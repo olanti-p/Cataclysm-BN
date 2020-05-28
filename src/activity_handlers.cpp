@@ -239,8 +239,8 @@ static const quality_id qual_BUTCHER( "BUTCHER" );
 static const quality_id qual_CUT_FINE( "CUT_FINE" );
 static const quality_id qual_LOCKPICK( "LOCKPICK" );
 
-static const species_id HUMAN( "HUMAN" );
-static const species_id ZOMBIE( "ZOMBIE" );
+static const species_id species_HUMAN( "HUMAN" );
+static const species_id species_ZOMBIE( "ZOMBIE" );
 
 static const std::string trait_flag_CANNIBAL( "CANNIBAL" );
 static const std::string trait_flag_PSYCHOPATH( "PSYCHOPATH" );
@@ -670,8 +670,8 @@ butchery_setup consider_butchery( const item &corpse_item, player &u, butcher_ty
     }
 
     // applies to all butchery actions
-    const bool is_human = corpse.id == mtype_id::NULL_ID() || ( corpse.in_species( HUMAN ) &&
-                          !corpse.in_species( ZOMBIE ) );
+    const bool is_human = corpse.id == mtype_id::NULL_ID() || ( corpse.in_species( species_HUMAN ) &&
+                          !corpse.in_species( species_ZOMBIE ) );
     if( is_human && !( u.has_trait_flag( trait_flag_CANNIBAL ) ||
                        u.has_trait_flag( trait_flag_PSYCHOPATH ) ||
                        u.has_trait_flag( trait_flag_SAPIOVORE ) ) ) {
