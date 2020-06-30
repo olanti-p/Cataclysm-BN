@@ -110,7 +110,6 @@ int burrow( player *, item *, bool, const tripoint & );
 int geiger( player *, item *, bool, const tripoint & );
 int teleport( player *, item *, bool, const tripoint & );
 int can_goo( player *, item *, bool, const tripoint & );
-int throwable_extinguisher_act( player *, item *, bool, const tripoint & );
 int directional_hologram( player *, item *, bool, const tripoint & );
 int capture_monster_veh( player *, item *, bool, const tripoint & );
 int capture_monster_act( player *, item *, bool, const tripoint & );
