@@ -520,7 +520,7 @@ bool map::process_fields_in_submap( submap *const current_submap,
                     sblk.apply_slime( p, cur.get_field_intensity() * cur_fd_type.apply_slime_factor );
                 }
                 if( cur_fd_type_id == fd_fire ) {
-                    if( process_fire_field_in_submap( current_submap, cur, p, dirty_transparency_cache ) ) {
+                    if( process_fire_field_in_submap( map_tile, p, cur, dirty_transparency_cache ) ) {
                         break;
                     }
                 }
@@ -888,11 +888,10 @@ bool map::process_fields_in_submap( submap *const current_submap,
     return dirty_transparency_cache;
 }
 
-bool map::process_fire_field_in_submap( submap *current_submap, field_entry &cur,
-                                        const tripoint &p, bool &dirty_transparency_cache )
+bool map::process_fire_field_in_submap( maptile &map_tile, const tripoint &p,
+                                        field_entry &cur, bool &dirty_transparency_cache )
 {
     map &here = get_map();
-    maptile map_tile( current_submap, point_zero );
     cur.set_field_age( std::max( -24_hours, cur.get_field_age() ) );
 
     // Entire objects for ter/frn for flags
