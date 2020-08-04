@@ -11,7 +11,7 @@
 
 #include "ret_val.h"
 #include "type_id.h"
-#include "units.h"
+#include "units_fwd.h"
 #include "visitable.h"
 
 class Character;

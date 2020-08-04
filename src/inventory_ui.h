@@ -21,7 +21,7 @@
 #include "item_location.h"
 #include "memory_fast.h"
 #include "pimpl.h"
-#include "units.h"
+#include "units_fwd.h"
 #include "item_category.h"
 
 class Character;

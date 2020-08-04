@@ -23,7 +23,7 @@
 #include "point.h"
 #include "string_formatter.h"
 #include "translations.h"
-#include "units.h"
+#include "units_fwd.h"
 
 struct input_event;
 

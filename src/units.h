@@ -2,6 +2,8 @@
 #ifndef CATA_SRC_UNITS_H
 #define CATA_SRC_UNITS_H
 
+#include "units_fwd.h"
+
 #include <algorithm>
 #include <cctype>
 #include <cstddef>
@@ -276,12 +278,6 @@ operator%=( quantity<lvt, ut> &lhs, const quantity<rvt, ut> &rhs )
 }
 /**@}*/
 
-class volume_in_milliliter_tag
-{
-};
-
-using volume = quantity<int, volume_in_milliliter_tag>;
-
 const volume volume_min = units::volume( std::numeric_limits<units::volume::value_type>::min(),
                           units::volume::unit_type{} );
 
@@ -315,12 +311,6 @@ inline constexpr double to_liter( const volume &v )
 // Legacy conversions factor for old volume values.
 // Don't use in new code! Use one of the from_* functions instead.
 static constexpr volume legacy_volume_factor = from_milliliter( 250 );
-
-class mass_in_milligram_tag
-{
-};
-
-using mass = quantity<std::int64_t, mass_in_milligram_tag>;
 
 const mass mass_min = units::mass( std::numeric_limits<units::mass::value_type>::min(),
                                    units::mass::unit_type{} );
@@ -365,12 +355,6 @@ inline constexpr double to_kilogram( const mass &v )
 {
     return v.value() / 1000000.0;
 }
-
-class energy_in_millijoule_tag
-{
-};
-
-using energy = quantity<int, energy_in_millijoule_tag>;
 
 const energy energy_min = units::energy( std::numeric_limits<units::energy::value_type>::min(),
                           units::energy::unit_type{} );
@@ -423,12 +407,6 @@ inline constexpr value_type to_kilojoule( const quantity<value_type, energy_in_m
 {
     return to_joule( v ) / 1000.0;
 }
-
-class money_in_cent_tag
-{
-};
-
-using money = quantity<int, money_in_cent_tag>;
 
 const money money_min = units::money( std::numeric_limits<units::money::value_type>::min(),
                                       units::money::unit_type{} );
@@ -507,12 +485,6 @@ constexpr double celsius_to_fahrenheit( double celsius )
 {
     return celsius * 9 / 5 + 32;
 }
-
-class temperature_in_millidegree_celsius_tag
-{
-};
-
-using temperature = quantity<int, temperature_in_millidegree_celsius_tag>;
 
 const temperature temperature_min = units::temperature(
                                         std::numeric_limits<units::temperature::value_type>::min(),
