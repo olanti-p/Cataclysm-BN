@@ -472,7 +472,7 @@ std::vector<om_vehicle> overmapbuffer::get_vehicle( const tripoint_abs_omt &p )
 
 void overmapbuffer::signal_hordes( const tripoint_abs_sm &center, const int sig_power )
 {
-    const auto radius = sig_power;
+    const int radius = sig_power;
     for( auto &om : get_overmaps_near( center, radius ) ) {
         const point_abs_sm abs_pos_om = project_to<coords::sm>( om->pos() );
         const tripoint_rel_sm rel_pos = center - abs_pos_om;
@@ -485,7 +485,7 @@ void overmapbuffer::signal_hordes( const tripoint_abs_sm &center, const int sig_
 void overmapbuffer::process_mongroups()
 {
     // arbitrary radius to include nearby overmaps (aside from the current one)
-    const auto radius = MAPSIZE * 2;
+    const int radius = MAPSIZE * 2;
     // TODO: fix point types
     const tripoint_abs_sm center( get_player_character().global_sm_location() );
     for( auto &om : get_overmaps_near( center, radius ) ) {
@@ -496,7 +496,7 @@ void overmapbuffer::process_mongroups()
 void overmapbuffer::move_hordes()
 {
     // arbitrary radius to include nearby overmaps (aside from the current one)
-    const auto radius = MAPSIZE * 2;
+    const int radius = MAPSIZE * 2;
     // TODO: fix point types
     const tripoint_abs_sm center( get_player_character().global_sm_location() );
     for( auto &om : get_overmaps_near( center, radius ) ) {
@@ -1283,7 +1283,7 @@ radio_tower_reference overmapbuffer::find_radio_station( const int frequency )
     const tripoint_abs_sm center( get_player_character().global_sm_location() );
     for( auto &om : get_overmaps_near( center, RADIO_MAX_STRENGTH ) ) {
         for( auto &tower : om->radios ) {
-            const auto rref = create_radio_tower_reference( *om, tower, center );
+            const radio_tower_reference rref = create_radio_tower_reference( *om, tower, center );
             if( rref.signal_strength > 0 && tower.frequency == frequency ) {
                 return rref;
             }
@@ -1302,7 +1302,7 @@ std::vector<radio_tower_reference> overmapbuffer::find_all_radio_stations()
     const int radius = RADIO_MAX_STRENGTH;
     for( auto &om : get_overmaps_near( center, radius ) ) {
         for( auto &tower : om->radios ) {
-            const auto rref = create_radio_tower_reference( *om, tower, center );
+            const radio_tower_reference rref = create_radio_tower_reference( *om, tower, center );
             if( rref.signal_strength > 0 ) {
                 result.push_back( rref );
             }
@@ -1321,7 +1321,7 @@ std::vector<camp_reference> overmapbuffer::get_camps_near( const tripoint_abs_sm
         [&]( basecamp & element ) {
             const tripoint_abs_omt camp_pt = element.camp_omt_pos();
             const tripoint_abs_sm camp_sm = project_to<coords::sm>( camp_pt );
-            const auto distance = rl_dist( camp_sm, location );
+            const int distance = rl_dist( camp_sm, location );
 
             return camp_reference{ &element, camp_sm, distance };
         } );
@@ -1357,7 +1357,7 @@ std::vector<city_reference> overmapbuffer::get_cities_near( const tripoint_abs_s
             const auto rel_pos_city = project_to<coords::sm>( element.pos );
             const auto abs_pos_city =
                 tripoint_abs_sm( project_combine( om->pos(), rel_pos_city ), 0 );
-            const auto distance = rl_dist( abs_pos_city, location );
+            const int distance = rl_dist( abs_pos_city, location );
 
             return city_reference{ &element, abs_pos_city, distance };
         } );
@@ -1408,7 +1408,7 @@ std::string overmapbuffer::get_description_at( const tripoint_abs_sm &where )
         return ter_name;
     }
 
-    const auto closest_cref = closest_known_city( where );
+    const city_reference closest_cref = closest_known_city( where );
 
     if( !closest_cref ) {
         return ter_name;

@@ -1106,8 +1106,8 @@ int worldfactory::show_modselection_window( const catacurses::window &win,
             int num_lines = fold_and_print( w_description, point( 1, 0 ),
                                             getmaxx( w_description ) - 1,
                                             c_white, mman_ui->get_information( selmod ) );
-            auto window_height = catacurses::getmaxy( w_description );
-            auto window_width = catacurses::getmaxx( w_description );
+            int window_height = catacurses::getmaxy( w_description );
+            int window_width = catacurses::getmaxx( w_description );
             if( num_lines > window_height ) {
                 // The description didn't fit in the window, so provide a
                 // hint for how to see the whole thing
@@ -1619,7 +1619,7 @@ bool WORLD::load_options()
 
 void load_world_option( const JsonObject &jo )
 {
-    auto arr = jo.get_array( "options" );
+    JsonArray arr = jo.get_array( "options" );
     if( arr.empty() ) {
         jo.throw_error( "no options specified", "options" );
     }

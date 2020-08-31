@@ -25,7 +25,7 @@ enum vitamin_type {
 
 template<>
 struct enum_traits<vitamin_type> {
-    static constexpr auto last = vitamin_type::num_vitamin_types;
+    static constexpr vitamin_type last = vitamin_type::num_vitamin_types;
 };
 
 class vitamin

@@ -153,7 +153,7 @@ extern "C" {
 
 void init_crash_handlers()
 {
-    for( auto sig : {
+    for( int sig : {
              SIGSEGV, SIGILL, SIGABRT, SIGFPE
          } ) {
 

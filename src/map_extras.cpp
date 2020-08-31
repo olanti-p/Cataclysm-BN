@@ -437,7 +437,7 @@ static bool mx_helicopter( map &m, const tripoint &abs_sub )
                     }
 
                     // Delete the items that would have spawned here from a "corpse"
-                    for( auto sp : wreckage->parts_at_relative( vp.mount(), true ) ) {
+                    for( int sp : wreckage->parts_at_relative( vp.mount(), true ) ) {
                         vehicle_stack here = wreckage->get_items( sp );
 
                         for( auto iter = here.begin(); iter != here.end(); ) {
@@ -461,7 +461,7 @@ static bool mx_helicopter( map &m, const tripoint &abs_sub )
                     }
 
                     // Delete the items that would have spawned here from a "corpse"
-                    for( auto sp : wreckage->parts_at_relative( vp.mount(), true ) ) {
+                    for( int sp : wreckage->parts_at_relative( vp.mount(), true ) ) {
                         vehicle_stack here = wreckage->get_items( sp );
 
                         for( auto iter = here.begin(); iter != here.end(); ) {
@@ -477,7 +477,7 @@ static bool mx_helicopter( map &m, const tripoint &abs_sub )
                     m.add_spawn( mon_zombie_military_pilot, 1, pos );
 
                     // Delete the items that would have spawned here from a "corpse"
-                    for( auto sp : wreckage->parts_at_relative( vp.mount(), true ) ) {
+                    for( int sp : wreckage->parts_at_relative( vp.mount(), true ) ) {
                         vehicle_stack here = wreckage->get_items( sp );
 
                         for( auto iter = here.begin(); iter != here.end(); ) {

@@ -60,7 +60,7 @@ inline bool operator<( body_part a, T b )
 
 template<>
 struct enum_traits<body_part> {
-    static constexpr auto last = body_part::num_bp;
+    static constexpr body_part last = body_part::num_bp;
 };
 
 enum class side : int {
@@ -72,7 +72,7 @@ enum class side : int {
 
 template<>
 struct enum_traits<side> {
-    static constexpr auto last = side::num_sides;
+    static constexpr side last = side::num_sides;
 };
 
 /**
