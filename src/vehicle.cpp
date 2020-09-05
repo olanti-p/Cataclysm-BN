@@ -111,7 +111,7 @@ static bool is_sm_tile_over_water( const tripoint &real_global_pos );
 static const itype_id fuel_type_mana( "mana" );
 
 // 1 kJ per battery charge
-const int bat_energy_j = 1000;
+static const int bat_energy_j = 1000;
 
 // For reference what each function is supposed to do, see their implementation in
 // @ref DefaultRemovePartHandler. Add compatible code for it into @ref MapgenRemovePartHandler,

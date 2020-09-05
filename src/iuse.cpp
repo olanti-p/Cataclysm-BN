@@ -110,6 +110,7 @@
 #include "ui.h"
 #include "units_utility.h"
 #include "value_ptr.h"
+#include "veh_interact.h"
 #include "veh_type.h"
 #include "vehicle.h"
 #include "vehicle_selector.h"
@@ -2974,8 +2975,6 @@ int iuse::clear_rubble( player *p, item *it, bool, const tripoint & )
     p->activity.placement = pnt;
     return it->type->charges_to_use();
 }
-
-void act_vehicle_siphon( vehicle * ); // veh_interact.cpp
 
 int iuse::siphon( player *p, item *it, bool, const tripoint & )
 {

@@ -270,4 +270,6 @@ class veh_interact
         bool can_self_jack();
 };
 
+void act_vehicle_siphon( vehicle *veh );
+
 #endif // CATA_SRC_VEH_INTERACT_H

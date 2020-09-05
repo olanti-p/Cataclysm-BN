@@ -1132,4 +1132,6 @@ struct itype {
         void tick( player &p, item &it, const tripoint &pos ) const;
 };
 
+void load_charge_removal_blacklist( const JsonObject &jo, const std::string &src );
+
 #endif // CATA_SRC_ITYPE_H

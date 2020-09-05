@@ -148,9 +148,8 @@ static const std::string flag_PLOWABLE( "PLOWABLE" );
 static const std::string flag_TREE( "TREE" );
 static const std::string flag_UNSAFE_CONSUME( "UNSAFE_CONSUME" );
 
-void cancel_aim_processing();
 //Generic activity: maximum search distance for zones, constructions, etc.
-const int ACTIVITY_SEARCH_DISTANCE = 60;
+static const int ACTIVITY_SEARCH_DISTANCE = 60;
 
 static bool same_type( const std::list<item> &items )
 {

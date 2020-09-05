@@ -2928,8 +2928,8 @@ void map::draw_map( mapgendata &dat )
     draw_connections( dat );
 }
 
-const int SOUTH_EDGE = 2 * SEEY - 1;
-const int EAST_EDGE = 2 * SEEX  - 1;
+static const int SOUTH_EDGE = 2 * SEEY - 1;
+static const int EAST_EDGE = 2 * SEEX  - 1;
 
 void map::draw_office_tower( mapgendata &dat )
 {

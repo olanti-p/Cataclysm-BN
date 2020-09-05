@@ -28,7 +28,7 @@ static const std::string flag_PERPETUAL( "PERPETUAL" );
 static const std::string flag_SAFE_FUEL_OFF( "SAFE_FUEL_OFF" );
 
 // '!', '-' and '=' are uses as default bindings in the menu
-const invlet_wrapper
+static const invlet_wrapper
 bionic_chars( "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\"#&()*+./:;@[\\]^_{|}" );
 
 namespace

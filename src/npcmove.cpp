@@ -189,11 +189,11 @@ const int avoidance_vehicles_radius = 5;
 
 } // namespace
 
-std::string npc_action_name( npc_action action );
+static std::string npc_action_name( npc_action action );
 
-void print_action( const char *prepend, npc_action action );
+static void print_action( const char *prepend, npc_action action );
 
-bool compare_sound_alert( const dangerous_sound &sound_a, const dangerous_sound &sound_b );
+static bool compare_sound_alert( const dangerous_sound &sound_a, const dangerous_sound &sound_b );
 
 hp_part most_damaged_hp_part( const Character &c );
 

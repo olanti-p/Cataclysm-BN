@@ -90,7 +90,7 @@ static const bionic_id bio_power_storage_mkII( "bio_power_storage_mkII" );
 
 struct itype;
 
-void spawn_animal( npc &p, const mtype_id &mon );
+static void spawn_animal( npc &p, const mtype_id &mon );
 
 void talk_function::nothing( npc & )
 {
