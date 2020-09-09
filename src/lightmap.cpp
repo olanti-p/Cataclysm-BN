@@ -240,7 +240,7 @@ void map::build_sunlight_cache( int zlev )
     }
     // If uppermost level, just apply weather illumination since there's no opportunity
     // for light to be blocked.
-    if( zlev == std::min( map_cache.max_populated_zlev + 1, OVERMAP_HEIGHT ) ) {
+    if( zlev == std::min( calc_max_populated_zlev() + 1, OVERMAP_HEIGHT ) ) {
         for( auto &lm_col : lm ) {
             for( four_quadrants &lm_entry : lm_col ) {
                 lm_entry.fill( outside_light_level );
@@ -320,7 +320,7 @@ void map::generate_lightmap( const int zlev )
     const int minz = zlevels ? -OVERMAP_DEPTH : zlev;
     // Start at the topmost populated zlevel to avoid unnecessary raycasting
     // Plus one zlevel to prevent clipping inside structures
-    const int maxz = zlevels ? clamp( map_cache.max_populated_zlev + 1, zlev + 1,
+    const int maxz = zlevels ? clamp( calc_max_populated_zlev() + 1, zlev + 1,
                                       OVERMAP_HEIGHT ) : zlev;
 
     // Iterate top to bottom because sunlight cache needs to construct in that order.
