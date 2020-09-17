@@ -1467,6 +1467,8 @@ void avatar::set_movement_mode( character_movemode new_mode )
         }
     }
     move_mode = new_mode;
+    // crouching affects visibility
+    get_map().set_seen_cache_dirty( pos().z );
 }
 
 void avatar::toggle_run_mode()
