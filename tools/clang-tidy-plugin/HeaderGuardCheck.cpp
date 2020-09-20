@@ -49,7 +49,9 @@ static std::string getHeaderGuard( StringRef Filename )
     bool Found = false;
     while( std::string::npos != ( LastSlash = TopDir.find_last_of( "/\\" ) ) ) {
         TopDir = TopDir.substr( 0, LastSlash );
-        if( pathExists( TopDir + "/.astylerc" ) ) {
+        // Either the root source dir (containing .astylerc) or the root build
+        // dir (containing CMakeCache.txt)
+        if( pathExists( TopDir + "/.astylerc" ) || pathExists( TopDir + "/CMakeCache.txt" ) ) {
             Found = true;
             break;
         }
