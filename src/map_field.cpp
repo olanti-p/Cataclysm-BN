@@ -249,12 +249,11 @@ void map::gas_spread_to( field_entry &cur, maptile &dst, const tripoint &p )
 }
 
 void map::spread_gas( field_entry &cur, const tripoint &p, int percent_spread,
-                      const time_duration &outdoor_age_speedup, scent_block &sblk )
+                      const time_duration &outdoor_age_speedup, scent_block &sblk, const oter_id &om_ter )
 {
-    const oter_id &cur_om_ter = overmap_buffer.ter( ms_to_omt_copy( g->m.getabs( p ) ) );
     const bool sheltered = g->is_sheltered( p );
     const int winddirection = g->weather.winddirection;
-    const int windpower = get_local_windpower( g->weather.windspeed, cur_om_ter, p, winddirection,
+    const int windpower = get_local_windpower( g->weather.windspeed, om_ter, p, winddirection,
                           sheltered );
 
     const int current_intensity = cur.get_field_intensity();
@@ -400,6 +399,7 @@ void map::process_fields_in_submap( submap *const current_submap,
 
     tripoint thep;
     thep.z = submap.z;
+    const oter_id &om_ter = overmap_buffer.ter( tripoint_abs_omt( sm_to_omt_copy( submap ) ) );
 
     // Initialize the map tile wrapper
     maptile map_tile( current_submap, 0, 0 );
@@ -518,7 +518,7 @@ void map::process_fields_in_submap( submap *const current_submap,
                     sblk.apply_slime( p, cur.get_field_intensity() * cur_fd_type.apply_slime_factor );
                 }
                 if( cur_fd_type_id == fd_fire ) {
-                    if( process_fire_field_in_submap( map_tile, p, cur ) ) {
+                    if( process_fire_field_in_submap( map_tile, p, cur, om_ter ) ) {
                         break;
                     }
                 }
@@ -528,7 +528,7 @@ void map::process_fields_in_submap( submap *const current_submap,
                     const int gas_percent_spread = cur_fd_type.percent_spread;
                     if( gas_percent_spread > 0 ) {
                         const time_duration outdoor_age_speedup = cur_fd_type.outdoor_age_speedup;
-                        spread_gas( cur, p, gas_percent_spread, outdoor_age_speedup, sblk );
+                        spread_gas( cur, p, gas_percent_spread, outdoor_age_speedup, sblk, om_ter );
                     }
                 }
 
@@ -819,7 +819,7 @@ void map::process_fields_in_submap( submap *const current_submap,
                                 }
                             }
                         } else {
-                            spread_gas( cur, p, 5, 0_turns, sblk );
+                            spread_gas( cur, p, 5, 0_turns, sblk, om_ter );
                         }
                     }
                 }
@@ -890,7 +890,8 @@ void map::process_fields_in_submap( submap *const current_submap,
     sblk.commit_modifications();
 }
 
-bool map::process_fire_field_in_submap( maptile &map_tile, const tripoint &p, field_entry &cur )
+bool map::process_fire_field_in_submap( maptile &map_tile, const tripoint &p, field_entry &cur,
+                                        const oter_id &om_ter )
 {
     map &here = get_map();
     cur.set_field_age( std::max( -24_hours, cur.get_field_age() ) );
