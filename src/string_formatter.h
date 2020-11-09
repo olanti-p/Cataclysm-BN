@@ -359,7 +359,7 @@ class string_formatter
 
     public:
         /// @param format The format string as required by `sprintf`.
-        string_formatter( std::string_view format ) : format( format ) { }
+        explicit string_formatter( std::string_view format ) : format( format ) { }
         /// Does the actual `sprintf`. It uses @ref format and puts the formatted
         /// string into @ref output.
         /// Note: use @ref get_output to get the formatted string after a successful

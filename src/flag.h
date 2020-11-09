@@ -57,7 +57,7 @@ class json_flag
         }
 
         /** Is this a valid (non-null) flag */
-        operator bool() const;
+        explicit operator bool() const;
 
         void check() const;
 

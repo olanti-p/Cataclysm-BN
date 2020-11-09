@@ -324,7 +324,7 @@ struct event_source {
 };
 
 struct event_type_event_source : event_source {
-    event_type_event_source( event_type t ) : type( t ) {}
+    explicit event_type_event_source( event_type t ) : type( t ) {}
 
     event_type type;
 
@@ -358,7 +358,7 @@ struct event_type_event_source : event_source {
 };
 
 struct event_transformation_event_source : event_source {
-    event_transformation_event_source( const string_id<event_transformation> &t ) :
+    explicit event_transformation_event_source( const string_id<event_transformation> &t ) :
         transformation( t ) {}
 
     string_id<event_transformation> transformation;

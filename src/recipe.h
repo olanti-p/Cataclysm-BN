@@ -41,8 +41,12 @@ class recipe
     public:
         recipe();
 
-        operator bool() const {
-            return !result_.is_null();
+        bool is_null() const {
+            return result_.is_null();
+        }
+
+        explicit operator bool() const {
+            return !is_null();
         }
 
         const itype_id &result() const {

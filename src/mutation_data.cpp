@@ -688,14 +688,11 @@ std::string dreams::get_random_for_category( const std::string &cat, int strengt
 
 bool trait_display_sort( const trait_id &a, const trait_id &b ) noexcept
 {
-    if( a->get_display_color() > b->get_display_color() ) {
-        return true;
-    }
-    if( a->get_display_color() < b->get_display_color() ) {
-        return false;
-    }
+    auto trait_sort_key = []( const trait_id & t ) {
+        return std::make_pair( -t->get_display_color().to_int(), t->name() );
+    };
 
-    return localized_compare( a->name(), b->name() );
+    return localized_compare( trait_sort_key( a ), trait_sort_key( b ) );
 }
 
 bool trait_display_nocolor_sort( const trait_id &a, const trait_id &b ) noexcept

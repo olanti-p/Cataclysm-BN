@@ -257,7 +257,7 @@ void dependency_tree::build_node_map(
     for( auto &elem : key_dependency_map ) {
         // check to see if the master node map knows the key
         if( master_node_map.find( elem.first ) == master_node_map.end() ) {
-            master_node_map.emplace( elem.first, elem.first );
+            master_node_map.emplace( elem.first, dependency_node( elem.first ) );
         }
     }
 }

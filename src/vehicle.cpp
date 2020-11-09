@@ -184,7 +184,7 @@ class MapgenRemovePartHandler : public RemovePartHandler
         map &m;
 
     public:
-        MapgenRemovePartHandler( map &m ) : m( m ) { }
+        explicit MapgenRemovePartHandler( map &m ) : m( m ) { }
 
         ~MapgenRemovePartHandler() override = default;
 

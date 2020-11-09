@@ -105,7 +105,7 @@ nc_color color_manager::name_to_color( const std::string &name,
     const color_id id = name_to_id( name, color_error );
     const color_struct &entry = color_array[id];
 
-    return entry.custom > 0 ? entry.custom : entry.color;
+    return entry.custom.to_int() > 0 ? entry.custom : entry.color;
 }
 
 color_id color_manager::name_to_id( const std::string &name,
@@ -155,7 +155,7 @@ nc_color color_manager::get( const color_id id ) const
 
     auto &entry = color_array[id];
 
-    return entry.custom > 0 ? entry.custom : entry.color;
+    return entry.custom.to_int() > 0 ? entry.custom : entry.color;
 }
 
 std::string color_manager::get_name( const nc_color &color ) const
@@ -169,7 +169,7 @@ nc_color color_manager::get_invert( const nc_color &color ) const
     const color_id id = color_to_id( color );
     auto &entry = color_array[id];
 
-    return entry.invert_custom > 0 ? entry.invert_custom : entry.invert;
+    return entry.invert_custom.to_int() > 0 ? entry.invert_custom : entry.invert;
 }
 
 nc_color color_manager::get_random() const
@@ -584,7 +584,7 @@ nc_color color_from_string( const std::string &color,
     }
 
     const nc_color col = all_colors.name_to_color( new_color, color_error );
-    if( col > 0 ) {
+    if( col.to_int() > 0 ) {
         return col;
     }
 
@@ -629,7 +629,7 @@ nc_color bgcolor_from_string( const std::string &color )
     }
 
     const nc_color col = all_colors.name_to_color( new_color );
-    if( col > 0 ) {
+    if( col.to_int() > 0 ) {
         return col;
     }
 
