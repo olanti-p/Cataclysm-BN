@@ -407,20 +407,21 @@ void npc::assess_danger()
     for( direction threat_dir : npc_threat_dir ) {
         cur_threat_map[ threat_dir ] = 0.25f * ai_cache.threat_map[ threat_dir ];
     }
+    map &here = get_map();
+    // cache string_id -> int_id conversion before hot loop
+    const field_type_id fd_fire = ::fd_fire;
     // first, check if we're about to be consumed by fire
-    // TODO: Use the field cache
-    for( const tripoint &pt : g->m.points_in_radius( pos(), 6 ) ) {
-        if( pt == pos() || g->m.has_flag( TFLAG_FIRE_CONTAINER,  pt ) ) {
+    // `map::get_field` uses `field_cache`, so in general case (no fire) it provides an early exit
+    for( const tripoint &pt : here.points_in_radius( pos(), 6 ) ) {
+        if( pt == pos() || !here.get_field( pt, fd_fire ) || here.has_flag( TFLAG_FIRE_CONTAINER,  pt ) ) {
             continue;
         }
-        if( g->m.get_field( pt, fd_fire ) != nullptr ) {
-            int dist = rl_dist( pos(), pt );
-            cur_threat_map[direction_from( pos(), pt )] += 2.0f * ( NPC_DANGER_MAX - dist );
-            if( dist < 3 && !has_effect( effect_npc_fire_bad ) ) {
-                warn_about( "fire_bad", 1_minutes );
-                add_effect( effect_npc_fire_bad, 5_turns );
-                path.clear();
-            }
+        int dist = rl_dist( pos(), pt );
+        cur_threat_map[direction_from( pos(), pt )] += 2.0f * ( NPC_DANGER_MAX - dist );
+        if( dist < 3 && !has_effect( effect_npc_fire_bad ) ) {
+            warn_about( "fire_bad", 1_minutes );
+            add_effect( effect_npc_fire_bad, 5_turns );
+            path.clear();
         }
     }
 
