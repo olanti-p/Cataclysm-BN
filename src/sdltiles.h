@@ -21,6 +21,7 @@ class window;
 
 extern std::unique_ptr<cata_tiles> tilecontext;
 extern std::array<SDL_Color, color_loader<SDL_Color>::COLOR_NAMES_COUNT> windowsPalette;
+extern bool direct3d_mode;
 
 void load_tileset();
 void rescale_tileset( int size );

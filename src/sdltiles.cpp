@@ -113,6 +113,7 @@ static int WindowHeight;       //Height of the actual window, not the curses win
 // the actual input value (key pressed, mouse button clicked, ...)
 // This value is finally returned by input_manager::get_input_event.
 static input_event last_input;
+bool direct3d_mode = false;
 
 static constexpr int ERR = -1;
 static int inputdelay;         //How long getch will wait for a character to be typed
@@ -311,6 +312,10 @@ static void WinCreate()
         renderer_name = "software";
     } else {
         renderer_name = get_option<std::string>( "RENDERER" );
+    }
+
+    if( renderer_name == "direct3d" ) {
+        direct3d_mode = true;
     }
 
     const int numRenderDrivers = SDL_GetNumRenderDrivers();
