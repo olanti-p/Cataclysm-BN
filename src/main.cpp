@@ -680,6 +680,9 @@ int main( int argc, char *argv[] )
 
     rng_set_engine_seed( seed );
 
+    // Setup UI before loading any data
+    game_ui::init_ui();
+
     g = std::make_unique<game>();
     // First load and initialize everything that does not
     // depend on the mods.
@@ -703,10 +706,7 @@ int main( int argc, char *argv[] )
         exit_handler( -999 );
     }
 
-    // Now we do the actual game.
-
-    game_ui::init_ui();
-
+    // TODO: what is this comment about?
     catacurses::curs_set( 0 ); // Invisible cursor here, because MAPBUFFER.load() is crash-prone
 
 #if !defined(_WIN32)
