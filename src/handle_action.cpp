@@ -102,6 +102,7 @@ static const skill_id skill_melee( "melee" );
 static const quality_id qual_CUT( "CUT" );
 
 static const bionic_id bio_remote( "bio_remote" );
+static const bionic_id bio_watch( "bio_watch" );
 
 static const trait_id trait_HIBERNATE( "HIBERNATE" );
 static const trait_id trait_PROF_CHURL( "PROF_CHURL" );
@@ -1013,7 +1014,7 @@ static void sleep()
 
     time_duration try_sleep_dur = 24_hours;
     std::string deaf_text;
-    if( g->u.is_deaf() ) {
+    if( g->u.is_deaf() && !g->u.has_bionic( bio_watch ) ) {
         deaf_text = _( "<color_c_red> (DEAF!)</color>" );
     }
     if( u.has_alarm_clock() ) {
