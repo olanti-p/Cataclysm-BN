@@ -1,0 +1,11 @@
+[
+  {
+    "type": "MOD_INFO",
+    "ident": "better_nucbat",
+    "name": "Better Nuclear Batteries",
+    "description": "Replaces some translated strings with superior versions",
+    "category": "content",
+    "authors": ["olanti-p"],
+    "dependencies": [ "dda" ]
+  }
+]

@@ -1,0 +1,152 @@
+# 
+# Translators:
+# olanti-p <olanti-p@yandex.ru>, 2020
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: better_nuclear_batteries\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-28 11:12+0200\n"
+"PO-Revision-Date: 2020-09-28 09:12+0000\n"
+"Last-Translator: olanti-p <olanti-p@yandex.ru>, 2020\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ru_RU\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: lang/json/AMMO_from_json.py
+msgid "fusion pack"
+msgid_plural "fusion packs"
+msgstr[0] "ядрёная батарея"
+msgstr[1] "ядрёные батареи"
+msgstr[2] "ядрёных батарей"
+msgstr[3] "ядрёные батареи"
+
+#. ~ Description for {'str': 'fusion pack'}
+#: lang/json/AMMO_from_json.py
+msgid ""
+"In the middle of the 21st Century, military powers began to look towards "
+"energy based weapons.  The result was the standard fusion pack, capable of "
+"delivering bolts of superheated gas at near light speed with no recoil."
+msgstr ""
+"В середине XXI века военные державы обратили внимание на энергетические виды"
+" вооружения. Результатом стала стандартная батарея ядрёного синтеза, "
+"способная запускать заряды перегретого газа на околосветовой скорости без "
+"отдачи."
+
+#: lang/json/AMMO_from_json.py
+msgid "bootleg fusion pack"
+msgid_plural "bootleg fusion packs"
+msgstr[0] "самодельная ядрёная батарея"
+msgstr[1] "самодельные ядрёные батареи"
+msgstr[2] "самодельных ядрёных батарей"
+msgstr[3] "самодельные ядрёные батареи"
+
+#. ~ Description for {'str': 'bootleg fusion pack'}
+#: lang/json/AMMO_from_json.py
+msgid ""
+"In the middle of the 21st Century, military powers began to look towards "
+"energy based weapons.  The result was the standard fusion pack, capable of "
+"delivering bolts of superheated gas at near light speed with no recoil.  "
+"This one has been hand-crafted from spare parts."
+msgstr ""
+"В середине XXI века военные державы обратили внимание на энергетические виды"
+" вооружения. Результатом стала стандартная батарея ядрёного синтеза, "
+"способная запускать заряды перегретого газа на околосветовой скорости без "
+"отдачи. Эта изготовлена вручную из запчастей."
+
+#: lang/json/AMMO_from_json.py lang/json/ammunition_type_from_json.py
+msgid "modified mininuke"
+msgid_plural "modified mininukes"
+msgstr[0] "модифицированная ядрёная мини-бомба"
+msgstr[1] "модифицированные ядрёные мини-бомбы"
+msgstr[2] "модифицированных ядрёных мини-бомб"
+msgstr[3] "модифицированные ядрёные мини-бомбы"
+
+#. ~ Description for {'str': 'modified mininuke'}
+#: lang/json/AMMO_from_json.py
+msgid ""
+"A heavily modified handheld nuclear device on a rocket.  Intended to be "
+"fired from a specialized launcher, it has been rigged to explode on impact "
+"instead of on a timer.  It can fly further than the explosion will reach, "
+"probably."
+msgstr ""
+"Сильно модифицированная ядрёная мини-бомба, установленная на ракету и "
+"предназначенная для запуска посредством специализированного устройства. "
+"Взрыв инициируется при ударе вместо таймера. Способна улететь дальше радиуса"
+" взрыва. Наверное."
+
+#. ~ Description for {'str': 'ANBC suit'}
+#: lang/json/ARMOR_from_json.py
+msgid ""
+"An armored, impermeable full-body suit that functions as body armor, as well"
+" as protecting from nuclear, biological, and chemical hazards.  It requires "
+"a separate gas mask for full protection."
+msgstr ""
+"Бронированный и герметичный костюм, покрывающий всё тело. Защищает от "
+"ядрёной, биологической и химической угрозы. Для полной защиты требуется "
+"противогаз."
+
+#: lang/json/BIONIC_ITEM_from_json.py
+msgid "Fusion Blaster Arm CBM"
+msgid_plural "Fusion Blaster Arm CBMs"
+msgstr[0] "КБМ: Ручной термоядрёный бластер"
+msgstr[1] "КБМ: Ручной термоядрёный бластер"
+msgstr[2] "КБМ: Ручной термоядрёный бластер"
+msgstr[3] "КБМ: Ручной термоядрёный бластер"
+
+#. ~ Description for {'str': 'Fusion Blaster Arm CBM'}
+#: lang/json/BIONIC_ITEM_from_json.py
+msgid ""
+"Your left arm has been replaced by a heavy-duty fusion blaster!  You may use"
+" your energy banks to fire a damaging heat ray.  However, you are unable to "
+"use or carry two-handed items, and your strength limits what you can use "
+"with your one hand."
+msgstr ""
+"Ваша левая рука была заменена на сверхмощный термоядрёный бластер! Вы можете"
+" использовать свою энергию, чтобы стрелять тепловым лучом. Однако в таком "
+"случае нельзя использовать двуручное оружие или носить предметы двумя "
+"руками, а ваша сила накладывает ограничения на то, что вы можете "
+"использовать одной рукой."
+
+#. ~ Description for {'str': '238-NK: Practicality Enhancement', 'str_pl':
+#. 'copies of 238-NK: Practicality Enhancement'}
+#: lang/json/BOOK_from_json.py
+msgid ""
+"The authors of this thoroughly researched and documented proposal make a "
+"very persuasive case for the adoption of spring-driven nuclear shells.  It's"
+" stamped \"DENIED\"."
+msgstr ""
+"Авторы этого досконально изученного и задокументированного предложения "
+"представили очень убедительные доводы в пользу идеи использования пружинных "
+"ядрёных боеголовок. На обложке стоит штамп «ОТКЛОНЕНО»."
+
+#. ~ Description for {'str': 'lab journal-Curie', 'str_pl': 'lab journals-
+#. Curie'}
+#: lang/json/BOOK_from_json.py
+msgid ""
+"This lab notebook is filled with the collective discoveries and refinements "
+"of a research team dedicated to nuclear energy.  You don't think you're "
+"ready to start a second Cataclysm, but the general information provided "
+"might be useful…"
+msgstr ""
+"В этом лабораторном журнале полно коллективных исследований и "
+"усовершенствований касательно ядрёной энергетики. Вы пока что не готовы "
+"начать второй Катаклизм, но в целом информация может пригодиться…"
+
+#: lang/json/GENERIC_from_json.py
+msgid "nuclear waste"
+msgid_plural "nuclear waste"
+msgstr[0] "ядрёные отходы"
+msgstr[1] "ядрёные отходы"
+msgstr[2] "ядрёные отходы"
+msgstr[3] "ядрёные отходы"
+
+#: lang/json/GENERIC_from_json.py
+msgid "nuclear fuel pellet"
+msgid_plural "nuclear fuel pellets"
+msgstr[0] "Дробинка ядрёного топлива"
+msgstr[1] "Дробинок ядрёного топлива"
+msgstr[2] "Дробинок ядрёного топлива"
+msgstr[3] "Дробинки ядрёного топлива"
