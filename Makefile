@@ -190,7 +190,9 @@ ifndef BACKTRACE
   # ...except not on native Windows builds, because the relevant headers are
   # probably not available
   ifneq ($(MSYS2), 1)
-    BACKTRACE = 1
+    ifneq ($(CYGWIN), 1)
+      BACKTRACE = 1
+    endif
   endif
 endif
 ifeq ($(BACKTRACE), 1)
