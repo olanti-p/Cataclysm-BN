@@ -197,11 +197,6 @@ using GenderMap = std::map<std::string, std::vector<std::string>>;
  */
 std::string gettext_gendered( const GenderMap &genders, const std::string &msg );
 
-bool isValidLanguage( const std::string &lang );
-std::string getLangFromLCID( const int &lcid );
-void select_language();
-void set_language();
-
 class JsonIn;
 
 /**
@@ -344,6 +339,30 @@ std::ostream &operator<<( std::ostream &out, const translation &t );
 std::string operator+( const translation &lhs, const std::string &rhs );
 std::string operator+( const std::string &lhs, const translation &rhs );
 std::string operator+( const translation &lhs, const translation &rhs );
+
+struct language_info {
+    std::string id; // 'll' or 'll_CC'
+    std::string locale;
+    translation name; // name, spelled in target language
+
+    std::string disp_name() const;
+};
+
+/** List supported languages. */
+std::vector<language_info> list_available_languages();
+/** Detect system language, should be done only once on startup. */
+void detect_system_language();
+/**
+ * Apply language from USE_LANG option. If tried to use system language,
+ * but failed to detect it, falls back to 'en'.
+ */
+void apply_language();
+/** Prompt for game language if necessary, should be done only once on startup. */
+void prompt_select_lang_on_startup();
+/** Get game's current language. */
+language_info get_language();
+/** Get system language as detected by the game. */
+language_info get_system_language();
 
 // Localized comparison operator, intended for sorting strings when they should
 // be sorted according to the user's locale.

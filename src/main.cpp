@@ -612,33 +612,10 @@ int main( int argc, char *argv[] )
 
     setupDebug( DebugOutput::file );
 
-    /**
-     * OS X does not populate locale env vars correctly (they usually default to
-     * "C") so don't bother trying to set the locale based on them.
-     */
-#if !defined(MACOSX)
-    if( setlocale( LC_ALL, "" ) == nullptr ) {
-        DebugLog( D_WARNING, D_MAIN ) << "Error while setlocale(LC_ALL, '').";
-    } else {
-#endif
-        try {
-            std::locale::global( std::locale( "" ) );
-        } catch( const std::exception & ) {
-            // if user default locale retrieval isn't implemented by system
-            try {
-                // default to basic C locale
-                std::locale::global( std::locale::classic() );
-            } catch( const std::exception &err ) {
-                debugmsg( "%s", err.what() );
-                exit_handler( -999 );
-            }
-        }
-#if !defined(MACOSX)
-    }
-#endif
+    DebugLog( D_INFO, DC_ALL ) << "[main] C locale on startup: " << setlocale( LC_ALL, nullptr );
+    DebugLog( D_INFO, DC_ALL ) << "[main] C++ locale on startup: " << std::locale().name();
 
-    DebugLog( D_INFO, DC_ALL ) << "[main] C locale set to " << setlocale( LC_ALL, nullptr );
-    DebugLog( D_INFO, DC_ALL ) << "[main] C++ locale set to " << std::locale().name();
+    detect_system_language();
 
 #if defined(TILES)
     SDL_version compiled;
@@ -675,8 +652,6 @@ int main( int argc, char *argv[] )
             return 1;
         }
     }
-
-    set_language();
 
     rng_set_engine_seed( seed );
 
@@ -717,26 +692,7 @@ int main( int argc, char *argv[] )
     sigaction( SIGINT, &sigIntHandler, nullptr );
 #endif
 
-#if defined(LOCALIZE)
-    std::string lang;
-#if defined(_WIN32)
-    lang = getLangFromLCID( GetUserDefaultLCID() );
-#else
-    const char *v = setlocale( LC_ALL, nullptr );
-    if( v != nullptr ) {
-        lang = v;
-
-        if( lang == "C" ) {
-            lang = "en";
-        }
-    }
-#endif
-    if( get_option<std::string>( "USE_LANG" ).empty() && ( lang.empty() ||
-            !isValidLanguage( lang ) ) ) {
-        select_language();
-        set_language();
-    }
-#endif
+    prompt_select_lang_on_startup();
     replay_buffered_debugmsg_prompts();
 
     while( true ) {

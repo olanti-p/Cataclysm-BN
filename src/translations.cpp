@@ -33,6 +33,60 @@
 #include "rng.h"
 #include "text_style_check.h"
 
+#if defined(LOCALIZE)
+#include "debug.h"
+#include "options.h"
+#include "ui.h"
+#include "ui_manager.h"
+#if defined(_WIN32)
+#if 1 // Prevent IWYU reordering platform_win.h below mmsystem.h
+#   include "platform_win.h"
+#endif
+#   include "mmsystem.h"
+#endif // _WIN32
+
+#if defined(MACOSX)
+#   include <CoreFoundation/CFLocale.h>
+#   include <CoreFoundation/CoreFoundation.h>
+#endif
+#endif // LOCALIZE
+
+std::string system_lang;
+bool system_lang_ok = false;
+
+std::string current_lang;
+bool current_lang_ok = false;
+
+static std::vector<language_info> lang_options = {
+    { "en", "en_US.UTF-8", no_translation( R"(English)" ) },
+#if defined(LOCALIZE)
+    { "de", "de_DE.UTF-8", no_translation( R"(Deutsch)" ) },
+    { "es_AR", "es_AR.UTF-8", no_translation( R"(Español (Argentina))" ) },
+    { "es_ES", "es_ES.UTF-8", no_translation( R"(Español (España))" ) },
+    { "fr", "fr_FR.UTF-8", no_translation( R"(Français)" ) },
+    { "hu", "hu_HU.UTF-8", no_translation( R"(Magyar)" ) },
+    { "ja", "ja_JP.UTF-8", no_translation( R"(日本語)" ) },
+    { "ko", "ko_KR.UTF-8", no_translation( R"(한국어)" ) },
+    { "pl", "pl_PL.UTF-8", no_translation( R"(Polski)" ) },
+    { "pt_BR", "pt_BR.UTF-8", no_translation( R"(Português (Brasil))" )},
+    { "ru", "ru_RU.UTF-8", no_translation( R"(Русский)" ) },
+    { "zh_CN", "zh_CN.UTF-8", no_translation( R"(中文 (天朝))" ) },
+    { "zh_TW", "zh_TW.UTF-8", no_translation( R"(中文 (台灣))" ) },
+#endif // LOCALIZE
+};
+
+static const language_info &get_lang_info( const std::string &lang )
+{
+    for( const language_info &li : lang_options ) {
+        if( li.id == lang ) {
+            return li;
+        }
+    }
+    // Should never happen
+    debugmsg( "%s is not a valid language", lang );
+    return lang_options[0];
+}
+
 // Names depend on the language settings. They are loaded from different files
 // based on the currently used language. If that changes, we have to reload the
 // names.
@@ -52,26 +106,6 @@ int detail::get_current_language_version()
 {
     return current_language_version;
 }
-
-#if defined(LOCALIZE)
-#include "debug.h"
-#include "options.h"
-#include "ui.h"
-#if defined(_WIN32)
-#if 1 // Prevent IWYU reordering platform_win.h below mmsystem.h
-#   include "platform_win.h"
-#endif
-#   include "mmsystem.h"
-#endif
-
-#if defined(MACOSX)
-#   include <CoreFoundation/CFLocale.h>
-#   include <CoreFoundation/CoreFoundation.h>
-
-#include "cata_utility.h"
-
-std::string getOSXSystemLang();
-#endif
 
 const char *pgettext( const char *context, const char *msgid )
 {
@@ -112,111 +146,60 @@ const char *npgettext( const char *const context, const char *const msgid,
     }
 }
 
-bool isValidLanguage( const std::string &lang )
+void apply_language()
 {
-    const auto languages = get_options().get_option( "USE_LANG" ).getItems();
-    return std::find_if( languages.begin(),
-    languages.end(), [&lang]( const options_manager::id_and_option & pair ) {
-        return pair.first == lang || pair.first == lang.substr( 0, pair.first.length() );
-    } ) != languages.end();
-}
-
-/* "Useful" links:
- *  https://www.science.co.il/language/Locale-codes.php
- *  https://support.microsoft.com/de-de/help/193080/how-to-use-the-getuserdefaultlcid-windows-api-function-to-determine-op
- *  https://msdn.microsoft.com/en-us/library/cc233965.aspx
- */
-std::string getLangFromLCID( const int &lcid )
-{
-    static std::map<std::string, std::set<int>> lang_lcid;
-    if( lang_lcid.empty() ) {
-        lang_lcid["en"] = {{ 1033, 2057, 3081, 4105, 5129, 6153, 7177, 8201, 9225, 10249, 11273 }};
-        lang_lcid["fr"] = {{ 1036, 2060, 3084, 4108, 5132 }};
-        lang_lcid["de"] = {{ 1031, 2055, 3079, 4103, 5127 }};
-        lang_lcid["it_IT"] = {{ 1040, 2064 }};
-        lang_lcid["es_AR"] = { 11274 };
-        lang_lcid["es_ES"] = {{ 1034, 2058, 3082, 4106, 5130, 6154, 7178, 8202, 9226, 10250, 12298, 13322, 14346, 15370, 16394, 17418, 18442, 19466, 20490 }};
-        lang_lcid["ja"] = { 1041 };
-        lang_lcid["ko"] = { 1042 };
-        lang_lcid["pl"] = { 1045 };
-        lang_lcid["pt_BR"] = {{ 1046, 2070 }};
-        lang_lcid["ru"] = { 1049 };
-        lang_lcid["zh_CN"] = {{ 2052, 3076, 4100 }};
-        lang_lcid["zh_TW"] = { 1028 };
-    }
-
-    for( auto &lang : lang_lcid ) {
-        if( lang.second.find( lcid ) != lang.second.end() ) {
-            return lang.first;
-        }
-    }
-    return "";
-}
-
-void select_language()
-{
-    auto languages = get_options().get_option( "USE_LANG" ).getItems();
-
-    languages.erase( std::remove_if( languages.begin(),
-    languages.end(), []( const options_manager::id_and_option & lang ) {
-        return lang.first.empty() || lang.second.empty();
-    } ), languages.end() );
-
-    uilist sm;
-    sm.allow_cancel = false;
-    sm.text = _( "Select your language" );
-    for( size_t i = 0; i < languages.size(); i++ ) {
-        sm.addentry( i, true, MENU_AUTOASSIGN, languages[i].second.translated() );
-    }
-    sm.query();
-
-    get_options().get_option( "USE_LANG" ).setValue( languages[sm.ret].first );
-    get_options().save();
-}
-
-void set_language()
-{
-    std::string win_or_mac_lang;
-#if defined(_WIN32)
-    win_or_mac_lang = getLangFromLCID( GetUserDefaultLCID() );
-#endif
-#if defined(MACOSX)
-    win_or_mac_lang = getOSXSystemLang();
-#endif
+#if defined(LOCALIZE)
     // Step 1. Setup locale settings.
-    std::string lang_opt = get_option<std::string>( "USE_LANG" ).empty() ? win_or_mac_lang :
-                           get_option<std::string>( "USE_LANG" );
-    if( !lang_opt.empty() ) {
-        // Not 'System Language'
-        // Overwrite all system locale settings. Use CDDA settings. User wants this.
+    std::string new_lang = get_option<std::string>( "USE_LANG" );
+    bool new_lang_ok = true;
+    if( new_lang.empty() ) {
+        new_lang = test_mode ? "en" : system_lang;
+        new_lang_ok = system_lang_ok;
+    }
+    if( new_lang == current_lang ) {
+        // Everything's fine as it is
+        return;
+    }
+    current_lang = new_lang;
+    current_lang_ok = new_lang_ok;
+
+    // Overwrite all system locale settings.
 #if defined(_WIN32)
-        std::string lang_env = "LANGUAGE=" + lang_opt;
-        if( _putenv( lang_env.c_str() ) != 0 ) {
-            DebugLog( D_WARNING, D_MAIN ) << "Can't set 'LANGUAGE' environment variable";
-        }
+    std::string lang_env = "LANGUAGE=" + current_lang;
+    if( _putenv( lang_env.c_str() ) != 0 ) {
+        DebugLog( D_WARNING, D_MAIN ) << "Can't set 'LANGUAGE' environment variable";
+    }
 #else
-        if( setenv( "LANGUAGE", lang_opt.c_str(), true ) != 0 ) {
-            DebugLog( D_WARNING, D_MAIN ) << "Can't set 'LANGUAGE' environment variable";
-        }
+    if( setenv( "LANGUAGE", current_lang.c_str(), true ) != 0 ) {
+        DebugLog( D_WARNING, D_MAIN ) << "Can't set 'LANGUAGE' environment variable";
+    }
 #endif
-        else {
-            const auto env = getenv( "LANGUAGE" );
-            if( env != nullptr ) {
-                DebugLog( D_INFO, D_MAIN ) << "Language is set to: '" << env << '\'';
-            } else {
-                DebugLog( D_WARNING, D_MAIN ) << "Can't get 'LANGUAGE' environment variable";
+    else {
+        const auto env = getenv( "LANGUAGE" );
+        if( env != nullptr ) {
+            DebugLog( D_INFO, D_MAIN ) << "Language is set to: '" << env << '\'';
+        } else {
+            DebugLog( D_WARNING, D_MAIN ) << "Can't get 'LANGUAGE' environment variable";
+        }
+    }
+
+    // Set exact locale, or try to at least have UTF-8 support
+    try {
+        std::locale::global( std::locale( get_lang_info( current_lang ).locale ) );
+    } catch( std::runtime_error &e ) {
+        try {
+            std::locale::global( std::locale( "en_US.UTF-8" ) );
+        } catch( std::runtime_error &e ) {
+            try {
+                std::locale::global( std::locale( "C.UTF-8" ) );
+            } catch( std::runtime_error &e ) {
+                std::locale::global( std::locale::classic() );
             }
         }
     }
 
-#if defined(_WIN32)
-    // Use the ANSI code page 1252 to work around some language output bugs.
-    if( setlocale( LC_ALL, ".1252" ) == nullptr ) {
-        DebugLog( D_WARNING, D_MAIN ) << "Error while setlocale(LC_ALL, '.1252').";
-    }
     DebugLog( D_INFO, DC_ALL ) << "[translations] C locale set to " << setlocale( LC_ALL, nullptr );
     DebugLog( D_INFO, DC_ALL ) << "[translations] C++ locale set to " << std::locale().name();
-#endif
 
     // Step 2. Bind to gettext domain.
     std::string locale_dir;
@@ -249,15 +232,20 @@ void set_language()
     do {
         current_language_version++;
     } while( current_language_version == INVALID_LANGUAGE_VERSION );
+#else // LOCALIZE
+    current_lang = "en";
+    reload_names();
+#endif // LOCALIZE
 }
 
+#if defined(LOCALIZE)
 #if defined(MACOSX)
-std::string getOSXSystemLang()
+static std::string getOSXSystemLang()
 {
     // Get the user's language list (in order of preference)
     CFArrayRef langs = CFLocaleCopyPreferredLanguages();
     if( CFArrayGetCount( langs ) == 0 ) {
-        return "en_US";
+        return "";
     }
 
     CFStringRef lang = static_cast<CFStringRef>( CFArrayGetValueAtIndex( langs, 0 ) );
@@ -270,7 +258,7 @@ std::string getOSXSystemLang()
         std::vector<char> lang_code_raw_slow( length, '\0' );
         bool success = CFStringGetCString( lang, lang_code_raw_slow.data(), length, kCFStringEncodingUTF8 );
         if( !success ) {
-            return "en_US";
+            return "";
         }
         lang_code = lang_code_raw_slow.data();
     }
@@ -290,37 +278,98 @@ std::string getOSXSystemLang()
         return "zh_TW";
     }
 
-    return isValidLanguage( lang_code ) ? lang_code : "en_US";
+    return lang_code;
 }
-#endif
-
-#else // !LOCALIZE
-
-#include <cstring> // strcmp
-#include <map>
-
-bool isValidLanguage( const std::string &/*lang*/ )
+#elif defined(_WIN32)
+/* "Useful" links:
+ *  https://www.science.co.il/language/Locale-codes.php
+ *  https://support.microsoft.com/de-de/help/193080/how-to-use-the-getuserdefaultlcid-windows-api-function-to-determine-op
+ *  https://msdn.microsoft.com/en-us/library/cc233965.aspx
+ */
+static std::string getLangFromLCID( const int &lcid )
 {
-    return true;
-}
+    static std::map<std::string, std::set<int>> lang_lcid;
+    if( lang_lcid.empty() ) {
+        lang_lcid["en"] = {{ 1033, 2057, 3081, 4105, 5129, 6153, 7177, 8201, 9225, 10249, 11273 }};
+        lang_lcid["fr"] = {{ 1036, 2060, 3084, 4108, 5132 }};
+        lang_lcid["de"] = {{ 1031, 2055, 3079, 4103, 5127 }};
+        lang_lcid["it_IT"] = {{ 1040, 2064 }};
+        lang_lcid["es_AR"] = { 11274 };
+        lang_lcid["es_ES"] = {{ 1034, 2058, 3082, 4106, 5130, 6154, 7178, 8202, 9226, 10250, 12298, 13322, 14346, 15370, 16394, 17418, 18442, 19466, 20490 }};
+        lang_lcid["ja"] = { 1041 };
+        lang_lcid["ko"] = { 1042 };
+        lang_lcid["pl"] = { 1045 };
+        lang_lcid["pt_BR"] = {{ 1046, 2070 }};
+        lang_lcid["ru"] = { 1049 };
+        lang_lcid["zh_CN"] = {{ 2052, 3076, 4100 }};
+        lang_lcid["zh_TW"] = { 1028 };
+    }
 
-std::string getLangFromLCID( const int &/*lcid*/ )
-{
+    for( auto &lang : lang_lcid ) {
+        if( lang.second.find( lcid ) != lang.second.end() ) {
+            return lang.first;
+        }
+    }
     return "";
 }
 
-void select_language()
+static std::string getWinSystemLang()
 {
-    return;
+    return getLangFromLCID( GetUserDefaultUILanguage() );
 }
-
-void set_language()
+#else // !MACOSX && !_WIN32
+static std::string getPOSIXSystemLang()
 {
-    reload_names();
-    return;
+    const char *env = getenv( "LANGUAGE" );
+    if( env && env[0] != '\0' ) {
+        return env;
+    }
+    env = getenv( "LC_ALL" );
+    if( env && env[0] != '\0' ) {
+        return env;
+    }
+    env = getenv( "LANG" );
+    if( env && env[0] != '\0' ) {
+        return env;
+    }
+    return "";
 }
-
+#endif
 #endif // LOCALIZE
+
+static std::string getSystemLang()
+{
+#if defined(LOCALIZE)
+    std::string lang;
+#if defined(MACOSX)
+    lang = getOSXSystemLang();
+#elif defined(_WIN32)
+    lang = getWinSystemLang();
+#else
+    lang = getPOSIXSystemLang();
+    if( lang == "C" || string_starts_with( lang, "C." ) ) {
+        lang = "en";
+    }
+#endif
+    if( lang.empty() ) {
+        return "";
+    }
+
+    for( const language_info &li : list_available_languages() ) {
+        if( li.id == lang ) {
+            return li.id;
+        }
+    }
+    for( const language_info &li : list_available_languages() ) {
+        if( string_starts_with( lang, li.id ) ) {
+            return li.id;
+        }
+    }
+    return "";
+#else // LOCALIZE
+    return lang_options[0].id;
+#endif
+}
 
 static void sanity_check_genders( const std::vector<std::string> &language_genders )
 {
@@ -753,4 +802,72 @@ bool localized_comparator::operator()( const std::wstring &l, const std::wstring
 #else
     return std::locale()( l, r );
 #endif
+}
+
+std::string language_info::disp_name() const
+{
+    return name.translated() + " [" + id + "]";
+}
+
+std::vector<language_info> list_available_languages()
+{
+    // TODO: scan for languages like we do for tilesets.
+    return lang_options;
+}
+
+void detect_system_language()
+{
+    system_lang = getSystemLang();
+    if( system_lang.empty() ) {
+        DebugLog( D_INFO, DC_ALL ) << "[translations] Failed to detect system language, assuming [en].";
+        system_lang = "en";
+        system_lang_ok = false;
+    } else {
+        DebugLog( D_INFO, DC_ALL ) << "[translations] Detected system language as [" << system_lang << "]";
+    }
+}
+
+language_info get_language()
+{
+    return get_lang_info( current_lang );
+}
+
+language_info get_system_language()
+{
+    if( test_mode ) {
+        return get_lang_info( "en" );
+    } else {
+        return get_lang_info( system_lang );
+    }
+}
+
+static void select_language_ui()
+{
+#if defined(LOCALIZE)
+    background_pane background;
+
+    uilist sm;
+    sm.allow_cancel = false;
+    sm.text = _( "Select your language" );
+    for( size_t i = 0; i < lang_options.size(); i++ ) {
+        sm.addentry( i, true, MENU_AUTOASSIGN, lang_options[i].disp_name() );
+    }
+    sm.query();
+
+    const std::string &new_lang = lang_options[sm.ret].id;
+#else
+    std::string new_lang = "en";
+#endif
+    get_options().get_option( "USE_LANG" ).setValue( new_lang );
+    get_options().save();
+}
+
+void prompt_select_lang_on_startup()
+{
+    if( current_lang_ok ) {
+        // Language auto detection succeeded
+        return;
+    }
+    select_language_ui();
+    apply_language();
 }
