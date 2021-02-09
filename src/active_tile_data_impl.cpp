@@ -209,3 +209,58 @@ void vehicle_connector_tile::load( JsonObject &jo )
 {
     jo.read( "connected_vehicles", connected_vehicles );
 }
+
+void temp_control_tile::update_internal( time_point to, const tripoint &/*p*/,
+        distribution_grid &grid )
+{
+    std::int64_t power = -this->power * to_seconds<std::int64_t>( to - get_last_updated() );
+    grid.mod_resource( static_cast<int>( std::max( static_cast<std::int64_t>( INT_MIN ), power ) ) );
+}
+
+active_tile_data *temp_control_tile::clone() const
+{
+    return new temp_control_tile( *this );
+}
+
+const std::string &temp_control_tile::get_type() const
+{
+    static const std::string type( "temp_control" );
+    return type;
+}
+
+template <>
+struct enum_traits<temp_control_tile::Kind> {
+    static constexpr temp_control_tile::Kind last = temp_control_tile::Kind::Num;
+};
+
+void temp_control_tile::store( JsonOut &jsout ) const
+{
+    jsout.member( "power", power );
+    jsout.member( "kind", kind );
+}
+
+void temp_control_tile::load( JsonObject &jo )
+{
+    jo.read( "power", power );
+    jo.read( "kind", kind );
+}
+
+namespace io
+{
+template<>
+std::string enum_to_string<temp_control_tile::Kind>( temp_control_tile::Kind data )
+{
+    switch( data ) {
+        case temp_control_tile::Kind::Fridge:
+            return "FRIDGE";
+        case temp_control_tile::Kind::Freezer:
+            return "FREEZER";
+        case temp_control_tile::Kind::Heater:
+            return "HEATER";
+        case temp_control_tile::Kind::Num:
+            break;
+    }
+    debugmsg( "Invalid temperature control tile kind: '%d'.", data );
+    return "INVALID";
+}
+} // namespace io

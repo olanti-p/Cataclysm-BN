@@ -38,6 +38,7 @@ T *furn_at( const tripoint &p )
 template active_tile_data *furn_at<active_tile_data>( const tripoint & );
 template vehicle_connector_tile *furn_at<vehicle_connector_tile>( const tripoint & );
 template battery_tile *furn_at<battery_tile>( const tripoint & );
+template temp_control_tile *furn_at<temp_control_tile>( const tripoint & );
 
 } // namespace active_tiles
 
@@ -84,6 +85,7 @@ static std::map<std::string, std::unique_ptr<active_tile_data>> build_type_map()
     add_type( new battery_tile() );
     add_type( new charger_tile() );
     add_type( new vehicle_connector_tile() );
+    add_type( new temp_control_tile() );
     return type_map;
 }
 

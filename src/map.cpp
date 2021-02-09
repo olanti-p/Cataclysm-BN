@@ -12,6 +12,7 @@
 #include <unordered_map>
 
 #include "active_item_cache.h"
+#include "active_tile_data_impl.h"
 #include "ammo.h"
 #include "ammo_effect.h"
 #include "artifact.h"
@@ -4530,10 +4531,26 @@ void map::process_items_in_submap( submap &current_submap, const tripoint &gridp
 
         const tripoint map_location = tripoint( grid_offset + active_item_ref.location, gridp.z );
         // root cellars are special
+        const temp_control_tile *tempt = nullptr;
         temperature_flag flag = temperature_flag::TEMP_NORMAL;
         if( ter( map_location ) == t_rootcellar ) {
             flag = temperature_flag::TEMP_ROOT_CELLAR;
+        } else if( ( tempt = active_tiles::furn_at<temp_control_tile>( g->m.getabs( map_location ) ) ) ) {
+            switch( tempt->kind ) {
+                case temp_control_tile::Kind::Fridge:
+                    flag = temperature_flag::TEMP_FRIDGE;
+                    break;
+                case temp_control_tile::Kind::Freezer:
+                    flag = temperature_flag::TEMP_FREEZER;
+                    break;
+                case temp_control_tile::Kind::Heater:
+                    flag = temperature_flag::TEMP_HEATER;
+                    break;
+                default:
+                    break;
+            }
         }
+
         map_stack items = i_at( map_location );
         process_map_items( items, active_item_ref.item_ref, map_location, 1, flag );
     }

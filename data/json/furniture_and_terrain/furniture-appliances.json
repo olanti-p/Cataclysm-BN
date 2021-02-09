@@ -176,6 +176,7 @@
     "coverage": 90,
     "required_str": 10,
     "flags": [ "CONTAINER", "PLACE_ITEM", "BLOCKSDOOR", "MINEABLE" ],
+    "active": [ "temp_control", { "power": 1, "kind": "FRIDGE" } ],
     "deconstruct": {
       "items": [
         { "item": "sheet_metal", "count": [ 2, 6 ] },
@@ -221,6 +222,7 @@
     "coverage": 90,
     "required_str": 10,
     "flags": [ "PLACE_ITEM", "BLOCKSDOOR" ],
+    "active": [ "temp_control", { "power": 2, "kind": "FREEZER" } ],
     "deconstruct": {
       "items": [
         { "item": "sheet_metal", "count": [ 2, 5 ] },
