@@ -17,6 +17,7 @@
 #include <utility>
 #include <vector>
 
+#include "active_tile_data_impl.h"
 #include "action.h"
 #include "artifact.h"
 #include "avatar.h"

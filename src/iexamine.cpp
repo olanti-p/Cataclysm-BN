@@ -12,6 +12,7 @@
 #include <type_traits>
 #include <utility>
 
+#include "active_tile_data_impl.h"
 #include "activity_actor.h"
 #include "ammo.h"
 #include "avatar.h"
