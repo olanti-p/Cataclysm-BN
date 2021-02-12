@@ -10177,7 +10177,7 @@ int Character::intimidation() const
     if( has_effect( effect_drunk ) ) {
         ret -= 4;
     }
-
+    ret = enchantment_cache.modify_value( enchant_vals::mod::SOCIAL_INTIMIDATE, ret );
     return ret;
 }
 
