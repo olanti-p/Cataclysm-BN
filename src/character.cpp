@@ -2754,6 +2754,7 @@ units::volume Character::volume_capacity_reduced_by(
     if( has_trait( trait_DISORGANIZED ) ) {
         ret = ret * 0.6;
     }
+    ret = enchantment_cache.modify_value( enchant_vals::mod::CARRY_VOLUME, ret );
     return std::max( ret, 0_ml );
 }
 

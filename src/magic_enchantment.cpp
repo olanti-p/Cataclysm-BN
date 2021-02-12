@@ -426,6 +426,14 @@ units::mass enchantment::modify_value( const enchant_vals::mod mod_val,
     return value;
 }
 
+units::volume enchantment::modify_value( const enchant_vals::mod mod_val,
+        units::volume value ) const
+{
+    value += units::from_milliliter<int>( get_value_add( mod_val ) );
+    value *= 1.0 + get_value_multiply( mod_val );
+    return value;
+}
+
 int enchantment::mult_bonus( enchant_vals::mod value_type, int base_value ) const
 {
     return get_value_multiply( value_type ) * base_value;

@@ -137,6 +137,7 @@ class enchantment
         double modify_value( const enchant_vals::mod mod_val, double value ) const;
         units::energy modify_value( const enchant_vals::mod mod_val, units::energy value ) const;
         units::mass modify_value( const enchant_vals::mod mod_val, units::mass value ) const;
+        units::volume modify_value( const enchant_vals::mod mod_val, units::volume value ) const;
 
         // this enchantment has a valid condition and is in the right location
         bool is_active( const Character &guy, const item &parent ) const;
