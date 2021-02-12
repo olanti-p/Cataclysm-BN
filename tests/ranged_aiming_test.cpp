@@ -7,7 +7,6 @@
 #include <vector>
 
 #include "catch/catch.hpp"
-#include "artifact.h"
 #include "avatar.h"
 #include "game.h"
 #include "map.h"
@@ -101,7 +100,7 @@ TEST_CASE( "Aiming at a target behind wall", "[ranged][aiming]" )
     clear_map();
     player &shooter = g->u;
     clear_character( shooter, true );
-    shooter.i_add( item( architects_cube(), calendar::turn ) );
+    shooter.i_add( item( "architect_cube", calendar::turn ) );
     arm_character( shooter, "glock_19" );
     int max_range = shooter.weapon.gun_range( &shooter );
     REQUIRE( max_range >= 5 );

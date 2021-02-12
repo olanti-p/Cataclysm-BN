@@ -123,7 +123,6 @@ class it_artifact_armor : public itype
 
 std::string new_artifact();
 std::string new_natural_artifact( artifact_natural_property prop );
-std::string architects_cube();
 
 // note: needs to be called by main() before MAPBUFFER.load
 void load_artifacts( const std::string &path );
