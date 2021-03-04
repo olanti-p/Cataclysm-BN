@@ -8,6 +8,7 @@
 
 #include "catch/catch.hpp"
 #include "avatar.h"
+#include "calendar.h"
 #include "game.h"
 #include "map.h"
 #include "map_helpers.h"
@@ -24,17 +25,14 @@ extern bool can_fire_turret( avatar &you, const map &m, const turret_data &turre
 
 static constexpr tripoint shooter_pos( 60, 60, 0 );
 
-static void set_up_player_vision()
+static void prepare_vision( Character &guy )
 {
-    g->place_player( shooter_pos );
-    g->u.worn.clear();
-    g->u.clear_effects();
     g->reset_light_level();
 
-    REQUIRE( !g->u.is_blind() );
-    REQUIRE( !g->u.in_sleep_state() );
+    REQUIRE( !guy.is_blind() );
+    REQUIRE( !guy.in_sleep_state() );
 
-    g->u.recalc_sight_limits();
+    guy.recalc_sight_limits();
 
     calendar::turn = calendar::turn_zero + 12_hours;
 
@@ -49,9 +47,12 @@ static void set_up_player_vision()
 TEST_CASE( "Aiming at a clearly visible target", "[ranged][aiming]" )
 {
     clear_map();
-    set_up_player_vision();
+    clear_avatar();
     player &shooter = g->u;
+    shooter.setpos( shooter_pos );
     arm_character( shooter, "glock_19" );
+
+    prepare_vision( shooter );
     int max_range = shooter.weapon.gun_range( &shooter );
     REQUIRE( max_range >= 10 );
     REQUIRE( max_range < 30 );
@@ -98,17 +99,19 @@ TEST_CASE( "Aiming at a clearly visible target", "[ranged][aiming]" )
 TEST_CASE( "Aiming at a target behind wall", "[ranged][aiming]" )
 {
     clear_map();
-    player &shooter = g->u;
-    clear_character( shooter, true );
-    shooter.i_add( item( "architect_cube", calendar::turn ) );
+    clear_avatar();
+    avatar &shooter = g->u;
+    shooter.setpos( shooter_pos );
+    shooter.add_effect( efftype_id( "debug_clairvoyance" ), time_duration::from_seconds( 1 ) );
     arm_character( shooter, "glock_19" );
-    int max_range = shooter.weapon.gun_range( &shooter );
-    REQUIRE( max_range >= 5 );
     for( int y_off = -1; y_off <= 1; y_off++ ) {
         g->m.ter_set( shooter_pos + point( 1, y_off ), t_wall );
     }
 
-    set_up_player_vision();
+    prepare_vision( shooter );
+    int max_range = shooter.weapon.gun_range( &shooter );
+    REQUIRE( max_range >= 5 );
+
     monster &z = spawn_test_monster( "debug_mon", shooter_pos + point( 2, 0 ) );
     WHEN( "There is no direct, passable line to target" ) {
         const auto path = g->m.find_clear_path( shooter.pos(), z.pos() );
@@ -138,15 +141,19 @@ TEST_CASE( "Aiming at a target behind wall", "[ranged][aiming]" )
 TEST_CASE( "Aiming at a target behind bars", "[ranged][aiming]" )
 {
     clear_map();
-    set_up_player_vision();
-    player &shooter = g->u;
+    clear_avatar();
+    avatar &shooter = g->u;
+    shooter.setpos( shooter_pos );
     arm_character( shooter, "glock_19" );
-    int max_range = shooter.weapon.gun_range( &shooter );
-    REQUIRE( max_range >= 5 );
     for( int y_off = -1; y_off <= 1; y_off++ ) {
         g->m.ter_set( shooter_pos + point( 1, y_off ), t_window_bars );
     }
     monster &z = spawn_test_monster( "debug_mon", shooter_pos + point( 2, 0 ) );
+
+    prepare_vision( shooter );
+    int max_range = shooter.weapon.gun_range( &shooter );
+    REQUIRE( max_range >= 5 );
+
     WHEN( "There is no direct, passable line to target" ) {
         const auto path = g->m.find_clear_path( shooter.pos(), z.pos() );
         int impassable_tiles = std::count_if( path.begin(), path.end(),
@@ -172,14 +179,14 @@ TEST_CASE( "Aiming at a target behind bars", "[ranged][aiming]" )
 TEST_CASE( "Aiming a turret from a solid vehicle", "[ranged][aiming]" )
 {
     clear_map();
-    set_up_player_vision();
+    clear_avatar();
     avatar &shooter = g->u;
     shooter.setpos( shooter_pos );
     arm_character( shooter, "glock_19" );
+    monster &z = spawn_test_monster( "debug_mon", shooter_pos + point( 5, 0 ) );
+
     int max_range = shooter.weapon.gun_range( &shooter );
     REQUIRE( max_range >= 5 );
-
-    monster &z = spawn_test_monster( "debug_mon", shooter_pos + point( 5, 0 ) );
 
     const auto path = g->m.find_clear_path( shooter.pos(), z.pos() );
     int impassable_tiles_before = std::count_if( path.begin(), path.end(),
@@ -190,6 +197,8 @@ TEST_CASE( "Aiming a turret from a solid vehicle", "[ranged][aiming]" )
 
     vehicle *veh = g->m.add_vehicle( vproto_id( "turret_test" ), shooter_pos, 0, 100, 0, false );
     REQUIRE( veh != nullptr );
+
+    prepare_vision( shooter );
 
     WHEN( "Shooter's line of fire becomes blocked by vehicle's windshield" ) {
         int impassable_tiles_after = std::count_if( path.begin(), path.end(),
@@ -221,8 +230,12 @@ TEST_CASE( "Aiming a turret from a solid vehicle", "[ranged][aiming]" )
 TEST_CASE( "Aiming at a target partially covered by a wall", "[.][ranged][aiming][slow]" )
 {
     clear_map();
+    clear_avatar();
     standard_npc shooter( "Shooter", shooter_pos, {}, 0, 8, 8, 8, 8 );
+    clear_character( shooter );
     arm_character( shooter, "win70" );
+
+    prepare_vision( shooter );
     int max_range = shooter.weapon.gun_range( &shooter );
     REQUIRE( max_range >= 55 );
 
