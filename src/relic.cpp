@@ -443,3 +443,12 @@ relic relic_procgen_data::generate( const relic_procgen_data::generation_rules &
 
     return ret;
 }
+
+bool relic::operator==( const relic &rhs ) const
+{
+    return charges_per_activation == rhs.charges_per_activation &&
+           moves == rhs.moves &&
+           item_name_override == rhs.item_name_override &&
+           active_effects == rhs.active_effects &&
+           passive_effects == rhs.passive_effects;
+}
