@@ -1,3 +1,4 @@
+#pragma optimize("", off)
 #include "character.h"
 
 #include <algorithm>
@@ -10251,3 +10252,4 @@ bool Character::defer_move( const tripoint &next )
     next_expected_position = pos();
     return true;
 }
+#pragma optimize("", on)

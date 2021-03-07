@@ -1,3 +1,4 @@
+#pragma optimize("", off)
 #include "creature.h"
 
 #include <algorithm>
@@ -1731,3 +1732,4 @@ void Creature::load_hit_range( const JsonObject &jo )
         jo.read( "even_good", dispersion_for_even_chance_of_good_hit );
     }
 }
+#pragma optimize("", on)

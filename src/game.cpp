@@ -1,3 +1,4 @@
+#pragma optimize("", off)
 #include "game.h"
 
 #include <algorithm>
@@ -12301,3 +12302,4 @@ distribution_grid_tracker &get_distribution_grid_tracker()
 {
     return *g->grid_tracker_ptr;
 }
+#pragma optimize("", on)

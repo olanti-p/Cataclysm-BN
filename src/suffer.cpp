@@ -1,3 +1,4 @@
+#pragma optimize("", off)
 #include <algorithm>
 #include <array>
 #include <cctype>
@@ -1910,3 +1911,4 @@ int  Character::leak_level( const std::string &flag ) const
     leak_level = inv.leak_level( flag );
     return leak_level;
 }
+#pragma optimize("", on)
