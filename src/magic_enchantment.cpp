@@ -1,3 +1,4 @@
+#pragma optimize("", off)
 #include "magic_enchantment.h"
 
 #include <algorithm>
@@ -514,3 +515,4 @@ bool enchantment::operator==( const enchantment &rhs ) const
            intermittent_activation == intermittent_activation &&
            active_conditions == rhs.active_conditions;
 }
+#pragma optimize("", on)

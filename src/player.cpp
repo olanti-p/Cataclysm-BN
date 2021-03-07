@@ -1,3 +1,4 @@
+#pragma optimize("", off)
 #include "player.h"
 
 #include <algorithm>
@@ -4445,3 +4446,4 @@ bool player::query_yn( const std::string &mes ) const
 {
     return ::query_yn( mes );
 }
+#pragma optimize("", on)

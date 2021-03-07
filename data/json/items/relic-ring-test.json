@@ -1,0 +1,64 @@
+[
+  {
+    "type": "TOOL_ARMOR",
+    "id": "xring_strength_4",
+    "name": "ring of strength +4",
+    "weight": "1 g",
+    "volume": "1 ml",
+    "symbol": "=",
+    "color": "red",
+    "description": "A platinum ring that makes you much stronger when you wear it.",
+    "relic_data": { "passive_effects": [ { "has": "HELD", "condition": "ALWAYS", "values": [ { "value": "STRENGTH", "add": 4 } ] } ] },
+    "use_action": [
+      {
+        "type": "transform",
+        "target": "xring_dexterity_4",
+        "active": false,
+        "msg": "transform to dex ring.",
+        "menu_text": "Change to dex ring",
+        "moves": 0
+      }
+    ]
+  },
+  {
+    "type": "TOOL_ARMOR",
+    "id": "xring_dexterity_4",
+    "name": "ring of dexterity +4",
+    "weight": "1 g",
+    "volume": "1 ml",
+    "symbol": "=",
+    "color": "blue",
+    "description": "A platinum ring that makes you much more agile when you wear it.",
+    "relic_data": { "passive_effects": [ { "has": "HELD", "condition": "ALWAYS", "values": [ { "value": "DEXTERITY", "add": 4 } ] } ] },
+    "use_action": [
+      {
+        "type": "transform",
+        "target": "xring_nothing",
+        "active": false,
+        "msg": "transform to nothing ring.",
+        "menu_text": "Change to nothing ring",
+        "moves": 0
+      }
+    ]
+  },
+  {
+    "type": "TOOL_ARMOR",
+    "id": "xring_nothing",
+    "name": "ring of nothing",
+    "weight": "1 g",
+    "volume": "1 ml",
+    "symbol": "=",
+    "color": "green",
+    "description": "A ring .",
+    "use_action": [
+      {
+        "type": "transform",
+        "target": "xring_strength_4",
+        "active": false,
+        "msg": "transform to str ring.",
+        "menu_text": "Change to str ring",
+        "moves": 0
+      }
+    ]
+  }
+]

@@ -1,3 +1,4 @@
+#pragma optimize("", off)
 #include "avatar.h"
 
 #include <algorithm>
@@ -1727,3 +1728,4 @@ std::string points_left::to_string()
         return _( "Freeform" );
     }
 }
+#pragma optimize("", on)
