@@ -141,17 +141,18 @@ void Creature::process_turn()
     if( is_dead_state() ) {
         return;
     }
+
+    // add an appropriate number of moves
+    if( !has_effect( effect_ridden ) ) {
+        moves += get_speed();
+    }
+
     reset_bonuses();
 
     process_effects();
 
     // Call this in case any effects have changed our stats
     reset_stats();
-
-    // add an appropriate number of moves
-    if( !has_effect( effect_ridden ) ) {
-        moves += get_speed();
-    }
 }
 
 bool Creature::is_underwater() const
