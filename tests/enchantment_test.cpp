@@ -216,3 +216,33 @@ TEST_CASE( "Enchantments modify attack cost", "[magic][enchantment]" )
     CHECK( guy.attack_cost( normal_sword ) == 25 );
     CHECK( guy.attack_cost( relic_sword ) == 25 );
 }
+
+TEST_CASE( "Enchantments modify move cost", "[magic][enchantment]" )
+{
+    clear_map();
+    Character &guy = get_player_character();
+    clear_character( *guy.as_player(), true );
+    guy.set_mutation( trait_id( "PADDED_FEET" ) );
+    const std::string s_relic = "test_relic_mods_mv_cost";
+
+    advance_turn( guy );
+
+    REQUIRE( guy.run_cost( 100 ) == 90 );
+
+    give_item( guy, s_relic );
+    guy.recalculate_enchantment_cache();
+
+    CHECK( guy.run_cost( 100 ) == 81 );
+
+    for( int i = 0; i < 13; i++ ) {
+        give_item( guy, s_relic );
+    }
+    guy.recalculate_enchantment_cache();
+
+    CHECK( guy.run_cost( 100 ) == 20 );
+
+    clear_items( guy );
+    guy.recalculate_enchantment_cache();
+
+    CHECK( guy.run_cost( 100 ) == 90 );
+}
