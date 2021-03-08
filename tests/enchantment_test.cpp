@@ -178,3 +178,41 @@ TEST_CASE( "Enchantments modify speed", "[magic][enchantment]" )
     CHECK( guy.get_speed() == 30 );
     CHECK( guy.get_moves() == 30 );
 }
+
+TEST_CASE( "Enchantments modify attack cost", "[magic][enchantment]" )
+{
+    clear_map();
+    Character &guy = get_player_character();
+    clear_character( *guy.as_player(), true );
+
+    item normal_sword( "test_normal_sword" );
+    item relic_sword( "test_relic_sword" );
+
+    REQUIRE( normal_sword.attack_cost() == 101 );
+    CHECK( relic_sword.attack_cost() == 86 );
+
+    advance_turn( guy );
+
+    REQUIRE( guy.attack_cost( normal_sword ) == 96 );
+    CHECK( guy.attack_cost( relic_sword ) == 82 );
+
+    give_item( guy, "test_relic_mods_atk_cost" );
+    guy.recalculate_enchantment_cache();
+
+    CHECK( guy.attack_cost( normal_sword ) == 77 );
+    CHECK( guy.attack_cost( relic_sword ) == 66 );
+
+    clear_items( guy );
+    guy.recalculate_enchantment_cache();
+
+    CHECK( guy.attack_cost( normal_sword ) == 96 );
+    CHECK( guy.attack_cost( relic_sword ) == 82 );
+
+    for( int i = 0; i < 10; i++ ) {
+        give_item( guy, "test_relic_mods_atk_cost" );
+    }
+    guy.recalculate_enchantment_cache();
+
+    CHECK( guy.attack_cost( normal_sword ) == 25 );
+    CHECK( guy.attack_cost( relic_sword ) == 25 );
+}
