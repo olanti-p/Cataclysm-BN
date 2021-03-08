@@ -4,6 +4,7 @@
 #include "map.h"
 #include "map_helpers.h"
 #include "item.h"
+#include "options.h"
 #include "player.h"
 #include "player_helpers.h"
 
@@ -245,4 +246,39 @@ TEST_CASE( "Enchantments modify move cost", "[magic][enchantment]" )
     guy.recalculate_enchantment_cache();
 
     CHECK( guy.run_cost( 100 ) == 90 );
+}
+
+TEST_CASE( "Enchantments modify metabolic rate", "[magic][enchantment][metabolism]" )
+{
+    clear_map();
+    Character &guy = get_player_character();
+    clear_character( *guy.as_player(), true );
+    const std::string s_relic = "test_relic_mods_metabolism";
+
+    advance_turn( guy );
+
+    const float normal_mr = get_option<float>( "PLAYER_HUNGER_RATE" );
+    REQUIRE( guy.metabolic_rate_base() == normal_mr );
+    REQUIRE( normal_mr == 1.0f );
+
+    guy.set_mutation( trait_id( "HUNGER" ) );
+
+    REQUIRE( guy.metabolic_rate_base() == Approx( 1.5f ) );
+
+    give_item( guy, s_relic );
+    guy.recalculate_enchantment_cache();
+
+    CHECK( guy.metabolic_rate_base() == Approx( 1.35f ) );
+
+    for( int i = 0; i < 11; i++ ) {
+        give_item( guy, s_relic );
+    }
+    guy.recalculate_enchantment_cache();
+
+    CHECK( guy.metabolic_rate_base() == Approx( 0.0f ) );
+
+    clear_items( guy );
+    guy.recalculate_enchantment_cache();
+
+    CHECK( guy.metabolic_rate_base() == Approx( 1.5f ) );
 }
