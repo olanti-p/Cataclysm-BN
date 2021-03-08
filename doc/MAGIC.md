@@ -353,6 +353,12 @@ bonus = add + base_value * multiply
 
 Thus, a `multiply` value of -0.8 is -80%, and a `multiply` of 2.5 is +250%.
 
+When multiple enchantments (e.g. from different items in inventory) modify the same value,
+their bonuses are added together before being applied.
+
+To avoid potential overflow from using multiple enchanted items,
+the final calculated values generally have some hardcoded bounds.
+
 #### IDs of modifiable values
 
 ##### STRENGTH
