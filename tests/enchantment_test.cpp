@@ -117,3 +117,64 @@ TEST_CASE( "Enchantments modify stats", "[magic][enchantment]" )
     CHECK( guy.get_per() == 8 );
     CHECK( guy.get_int() == 8 );
 }
+
+TEST_CASE( "Enchantments modify speed", "[magic][enchantment]" )
+{
+    clear_map();
+    Character &guy = get_player_character();
+    clear_character( *guy.as_player(), true );
+    const std::string s_relic = "test_relic_mods_speed";
+
+    guy.set_moves( 0 );
+    advance_turn( guy );
+
+    REQUIRE( guy.get_speed_base() == 100 );
+    REQUIRE( guy.get_speed() == 100 );
+    REQUIRE( guy.get_moves() == 100 );
+
+    give_item( guy, s_relic );
+    guy.set_moves( 0 );
+    advance_turn( guy );
+
+    // FIXME: there's an extra turn delay between when speed bonus is applied and
+    //        when it actually affects gained moves
+    CHECK( guy.get_moves() == 100 );
+    guy.set_moves( 0 );
+    advance_turn( guy );
+
+    CHECK( guy.get_speed_base() == 100 );
+    CHECK( guy.get_speed() == 75 );
+    CHECK( guy.get_moves() == 75 );
+
+    clear_items( guy );
+    guy.set_moves( 0 );
+    advance_turn( guy );
+
+    // FIXME: there's an extra turn delay between when speed bonus is applied and
+    //        when it actually affects gained moves
+    CHECK( guy.get_moves() == 75 );
+    guy.set_moves( 0 );
+    advance_turn( guy );
+
+    CHECK( guy.get_speed_base() == 100 );
+    CHECK( guy.get_speed() == 100 );
+    CHECK( guy.get_moves() == 100 );
+
+    guy.set_moves( 0 );
+    guy.set_speed_base( 120 );
+    for( int i = 0; i < 10; i++ ) {
+        give_item( guy, s_relic );
+    }
+
+    advance_turn( guy );
+
+    // FIXME: there's an extra turn delay between when speed bonus is applied and
+    //        when it actually affects gained moves
+    CHECK( guy.get_moves() == 120 );
+    guy.set_moves( 0 );
+    advance_turn( guy );
+
+    CHECK( guy.get_speed_base() == 120 );
+    CHECK( guy.get_speed() == 30 );
+    CHECK( guy.get_moves() == 30 );
+}
