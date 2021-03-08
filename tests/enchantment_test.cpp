@@ -72,3 +72,48 @@ TEST_CASE( "Enchantments apply effects", "[magic][enchantment]" )
 
     CHECK( !guy.has_effect( effect_debug_clairvoyance ) );
 }
+
+TEST_CASE( "Enchantments modify stats", "[magic][enchantment]" )
+{
+    clear_map();
+    Character &guy = get_player_character();
+    clear_character( *guy.as_player(), true );
+
+    advance_turn( guy );
+
+    REQUIRE( guy.get_str_base() == 8 );
+    REQUIRE( guy.get_dex_base() == 8 );
+    REQUIRE( guy.get_per_base() == 8 );
+    REQUIRE( guy.get_int_base() == 8 );
+
+    REQUIRE( guy.get_str() == 8 );
+    REQUIRE( guy.get_dex() == 8 );
+    REQUIRE( guy.get_per() == 8 );
+    REQUIRE( guy.get_int() == 8 );
+
+    give_item( guy, "test_relic_mods_stats" );
+    advance_turn( guy );
+
+    CHECK( guy.get_str_base() == 8 );
+    CHECK( guy.get_dex_base() == 8 );
+    CHECK( guy.get_per_base() == 8 );
+    CHECK( guy.get_int_base() == 8 );
+
+    CHECK( guy.get_str() == 20 );
+    CHECK( guy.get_dex() == 6 );
+    CHECK( guy.get_per() == 5 );
+    CHECK( guy.get_int() == 0 );
+
+    clear_items( guy );
+    advance_turn( guy );
+
+    CHECK( guy.get_str_base() == 8 );
+    CHECK( guy.get_dex_base() == 8 );
+    CHECK( guy.get_per_base() == 8 );
+    CHECK( guy.get_int_base() == 8 );
+
+    CHECK( guy.get_str() == 8 );
+    CHECK( guy.get_dex() == 8 );
+    CHECK( guy.get_per() == 8 );
+    CHECK( guy.get_int() == 8 );
+}
