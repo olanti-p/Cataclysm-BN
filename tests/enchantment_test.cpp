@@ -1,5 +1,6 @@
 #include "catch/catch.hpp"
 
+#include "magic.h"
 #include "magic_enchantment.h"
 #include "map.h"
 #include "map_helpers.h"
@@ -281,4 +282,63 @@ TEST_CASE( "Enchantments modify metabolic rate", "[magic][enchantment][metabolis
     guy.recalculate_enchantment_cache();
 
     CHECK( guy.metabolic_rate_base() == Approx( 1.5f ) );
+}
+
+TEST_CASE( "Enchantments modify mana pool", "[magic][enchantment]" )
+{
+    clear_map();
+    Character &guy = get_player_character();
+    clear_character( *guy.as_player(), true );
+    guy.set_max_power_level( 100_kJ );
+    guy.set_power_level( 0_kJ );
+    REQUIRE( guy.get_max_power_level() == 100_kJ );
+    REQUIRE( guy.get_power_level() == 0_kJ );
+    const std::string s_relic = "test_relic_mods_manapool";
+
+    advance_turn( guy );
+    guy.magic->set_mana( 0 );
+
+    // Unmodified mana pool should replenish in 8 hours
+    REQUIRE( guy.magic->max_mana( guy ) == 1000 );
+    constexpr double normal_regen_rate = 1000.0 / to_turns<double>( 8_hours );
+
+    REQUIRE( guy.magic->available_mana() == 0 );
+    REQUIRE( guy.magic->mana_regen_rate( guy ) == Approx( normal_regen_rate ) );
+
+    give_item( guy, s_relic );
+    guy.recalculate_enchantment_cache();
+
+    CHECK( guy.magic->max_mana( guy ) == 800 );
+    // 0.8 since regen rate scales with capacity; 0.7 is from MANA_REGEN modifier
+    CHECK( guy.magic->mana_regen_rate( guy ) == Approx( normal_regen_rate * 0.8 * 0.7 ) );
+
+    // bionic power penatly still works
+    guy.set_power_level( 77_kJ );
+    REQUIRE( guy.get_power_level() == 77_kJ );
+    CHECK( guy.magic->max_mana( guy ) == 723 );
+    guy.set_power_level( 0_kJ );
+    REQUIRE( guy.get_power_level() == 0_kJ );
+    CHECK( guy.magic->max_mana( guy ) == 800 );
+
+    for( int i = 0; i < 3; i++ ) {
+        give_item( guy, s_relic );
+    }
+    guy.recalculate_enchantment_cache();
+
+    CHECK( guy.magic->max_mana( guy ) == 200 );
+    CHECK( guy.magic->mana_regen_rate( guy ) == Approx( 0.0 ) );
+
+    for( int i = 0; i < 3; i++ ) {
+        give_item( guy, s_relic );
+    }
+    guy.recalculate_enchantment_cache();
+
+    CHECK( guy.magic->max_mana( guy ) == 0 );
+    CHECK( guy.magic->mana_regen_rate( guy ) == Approx( 0.0 ) );
+
+    clear_items( guy );
+    guy.recalculate_enchantment_cache();
+
+    CHECK( guy.magic->available_mana() == 0 );
+    CHECK( guy.magic->mana_regen_rate( guy ) == Approx( normal_regen_rate ) );
 }
