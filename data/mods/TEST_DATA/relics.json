@@ -108,5 +108,20 @@
         }
       ]
     }
+  },
+  {
+    "type": "GENERIC",
+    "id": "test_relic_mods_bp_cap",
+    "copy-from": "test_relic_base",
+    "name": "TEST relic mods bionic power cap",
+    "relic_data": {
+      "passive_effects": [
+        {
+          "has": "HELD",
+          "condition": "ALWAYS",
+          "values": [ { "value": "BIONIC_POWER_CAP", "add": -120000000, "multiply": 1.0 } ]
+        }
+      ]
+    }
   }
 ]

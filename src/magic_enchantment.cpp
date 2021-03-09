@@ -81,7 +81,7 @@ namespace io
             case enchant_vals::mod::METABOLISM: return "METABOLISM";
             case enchant_vals::mod::MANA_CAP: return "MANA_CAP";
             case enchant_vals::mod::MANA_REGEN: return "MANA_REGEN";
-            case enchant_vals::mod::BIONIC_POWER: return "BIONIC_POWER";
+            case enchant_vals::mod::BIONIC_POWER_CAP: return "BIONIC_POWER_CAP";
             case enchant_vals::mod::MAX_STAMINA: return "MAX_STAMINA";
             case enchant_vals::mod::REGEN_STAMINA: return "REGEN_STAMINA";
             case enchant_vals::mod::MAX_HP: return "MAX_HP";
@@ -140,6 +140,17 @@ namespace io
     }
     // *INDENT-ON*
 } // namespace io
+
+static bool uses_add_bonus( enchant_vals::mod value )
+{
+    switch( value ) {
+        case enchant_vals::mod::METABOLISM:
+        case enchant_vals::mod::MANA_REGEN:
+            return false;
+        default:
+            return true;
+    }
+}
 
 namespace
 {
@@ -408,18 +419,20 @@ double enchantment::get_value_multiply( const enchant_vals::mod value ) const
 
 double enchantment::calc_bonus( enchant_vals::mod value, double base ) const
 {
-    bool use_add = true;
-    switch( value ) {
-        case enchant_vals::mod::METABOLISM:
-        case enchant_vals::mod::MANA_REGEN:
-            use_add = false;
-            break;
-        default:
-            break;
-    }
-    double add = use_add ? get_value_add( value ) : 0.0;
+    double add = uses_add_bonus( value ) ? get_value_add( value ) : 0.0;
     double mul = get_value_multiply( value );
     return add + base * mul;
+}
+
+units::energy enchantment::apply_bonus( enchant_vals::mod value, units::energy base ) const
+{
+    int raw = units::to_millijoule( base );
+    int64_t bonus = static_cast<int64_t>( calc_bonus( value, raw ) );
+    int64_t min = 0;
+    int64_t max = static_cast<int64_t>( units::to_millijoule( units::energy_max ) );
+
+    int64_t ret = clamp( static_cast<int64_t>( raw ) + bonus, min, max );
+    return units::from_millijoule( static_cast<int>( ret ) );
 }
 
 int enchantment::mult_bonus( enchant_vals::mod value_type, int base_value ) const

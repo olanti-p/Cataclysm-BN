@@ -1901,12 +1901,14 @@ units::energy Character::get_power_level() const
 
 units::energy Character::get_max_power_level() const
 {
-    return max_power_level;
+    return enchantment_cache->apply_bonus(
+               enchant_vals::mod::BIONIC_POWER_CAP, max_power_level
+           );
 }
 
 void Character::set_power_level( const units::energy &npower )
 {
-    power_level = std::min( npower, max_power_level );
+    power_level = std::min( npower, get_max_power_level() );
 }
 
 void Character::set_max_power_level( const units::energy &npower_max )
@@ -1921,12 +1923,13 @@ void Character::mod_power_level( const units::energy &npower )
     int64_t power = static_cast<int64_t>( units::to_millijoule( power_level ) ) +
                     static_cast<int64_t>( units::to_millijoule( npower ) );
     units::energy new_power;
-    if( power > units::to_millijoule( max_power_level ) ) {
-        new_power = max_power_level;
+    units::energy max = get_max_power_level();
+    if( power > units::to_millijoule( max ) ) {
+        new_power = max;
     } else {
         new_power = power_level + npower;
     }
-    power_level = clamp( new_power, 0_kJ, max_power_level );
+    power_level = clamp( new_power, 0_kJ, max );
 }
 
 void Character::mod_max_power_level( const units::energy &npower_max )
@@ -1936,7 +1939,7 @@ void Character::mod_max_power_level( const units::energy &npower_max )
 
 bool Character::is_max_power() const
 {
-    return power_level >= max_power_level;
+    return power_level >= get_max_power_level();
 }
 
 bool Character::has_power() const

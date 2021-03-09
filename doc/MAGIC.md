@@ -416,6 +416,12 @@ This modifier ignores `add` field.
 `base_value` here is character's base mana gain rate modified by traits.
 The final value cannot go below 0.
 
+##### BIONIC_POWER_CAP
+Bionic power capacity.
+`add` field expects number of millijoules.
+`base_value` here is character's base bionic power cap.
+The final value cannot go below 0 or above units::energy maximum.
+
 #### Item values
 
 ##### ITEM_ATTACK_COST
@@ -431,7 +437,6 @@ TODO: docs for each
 TODO: some of these are broken/unimplemented
 
 
-* BIONIC_POWER
 * MAX_STAMINA
 * REGEN_STAMINA
 * MAX_HP

@@ -342,3 +342,42 @@ TEST_CASE( "Enchantments modify mana pool", "[magic][enchantment]" )
     CHECK( guy.magic->available_mana() == 0 );
     CHECK( guy.magic->mana_regen_rate( guy ) == Approx( normal_regen_rate ) );
 }
+
+TEST_CASE( "Enchantments modify bionic power capacity", "[magic][enchantment]" )
+{
+    clear_map();
+    Character &guy = get_player_character();
+    clear_character( *guy.as_player(), true );
+    guy.set_max_power_level( 100_kJ );
+    REQUIRE( guy.get_max_power_level() == 100_kJ );
+    const std::string s_relic = "test_relic_mods_bp_cap";
+
+    advance_turn( guy );
+
+    REQUIRE( guy.get_max_power_level() == 100_kJ );
+
+    give_item( guy, s_relic );
+    guy.recalculate_enchantment_cache();
+
+    CHECK( guy.get_max_power_level() == 80_kJ );
+
+    for( int i = 0; i < 7; i++ ) {
+        give_item( guy, s_relic );
+    }
+    guy.recalculate_enchantment_cache();
+
+    CHECK( guy.get_max_power_level() == 0_kJ );
+
+    clear_items( guy );
+    guy.recalculate_enchantment_cache();
+
+    CHECK( guy.get_max_power_level() == 100_kJ );
+
+    guy.set_max_power_level( 1500_kJ );
+    REQUIRE( guy.get_max_power_level() == 1500_kJ );
+
+    give_item( guy, s_relic );
+    guy.recalculate_enchantment_cache();
+
+    CHECK( guy.get_max_power_level() == units::energy_max );
+}
