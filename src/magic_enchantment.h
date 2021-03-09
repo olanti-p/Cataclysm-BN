@@ -12,6 +12,7 @@
 #include "magic.h"
 #include "optional.h"
 #include "type_id.h"
+#include "units.h"
 
 class Character;
 class Creature;
@@ -33,7 +34,7 @@ enum class mod : int {
     METABOLISM,
     MANA_CAP,
     MANA_REGEN,
-    BIONIC_POWER,
+    BIONIC_POWER_CAP,
     MAX_STAMINA,
     REGEN_STAMINA,
     MAX_HP,
@@ -128,6 +129,7 @@ class enchantment
          * Calculate bonus provided by this enchantment for given base value.
          */
         double calc_bonus( enchant_vals::mod value, double base, bool round = false ) const;
+        units::energy apply_bonus( enchant_vals::mod value, units::energy base ) const;
 
         // this enchantment has a valid condition and is in the right location
         bool is_active( const Character &guy, const item &parent ) const;

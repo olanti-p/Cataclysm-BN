@@ -1250,10 +1250,10 @@ itype_id Character::find_remote_fuel( bool look_only )
                 if( !look_only ) {
                     if( has_charges( "UPS_off", 1, used_ups ) ) {
                         set_value( "rem_battery", std::to_string( charges_of( "UPS_off",
-                                   units::to_kilojoule( max_power_level ), used_ups ) ) );
+                                   units::to_kilojoule( get_max_power_level() ), used_ups ) ) );
                     } else if( has_charges( "adv_UPS_off", 1, used_ups ) ) {
                         set_value( "rem_battery", std::to_string( charges_of( "adv_UPS_off",
-                                   units::to_kilojoule( max_power_level ), used_ups ) ) );
+                                   units::to_kilojoule( get_max_power_level() ), used_ups ) ) );
                     } else {
                         set_value( "rem_battery", std::to_string( 0 ) );
                     }
@@ -2292,15 +2292,15 @@ void Character::bionics_install_failure( const std::string &installer,
             // We've got all the bad bionics!
             if( valid.empty() ) {
                 if( has_max_power() ) {
-                    units::energy old_power = get_max_power_level();
+                    units::energy old_power = max_power_level;
                     add_msg( m_bad, _( "%s lose power capacity!" ), disp_name() );
                     set_max_power_level( units::from_kilojoule( rng( 0,
-                                         units::to_kilojoule( get_max_power_level() ) - 25 ) ) );
+                                         units::to_kilojoule( max_power_level ) - 25 ) ) );
                     if( is_player() ) {
                         g->memorial().add(
                             pgettext( "memorial_male", "Lost %d units of power capacity." ),
                             pgettext( "memorial_female", "Lost %d units of power capacity." ),
-                            units::to_kilojoule( old_power - get_max_power_level() ) );
+                            units::to_kilojoule( old_power - max_power_level ) );
                     }
                 }
                 // TODO: What if we can't lose power capacity?  No penalty?
