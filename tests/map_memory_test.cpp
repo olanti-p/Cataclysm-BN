@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <sstream>
 #include <string>
+#include <iostream>
 
 #include "catch/catch.hpp"
 #include "game_constants.h"

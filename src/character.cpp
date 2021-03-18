@@ -468,6 +468,11 @@ character_id Character::getID() const
     return this->id;
 }
 
+std::ostream &operator<<( std::ostream &o, character_id id )
+{
+    return o << id.get_value();
+}
+
 field_type_id Character::bloodType() const
 {
     if( has_trait( trait_ACIDBLOOD ) ) {

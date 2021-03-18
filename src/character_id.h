@@ -3,7 +3,7 @@
 #define CATA_SRC_CHARACTER_ID_H
 
 #include <cassert>
-#include <ostream>
+#include <iosfwd>
 
 class JsonIn;
 class JsonOut;
@@ -50,9 +50,6 @@ inline bool operator<( character_id l, character_id r )
     return l.get_value() < r.get_value();
 }
 
-inline std::ostream &operator<<( std::ostream &o, character_id id )
-{
-    return o << id.get_value();
-}
+std::ostream &operator<<( std::ostream &o, character_id id );
 
 #endif // CATA_SRC_CHARACTER_ID_H

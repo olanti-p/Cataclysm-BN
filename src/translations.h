@@ -3,7 +3,7 @@
 #define CATA_SRC_TRANSLATIONS_H
 
 #include <map>
-#include <ostream>
+#include <iosfwd>
 #include <string>
 #include <type_traits>
 #include <utility>

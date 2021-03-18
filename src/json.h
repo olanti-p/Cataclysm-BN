@@ -6,7 +6,7 @@
 #include <bitset>
 #include <cstddef>
 #include <cstdint>
-#include <iostream>
+#include <iosfwd>
 #include <map>
 #include <set>
 #include <stdexcept>
