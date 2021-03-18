@@ -26,6 +26,7 @@
 #include "cursesdef.h"
 #include "debug.h"
 #include "effect.h"
+#include "file_utility.h"
 #include "game.h"
 #include "game_constants.h"
 #include "game_ui.h"

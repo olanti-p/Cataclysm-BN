@@ -20,6 +20,7 @@
 #include "coordinate_conversions.h"
 #include "debug.h"
 #include "flood_fill.h"
+#include "file_utility.h"
 #include "game.h"
 #include "generic_factory.h"
 #include "json.h"

@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "cata_utility.h"
+#include "file_utility.h"
 #include "json.h"
 #include "rng.h"
 #include "string_formatter.h"

@@ -1,7 +1,9 @@
+#include "map_memory.h"
+
 #include "coordinate_conversions.h"
 #include "filesystem.h"
+#include "file_utility.h"
 #include "game.h"
-#include "map_memory.h"
 #include "line.h"
 #include "cata_utility.h"
 
