@@ -2,6 +2,7 @@
 
 #include "catch/catch.hpp"
 #include "filesystem.h"
+#include "file_utility.h"
 #include "string_formatter.h"
 #include "path_info.h"
 #include "game.h"

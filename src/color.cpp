@@ -10,6 +10,7 @@
 #include "cursesdef.h"
 #include "debug.h"
 #include "filesystem.h"
+#include "file_utility.h"
 #include "input.h"
 #include "json.h"
 #include "output.h"

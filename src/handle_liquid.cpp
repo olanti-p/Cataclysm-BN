@@ -18,6 +18,7 @@
 #include "colony.h"
 #include "debug.h"
 #include "enums.h"
+#include "file_utility.h"
 #include "game.h"
 #include "game_inventory.h"
 #include "iexamine.h"

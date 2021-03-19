@@ -7,6 +7,7 @@
 #include <string>
 
 #include "cata_utility.h"
+#include "file_utility.h"
 #include "game_constants.h"
 #include "json.h"
 #include "math_defines.h"

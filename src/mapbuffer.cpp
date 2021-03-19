@@ -13,6 +13,7 @@
 #include "debug.h"
 #include "distribution_grid.h"
 #include "filesystem.h"
+#include "file_utility.h"
 #include "game.h"
 #include "game_constants.h"
 #include "json.h"

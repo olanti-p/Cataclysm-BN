@@ -11,6 +11,7 @@
 #include "debug.h"
 #include "dependency_tree.h"
 #include "filesystem.h"
+#include "file_utility.h"
 #include "json.h"
 #include "path_info.h"
 #include "string_formatter.h"
