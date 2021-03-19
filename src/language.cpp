@@ -24,6 +24,7 @@
 #endif // LOCALIZE
 
 #include "cached_options.h"
+#include "cata_utility.h"
 #include "debug.h"
 #include "file_utility.h"
 #include "name.h"
