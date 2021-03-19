@@ -12,6 +12,7 @@
 #include "omdata.h"
 #include "type_id.h"
 
+class JsonObject;
 class item;
 
 struct advanced_inv_pane_save_state {
@@ -32,13 +33,7 @@ struct advanced_inv_pane_save_state {
             json.member( prefix + "in_vehicle", in_vehicle );
         }
 
-        void deserialize( const JsonObject &jo, const std::string &prefix ) {
-            jo.read( prefix + "sort_idx", sort_idx );
-            jo.read( prefix + "filter", filter );
-            jo.read( prefix + "area_idx", area_idx );
-            jo.read( prefix + "selected_idx", selected_idx );
-            jo.read( prefix + "in_vehicle", in_vehicle );
-        }
+        void deserialize( const JsonObject &jo, const std::string &prefix );
 };
 
 struct advanced_inv_save_state {
@@ -66,17 +61,7 @@ struct advanced_inv_save_state {
             pane_right.serialize( json, prefix + "pane_right_" );
         }
 
-        void deserialize( JsonObject &jo, const std::string &prefix ) {
-            jo.read( prefix + "active_left", active_left );
-            jo.read( prefix + "last_popup_dest", last_popup_dest );
-
-            jo.read( prefix + "saved_area", saved_area );
-            jo.read( prefix + "saved_area_right", saved_area_right );
-            pane.area_idx = saved_area;
-            pane_right.area_idx = saved_area_right;
-            pane.deserialize( jo, prefix + "pane_" );
-            pane_right.deserialize( jo, prefix + "pane_right_" );
-        }
+        void deserialize( JsonObject &jo, const std::string &prefix );
 };
 /*
   centralized depot for trivial ui data such as sorting, string_input_popup history, etc.
