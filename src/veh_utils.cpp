@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "calendar.h"
+#include "craft_command.h"
 #include "map.h"
 #include "player.h"
 #include "veh_type.h"
@@ -128,8 +129,9 @@ bool repair_part( vehicle &veh, vehicle_part &pt, Character &who_c )
     // consume items extracting any base item (which we will need if replacing broken part)
     item base( vp.item );
     for( const auto &e : reqs.get_components() ) {
-        for( auto &obj : who.consume_items( who.select_item_component( e, 1, map_inv ), 1,
-                                            is_crafting_component ) ) {
+        comp_selection<item_comp> selected;
+        who.select_item_component( selected, e, 1, map_inv );
+        for( auto &obj : who.consume_items( selected, 1, is_crafting_component ) ) {
             if( obj.typeId() == vp.item ) {
                 base = obj;
             }
@@ -137,7 +139,9 @@ bool repair_part( vehicle &veh, vehicle_part &pt, Character &who_c )
     }
 
     for( const auto &e : reqs.get_tools() ) {
-        who.consume_tools( who.select_tool_component( e, 1, map_inv ), 1 );
+        comp_selection<tool_comp> selected;
+        who.select_tool_component( selected, e, 1, map_inv );
+        who.consume_tools( selected, 1 );
     }
 
     who.invalidate_crafting_inventory();

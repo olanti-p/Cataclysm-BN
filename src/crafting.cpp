@@ -36,6 +36,7 @@
 #include "inventory.h"
 #include "item.h"
 #include "item_contents.h"
+#include "item_craft_data.h"
 #include "item_location.h"
 #include "item_stack.h"
 #include "itype.h"
@@ -1187,7 +1188,8 @@ bool player::can_continue_craft( item &craft )
 
         std::vector<comp_selection<item_comp>> item_selections;
         for( const auto &it : continue_reqs.get_components() ) {
-            comp_selection<item_comp> is = select_item_component( it, batch_size, map_inv, true, filter );
+            comp_selection<item_comp> is;
+            select_item_component( is, it, batch_size, map_inv, true, filter );
             if( is.use_from == cancel ) {
                 cancel_activity();
                 add_msg( _( "You stop crafting." ) );
@@ -1237,7 +1239,8 @@ bool player::can_continue_craft( item &craft )
 
         std::vector<comp_selection<tool_comp>> new_tool_selections;
         for( const std::vector<tool_comp> &alternatives : tool_reqs ) {
-            comp_selection<tool_comp> selection = select_tool_component( alternatives, batch_size,
+            comp_selection<tool_comp> selection;
+            select_tool_component( selection, alternatives, batch_size,
             map_inv, DEFAULT_HOTKEYS, true, true, []( int charges ) {
                 return charges / 20;
             } );
@@ -1247,7 +1250,7 @@ bool player::can_continue_craft( item &craft )
             new_tool_selections.push_back( selection );
         }
 
-        craft.set_cached_tool_selections( new_tool_selections );
+        craft.get_craft_data().cached_tool_selections = new_tool_selections;
         craft.set_tools_to_continue( true );
     }
 
@@ -1286,15 +1289,17 @@ const requirement_data *player::select_requirements(
 }
 
 /* selection of component if a recipe requirement has multiple options (e.g. 'duct tap' or 'welder') */
-comp_selection<item_comp> player::select_item_component( const std::vector<item_comp> &components,
-        int batch, inventory &map_inv, bool can_cancel,
-        const std::function<bool( const item & )> &filter, bool player_inv )
+void player::select_item_component( comp_selection<item_comp> &output,
+                                    const std::vector<item_comp> &components,
+                                    int batch, inventory &map_inv, bool can_cancel,
+                                    const std::function<bool( const item & )> &filter, bool player_inv )
 {
     std::vector<item_comp> player_has;
     std::vector<item_comp> map_has;
     std::vector<item_comp> mixed;
 
-    comp_selection<item_comp> selected;
+    comp_selection<item_comp> &selected = output;
+    selected = comp_selection<item_comp>();
 
     for( const auto &component : components ) {
         itype_id type = component.type;
@@ -1307,7 +1312,7 @@ comp_selection<item_comp> player::select_item_component( const std::vector<item_
             if( map_charges == item::INFINITE_CHARGES ) {
                 selected.use_from = use_from_map;
                 selected.comp = component;
-                return selected;
+                return;
             }
             if( player_inv ) {
                 int player_charges = charges_of( type, INT_MAX, filter );
@@ -1376,7 +1381,7 @@ comp_selection<item_comp> player::select_item_component( const std::vector<item_
         } else {
             debugmsg( "Attempted a recipe with no available components!" );
             selected.use_from = cancel;
-            return selected;
+            return;
         }
     } else { // Let the player pick which component they want to use
         uilist cmenu;
@@ -1418,12 +1423,12 @@ comp_selection<item_comp> player::select_item_component( const std::vector<item_
             if( player_inv ) {
                 if( has_trait( trait_DEBUG_HS ) ) {
                     selected.use_from = use_from_player;
-                    return selected;
+                    return;
                 }
             }
             debugmsg( "Attempted a recipe with no available components!" );
             selected.use_from = cancel;
-            return selected;
+            return;
         }
 
         cmenu.allow_cancel = can_cancel;
@@ -1435,7 +1440,7 @@ comp_selection<item_comp> player::select_item_component( const std::vector<item_
         if( cmenu.ret < 0 ||
             static_cast<size_t>( cmenu.ret ) >= map_has.size() + player_has.size() + mixed.size() ) {
             selected.use_from = cancel;
-            return selected;
+            return;
         }
 
         size_t uselection = static_cast<size_t>( cmenu.ret );
@@ -1453,7 +1458,7 @@ comp_selection<item_comp> player::select_item_component( const std::vector<item_
         }
     }
 
-    return selected;
+    return;
 }
 
 // Prompts player to empty all newly-unsealed containers in inventory
@@ -1540,17 +1545,19 @@ std::list<item> player::consume_items( const std::vector<item_comp> &components,
 {
     inventory map_inv;
     map_inv.form_from_map( pos(), PICKUP_RANGE, this );
-    return consume_items( select_item_component( components, batch, map_inv, false, filter ), batch,
-                          filter );
+    comp_selection<item_comp> selected;
+    select_item_component( selected, components, batch, map_inv, false, filter );
+    return consume_items( selected, batch, filter );
 }
 
-comp_selection<tool_comp>
-player::select_tool_component( const std::vector<tool_comp> &tools, int batch, inventory &map_inv,
-                               const std::string &hotkeys, bool can_cancel, bool player_inv,
-                               const std::function<int( int )> charges_required_modifier )
+void player::select_tool_component( comp_selection<tool_comp> &output,
+                                    const std::vector<tool_comp> &tools, int batch, inventory &map_inv,
+                                    const std::string &hotkeys, bool can_cancel, bool player_inv,
+                                    const std::function<int( int )> charges_required_modifier )
 {
 
-    comp_selection<tool_comp> selected;
+    comp_selection<tool_comp> &selected = output;
+    selected = comp_selection<tool_comp>();
 
     auto calc_charges = [&]( const tool_comp & t ) {
         const int full_craft_charges = item::find_type( t.type )->charge_factor() * t.count * batch;
@@ -1581,7 +1588,7 @@ player::select_tool_component( const std::vector<tool_comp> &tools, int batch, i
     }
     if( found_nocharge ) {
         selected.use_from = use_from_none;
-        return selected;    // Default to using a tool that doesn't require charges
+        return;    // Default to using a tool that doesn't require charges
     }
 
     if( player_has.size() + map_has.size() == 1 ) {
@@ -1601,7 +1608,7 @@ player::select_tool_component( const std::vector<tool_comp> &tools, int batch, i
             selected.comp = map_has[0];
         } else {
             selected.use_from = use_from_none;
-            return selected;
+            return;
         }
     } else { // Variety of options, list them and pick one
         // Populate the list
@@ -1632,7 +1639,7 @@ player::select_tool_component( const std::vector<tool_comp> &tools, int batch, i
 
         if( tmenu.entries.empty() ) {  // This SHOULD only happen if cooking with a fire,
             selected.use_from = use_from_none;
-            return selected;    // and the fire goes out.
+            return;    // and the fire goes out.
         }
 
         tmenu.allow_cancel = can_cancel;
@@ -1643,7 +1650,7 @@ player::select_tool_component( const std::vector<tool_comp> &tools, int batch, i
 
         if( tmenu.ret < 0 || static_cast<size_t>( tmenu.ret ) >= map_has.size() + player_has.size() ) {
             selected.use_from = cancel;
-            return selected;
+            return;
         }
 
         size_t uselection = static_cast<size_t>( tmenu.ret );
@@ -1657,7 +1664,7 @@ player::select_tool_component( const std::vector<tool_comp> &tools, int batch, i
         }
     }
 
-    return selected;
+    return;
 }
 
 bool player::craft_consume_tools( item &craft, int mulitplier, bool start_craft )
@@ -1692,7 +1699,7 @@ bool player::craft_consume_tools( item &craft, int mulitplier, bool start_craft 
 
     // First check if we still have our cached selections
     const std::vector<comp_selection<tool_comp>> &cached_tool_selections =
-                craft.get_cached_tool_selections();
+                craft.get_craft_data().cached_tool_selections;
 
     inventory map_inv;
     map_inv.form_from_map( pos(), PICKUP_RANGE, this );
@@ -1780,7 +1787,9 @@ void player::consume_tools( const std::vector<tool_comp> &tools, int batch,
 {
     inventory map_inv;
     map_inv.form_from_map( pos(), PICKUP_RANGE, this );
-    consume_tools( select_tool_component( tools, batch, map_inv, hotkeys ), batch );
+    comp_selection<tool_comp> selected;
+    select_tool_component( selected, tools, batch, map_inv, hotkeys );
+    consume_tools( selected, batch );
 }
 
 ret_val<bool> player::can_disassemble( const item &obj, const inventory &inv ) const

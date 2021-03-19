@@ -1,4 +1,5 @@
 #include "basecamp.h"
+#include "basecamp_components.h"
 
 #include <algorithm>
 #include <map>
@@ -721,9 +722,8 @@ bool basecamp_action_components::choose_components()
         return false;
     }
     for( const auto &it : req->get_components() ) {
-        comp_selection<item_comp> is =
-            g->u.select_item_component( it, batch_size_, base_._inv, true, filter,
-                                        !base_.by_radio );
+        comp_selection<item_comp> is;
+        g->u.select_item_component( is, it, batch_size_, base_._inv, true, filter, !base_.by_radio );
         if( is.use_from == cancel ) {
             return false;
         }
@@ -731,9 +731,9 @@ bool basecamp_action_components::choose_components()
     }
     // this may consume pseudo-resources from fake items
     for( const auto &it : req->get_tools() ) {
-        comp_selection<tool_comp> ts =
-            g->u.select_tool_component( it, batch_size_, base_._inv, DEFAULT_HOTKEYS, true,
-                                        !base_.by_radio );
+        comp_selection<tool_comp> ts;
+        g->u.select_tool_component( ts, it, batch_size_, base_._inv, DEFAULT_HOTKEYS, true,
+                                    !base_.by_radio );
         if( ts.use_from == cancel ) {
             return false;
         }

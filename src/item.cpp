@@ -50,6 +50,7 @@
 #include "int_id.h"
 #include "inventory.h"
 #include "item_category.h"
+#include "item_craft_data.h"
 #include "item_factory.h"
 #include "item_group.h"
 #include "iteminfo_query.h"
@@ -427,7 +428,7 @@ static const item *get_most_rotten_component( const item &craft )
 item::item( const recipe *rec, int qty, std::list<item> items, std::vector<item_comp> selections )
     : item( "craft", calendar::turn, qty )
 {
-    craft_data_ = cata::make_value<craft_data>();
+    craft_data_ = cata::make_value<item_craft_data>();
     craft_data_->making = rec;
     components = items;
     craft_data_->comps_used = selections;
@@ -9527,16 +9528,16 @@ bool item::has_tools_to_continue() const
     return craft_data_->tools_to_continue;
 }
 
-void item::set_cached_tool_selections( const std::vector<comp_selection<tool_comp>> &selections )
+item_craft_data &item::get_craft_data()
 {
     assert( craft_data_ );
-    craft_data_->cached_tool_selections = selections;
+    return *craft_data_;
 }
 
-const std::vector<comp_selection<tool_comp>> &item::get_cached_tool_selections() const
+const item_craft_data &item::get_craft_data() const
 {
     assert( craft_data_ );
-    return craft_data_->cached_tool_selections;
+    return *craft_data_;
 }
 
 const cata::value_ptr<islot_comestible> &item::get_comestible() const

@@ -18,7 +18,6 @@
 #include "character.h"
 #include "character_id.h"
 #include "color.h"
-#include "craft_command.h"
 #include "creature.h"
 #include "cursesdef.h"
 #include "enums.h"
@@ -35,6 +34,7 @@
 
 class basecamp;
 class effect;
+class craft_command;
 class faction;
 class inventory;
 class map;
@@ -68,6 +68,7 @@ enum game_message_type : int;
 class vehicle;
 struct item_comp;
 struct tool_comp;
+template<typename T> struct comp_selection;
 struct w_point;
 
 /** @relates ret_val */
@@ -664,10 +665,10 @@ class player : public Character
         const requirement_data *select_requirements(
             const std::vector<const requirement_data *> &, int batch, const inventory &,
             const std::function<bool( const item & )> &filter ) const;
-        comp_selection<item_comp>
-        select_item_component( const std::vector<item_comp> &components,
-                               int batch, inventory &map_inv, bool can_cancel = false,
-                               const std::function<bool( const item & )> &filter = return_true<item>, bool player_inv = true );
+        void select_item_component( comp_selection<item_comp> &output,
+                                    const std::vector<item_comp> &components,
+                                    int batch, inventory &map_inv, bool can_cancel = false,
+                                    const std::function<bool( const item & )> &filter = return_true<item>, bool player_inv = true );
         std::list<item> consume_items( const comp_selection<item_comp> &is, int batch,
                                        const std::function<bool( const item & )> &filter = return_true<item> );
         std::list<item> consume_items( map &m, const comp_selection<item_comp> &is, int batch,
@@ -675,10 +676,10 @@ class player : public Character
                                        const tripoint &origin = tripoint_zero, int radius = PICKUP_RANGE );
         std::list<item> consume_items( const std::vector<item_comp> &components, int batch = 1,
                                        const std::function<bool( const item & )> &filter = return_true<item> );
-        comp_selection<tool_comp>
-        select_tool_component( const std::vector<tool_comp> &tools, int batch, inventory &map_inv,
-                               const std::string &hotkeys = DEFAULT_HOTKEYS,
-                               bool can_cancel = false, bool player_inv = true,
+        void select_tool_component( comp_selection<tool_comp> &output,
+                                    const std::vector<tool_comp> &tools, int batch, inventory &map_inv,
+                                    const std::string &hotkeys = DEFAULT_HOTKEYS,
+                                    bool can_cancel = false, bool player_inv = true,
         std::function<int( int )> charges_required_modifier = []( int i ) {
             return i;
         } );

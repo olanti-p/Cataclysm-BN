@@ -14,7 +14,6 @@
 #include <vector>
 
 #include "calendar.h"
-#include "craft_command.h"
 #include "enums.h"
 #include "flat_set.h"
 #include "gun_mode.h"
@@ -39,6 +38,7 @@ class gun_type_type;
 class gunmod_location;
 class item;
 class iteminfo_query;
+class item_craft_data;
 class material_type;
 class monster;
 class nc_color;
@@ -2047,8 +2047,8 @@ class item : public visitable<item>
 
         void set_tools_to_continue( bool value );
         bool has_tools_to_continue() const;
-        void set_cached_tool_selections( const std::vector<comp_selection<tool_comp>> &selections );
-        const std::vector<comp_selection<tool_comp>> &get_cached_tool_selections() const;
+        item_craft_data &get_craft_data();
+        const item_craft_data &get_craft_data() const;
 
         std::vector<enchantment> get_enchantments() const;
 
@@ -2125,25 +2125,7 @@ class item : public visitable<item>
         std::string corpse_name;       // Name of the late lamented
         std::set<matec_id> techniques; // item specific techniques
 
-        /**
-         * Data for items that represent in-progress crafts.
-         */
-        class craft_data
-        {
-            public:
-                const recipe *making = nullptr;
-                int next_failure_point = -1;
-                std::vector<item_comp> comps_used;
-                // If the crafter has insufficient tools to continue to the next 5% progress step
-                bool tools_to_continue = false;
-                std::vector<comp_selection<tool_comp>> cached_tool_selections;
-
-                void serialize( JsonOut &jsout ) const;
-                void deserialize( JsonIn &jsin );
-                void deserialize( const JsonObject &obj );
-        };
-
-        cata::value_ptr<craft_data> craft_data_;
+        cata::value_ptr<item_craft_data> craft_data_;
 
         // any relic data specific to this item
         cata::value_ptr<relic> relic_data;

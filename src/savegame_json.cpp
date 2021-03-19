@@ -61,6 +61,7 @@
 #include "inventory.h"
 #include "item.h"
 #include "item_contents.h"
+#include "item_craft_data.h"
 #include "item_factory.h"
 #include "item_location.h"
 #include "itype.h"
@@ -2078,9 +2079,9 @@ void units::energy::deserialize( JsonIn &jsin )
 } // namespace units
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-///// item.h
+///// item_craft_data.h
 
-void item::craft_data::serialize( JsonOut &jsout ) const
+void item_craft_data::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
     jsout.member( "making", making->ident().str() );
@@ -2091,12 +2092,12 @@ void item::craft_data::serialize( JsonOut &jsout ) const
     jsout.end_object();
 }
 
-void item::craft_data::deserialize( JsonIn &jsin )
+void item_craft_data::deserialize( JsonIn &jsin )
 {
     deserialize( jsin.get_object() );
 }
 
-void item::craft_data::deserialize( const JsonObject &obj )
+void item_craft_data::deserialize( const JsonObject &obj )
 {
     making = &recipe_id( obj.get_string( "making" ) ).obj();
     obj.read( "comps_used", comps_used );
@@ -2104,6 +2105,9 @@ void item::craft_data::deserialize( const JsonObject &obj )
     tools_to_continue = obj.get_bool( "tools_to_continue", false );
     obj.read( "cached_tool_selections", cached_tool_selections );
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+///// item.h
 
 // Template parameter because item::craft_data is private and I don't want to make it public.
 template<typename T>

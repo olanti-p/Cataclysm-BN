@@ -5063,8 +5063,8 @@ static void smoker_load_food( player &p, const tripoint &examp,
         return it.rotten();
     } );
 
-    comp_selection<item_comp> selected = p.select_item_component( comps, 1, inv, true,
-                                         is_non_rotten_crafting_component );
+    comp_selection<item_comp> selected;
+    p.select_item_component( selected, comps, 1, inv, true, is_non_rotten_crafting_component );
     std::list<item> moved = p.consume_items( selected, 1, is_non_rotten_crafting_component );
 
     for( const item &m : moved ) {
@@ -5171,8 +5171,8 @@ static void mill_load_food( player &p, const tripoint &examp,
         return it.rotten();
     } );
 
-    comp_selection<item_comp> selected = p.select_item_component( comps, 1, inv, true,
-                                         is_non_rotten_crafting_component );
+    comp_selection<item_comp> selected;
+    p.select_item_component( selected, comps, 1, inv, true, is_non_rotten_crafting_component );
     std::list<item> moved = p.consume_items( selected, 1, is_non_rotten_crafting_component );
     for( const item &m : moved ) {
         g->m.add_item( examp, m );

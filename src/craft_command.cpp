@@ -12,6 +12,7 @@
 #include "game_constants.h"
 #include "inventory.h"
 #include "item.h"
+#include "item_craft_data.h"
 #include "json.h"
 #include "output.h"
 #include "player.h"
@@ -152,8 +153,8 @@ void craft_command::execute( const tripoint &new_loc )
         }
 
         for( const auto &it : needs->get_components() ) {
-            comp_selection<item_comp> is =
-                crafter->select_item_component( it, batch_size, map_inv, true, filter );
+            comp_selection<item_comp> is;
+            crafter->select_item_component( is, it, batch_size, map_inv, true, filter );
             if( is.use_from == cancel ) {
                 return;
             }
@@ -162,7 +163,8 @@ void craft_command::execute( const tripoint &new_loc )
 
         tool_selections.clear();
         for( const auto &it : needs->get_tools() ) {
-            comp_selection<tool_comp> ts = crafter->select_tool_component(
+            comp_selection<tool_comp> ts;
+            crafter->select_tool_component( ts,
             it, batch_size, map_inv, DEFAULT_HOTKEYS, true, true, []( int charges ) {
                 return charges / 20 + charges % 20;
             } );
@@ -268,7 +270,7 @@ item craft_command::create_in_progress_craft()
 
     item new_craft( rec, batch_size, used, comps_used );
 
-    new_craft.set_cached_tool_selections( tool_selections );
+    new_craft.get_craft_data().cached_tool_selections = tool_selections;
     new_craft.set_tools_to_continue( true );
     // Pass true to indicate that we are starting the craft and the remainder should be consumed as well
     crafter->craft_consume_tools( new_craft, 1, true );

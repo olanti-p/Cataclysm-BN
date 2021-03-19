@@ -13,6 +13,7 @@
 #include "activity_handlers.h"
 #include "avatar.h"
 #include "basecamp.h"
+#include "basecamp_components.h"
 #include "calendar.h"
 #include "cata_utility.h"
 #include "catacharset.h"
