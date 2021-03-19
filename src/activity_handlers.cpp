@@ -39,6 +39,7 @@
 #include "event_bus.h"
 #include "fault.h"
 #include "field_type.h"
+#include "file_utility.h"
 #include "flat_set.h"
 #include "game.h"
 #include "game_constants.h"

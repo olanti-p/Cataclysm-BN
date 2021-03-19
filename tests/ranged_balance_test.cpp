@@ -13,6 +13,7 @@
 #include "catch/catch.hpp"
 #include "creature.h"
 #include "dispersion.h"
+#include "file_utility.h"
 #include "game_constants.h"
 #include "inventory.h"
 #include "item.h"

@@ -7,6 +7,7 @@
 #include "color.h"
 #include "cursesdef.h"
 #include "filesystem.h"
+#include "file_utility.h"
 #include "game.h"
 #include "generic_factory.h"
 #include "input.h"
