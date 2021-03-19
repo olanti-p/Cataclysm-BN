@@ -3,7 +3,9 @@
 #define CATA_SRC_POLY_SERIALIZED_PTR_H
 
 #include <memory>
-#include "json.h"
+
+class JsonIn;
+class JsonOut;
 
 namespace cata
 {
