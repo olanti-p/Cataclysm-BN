@@ -16,6 +16,7 @@
 #include "avatar.h"
 #include "avatar_action.h"
 #include "bionics.h"
+#include "bodypart_type.h"
 #include "cata_utility.h"
 #include "catacharset.h"
 #include "character_martial_arts.h"

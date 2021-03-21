@@ -16,6 +16,7 @@
 #include "avatar.h"
 #include "avatar_action.h"
 #include "ballistics.h"
+#include "bodypart_type.h"
 #include "calendar.h"
 #include "cata_utility.h"
 #include "character.h"

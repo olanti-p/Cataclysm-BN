@@ -1,4 +1,5 @@
 #include "bodypart.h"
+#include "bodypart_type.h"
 
 #include <cstdlib>
 #include <set>

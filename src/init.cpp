@@ -20,6 +20,7 @@
 #include "behavior.h"
 #include "bionics.h"
 #include "bodypart.h"
+#include "bodypart_type.h"
 #include "clothing_mod.h"
 #include "clzones.h"
 #include "construction.h"

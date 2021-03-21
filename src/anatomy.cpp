@@ -7,6 +7,7 @@
 #include <numeric>
 #include <set>
 
+#include "bodypart_type.h"
 #include "cata_utility.h"
 #include "debug.h"
 #include "enums.h"

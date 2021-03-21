@@ -16,6 +16,7 @@
 
 #include "avatar.h"
 #include "bodypart.h"
+#include "bodypart_type.h"
 #include "calendar.h"
 #include "cata_utility.h"
 #include "color.h"

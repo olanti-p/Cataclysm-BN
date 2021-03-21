@@ -8,6 +8,7 @@
 
 #include "anatomy.h"
 #include "avatar.h"
+#include "bodypart_type.h"
 #include "calendar.h"
 #include "character.h"
 #include "color.h"

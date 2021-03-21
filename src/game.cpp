@@ -42,6 +42,7 @@
 #include "basecamp.h"
 #include "bionics.h"
 #include "bodypart.h"
+#include "bodypart_type.h"
 #include "cata_utility.h"
 #include "catacharset.h"
 #include "character.h"

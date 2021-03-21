@@ -8,6 +8,7 @@
 
 #include "avatar.h"
 #include "bodypart.h"
+#include "bodypart_type.h"
 #include "calendar.h"
 #include "character.h"
 #include "creature.h"

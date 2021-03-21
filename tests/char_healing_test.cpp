@@ -2,6 +2,7 @@
 
 #include "avatar.h"
 #include "bodypart.h"
+#include "bodypart_type.h"
 #include "calendar.h"
 #include "catch/catch.hpp"
 #include "character.h"
