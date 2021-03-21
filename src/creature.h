@@ -14,7 +14,6 @@
 #include "bodypart.h"
 #include "pimpl.h"
 #include "string_formatter.h"
-#include "translations.h"
 #include "type_id.h"
 #include "units.h"
 #include "cached_options.h"
@@ -38,6 +37,7 @@ class JsonOut;
 struct tripoint;
 class time_duration;
 class player;
+class translation;
 struct point;
 
 enum damage_type : int;
