@@ -18,7 +18,6 @@
 #include "calendar.h"
 #include "character_id.h"
 #include "clzones.h"
-#include "colony.h"
 #include "damage.h"
 #include "game_constants.h"
 #include "item.h"

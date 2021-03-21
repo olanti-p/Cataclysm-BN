@@ -19,7 +19,6 @@
 
 #include "bodypart.h"
 #include "calendar.h"
-#include "colony.h"
 #include "enums.h"
 #include "filter_utility.h"
 #include "game_constants.h"
