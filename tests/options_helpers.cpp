@@ -2,6 +2,8 @@
 
 #include "options.h"
 
+#include <locale>
+
 override_option::override_option( const std::string &option, const std::string &value ) :
     option_( option )
 {

@@ -8,7 +8,7 @@
 #include <cstdint>
 #include <limits>
 #include <map>
-#include <ostream>
+#include <iosfwd>
 #include <string>
 #include <type_traits>
 #include <utility>
@@ -575,30 +575,11 @@ inline constexpr value_type to_fahrenheit( const
 // Streaming operators for debugging and tests
 // (for UI output other functions should be used which render in the user's
 // chosen units)
-inline std::ostream &operator<<( std::ostream &o, mass_in_milligram_tag )
-{
-    return o << "mg";
-}
-
-inline std::ostream &operator<<( std::ostream &o, volume_in_milliliter_tag )
-{
-    return o << "ml";
-}
-
-inline std::ostream &operator<<( std::ostream &o, energy_in_millijoule_tag )
-{
-    return o << "mJ";
-}
-
-inline std::ostream &operator<<( std::ostream &o, money_in_cent_tag )
-{
-    return o << "cent";
-}
-
-inline std::ostream &operator<<( std::ostream &o, temperature_in_millidegree_celsius_tag )
-{
-    return o << "mC";
-}
+std::ostream &operator<<( std::ostream &o, mass_in_milligram_tag );
+std::ostream &operator<<( std::ostream &o, volume_in_milliliter_tag );
+std::ostream &operator<<( std::ostream &o, energy_in_millijoule_tag );
+std::ostream &operator<<( std::ostream &o, money_in_cent_tag );
+std::ostream &operator<<( std::ostream &o, temperature_in_millidegree_celsius_tag );
 
 template<typename value_type, typename tag_type>
 inline std::ostream &operator<<( std::ostream &o, const quantity<value_type, tag_type> &v )

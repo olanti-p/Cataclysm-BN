@@ -27,6 +27,31 @@ void mass::serialize( JsonOut &jsout ) const
     }
 }
 
+std::ostream &operator<<( std::ostream &o, mass_in_milligram_tag )
+{
+    return o << "mg";
+}
+
+std::ostream &operator<<( std::ostream &o, volume_in_milliliter_tag )
+{
+    return o << "ml";
+}
+
+std::ostream &operator<<( std::ostream &o, energy_in_millijoule_tag )
+{
+    return o << "mJ";
+}
+
+std::ostream &operator<<( std::ostream &o, money_in_cent_tag )
+{
+    return o << "cent";
+}
+
+std::ostream &operator<<( std::ostream &o, temperature_in_millidegree_celsius_tag )
+{
+    return o << "mC";
+}
+
 std::string display( const units::energy v )
 {
     const int kj = units::to_kilojoule( v );

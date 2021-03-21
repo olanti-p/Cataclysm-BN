@@ -2,6 +2,8 @@
 #include "sdl_geometry.h"
 #include "debug.h"
 
+#include <ostream>
+
 void GeometryRenderer::horizontal_line( const SDL_Renderer_Ptr &renderer, const point &pos, int x2,
                                         int thickness, const SDL_Color &color ) const
 {

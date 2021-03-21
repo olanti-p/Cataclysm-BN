@@ -18,6 +18,7 @@
 #include "bionics.h"
 #include "cata_utility.h"
 #include "catacharset.h"
+#include "character_id.h"
 #include "clzones.h"
 #include "colony.h"
 #include "construction.h"
@@ -370,6 +371,11 @@ std::string enum_to_string<character_movemode>( character_movemode data )
 }
 
 } // namespace io
+
+std::ostream &operator<<( std::ostream &o, character_id id )
+{
+    return o << id.get_value();
+}
 
 Character &get_player_character()
 {

@@ -1,5 +1,7 @@
 #include "map_memory.h"
 
+#include <iostream>
+
 #include "coordinate_conversions.h"
 #include "debug.h"
 #include "filesystem.h"
