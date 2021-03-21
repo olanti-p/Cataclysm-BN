@@ -4466,7 +4466,7 @@ FMT_END_NAMESPACE
 
 #ifdef FMT_HEADER_ONLY
 #  define FMT_FUNC inline
-#  include "fmtlib_format-inl.h"
+//#  include "fmtlib_format-inl.h"
 #else
 #  define FMT_FUNC
 #endif
