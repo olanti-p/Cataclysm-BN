@@ -4,10 +4,11 @@
 
 #include <string>
 
-#include "pldata.h"
 #include "type_id.h"
 
+class addiction;
 class Character;
+enum class add_type : int;
 
 // Minimum intensity before effects are seen
 constexpr int MIN_ADDICTION_LEVEL = 3;
