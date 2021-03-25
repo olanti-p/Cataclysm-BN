@@ -15,6 +15,7 @@
 #include "StaticDeclarationsCheck.h"
 #include "StaticStringIdConstantsCheck.h"
 #include "TestFilenameCheck.h"
+#include "TestsMustRestoreGlobalStateCheck.h"
 #include "TextStyleCheck.h"
 #include "TranslatorCommentsCheck.h"
 #include "UnusedStaticsCheck.h"
@@ -51,6 +52,8 @@ class CataModule : public ClangTidyModule
             CheckFactories.registerCheck<StaticStringIdConstantsCheck>(
                 "cata-static-string_id-constants" );
             CheckFactories.registerCheck<TestFilenameCheck>( "cata-test-filename" );
+            CheckFactories.registerCheck<TestsMustRestoreGlobalStateCheck>(
+                "cata-tests-must-restore-global-state" );
             CheckFactories.registerCheck<TextStyleCheck>( "cata-text-style" );
             CheckFactories.registerCheck<TranslatorCommentsCheck>( "cata-translator-comments" );
             CheckFactories.registerCheck<UnusedStaticsCheck>( "cata-unused-statics" );
