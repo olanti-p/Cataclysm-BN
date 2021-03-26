@@ -1,6 +1,7 @@
 #include "options_helpers.h"
 
 #include "options.h"
+#include "weather.h"
 
 override_option::override_option( const std::string &option, const std::string &value ) :
     option_( option )
@@ -23,4 +24,14 @@ bool try_set_utf8_locale()
         return false;
     }
     return true;
+}
+
+scoped_weather_override::scoped_weather_override( const weather_type_id &weather )
+{
+    get_weather().weather_override = weather;
+}
+
+scoped_weather_override::~scoped_weather_override()
+{
+    get_weather().weather_override = weather_type_id::NULL_ID();
 }

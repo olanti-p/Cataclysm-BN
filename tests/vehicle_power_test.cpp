@@ -14,6 +14,7 @@
 #include "map.h"
 #include "map_helpers.h"
 #include "optional.h"
+#include "options_helpers.h"
 #include "point.h"
 #include "state_helpers.h"
 #include "type_id.h"
@@ -68,7 +69,7 @@ TEST_CASE( "vehicle power with reactor and solar panels", "[vehicle][power]" )
             calendar::turn = calendar::turn_zero + calendar::season_length() + 1_days;
             const time_point start_time = sunrise( calendar::turn ) + 3_hours;
             veh_ptr->update_time( start_time );
-            get_weather().weather_override = weather_type_id( "sunny" );
+            scoped_weather_override sunny_weather( weather_type_id( "sunny" ) );
 
             AND_GIVEN( "the battery has no charge" ) {
                 veh_ptr->discharge_battery( veh_ptr->fuel_left( fuel_type_battery ) );
@@ -98,7 +99,7 @@ TEST_CASE( "vehicle power with reactor and solar panels", "[vehicle][power]" )
 
         GIVEN( "it is 3 hours after sunset, with clear weather" ) {
             const time_point at_night = sunset( calendar::turn ) + 3_hours;
-            get_weather().weather_override = weather_type_id( "clear" );
+            scoped_weather_override clear_weather( weather_type_id( "clear" ) );
             veh_ptr->update_time( at_night );
 
             AND_GIVEN( "the battery has no charge" ) {
