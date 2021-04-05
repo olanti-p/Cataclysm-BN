@@ -5,6 +5,9 @@
 #include <string>
 #include <vector>
 
+/** For experimental translations system. */
+extern bool gettext_use_modular;
+
 /**
  * Contains information on a language supported by the game.
  *
@@ -109,5 +112,17 @@ void set_language();
  * If lang system has not been initialized, falls back to English.
  */
 const language_info &get_language();
+
+#if defined(LOCALIZE)
+class trans_library;
+namespace l10n_data
+{
+trans_library &get_library();
+void reload_catalogues();
+void unload_catalogues();
+void load_mod_catalogues();
+void unload_mod_catalogues();
+} // namespace l10n_data
+#endif // LOCALIZE
 
 #endif // CATA_SRC_LANGUAGE_H

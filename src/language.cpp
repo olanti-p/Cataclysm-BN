@@ -22,6 +22,7 @@
 
 #include "cached_options.h"
 #include "catacharset.h"
+#include "cata_libintl.h"
 #include "debug.h"
 #include "fstream_utils.h"
 #include "name.h"
@@ -33,6 +34,10 @@
 #if defined(LOCALIZE)
 #  include "json.h"
 #  include "ui_manager.h"
+#  include "filesystem.h"
+#  include "mod_manager.h"
+#  include "path_info.h"
+#  include "worldfactory.h"
 #endif
 
 std::string to_valid_language( const std::string &lang );
@@ -49,6 +54,8 @@ static language_info const *system_language = nullptr;
 // gettext should be using.
 // May be nullptr if language hasn't been set yet.
 static language_info const *current_language = nullptr;
+
+bool gettext_use_modular = false;
 
 static language_info fallback_language = { "en", R"(English)", "en_US.UTF-8", { "n" }, "", { 1033 } };
 
@@ -215,6 +222,26 @@ void set_language()
     } else {
         current_language = get_lang_info( lang_opt );
     }
+
+    // Step 1.2 Decide which translation system we're using
+    if( get_option<bool>( "MODULAR_TRANSLATIONS" ) ) {
+        DebugLog( D_INFO, D_MAIN ) << "[lang] Using exp. system, language set to " << lang_opt;
+
+        gettext_use_modular = true;
+
+        // Step 2. Setup locale
+        update_global_locale();
+
+        // Step 3. Load translations for game and, possibly, mods
+        l10n_data::reload_catalogues();
+
+        // Step 4. Finalize
+        reload_names();
+        return;
+    }
+
+    gettext_use_modular = false;
+    l10n_data::unload_catalogues();
 
     // Step 2. Setup locale & environment variables.
     // By default, gettext uses current locale to determine which language to use.
@@ -482,3 +509,106 @@ bool localized_comparator::operator()( const std::wstring &l, const std::wstring
     return std::locale()( l, r );
 #endif
 }
+
+// ==============================================================================================
+// Translation files management
+// ==============================================================================================
+
+#if defined(LOCALIZE)
+namespace l10n_data
+{
+trans_library &get_library()
+{
+    static trans_library trans_lib_singleton;
+    return trans_lib_singleton;
+}
+
+
+void add_cat_if_exists( trans_library &lib, const std::string &file_path )
+{
+    if( !file_exist( file_path ) ) {
+        return;
+    }
+    try {
+        trans_catalogue cat = trans_catalogue::load_from_file( file_path );
+        lib.add_catalogue( std::move( cat ) );
+    } catch( std::runtime_error err ) {
+        debugmsg( "Failed to load translation catalogue '%s': %s", file_path, err.what() );
+    }
+}
+
+void add_base_catalogue( trans_library &lib, const std::string &lang_id )
+{
+    // TODO: split source code strings from data strings
+    //       and load data translations from separate file(s)
+    std::string path = PATH_INFO::base_path() + "lang/mo/" + lang_id + "/LC_MESSAGES/cataclysm-bn.mo";
+    add_cat_if_exists( lib, path );
+}
+
+void add_mod_catalogues( trans_library &lib, const std::string &lang_id )
+{
+    if( !world_generator || !world_generator->active_world ) {
+        return;
+    }
+
+    const std::vector<mod_id> &mods = world_generator->active_world->active_mod_order;
+    for( const mod_id &mod : mods ) {
+        std::string path = mod.obj().path + "/lang/" + lang_id + ".mo";
+        add_cat_if_exists( lib, path );
+    }
+}
+
+void reload_catalogues()
+{
+    if( !gettext_use_modular ) {
+        return;
+    }
+    dbg( D_INFO, "[lang] Reloading all catalogues." );
+
+    trans_library &lib = get_library();
+    lib.clear_all_catalogues();
+    add_base_catalogue( lib, get_language().id );
+    add_mod_catalogues( lib, get_language().id );
+    lib.finalize();
+    invalidate_translations();
+}
+
+void unload_catalogues()
+{
+    dbg( D_INFO, "[lang] Unloading all catalogues." );
+
+    trans_library &lib = get_library();
+    lib.clear_all_catalogues();
+    lib.finalize();
+    invalidate_translations();
+}
+
+void load_mod_catalogues()
+{
+    if( !gettext_use_modular ) {
+        return;
+    }
+    dbg( D_INFO, "[lang] Loading mod catalogues." );
+
+    trans_library &lib = get_library();
+    add_mod_catalogues( lib, get_language().id );
+    lib.finalize();
+    invalidate_translations();
+}
+
+void unload_mod_catalogues()
+{
+    if( !gettext_use_modular ) {
+        return;
+    }
+    dbg( D_INFO, "[lang] Unloading mod catalogues." );
+
+    trans_library &lib = get_library();
+    lib.clear_all_catalogues();
+    add_base_catalogue( lib, get_language().id );
+    lib.finalize();
+    invalidate_translations();
+}
+
+} // namespace l10n_data
+#endif // LOCALIZE

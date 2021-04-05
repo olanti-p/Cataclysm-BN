@@ -45,6 +45,7 @@
 #include "item_category.h"
 #include "item_factory.h"
 #include "json.h"
+#include "language.h"
 #include "loading_ui.h"
 #include "magic.h"
 #include "magic_enchantment.h"
@@ -549,6 +550,7 @@ void DynamicDataLoader::unload_data()
     vehicle_prototype::reset();
     vitamin::reset();
     vpart_info::reset();
+    l10n_data::unload_mod_catalogues();
 }
 
 void DynamicDataLoader::finalize_loaded_data()
@@ -618,6 +620,9 @@ void DynamicDataLoader::finalize_loaded_data( loading_ui &ui )
             { _( "Achivements" ), &achievement::finalize },
 #if defined(TILES)
             { _( "Tileset" ), &load_tileset },
+#endif
+#if defined(LOCALIZE)
+            {_( "Localization" ), &l10n_data::load_mod_catalogues },
 #endif
         }
     };
