@@ -624,6 +624,14 @@ std::size_t trans_catalogue::hash_nth_orig_string( u32 n ) const
     return seed;
 }
 
+const char *trans_catalogue::get_nth_orig_string( u32 n ) const
+{
+    u32 record_addr = offs_orig_table + n * MO_STRING_RECORD_STEP;
+    string_info r = get_string_info_unsafe( record_addr );
+
+    return addr_to_cstr( r.address );
+}
+
 const char *trans_catalogue::get_nth_translation( u32 n ) const
 {
     u32 record_addr = offs_trans_table + n * MO_STRING_RECORD_STEP;
@@ -679,11 +687,21 @@ void trans_library::build_string_table()
         for( u32 i = 0; i < num; i++ ) {
             std::size_t hsh = cat.hash_nth_orig_string( i );
             // TODO: properly report conflicts
-            /*
-            if( string_table.find( hsh ) != string_table.end() ) {
-                std::cerr << "Overwriting a string!" << std::endl << std::flush;
+            auto it = string_table.find( hsh );
+            if( it != string_table.end() ) {
+                string_descriptor sd = it->second;
+                std::string orig( catalogues[sd.catalogue].get_nth_orig_string( sd.entry ) );
+                std::string curr( catalogues[i_cat].get_nth_orig_string( i ) );
+                if( orig != curr ) {
+                    std::string e = string_format(
+                                        "Hash collision for strings %d:%d and %d:%d",
+                                        sd.catalogue, sd.entry, i_cat, i
+                                    );
+                    throw std::runtime_error( e );
+                } else {
+                    //std::cerr << "Overwriting a string!" << std::endl << std::flush;
+                }
             }
-            */
             string_table[hsh] = string_descriptor{ i_cat, i };
         }
     }

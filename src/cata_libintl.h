@@ -153,6 +153,9 @@ class trans_catalogue
         std::size_t hash_nth_orig_string( u32 n ) const;
         const char *get_nth_translation( u32 n ) const;
         const char *get_nth_pl_translation( u32 n, unsigned long num ) const;
+
+        // Debug
+        const char *get_nth_orig_string( u32 n ) const;
 };
 
 trans_catalogue load_translation_catalogue( const std::string &file_path );
