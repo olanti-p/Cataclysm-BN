@@ -23,6 +23,7 @@
 #include "point.h"
 #include "shadowcasting.h"
 #include "type_id.h"
+#include "weather.h"
 
 enum class vision_test_flags {
     none = 0,

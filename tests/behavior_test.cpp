@@ -6,7 +6,6 @@
 #include "behavior_strategy.h"
 #include "catch/catch.hpp"
 #include "character_oracle.h"
-#include "game.h"
 #include "item.h"
 #include "item_location.h"
 #include "map_helpers.h"
@@ -150,7 +149,7 @@ TEST_CASE( "check_npc_behavior_tree", "[npc][behavior]" )
     behavior::character_oracle_t oracle( &test_npc );
     CHECK( npc_needs.tick( &oracle ) == "idle" );
     SECTION( "Freezing" ) {
-        g->weather.temperature = -100;
+        get_weather().temperature = -100;
         get_weather().clear_temp_cache();
         test_npc.update_bodytemp();
         CHECK( npc_needs.tick( &oracle ) == "idle" );

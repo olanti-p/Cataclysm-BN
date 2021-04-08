@@ -92,7 +92,7 @@ bool map::build_transparency_cache( const int zlev )
         &transparency_cache[0][0], MAPSIZE_X * MAPSIZE_Y,
         static_cast<float>( LIGHT_TRANSPARENCY_OPEN_AIR ) );
 
-    const float sight_penalty = weather::sight_penalty( g->weather.weather );
+    const float sight_penalty = weather::sight_penalty( get_weather().weather );
 
     // Traverse the submaps in order
     for( int smx = 0; smx < my_MAPSIZE; ++smx ) {
@@ -243,7 +243,7 @@ void map::build_sunlight_cache( int zlev )
     const auto &prev_transparency_cache = prev_map_cache.transparency_cache;
     const auto &prev_floor_cache = prev_map_cache.floor_cache;
     const auto &outside_cache = map_cache.outside_cache;
-    const float sight_penalty = weather::sight_penalty( g->weather.weather );
+    const float sight_penalty = weather::sight_penalty( get_weather().weather );
     for( int x = 0; x < MAPSIZE_X; x++ ) {
         for( int y = 0; y < MAPSIZE_Y; y++ ) {
             // Very common case

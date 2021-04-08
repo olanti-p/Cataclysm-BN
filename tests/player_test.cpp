@@ -172,14 +172,14 @@ static void guarantee_neutral_weather( const player &p )
     REQUIRE( !get_map().has_flag( TFLAG_DEEP_WATER, p.pos() ) );
     REQUIRE( !g->is_in_sunlight( p.pos() ) );
 
-    const w_point weather = *g->weather.weather_precise;
+    weather_manager &weather = get_weather();
+    double humidity = weather.weather_precise->humidity;
     const oter_id &cur_om_ter = overmap_buffer.ter( p.global_omt_location() );
     bool sheltered = g->is_sheltered( p.pos() );
-    double total_windpower = get_local_windpower( g->weather.windspeed, cur_om_ter,
+    double total_windpower = get_local_windpower( weather.windspeed, cur_om_ter,
                              p.pos(),
-                             g->weather.winddirection, sheltered );
-    int air_humidity = get_local_humidity( weather.humidity, g->weather.weather,
-                                           sheltered );
+                             weather.winddirection, sheltered );
+    int air_humidity = get_local_humidity( humidity, weather.weather, sheltered );
     REQUIRE( air_humidity == 0 );
     REQUIRE( total_windpower == 0.0 );
     REQUIRE( !const_cast<player &>( p ).in_climate_control() );

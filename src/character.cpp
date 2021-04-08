@@ -4800,7 +4800,7 @@ needs_rates Character::calc_needs_rates() const
 
     if( has_trait( trait_TRANSPIRATION ) ) {
         // Transpiration, the act of moving nutrients with evaporating water, can take a very heavy toll on your thirst when it's really hot.
-        rates.thirst *= ( ( g->weather.get_temperature( pos() ) - 32.5f ) / 40.0f );
+        rates.thirst *= ( ( get_weather().get_temperature( pos() ) - 32.5f ) / 40.0f );
     }
 
     if( is_npc() ) {
@@ -5038,11 +5038,11 @@ void Character::update_bodytemp()
         return;
     }
     /* Cache calls to g->get_temperature( player position ), used in several places in function */
-    const auto player_local_temp = g->weather.get_temperature( pos() );
+    const auto player_local_temp = get_weather().get_temperature( pos() );
     // NOTE : visit weather.h for some details on the numbers used
     // In Celsius / 100
     int Ctemperature = static_cast<int>( 100 * units::fahrenheit_to_celsius( player_local_temp ) );
-    const w_point weather = *g->weather.weather_precise;
+    const w_point weather = *get_weather().weather_precise;
     int vehwindspeed = 0;
     const optional_vpart_position vp = g->m.veh_at( pos() );
     if( vp ) {
@@ -5050,10 +5050,10 @@ void Character::update_bodytemp()
     }
     const oter_id &cur_om_ter = overmap_buffer.ter( global_omt_location() );
     bool sheltered = g->is_sheltered( pos() );
-    double total_windpower = get_local_windpower( g->weather.windspeed + vehwindspeed, cur_om_ter,
+    double total_windpower = get_local_windpower( get_weather().windspeed + vehwindspeed, cur_om_ter,
                              pos(),
-                             g->weather.winddirection, sheltered );
-    int air_humidity = get_local_humidity( weather.humidity, g->weather.weather,
+                             get_weather().winddirection, sheltered );
+    int air_humidity = get_local_humidity( weather.humidity, get_weather().weather,
                                            sheltered );
     // Let's cache this not to check it num_bp times
     const bool has_bark = has_trait( trait_BARK );
@@ -5069,14 +5069,14 @@ void Character::update_bodytemp()
      * Calculations that affect all body parts equally go here, not in the loop
      */
     const int sunlight_warmth = g->is_in_sunlight( pos() )
-                                ? ( g->weather.weather == WEATHER_SUNNY ? 1000 : 500 )
+                                ? ( get_weather().weather == WEATHER_SUNNY ? 1000 : 500 )
                                 : 0;
     const int best_fire = get_heat_radiation( pos(), true );
     const bool pyromania = has_trait( trait_PYROMANIA );
 
     const int lying_warmth = use_floor_warmth ? floor_warmth( pos() ) : 0;
     const int water_temperature_raw =
-        100 * units::fahrenheit_to_celsius( g->weather.get_water_temperature( pos() ) );
+        100 * units::fahrenheit_to_celsius( get_weather().get_water_temperature( pos() ) );
     // Rescale so that 0C is 0 (FREEZING) and 30C is 5k (NORM).
     const int water_temperature = water_temperature_raw * 5 / 3;
 
@@ -9879,7 +9879,7 @@ bool Character::can_hear( const tripoint &source, const int volume ) const
     }
     const int dist = rl_dist( source, pos() );
     const float volume_multiplier = hearing_ability();
-    return ( volume - weather::sound_attn( g->weather.weather ) ) * volume_multiplier >= dist;
+    return ( volume - weather::sound_attn( get_weather().weather ) ) * volume_multiplier >= dist;
 }
 
 float Character::hearing_ability() const
