@@ -1,6 +1,7 @@
 #include "cata_libintl.h"
 
 #include "catch/catch.hpp"
+#include "filesystem.h"
 #include "string_formatter.h"
 #include "rng.h"
 
@@ -15,32 +16,32 @@ struct test_case_data {
 
 static const std::vector<test_case_data> tests_plural_form_rules = {{
         {
-            0,
+            0, // a valid expression
             "n%2",
             "(n%2)",
         },
         {
-            1,
+            1, // same as previous, but with brackets and spaces
             " ( n % 2 ) ",
             "(n%2)",
         },
         {
-            2,
+            2, // ternary op
             "n?0:1",
             "(n?0:1)",
         },
         {
-            3,
+            3, // two ternary ops
             "n?1?2:3:4",
             "(n?(1?2:3):4)",
         },
         {
-            4,
+            4, // ternary op priority
             "n==1?n%2:n%3",
             "((n==1)?(n%2):(n%3))",
         },
         {
-            5,
+            5, // simple op priority
             "n%10==1 && n%100!=11",
             "(((n%10)==1)&&((n%100)!=11))",
         },
@@ -70,12 +71,12 @@ static const std::vector<test_case_data> tests_plural_form_rules = {{
             "((((n%10)==1)&&((n%100)!=11))?0:((n!=0)?1:2))",
         },
         {
-            11, // Polish
+            11, // Polish (GNU version)
             "n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2",
             "((n==1)?0:((((n%10)>=2)&&(((n%10)<=4)&&(((n%100)<10)||((n%100)>=20))))?1:2))",
         },
         {
-            12, // Russian
+            12, // Russian (GNU version)
             "n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2",
             "((((n%10)==1)&&((n%100)!=11))?0:((((n%10)>=2)&&(((n%10)<=4)&&(((n%100)<10)||((n%100)>=20))))?1:2))",
         },
@@ -84,67 +85,67 @@ static const std::vector<test_case_data> tests_plural_form_rules = {{
 
 static const std::vector<test_case_data> tests_plural_form_rules_fail = {{
         {
-            0,
+            0, // missing right-hand expression
             "n%",
             "expected expression at pos 2",
         },
         {
-            1,
+            1, // missing left-hand expression
             "%2",
             "expected expression at pos 0",
         },
         {
-            2,
+            2, // missing op
             "n2",
             "unexpected token at pos 1",
         },
         {
-            3,
+            3, // missing closing bracket
             " ( n % 2 ",
             "expected closing bracket at pos 9",
         },
         {
-            4,
+            4, // stray closing bracket
             "  n % 2     )  ",
             "unexpected token at pos 12",
         },
         {
-            5,
+            5, // empty expression
             "  ",
             "expected expression at pos 2",
         },
         {
-            6,
+            6, // missing op
             " ( n % 2 ) 2 % n",
             "unexpected token at pos 11",
         },
         {
-            7,
+            7, // missing right-hand expression
             " ( n % 2 ) % % 4",
             "expected expression at pos 13",
         },
         {
-            8,
+            8, // missing left-hand expression
             "%% 3",
             "expected expression at pos 0",
         },
         {
-            9,
+            9, // unknown op
             "n % -3",
             "unexpected character '-' at pos 4",
         },
         {
-            10,
+            10, // unknown op
             "n * 3",
             "unexpected character '*' at pos 2",
         },
         {
-            11,
+            11, // extra closing bracket
             "(((((n % 3))))))",
             "unexpected token at pos 15",
         },
         {
-            12,
+            12, // missing op
             "n % 2 3",
             "unexpected token at pos 6",
         },
@@ -154,14 +155,15 @@ static const std::vector<test_case_data> tests_plural_form_rules_fail = {{
             "invalid number '4294967296' at pos 5",
         },
         {
-            14,
+            14, // missing ternary delimiter
             "n ? 2 3",
             "expected ternary delimiter at pos 6",
         },
     }
 };
 
-TEST_CASE( "Plural forms parser", "[libintl][i18n]" )
+// MO Plural forms expression parsing
+TEST_CASE( "mo_plurals_parsing", "[libintl][i18n]" )
 {
     for( const auto &it : tests_plural_form_rules ) {
         CAPTURE( it.serial );
@@ -175,66 +177,151 @@ TEST_CASE( "Plural forms parser", "[libintl][i18n]" )
             cata_internal::PlfNodePtr ptr = cata_internal::parse_plural_rules( it.input );
             CAPTURE( ptr->debug_dump() );
             FAIL_CHECK();
-        } catch( std::runtime_error e ) {
-            CHECK( e.what() == it.expected );
+        } catch( std::runtime_error err ) {
+            CHECK( err.what() == it.expected );
         }
     }
 }
 
-TEST_CASE( "Plural forms calculation", "[libintl][i18n]" )
+// MO Plural forms calculation
+TEST_CASE( "mo_plurals_calculation", "[libintl][i18n]" )
 {
-    constexpr size_t CHECK_STEP = 32;
-    constexpr size_t CHECK_TOTAL = 1'000'000;
-    constexpr size_t CHECK_RANDOM = 1'000'000;
+    constexpr size_t NUM_MANUAL_FORMS = 130;
+    constexpr size_t PLF_PERIOD = 100;
 
-    // Speed is ~ 1'000'000 / second
-
-    std::vector<std::string> strs = {{
-            "предмет", // one
-            "предмета", // few
-            "предметов", // many
-            "предметы", // other (fractional)
+    // Plural forms for Russian for numbers 0..129
+    static const std::array<unsigned long, NUM_MANUAL_FORMS> expected_plural_values = {{
+            2, 0, 1, 1, 1, 2, 2, 2, 2, 2, // 0..9
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, // 10..19
+            2, 0, 1, 1, 1, 2, 2, 2, 2, 2, // 20..29
+            2, 0, 1, 1, 1, 2, 2, 2, 2, 2, // 30..39
+            2, 0, 1, 1, 1, 2, 2, 2, 2, 2, // 40..49
+            2, 0, 1, 1, 1, 2, 2, 2, 2, 2, // 50..59
+            2, 0, 1, 1, 1, 2, 2, 2, 2, 2, // 60..69
+            2, 0, 1, 1, 1, 2, 2, 2, 2, 2, // 70..79
+            2, 0, 1, 1, 1, 2, 2, 2, 2, 2, // 80..89
+            2, 0, 1, 1, 1, 2, 2, 2, 2, 2, // 90..99
+            2, 0, 1, 1, 1, 2, 2, 2, 2, 2, // 100..109
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, // 110..119
+            2, 0, 1, 1, 1, 2, 2, 2, 2, 2, // 120..129
         }
     };
 
-    std::string test1 =
-        "n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2";
-    std::string test2 =
-        "(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3)";
+    // Plural rules for Russian
+    std::string expr_raw =
+        "n%10==1 && n%100!=11 ? 0 : n%10>1 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2";
+    // Original string comes from GNU gettext documentation:
+    // "n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2";
+    //                                 ^^^-- this part was changed
+    // The change was done so that this expression would include *every* supported operator
+    cata_internal::PlfNodePtr expr = cata_internal::parse_plural_rules( expr_raw );
 
-    cata_internal::PlfNodePtr ptr1 = cata_internal::parse_plural_rules( test1 );
-    cata_internal::PlfNodePtr ptr2 = cata_internal::parse_plural_rules( test2 );
+    SECTION( "Produces expected values for small numbers" ) {
+        for( size_t i = 0; i < NUM_MANUAL_FORMS; i++ ) {
+            unsigned long x = i;
+            unsigned long exp = expected_plural_values[i];
 
-    // Ordered check
-    cata_printf( "Started 1st PLF check.\n" );
-    bool printed = false;
-    for( size_t x = 0; x < CHECK_TOTAL; x++ ) {
-        int plf1 = ptr1->eval( x );
-        int plf2 = ptr2->eval( x );
-        if( plf1 != plf2 ) {
-            cata_printf( " x=% 6d  plf1=%d  plf2=%d  % 6d %s\n", x, plf1, plf2, x, strs[plf2] );
-            printed = true;
+            CAPTURE( x );
+            unsigned long res = expr->eval( x );
+            CHECK( exp == res );
         }
-        if( printed && x % CHECK_STEP == 0 ) {
-            break;
+    };
+
+    SECTION( "Produces expected values for big numbers" ) {
+        constexpr size_t CHECK_MAX = 1'234'567;
+
+        for( size_t i = NUM_MANUAL_FORMS; i < CHECK_MAX; i++ ) {
+            unsigned long x = i;
+            unsigned long exp = expected_plural_values[i % PLF_PERIOD];
+
+            CAPTURE( x );
+            unsigned long res = expr->eval( x );
+            if( exp != res ) {
+                REQUIRE( exp == res );
+            }
         }
-    }
+    };
 
-    // Random check
-    cata_printf( "Started 2nd PLF check.\n" );
-    for( size_t i = 0; i < CHECK_RANDOM; i++ ) {
-        static std::uniform_int_distribution<unsigned long> rng_uint_dist;
-        unsigned long x = rng_uint_dist( rng_get_engine() );
+    SECTION( "Produces expected values for any numbers" ) {
+        constexpr size_t CHECK_TOTAL = 1'000'000;
 
-        int plf1 = ptr1->eval( x );
-        int plf2 = ptr2->eval( x );
-        if( plf1 != plf2 ) {
-            cata_printf( " x=% 6d  plf1=%d  plf2=%d  % 6d %s\n", x, plf1, plf2, x, strs[plf2] );
-            break;
+        for( size_t i = 0; i < CHECK_TOTAL; i++ ) {
+            unsigned long x;
+            if( i == 0 ) {
+                x = std::numeric_limits<unsigned long>::max();
+            } else {
+                static std::uniform_int_distribution<unsigned long> rng_uint_dist;
+                x = rng_uint_dist( rng_get_engine() );
+            }
+            unsigned long exp = expected_plural_values[x % PLF_PERIOD];
+
+            CAPTURE( x );
+            unsigned long res = expr->eval( x );
+            if( exp != res ) {
+                REQUIRE( exp == res );
+            }
         }
-    }
+    };
 
-    cata_printf( "Done with PLF checks.\n" );
+    // For some languages Transifex defines additional plural form for fractions.
+    // Neither GNU gettext nor cata_libintl support fractional numbers, so
+    // the extra plural form goes unused. Relevant issue:
+    // https://github.com/cataclysmbnteam/Cataclysm-BN/issues/432
+    //
+    // This test reaffirms the assumption that both Transifex's and GNU's plf expressions
+    // produce same values for integer numbers.
+    SECTION( "GNU gettext rules equal Transifex rules" ) {
+        constexpr size_t CHECK_TOTAL = 1'000'000;
+
+        struct rules {
+            int serial;
+            std::string gnu;
+            std::string tfx;
+        };
+
+        static std::vector<rules> rules_to_compare = {{
+                {
+                    0, // Polish
+                    "(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)",
+                    "(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1"
+                    "&& (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3)"
+                },
+                {
+                    1, // Russian
+                    "(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)",
+                    "(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 :"
+                    " n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3)"
+                },
+                {
+                    2, // Ukrainian
+                    "(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)",
+                    "(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+                    "11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+                    "100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+                    "(n % 100 >=11 && n % 100 <=14 )) ? 2: 3)"
+                }
+            }
+        };
+
+        for( const rules &it : rules_to_compare ) {
+            CAPTURE( it.serial );
+            cata_internal::PlfNodePtr expr_gnu = cata_internal::parse_plural_rules( it.gnu );
+            cata_internal::PlfNodePtr expr_tfx = cata_internal::parse_plural_rules( it.tfx );
+
+            for( size_t i = 0; i < CHECK_TOTAL; i++ ) {
+                static std::uniform_int_distribution<unsigned long> rng_uint_dist;
+                unsigned long x = rng_uint_dist( rng_get_engine() );
+
+                CAPTURE( x );
+
+                unsigned long res_gnu = expr_gnu->eval( x );
+                unsigned long res_tfx = expr_tfx->eval( x );
+                if( res_gnu != res_tfx ) {
+                    REQUIRE( res_gnu == res_tfx );
+                }
+            }
+        }
+    };
 }
 
 static void test_get_strings( const trans_library &lib )
@@ -264,7 +351,8 @@ static void test_get_strings( const trans_library &lib )
 
 static const std::string mo_dir = "tests/data/cata_libintl/";
 
-TEST_CASE( "Load single MO and get strings", "[libintl][i18n]" )
+// Load single MO and get strings
+TEST_CASE( "single_mo_strings", "[libintl][i18n]" )
 {
     SECTION( "Little endian file" ) {
         trans_library lib;
@@ -282,7 +370,8 @@ TEST_CASE( "Load single MO and get strings", "[libintl][i18n]" )
     }
 }
 
-TEST_CASE( "Load multiple MO and get strings", "[libintl][i18n]" )
+// Load multiple MO and get strings
+TEST_CASE( "multiple_mo_strings", "[libintl][i18n]" )
 {
     trans_library lib;
     lib.add_catalogue( trans_catalogue::load_from_file( mo_dir + "multi_1_ru.mo" ) );
@@ -300,47 +389,65 @@ static const std::vector<test_case_data> tests_mo_loading_failures = {{
             "failed to open file",
         },
         {
-            1, // not a file
-            "",
-            "not a MO file", // FIXME: this should be "failed to open file"
-        },
-        {
-            2, // not a MO file (magic number mismatch)
+            1, // not a MO file (magic number mismatch)
             "single.pot",
             "not a MO file",
         },
         {
-            3, // not a MO file (too small to have magic number)
+            2, // not a MO file (too small to have magic number)
             "empty_file.mo",
             "not a MO file",
         },
         {
-            4, // wrong charset (only UTF-8 is supported)
+            3, // wrong charset (only UTF-8 is supported)
             "wrong_charset_ru.mo",
             "unexpected value in Content-Type header (wrong charset?)",
         },
         {
-            5, // one of the strings extends beyond end of file
+            4, // one of the strings extends beyond end of file
             "single_ru_string_ignores_eof.mo",
             "string_info at 0x84: extends beyond EOF (len:0x16 addr:0x35f file size:0x375)",
         },
         {
-            6, // one of the strings is missing null terminator
+            5, // one of the strings is missing null terminator
             "single_ru_missing_nullterm.mo",
             "string_info at 0x84: missing null terminator",
         },
     }
 };
 
-TEST_CASE( "MO loading failure", "[libintl][i18n]" )
+// MO loading failure
+TEST_CASE( "mo_loading_failure", "[libintl][i18n]" )
 {
     for( const auto &it : tests_mo_loading_failures ) {
         CAPTURE( it.serial );
         try {
             trans_catalogue::load_from_file( mo_dir + it.input );
             FAIL_CHECK();
-        } catch( std::runtime_error e ) {
-            CHECK( e.what() == it.expected );
+        } catch( std::runtime_error err ) {
+            CHECK( err.what() == it.expected );
+        }
+    }
+}
+
+// Load all MO files for the base game to check for loading failures
+TEST_CASE( "load_all_base_game_mos", "[libintl][i18n]" )
+{
+    std::vector<std::string> mo_files = get_files_from_path( ".mo", "lang/mo", true, true );
+
+    if( mo_files.empty() ) {
+        WARN( "Skipping (no MO files found)" );
+        return;
+    }
+
+    for( const std::string &file : mo_files ) {
+        try {
+            trans_library lib;
+            lib.add_catalogue( trans_catalogue::load_from_file( file ) );
+            lib.finalize();
+        } catch( std::runtime_error err ) {
+            CAPTURE( err.what() );
+            FAIL_CHECK();
         }
     }
 }

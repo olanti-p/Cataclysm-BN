@@ -225,7 +225,7 @@ void set_language()
 
     // Step 1.2 Decide which translation system we're using
     if( get_option<bool>( "MODULAR_TRANSLATIONS" ) ) {
-        DebugLog( D_INFO, D_MAIN ) << "[lang] Using exp. system, language set to " << lang_opt;
+        dbg( D_INFO, "[lang] Using experimental system, language set to '%s'", lang_opt );
 
         gettext_use_modular = true;
 

@@ -111,10 +111,11 @@ TEST_CASE( "translations_actually_translate", "[translations][i18n]" )
     const char *test_msgid = "Play <N|n>ow!";
     const char *test_msgctx = "Main Menu|New Game";
 
+    bool skip_gnu_gettext = false;
     if( !try_set_utf8_locale() ) {
-        // On platforms where we can't set the locale, ignore this test
-        WARN( "Skipped (unable to set locale)" );
-        return;
+        // On platforms where we can't set the locale, ignore GNU gettext
+        WARN( "Skipping GNU gettext tests" );
+        skip_gnu_gettext = true;
     }
 
     const auto has_lang = [&]( const std::string & id ) -> bool {
@@ -134,24 +135,36 @@ TEST_CASE( "translations_actually_translate", "[translations][i18n]" )
 
     // Back up current language (should be 'en')
     const static std::string USE_LANG( "USE_LANG" );
+    const static std::string MODULAR( "MODULAR_TRANSLATIONS" );
     std::string lang_default = get_option<std::string>( USE_LANG );
+    bool modular_default = get_option<bool>( MODULAR );
 
-    for( const auto &test : test_cases ) {
-        CAPTURE( test.first );
+    // Test both regular translations & new modular system
+    for( int mi = 0; mi < 2; mi++ ) {
+        if( mi == 0 && skip_gnu_gettext ) {
+            continue;
+        }
+        bool modular = mi == 1;
+        for( const auto &test : test_cases ) {
+            CAPTURE( modular );
+            CAPTURE( test.first );
 
-        get_options().get_option( USE_LANG ).setValue( test.first );
-        get_options().save();
-        CHECK( get_option<std::string>( USE_LANG ) == test.first );
+            get_options().get_option( USE_LANG ).setValue( test.first );
+            get_options().get_option( MODULAR ).setValue( modular ? "True" : "False" );
+            get_options().save();
+            CHECK( get_option<std::string>( USE_LANG ) == test.first );
 
-        set_language();
+            set_language();
 
-        // Should return translated string (or original/same string for English)
-        const char *translated = pgettext( test_msgctx, test_msgid );
-        CHECK( test.second == translated );
+            // Should return translated string (or original/same string for English)
+            const char *translated = pgettext( test_msgctx, test_msgid );
+            CHECK( test.second == translated );
+        }
     }
 
     // Restore language
     get_options().get_option( USE_LANG ).setValue( lang_default );
+    get_options().get_option( MODULAR ).setValue( modular_default ? "True" : "False" );
     get_options().save();
     set_language();
 }
