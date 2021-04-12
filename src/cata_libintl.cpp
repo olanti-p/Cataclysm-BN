@@ -532,6 +532,8 @@ trans_catalogue::plf_header_data trans_catalogue::parse_plf_header( const meta_h
 {
     constexpr unsigned long MAX_PLURAL_FORMS = 8;
 
+    plf_header_data ret;
+
     // Parse Plural-Forms header.
     std::string plf_raw;
     {
@@ -545,15 +547,16 @@ trans_catalogue::plf_header_data trans_catalogue::parse_plf_header( const meta_h
             break;
         }
         if( !found ) {
-            throw std::runtime_error( "failed to find Plural-Forms header" );
+            // Default to English rules
+            ret.num = 2;
+            ret.rules = cata_internal::parse_plural_rules( "n!=1" );
+            return ret;
         }
     }
     std::vector<std::string> parts = string_split( plf_raw, ';' );
     if( parts.size() != 3 ) {
         throw std::runtime_error( "expected Plural-Forms header to have 2 ';' characters" );
     }
-
-    plf_header_data ret;
 
     // Parse & validate nplurals
     {
