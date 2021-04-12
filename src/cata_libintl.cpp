@@ -721,8 +721,19 @@ void trans_library::add_catalogue( trans_catalogue cat )
 
 void trans_library::finalize()
 {
+    auto start_tick = std::chrono::steady_clock::now();
     clear_string_table();
     build_string_table();
+    auto end_tick = std::chrono::steady_clock::now();
+    int64_t diff = std::chrono::duration_cast<std::chrono::milliseconds>(
+                       end_tick - start_tick ).count();
+
+    u32 num_total = 0;
+    for( const trans_catalogue &cat : catalogues ) {
+        num_total += cat.get_num_strings();
+    }
+    std::cerr << string_format( "[libintl] Took %d ms to hash %d strings", diff,
+                                num_total ) << std::endl;
 }
 
 const char *trans_library::lookup_string_in_table( std::size_t hsh ) const
