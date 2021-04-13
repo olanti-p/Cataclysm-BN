@@ -189,7 +189,7 @@ ParseRet plf_get_cmp( const PlfTStream &ts );
 ParseRet plf_get_mod( const PlfTStream &ts );
 ParseRet plf_get_value( const PlfTStream &ts );
 
-bool plf_try_binary_op( ParseRet &left, PlfOp op, ParserPtr parser )
+static bool plf_try_binary_op( ParseRet &left, PlfOp op, ParserPtr parser )
 {
     const PlfTStream &ts = left.ts;
     if( ts.peek().kind != op ) {
@@ -734,6 +734,16 @@ void trans_library::finalize()
     }
     std::cerr << string_format( "[libintl] Took %d ms to hash %d strings", diff,
                                 num_total ) << std::endl;
+}
+
+trans_library trans_library::create( std::vector<trans_catalogue> catalogues )
+{
+    trans_library lib;
+    lib.clear_all_catalogues();
+    lib.clear_string_table();
+    lib.catalogues = std::move( catalogues );
+    lib.finalize();
+    return lib;
 }
 
 const char *trans_library::lookup_string_in_table( u32 hsh ) const

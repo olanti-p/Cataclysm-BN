@@ -355,16 +355,16 @@ static const std::string mo_dir = "tests/data/cata_libintl/";
 TEST_CASE( "single_mo_strings", "[libintl][i18n]" )
 {
     SECTION( "Little endian file" ) {
-        trans_library lib;
-        lib.add_catalogue( trans_catalogue::load_from_file( mo_dir + "single_ru_little_endian.mo" ) );
-        lib.finalize();
+        std::vector<trans_catalogue> list;
+        list.push_back( trans_catalogue::load_from_file( mo_dir + "single_ru_little_endian.mo" ) );
+        trans_library lib = trans_library::create( std::move( list ) );
 
         test_get_strings( lib );
     }
     SECTION( "Big endian file" ) {
-        trans_library lib;
-        lib.add_catalogue( trans_catalogue::load_from_file( mo_dir + "single_ru_big_endian.mo" ) );
-        lib.finalize();
+        std::vector<trans_catalogue> list;
+        list.push_back( trans_catalogue::load_from_file( mo_dir + "single_ru_big_endian.mo" ) );
+        trans_library lib = trans_library::create( std::move( list ) );
 
         test_get_strings( lib );
     }
@@ -373,11 +373,11 @@ TEST_CASE( "single_mo_strings", "[libintl][i18n]" )
 // Load multiple MO and get strings
 TEST_CASE( "multiple_mo_strings", "[libintl][i18n]" )
 {
-    trans_library lib;
-    lib.add_catalogue( trans_catalogue::load_from_file( mo_dir + "multi_1_ru.mo" ) );
-    lib.add_catalogue( trans_catalogue::load_from_file( mo_dir + "multi_2_ru.mo" ) );
-    lib.add_catalogue( trans_catalogue::load_from_file( mo_dir + "multi_3_ru.mo" ) );
-    lib.finalize();
+    std::vector<trans_catalogue> list;
+    list.push_back( trans_catalogue::load_from_file( mo_dir + "multi_1_ru.mo" ) );
+    list.push_back( trans_catalogue::load_from_file( mo_dir + "multi_2_ru.mo" ) );
+    list.push_back( trans_catalogue::load_from_file( mo_dir + "multi_3_ru.mo" ) );
+    trans_library lib = trans_library::create( std::move( list ) );
 
     test_get_strings( lib );
 }
@@ -442,9 +442,9 @@ TEST_CASE( "load_all_base_game_mos", "[libintl][i18n]" )
 
     for( const std::string &file : mo_files ) {
         try {
-            trans_library lib;
-            lib.add_catalogue( trans_catalogue::load_from_file( file ) );
-            lib.finalize();
+            std::vector<trans_catalogue> list;
+            list.push_back( trans_catalogue::load_from_file( file ) );
+            trans_library lib = trans_library::create( std::move( list ) );
         } catch( std::runtime_error err ) {
             CAPTURE( err.what() );
             FAIL_CHECK();

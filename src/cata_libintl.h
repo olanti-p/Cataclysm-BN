@@ -193,10 +193,12 @@ class trans_library
         const char *lookup_string_in_table( u32 hsh ) const;
         const char *lookup_pl_string_in_table( u32 hsh, unsigned long n ) const;
 
-    public:
         void clear_all_catalogues();
         void add_catalogue( trans_catalogue cat );
         void finalize();
+
+    public:
+        static trans_library create( std::vector<trans_catalogue> catalogues );
 
         const char *get( const char *msgid ) const;
         const char *get_pl( const char *msgid, const char *msgid_pl, unsigned long n ) const;

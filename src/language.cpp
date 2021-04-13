@@ -524,28 +524,27 @@ trans_library &get_library()
 }
 
 
-void add_cat_if_exists( trans_library &lib, const std::string &file_path )
+static void add_cat_if_exists( std::vector<trans_catalogue> &list, const std::string &file_path )
 {
     if( !file_exist( file_path ) ) {
         return;
     }
     try {
-        trans_catalogue cat = trans_catalogue::load_from_file( file_path );
-        lib.add_catalogue( std::move( cat ) );
+        list.push_back( trans_catalogue::load_from_file( file_path ) );
     } catch( std::runtime_error err ) {
         debugmsg( "Failed to load translation catalogue '%s': %s", file_path, err.what() );
     }
 }
 
-void add_base_catalogue( trans_library &lib, const std::string &lang_id )
+static void add_base_catalogue( std::vector<trans_catalogue> &list, const std::string &lang_id )
 {
     // TODO: split source code strings from data strings
     //       and load data translations from separate file(s)
     std::string path = PATH_INFO::base_path() + "lang/mo/" + lang_id + "/LC_MESSAGES/cataclysm-bn.mo";
-    add_cat_if_exists( lib, path );
+    add_cat_if_exists( list, path );
 }
 
-void add_mod_catalogues( trans_library &lib, const std::string &lang_id )
+static void add_mod_catalogues( std::vector<trans_catalogue> &list, const std::string &lang_id )
 {
     if( !world_generator || !world_generator->active_world ) {
         return;
@@ -554,7 +553,7 @@ void add_mod_catalogues( trans_library &lib, const std::string &lang_id )
     const std::vector<mod_id> &mods = world_generator->active_world->active_mod_order;
     for( const mod_id &mod : mods ) {
         std::string path = mod.obj().path + "/lang/" + lang_id + ".mo";
-        add_cat_if_exists( lib, path );
+        add_cat_if_exists( list, path );
     }
 }
 
@@ -565,11 +564,11 @@ void reload_catalogues()
     }
     dbg( D_INFO, "[lang] Reloading all catalogues." );
 
-    trans_library &lib = get_library();
-    lib.clear_all_catalogues();
-    add_base_catalogue( lib, get_language().id );
-    add_mod_catalogues( lib, get_language().id );
-    lib.finalize();
+    std::vector<trans_catalogue> list;
+    add_base_catalogue( list, get_language().id );
+    add_mod_catalogues( list, get_language().id );
+    get_library() = trans_library::create( std::move( list ) );
+
     invalidate_translations();
 }
 
@@ -577,9 +576,8 @@ void unload_catalogues()
 {
     dbg( D_INFO, "[lang] Unloading all catalogues." );
 
-    trans_library &lib = get_library();
-    lib.clear_all_catalogues();
-    lib.finalize();
+    get_library() = trans_library::create( {} );
+
     invalidate_translations();
 }
 
@@ -590,9 +588,11 @@ void load_mod_catalogues()
     }
     dbg( D_INFO, "[lang] Loading mod catalogues." );
 
-    trans_library &lib = get_library();
-    add_mod_catalogues( lib, get_language().id );
-    lib.finalize();
+    std::vector<trans_catalogue> list;
+    add_base_catalogue( list, get_language().id );
+    add_mod_catalogues( list, get_language().id );
+    get_library() = trans_library::create( std::move( list ) );
+
     invalidate_translations();
 }
 
@@ -603,10 +603,10 @@ void unload_mod_catalogues()
     }
     dbg( D_INFO, "[lang] Unloading mod catalogues." );
 
-    trans_library &lib = get_library();
-    lib.clear_all_catalogues();
-    add_base_catalogue( lib, get_language().id );
-    lib.finalize();
+    std::vector<trans_catalogue> list;
+    add_base_catalogue( list, get_language().id );
+    get_library() = trans_library::create( std::move( list ) );
+
     invalidate_translations();
 }
 
