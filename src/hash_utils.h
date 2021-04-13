@@ -15,8 +15,8 @@ namespace cata
 // See Mike Seymour in magic-numbers-in-boosthash-combine:
 //     http://stackoverflow.com/questions/4948780
 
-template <class T, typename Hash = std::hash<T>>
-inline void hash_combine( std::size_t &seed, const T &v, const Hash &hash = std::hash<T>() )
+template <class T, typename Hash = std::hash<T>, typename Seed = std::size_t>
+inline void hash_combine( Seed &seed, const T &v, const Hash &hash = std::hash<T>() )
 {
     seed ^= hash( v ) + 0x9e3779b9 + ( seed << 6 ) + ( seed >> 2 );
 }
