@@ -173,14 +173,21 @@ class trans_library
     private:
         // Describes single string within the library
         struct string_descriptor {
+            u32 hash;
             u32 catalogue;
             u32 entry;
+
+            bool operator<( const string_descriptor &rhs ) const {
+                return this->hash < rhs.hash;
+            }
         };
+        std::vector<string_descriptor>::const_iterator find_in_table( u32 hash ) const;
 
         // =========== MEMBERS ===========
 
         // Full index of loaded strings
-        std::unordered_map<u32, string_descriptor> string_table;
+        std::vector<string_descriptor> string_vec;
+
         // Full index of loaded catalogues
         std::vector<trans_catalogue> catalogues;
 

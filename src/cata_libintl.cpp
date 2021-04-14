@@ -667,29 +667,42 @@ const char *trans_catalogue::get_nth_pl_translation( u32 n, unsigned long num ) 
 // Translation library
 // ==============================================================================================
 
+std::vector<trans_library::string_descriptor>::const_iterator trans_library::find_in_table(
+    u32 hash ) const
+{
+    if( !string_vec.empty() ) {
+        auto it = std::lower_bound( string_vec.begin(), string_vec.end(), string_descriptor{hash, 0, 0} );
+        if( it->hash == hash ) {
+            return it;
+        }
+    }
+    return string_vec.end();
+}
+
 bool trans_library::string_table_empty() const
 {
-    return string_table.empty();
+    return string_vec.empty();
 }
 
 void trans_library::clear_string_table()
 {
-    string_table.clear();
+    string_vec.clear();
 }
 
 void trans_library::build_string_table()
 {
-    assert( string_table.empty() );
+    assert( string_vec.empty() );
 
     for( u32 i_cat = 0; i_cat < catalogues.size(); i_cat++ ) {
         const trans_catalogue &cat = catalogues[i_cat];
         u32 num = cat.get_num_strings();
+        string_vec.reserve( num );
         for( u32 i = 0; i < num; i++ ) {
             u32 hsh = cat.hash_nth_orig_string( i );
             // TODO: properly report conflicts
-            auto it = string_table.find( hsh );
-            if( it != string_table.end() ) {
-                string_descriptor sd = it->second;
+            auto it = find_in_table( hsh );
+            if( it != string_vec.end() ) {
+                string_descriptor sd = *it;
                 std::string orig( catalogues[sd.catalogue].get_nth_orig_string( sd.entry ) );
                 std::string curr( catalogues[i_cat].get_nth_orig_string( i ) );
                 if( orig != curr ) {
@@ -702,7 +715,13 @@ void trans_library::build_string_table()
                     //std::cerr << "Overwriting a string!" << std::endl << std::flush;
                 }
             }
-            string_table[hsh] = string_descriptor{ i_cat, i };
+            string_descriptor desc = { hsh, i_cat, i };
+            if( string_vec.empty() ) {
+                string_vec.push_back( desc );
+            } else {
+                auto pos = std::lower_bound( string_vec.begin(), string_vec.end(), desc );
+                string_vec.insert( pos, desc );
+            }
         }
     }
 }
@@ -748,20 +767,20 @@ trans_library trans_library::create( std::vector<trans_catalogue> catalogues )
 
 const char *trans_library::lookup_string_in_table( u32 hsh ) const
 {
-    auto it = string_table.find( hsh );
-    if( it == string_table.end() ) {
+    auto it = find_in_table( hsh );
+    if( it == string_vec.end() ) {
         return nullptr;
     }
-    return catalogues[it->second.catalogue].get_nth_translation( it->second.entry );
+    return catalogues[it->catalogue].get_nth_translation( it->entry );
 }
 
 const char *trans_library::lookup_pl_string_in_table( u32 hsh, unsigned long n ) const
 {
-    auto it = string_table.find( hsh );
-    if( it == string_table.end() ) {
+    auto it = find_in_table( hsh );
+    if( it == string_vec.end() ) {
         return nullptr;
     }
-    return catalogues[it->second.catalogue].get_nth_pl_translation( it->second.entry, n );
+    return catalogues[it->catalogue].get_nth_pl_translation( it->entry, n );
 }
 
 const char *trans_library::get( const char *msgid ) const
