@@ -15,18 +15,18 @@
 // Hashing utilities
 // ==============================================================================================
 
-constexpr size_t HASH_SEED = 5381;
+constexpr cata_internal::u32 HASH_SEED = 0x9e3779b9; // An arbitrary number
 
-inline static void hash_combine_cstr( std::size_t &seed, const char *str )
+inline static void hash_combine_cstr( cata_internal::u32 &seed, const char *str )
 {
     for( char const *c = str; *c != '\0'; c++ ) {
-        cata::hash_combine( seed, *c );
+        cata::hash_combine( seed, *c, []( char c ) -> cata_internal::u32 {return c;} );
     }
 }
 
-inline static void hash_combine_char( std::size_t &seed, char c )
+inline static void hash_combine_char( cata_internal::u32 &seed, char c )
 {
-    cata::hash_combine( seed, c );
+    cata::hash_combine( seed, c, []( char c ) -> cata_internal::u32 {return c;} );
 }
 
 // ==============================================================================================
@@ -612,12 +612,12 @@ trans_catalogue::trans_catalogue( std::string buffer )
     this->plf_rules = std::move( plf.rules );
 }
 
-std::size_t trans_catalogue::hash_nth_orig_string( u32 n ) const
+cata_internal::u32 trans_catalogue::hash_nth_orig_string( u32 n ) const
 {
     u32 record_addr = offs_orig_table + n * MO_STRING_RECORD_STEP;
     string_info r = get_string_info_unsafe( record_addr );
 
-    std::size_t seed = HASH_SEED;
+    u32 seed = HASH_SEED;
     for( u32 i = 0; i < r.length; i++ ) {
         hash_combine_char( seed, get_u8_unsafe( r.address + i ) );
     }
@@ -685,7 +685,7 @@ void trans_library::build_string_table()
         const trans_catalogue &cat = catalogues[i_cat];
         u32 num = cat.get_num_strings();
         for( u32 i = 0; i < num; i++ ) {
-            std::size_t hsh = cat.hash_nth_orig_string( i );
+            u32 hsh = cat.hash_nth_orig_string( i );
             // TODO: properly report conflicts
             auto it = string_table.find( hsh );
             if( it != string_table.end() ) {
@@ -736,7 +736,7 @@ void trans_library::finalize()
                                 num_total ) << std::endl;
 }
 
-const char *trans_library::lookup_string_in_table( std::size_t hsh ) const
+const char *trans_library::lookup_string_in_table( u32 hsh ) const
 {
     auto it = string_table.find( hsh );
     if( it == string_table.end() ) {
@@ -745,7 +745,7 @@ const char *trans_library::lookup_string_in_table( std::size_t hsh ) const
     return catalogues[it->second.catalogue].get_nth_translation( it->second.entry );
 }
 
-const char *trans_library::lookup_pl_string_in_table( std::size_t hsh, unsigned long n ) const
+const char *trans_library::lookup_pl_string_in_table( u32 hsh, unsigned long n ) const
 {
     auto it = string_table.find( hsh );
     if( it == string_table.end() ) {
@@ -762,7 +762,7 @@ const char *trans_library::get( const char *msgid ) const
     }
 
     if( !string_table_empty() ) {
-        std::size_t seed = HASH_SEED;
+        u32 seed = HASH_SEED;
 
         hash_combine_cstr( seed, msgid );
 
@@ -777,7 +777,7 @@ const char *trans_library::get( const char *msgid ) const
 const char *trans_library::get_pl( const char *msgid, const char *msgid_pl, unsigned long n ) const
 {
     if( !string_table_empty() ) {
-        std::size_t seed = HASH_SEED;
+        u32 seed = HASH_SEED;
 
         hash_combine_cstr( seed, msgid );
         hash_combine_char( seed, '\0' );
@@ -794,7 +794,7 @@ const char *trans_library::get_pl( const char *msgid, const char *msgid_pl, unsi
 const char *trans_library::get_ctx( const char *ctx, const char *msgid ) const
 {
     if( !string_table_empty() ) {
-        std::size_t seed = HASH_SEED;
+        u32 seed = HASH_SEED;
 
         hash_combine_cstr( seed, ctx );
         hash_combine_char( seed, '\4' );
@@ -812,7 +812,7 @@ const char *trans_library::get_ctx_pl( const char *ctx, const char *msgid, const
                                        unsigned long n ) const
 {
     if( !string_table_empty() ) {
-        std::size_t seed = HASH_SEED;
+        u32 seed = HASH_SEED;
 
         hash_combine_cstr( seed, ctx );
         hash_combine_char( seed, '\4' );
