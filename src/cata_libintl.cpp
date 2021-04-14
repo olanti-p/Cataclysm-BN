@@ -6,6 +6,7 @@
 #include "string_formatter.h"
 
 #include <chrono>
+#include <cstring>
 #include <iostream>
 #include <limits>
 #include <locale>
@@ -599,6 +600,11 @@ trans_catalogue::plf_header_data trans_catalogue::parse_plf_header( const meta_h
 
 trans_catalogue::trans_catalogue( std::string buffer )
 {
+    size_t n = buffer.size();
+    this->buf.reserve( n );
+    this->buf.resize( n );
+    memcpy( &this->buf[0], &buffer[0], n );
+
     set_buffer( std::move( buffer ) );
     process_file_header();
     sanity_check_strings();
@@ -757,6 +763,7 @@ void trans_library::finalize()
 
 trans_library trans_library::create( std::vector<trans_catalogue> catalogues )
 {
+    std::cerr << "sizeof(string_descriptor) = " << sizeof(string_descriptor) << std::endl;
     trans_library lib;
     lib.clear_all_catalogues();
     lib.clear_string_table();
