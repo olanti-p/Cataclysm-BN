@@ -332,6 +332,8 @@ static void test_get_strings( const trans_library &lib )
         CHECK( std::string( s ) == expected );
     };
 
+    tst( 0, lib.get( "" ), "" ); // Metadata entry should not be revealed
+
     tst( 1, lib.get( "Cataclysm" ), "Катаклизм" );
 
     tst( 11, lib.get_ctx( "noun", "Test" ), "Тест" );

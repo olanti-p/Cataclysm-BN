@@ -702,8 +702,9 @@ void trans_library::build_string_table()
     for( u32 i_cat = 0; i_cat < catalogues.size(); i_cat++ ) {
         const trans_catalogue &cat = catalogues[i_cat];
         u32 num = cat.get_num_strings();
-        string_vec.reserve( num );
-        for( u32 i = 0; i < num; i++ ) {
+        // 0th entry is the metadata, we skip it
+        string_vec.reserve( num - 1 );
+        for( u32 i = 1; i < num; i++ ) {
             u32 hsh = cat.hash_nth_orig_string( i );
             // TODO: properly report conflicts
             auto it = find_in_table( hsh );
@@ -763,7 +764,7 @@ void trans_library::finalize()
 
 trans_library trans_library::create( std::vector<trans_catalogue> catalogues )
 {
-    std::cerr << "sizeof(string_descriptor) = " << sizeof(string_descriptor) << std::endl;
+    std::cerr << "sizeof(string_descriptor) = " << sizeof( string_descriptor ) << std::endl;
     trans_library lib;
     lib.clear_all_catalogues();
     lib.clear_string_table();
@@ -792,11 +793,6 @@ const char *trans_library::lookup_pl_string_in_table( u32 hsh, unsigned long n )
 
 const char *trans_library::get( const char *msgid ) const
 {
-    if( msgid[0] == '\0' ) {
-        // Don't reveal metadata entry
-        return "";
-    }
-
     if( !string_table_empty() ) {
         u32 seed = HASH_SEED;
 
