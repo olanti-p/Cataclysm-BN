@@ -12,6 +12,12 @@
 #include <locale>
 #include <sstream>
 
+// TODO:
+// 1. tests for mo language mixing
+// 2. deal with hash collisions by getting rid of hashing
+// 3. add note on operator precedence
+// 4. write docs & guides
+
 // ==============================================================================================
 // Hashing utilities
 // ==============================================================================================
