@@ -469,7 +469,7 @@ void trans_catalogue::process_file_header()
     offs_trans_table = get_u32( MO_TRANS_TABLE_OFFSET_ADDR );
 }
 
-void trans_catalogue::sanity_check_strings()
+void trans_catalogue::check_string_terminators()
 {
     const auto check_string = [this]( bool nullt, u32 addr ) {
         string_info s = get_string_info( addr );
@@ -496,6 +496,46 @@ void trans_catalogue::sanity_check_strings()
     for( u32 i = 0; i < number_of_strings; i++ ) {
         check_string( false, offs_orig_table + i * MO_STRING_RECORD_STEP );
         check_string( true, offs_trans_table + i * MO_STRING_RECORD_STEP );
+    }
+}
+
+void trans_catalogue::check_string_plurals()
+{
+    // Skip 0th metadata entry
+    for( u32 i = 1; i < number_of_strings; i++ ) {
+        string_info info = get_string_info_unsafe( offs_orig_table + i * MO_STRING_RECORD_STEP );
+
+        // Check for null byte - msgid/msgid_plural separator
+        bool has_plurals = false;
+        for( u32 j = info.address; j < info.address + info.length; j++ ) {
+            if( get_u8_unsafe( j ) == 0 ) {
+                has_plurals = true;
+                break;
+            }
+        }
+
+        if( !has_plurals ) {
+            continue;
+        }
+
+        // Count null bytes - each plural form is a null-terminated string (including last one)
+        u32 addr_tr = offs_trans_table + i * MO_STRING_RECORD_STEP;
+        string_info info_tr = get_string_info_unsafe( addr_tr );
+        unsigned long plural_forms = 0;
+        for( u32 j = info_tr.address; j <= info_tr.address + info_tr.length; j++ ) {
+            if( get_u8_unsafe( j ) == 0 ) {
+                plural_forms += 1;
+            }
+        }
+
+        // Number of plural forms should match the number specified in metadata
+        if( plural_forms != this->num_plural_forms ) {
+            std::string e = string_format(
+                                "string_info at %#x: expected %d plural forms, got %d",
+                                addr_tr, this->num_plural_forms, plural_forms
+                            );
+            throw std::runtime_error( e );
+        }
     }
 }
 
@@ -613,7 +653,7 @@ trans_catalogue::trans_catalogue( std::string buffer )
 
     set_buffer( std::move( buffer ) );
     process_file_header();
-    sanity_check_strings();
+    check_string_terminators();
 
     std::string meta_raw = get_metadata();
     meta_headers headers = string_split( meta_raw, '\n' );
@@ -622,6 +662,8 @@ trans_catalogue::trans_catalogue( std::string buffer )
     plf_header_data plf = parse_plf_header( headers );
     this->num_plural_forms = plf.num;
     this->plf_rules = std::move( plf.rules );
+
+    check_string_plurals();
 }
 
 cata_internal::u32 trans_catalogue::hash_nth_orig_string( u32 n ) const

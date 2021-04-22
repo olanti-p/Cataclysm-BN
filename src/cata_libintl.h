@@ -134,7 +134,8 @@ class trans_catalogue
             buf = std::move( buffer );
         }
         void process_file_header();
-        void sanity_check_strings();
+        void check_string_terminators();
+        void check_string_plurals();
         std::string get_metadata() const;
         static void check_encoding( const meta_headers &headers );
         static plf_header_data parse_plf_header( const meta_headers &headers );
@@ -158,8 +159,6 @@ class trans_catalogue
         const char *get_nth_orig_string( u32 n ) const;
 };
 
-trans_catalogue load_translation_catalogue( const std::string &file_path );
-
 /**
  * Translation library.
  * Represents collection of catalogues merged into a single pool ready for use.
@@ -181,7 +180,6 @@ class trans_library
                 return this->hash < rhs.hash;
             }
         };
-        std::vector<string_descriptor>::const_iterator find_in_table( u32 hash ) const;
 
         // =========== MEMBERS ===========
 
@@ -192,6 +190,8 @@ class trans_library
         std::vector<trans_catalogue> catalogues;
 
         // =========== METHODS ===========
+
+        std::vector<string_descriptor>::const_iterator find_in_table( u32 hash ) const;
 
         bool string_table_empty() const;
         void clear_string_table();
