@@ -332,32 +332,36 @@ static void test_get_strings( const trans_library &lib )
         CHECK( std::string( s ) == expected );
     };
 
-    tst( 0, lib.get( "" ), "" ); // Metadata entry should not be revealed
-
+    // _()
     tst( 1, lib.get( "Cataclysm" ), "Катаклизм" );
 
+    // pgettext()
     tst( 11, lib.get_ctx( "noun", "Test" ), "Тест" );
     tst( 12, lib.get_ctx( "verb", "Test" ), "Тестировать" );
 
-    tst( 21, lib.get( "%d item" ), "%d предмет" );
-    tst( 22, lib.get_pl( "%d item", "%d items", 1 ), "%d предмет" );
-    tst( 23, lib.get_pl( "%d item", "%d items", 1 ), "%d предмет" );
-    tst( 24, lib.get_pl( "%d item", "%d items", 2 ), "%d предмета" );
-    tst( 25, lib.get_pl( "%d item", "%d items", 5 ), "%d предметов" );
-    // When looking up translations, plural form is ignored
-    tst( 26, lib.get_pl( "%d item", "%d itemses", 5 ), "%d предметов" );
+    // vgettext()
+    tst( 21, lib.get_pl( "%d item", "%d items", 1 ), "%d предмет" );
+    tst( 22, lib.get_pl( "%d item", "%d items", 2 ), "%d предмета" );
+    tst( 23, lib.get_pl( "%d item", "%d items", 5 ), "%d предметов" );
 
-    // The regular query should also work
-    tst( 32, lib.get_ctx( "source of water", "%d spring" ), "%d родник" );
-    tst( 32, lib.get_ctx_pl( "source of water", "%d spring", "%d springs", 1 ), "%d родник" );
-    tst( 33, lib.get_ctx_pl( "source of water", "%d spring", "%d springs", 2 ), "%d родника" );
-    tst( 34, lib.get_ctx_pl( "source of water", "%d spring", "%d springs", 5 ), "%d родников" );
-    tst( 36, lib.get_ctx( "metal coil", "%d spring" ), "%d пружина" );
-    tst( 36, lib.get_ctx_pl( "metal coil", "%d spring", "%d springs", 1 ), "%d пружина" );
-    tst( 37, lib.get_ctx_pl( "metal coil", "%d spring", "%d springs", 2 ), "%d пружины" );
-    tst( 38, lib.get_ctx_pl( "metal coil", "%d spring", "%d springs", 5 ), "%d пружин" );
-    // When looking up translations, plural form is ignored
-    tst( 39, lib.get_ctx_pl( "metal coil", "%d spring", "%d springies", 5 ), "%d пружин" );
+    // vpgettext()
+    tst( 31, lib.get_ctx_pl( "source of water", "%d spring", "%d springs", 1 ), "%d родник" );
+    tst( 32, lib.get_ctx_pl( "source of water", "%d spring", "%d springs", 2 ), "%d родника" );
+    tst( 33, lib.get_ctx_pl( "source of water", "%d spring", "%d springs", 5 ), "%d родников" );
+    tst( 34, lib.get_ctx_pl( "metal coil", "%d spring", "%d springs", 1 ), "%d пружина" );
+    tst( 35, lib.get_ctx_pl( "metal coil", "%d spring", "%d springs", 2 ), "%d пружины" );
+    tst( 36, lib.get_ctx_pl( "metal coil", "%d spring", "%d springs", 5 ), "%d пружин" );
+
+    // Plural form does not affect string lookup
+    tst( 41, lib.get( "%d item" ), "%d предмет" );
+    tst( 42, lib.get_pl( "%d item", "%d itemses", 5 ), "%d предметов" );
+    tst( 43, lib.get_ctx( "source of water", "%d spring" ), "%d родник" );
+    tst( 44, lib.get_ctx( "metal coil", "%d spring" ), "%d пружина" );
+    tst( 45, lib.get_ctx_pl( "metal coil", "%d spring", "%d of 'em!", 5 ), "%d пружин" );
+    tst( 46, lib.get_ctx_pl( "source of water", "%d spring", "%d of 'em!", 5 ), "%d родников" );
+
+    // Metadata entry should not be revealed
+    tst( 51, lib.get( "" ), "" );
 }
 
 static const std::string mo_dir = "tests/data/cata_libintl/";

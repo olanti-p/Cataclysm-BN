@@ -187,16 +187,10 @@ class trans_library
 
         std::vector<string_descriptor>::const_iterator find_in_table( const char *id ) const;
 
-        bool string_table_empty() const;
-        void clear_string_table();
         void build_string_table();
 
         const char *lookup_string_in_table( const char *id ) const;
         const char *lookup_pl_string_in_table( const char *id, unsigned long n ) const;
-
-        void clear_all_catalogues();
-        void add_catalogue( trans_catalogue cat );
-        void finalize();
 
     public:
         static trans_library create( std::vector<trans_catalogue> catalogues );

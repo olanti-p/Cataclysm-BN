@@ -14,9 +14,8 @@
 
 // TODO:
 // 1. tests for mo language mixing
-// 2. deal with hash collisions by getting rid of hashing
-// 3. add note on operator precedence
-// 4. write docs & guides
+// 2. add note on operator precedence
+// 3. write docs & guides
 
 // ==============================================================================================
 // Plural forms
@@ -709,16 +708,6 @@ std::vector<trans_library::string_descriptor>::const_iterator trans_library::fin
     return string_vec.end();
 }
 
-bool trans_library::string_table_empty() const
-{
-    return string_vec.empty();
-}
-
-void trans_library::clear_string_table()
-{
-    string_vec.clear();
-}
-
 void trans_library::build_string_table()
 {
     assert( string_vec.empty() );
@@ -751,23 +740,13 @@ void trans_library::build_string_table()
     }
 }
 
-void trans_library::clear_all_catalogues()
+trans_library trans_library::create( std::vector<trans_catalogue> catalogues )
 {
-    clear_string_table();
-    catalogues.clear();
-}
+    trans_library lib;
+    lib.catalogues = std::move( catalogues );
 
-void trans_library::add_catalogue( trans_catalogue cat )
-{
-    clear_string_table();
-    catalogues.push_back( std::move( cat ) );
-}
-
-void trans_library::finalize()
-{
     auto start_tick = std::chrono::steady_clock::now();
-    clear_string_table();
-    build_string_table();
+    lib.build_string_table();
     auto end_tick = std::chrono::steady_clock::now();
     int64_t diff = std::chrono::duration_cast<std::chrono::milliseconds>(
                        end_tick - start_tick ).count();
@@ -776,18 +755,9 @@ void trans_library::finalize()
     for( const trans_catalogue &cat : catalogues ) {
         num_total += cat.get_num_strings();
     }
-    std::cerr << string_format( "[libintl] Took %d ms to hash %d strings", diff,
+    std::cerr << string_format( "[libintl] Took %d ms to sort %d strings", diff,
                                 num_total ) << std::endl;
-}
 
-trans_library trans_library::create( std::vector<trans_catalogue> catalogues )
-{
-    std::cerr << "sizeof(string_descriptor) = " << sizeof( string_descriptor ) << std::endl;
-    trans_library lib;
-    lib.clear_all_catalogues();
-    lib.clear_string_table();
-    lib.catalogues = std::move( catalogues );
-    lib.finalize();
     return lib;
 }
 
@@ -811,24 +781,22 @@ const char *trans_library::lookup_pl_string_in_table( const char *id, unsigned l
 
 const char *trans_library::get( const char *msgid ) const
 {
-    if( !string_table_empty() ) {
-        const char *ret = lookup_string_in_table( msgid );
-        if( ret ) {
-            return ret;
-        }
+    const char *ret = lookup_string_in_table( msgid );
+    if( ret ) {
+        return ret;
+    } else {
+        return msgid;
     }
-    return msgid;
 }
 
 const char *trans_library::get_pl( const char *msgid, const char *msgid_pl, unsigned long n ) const
 {
-    if( !string_table_empty() ) {
-        const char *ret = lookup_pl_string_in_table( msgid, n );
-        if( ret ) {
-            return ret;
-        }
+    const char *ret = lookup_pl_string_in_table( msgid, n );
+    if( ret ) {
+        return ret;
+    } else {
+        return ( n == 1 ) ? msgid : msgid_pl;
     }
-    return ( n == 1 ) ? msgid : msgid_pl;
 }
 
 const char *trans_library::get_ctx( const char *ctx, const char *msgid ) const
