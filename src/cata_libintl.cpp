@@ -1,10 +1,10 @@
 #include "cata_libintl.h"
 
 #include "fstream_utils.h"
-#include "hash_utils.h"
 #include "string_utils.h"
 #include "string_formatter.h"
 
+#include <array>
 #include <chrono>
 #include <cstring>
 #include <iostream>
@@ -17,24 +17,6 @@
 // 2. deal with hash collisions by getting rid of hashing
 // 3. add note on operator precedence
 // 4. write docs & guides
-
-// ==============================================================================================
-// Hashing utilities
-// ==============================================================================================
-
-constexpr cata_internal::u32 HASH_SEED = 0x9e3779b9; // An arbitrary number
-
-inline static void hash_combine_cstr( cata_internal::u32 &seed, const char *str )
-{
-    for( char const *c = str; *c != '\0'; c++ ) {
-        cata::hash_combine( seed, *c, []( char c ) -> cata_internal::u32 {return c;} );
-    }
-}
-
-inline static void hash_combine_char( cata_internal::u32 &seed, char c )
-{
-    cata::hash_combine( seed, c, []( char c ) -> cata_internal::u32 {return c;} );
-}
 
 // ==============================================================================================
 // Plural forms
@@ -665,18 +647,6 @@ trans_catalogue::trans_catalogue( std::string buffer )
     check_string_plurals();
 }
 
-cata_internal::u32 trans_catalogue::hash_nth_orig_string( u32 n ) const
-{
-    u32 record_addr = offs_orig_table + n * MO_STRING_RECORD_STEP;
-    string_info r = get_string_info_unsafe( record_addr );
-
-    u32 seed = HASH_SEED;
-    for( u32 i = 0; i < r.length; i++ ) {
-        hash_combine_char( seed, get_u8_unsafe( r.address + i ) );
-    }
-    return seed;
-}
-
 const char *trans_catalogue::get_nth_orig_string( u32 n ) const
 {
     u32 record_addr = offs_orig_table + n * MO_STRING_RECORD_STEP;
@@ -721,14 +691,21 @@ const char *trans_catalogue::get_nth_pl_translation( u32 n, unsigned long num ) 
 // ==============================================================================================
 
 std::vector<trans_library::string_descriptor>::const_iterator trans_library::find_in_table(
-    u32 hash ) const
+    const char *id ) const
 {
-    if( !string_vec.empty() ) {
-        auto it = std::lower_bound( string_vec.begin(), string_vec.end(), string_descriptor{hash, 0, 0} );
-        if( it->hash == hash ) {
+    auto it = std::lower_bound( string_vec.begin(), string_vec.end(),
+    id, [this]( const string_descriptor & a_descr, const char *b ) -> bool {
+        const char *a = this->catalogues[a_descr.catalogue].get_nth_orig_string( a_descr.entry );
+        return strcmp( a, b ) < 0;
+    } );
+
+    if( it != string_vec.end() ) {
+        const char *found = catalogues[it->catalogue].get_nth_orig_string( it->entry );
+        if( strcmp( id, found ) == 0 ) {
             return it;
         }
     }
+
     return string_vec.end();
 }
 
@@ -752,29 +729,23 @@ void trans_library::build_string_table()
         // 0th entry is the metadata, we skip it
         string_vec.reserve( num - 1 );
         for( u32 i = 1; i < num; i++ ) {
-            u32 hsh = cat.hash_nth_orig_string( i );
-            // TODO: properly report conflicts
-            auto it = find_in_table( hsh );
-            if( it != string_vec.end() ) {
-                string_descriptor sd = *it;
-                std::string orig( catalogues[sd.catalogue].get_nth_orig_string( sd.entry ) );
-                std::string curr( catalogues[i_cat].get_nth_orig_string( i ) );
-                if( orig != curr ) {
-                    std::string e = string_format(
-                                        "Hash collision for strings %d:%d and %d:%d",
-                                        sd.catalogue, sd.entry, i_cat, i
-                                    );
-                    throw std::runtime_error( e );
-                } else {
-                    //std::cerr << "Overwriting a string!" << std::endl << std::flush;
-                }
-            }
-            string_descriptor desc = { hsh, i_cat, i };
-            if( string_vec.empty() ) {
+            const char *i_cstr = cat.get_nth_orig_string( i );
+
+            auto it = std::lower_bound( string_vec.begin(), string_vec.end(),
+            i_cstr, [this]( const string_descriptor & a_descr, const char *b ) -> bool {
+                const char *a = this->catalogues[a_descr.catalogue].get_nth_orig_string( a_descr.entry );
+                return strcmp( a, b ) < 0;
+            } );
+
+            string_descriptor desc = { i_cat, i };
+            if( it == string_vec.end() ) {
+                // Not found, or all elements are greater
                 string_vec.push_back( desc );
+            } else if( strcmp( catalogues[it->catalogue].get_nth_orig_string( it->entry ), i_cstr ) == 0 ) {
+                // Don't overwrite existing strings
+                continue;
             } else {
-                auto pos = std::lower_bound( string_vec.begin(), string_vec.end(), desc );
-                string_vec.insert( pos, desc );
+                string_vec.insert( it, desc );
             }
         }
     }
@@ -820,18 +791,18 @@ trans_library trans_library::create( std::vector<trans_catalogue> catalogues )
     return lib;
 }
 
-const char *trans_library::lookup_string_in_table( u32 hsh ) const
+const char *trans_library::lookup_string_in_table( const char *id ) const
 {
-    auto it = find_in_table( hsh );
+    auto it = find_in_table( id );
     if( it == string_vec.end() ) {
         return nullptr;
     }
     return catalogues[it->catalogue].get_nth_translation( it->entry );
 }
 
-const char *trans_library::lookup_pl_string_in_table( u32 hsh, unsigned long n ) const
+const char *trans_library::lookup_pl_string_in_table( const char *id, unsigned long n ) const
 {
-    auto it = find_in_table( hsh );
+    auto it = find_in_table( id );
     if( it == string_vec.end() ) {
         return nullptr;
     }
@@ -841,11 +812,7 @@ const char *trans_library::lookup_pl_string_in_table( u32 hsh, unsigned long n )
 const char *trans_library::get( const char *msgid ) const
 {
     if( !string_table_empty() ) {
-        u32 seed = HASH_SEED;
-
-        hash_combine_cstr( seed, msgid );
-
-        const char *ret = lookup_string_in_table( seed );
+        const char *ret = lookup_string_in_table( msgid );
         if( ret ) {
             return ret;
         }
@@ -856,13 +823,7 @@ const char *trans_library::get( const char *msgid ) const
 const char *trans_library::get_pl( const char *msgid, const char *msgid_pl, unsigned long n ) const
 {
     if( !string_table_empty() ) {
-        u32 seed = HASH_SEED;
-
-        hash_combine_cstr( seed, msgid );
-        hash_combine_char( seed, '\0' );
-        hash_combine_cstr( seed, msgid_pl );
-
-        const char *ret = lookup_pl_string_in_table( seed, n );
+        const char *ret = lookup_pl_string_in_table( msgid, n );
         if( ret ) {
             return ret;
         }
@@ -872,37 +833,19 @@ const char *trans_library::get_pl( const char *msgid, const char *msgid_pl, unsi
 
 const char *trans_library::get_ctx( const char *ctx, const char *msgid ) const
 {
-    if( !string_table_empty() ) {
-        u32 seed = HASH_SEED;
-
-        hash_combine_cstr( seed, ctx );
-        hash_combine_char( seed, '\4' );
-        hash_combine_cstr( seed, msgid );
-
-        const char *ret = lookup_string_in_table( seed );
-        if( ret ) {
-            return ret;
-        }
-    }
-    return msgid;
+    std::string buf;
+    buf += ctx;
+    buf += '\4';
+    buf += msgid;
+    return get( buf.c_str() );
 }
 
 const char *trans_library::get_ctx_pl( const char *ctx, const char *msgid, const char *msgid_pl,
                                        unsigned long n ) const
 {
-    if( !string_table_empty() ) {
-        u32 seed = HASH_SEED;
-
-        hash_combine_cstr( seed, ctx );
-        hash_combine_char( seed, '\4' );
-        hash_combine_cstr( seed, msgid );
-        hash_combine_char( seed, '\0' );
-        hash_combine_cstr( seed, msgid_pl );
-
-        const char *ret = lookup_pl_string_in_table( seed, n );
-        if( ret ) {
-            return ret;
-        }
-    }
-    return ( n == 1 ) ? msgid : msgid_pl;
+    std::string buf;
+    buf += ctx;
+    buf += '\4';
+    buf += msgid;
+    return get_pl( buf.c_str(), msgid_pl, n );
 }

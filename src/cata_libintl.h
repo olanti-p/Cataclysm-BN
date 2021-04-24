@@ -151,7 +151,6 @@ class trans_catalogue
             return number_of_strings;
         }
 
-        u32 hash_nth_orig_string( u32 n ) const;
         const char *get_nth_translation( u32 n ) const;
         const char *get_nth_pl_translation( u32 n, unsigned long num ) const;
 
@@ -172,13 +171,8 @@ class trans_library
     private:
         // Describes single string within the library
         struct string_descriptor {
-            u32 hash;
             u32 catalogue;
             u32 entry;
-
-            bool operator<( const string_descriptor &rhs ) const {
-                return this->hash < rhs.hash;
-            }
         };
 
         // =========== MEMBERS ===========
@@ -191,14 +185,14 @@ class trans_library
 
         // =========== METHODS ===========
 
-        std::vector<string_descriptor>::const_iterator find_in_table( u32 hash ) const;
+        std::vector<string_descriptor>::const_iterator find_in_table( const char *id ) const;
 
         bool string_table_empty() const;
         void clear_string_table();
         void build_string_table();
 
-        const char *lookup_string_in_table( u32 hsh ) const;
-        const char *lookup_pl_string_in_table( u32 hsh, unsigned long n ) const;
+        const char *lookup_string_in_table( const char *id ) const;
+        const char *lookup_pl_string_in_table( const char *id, unsigned long n ) const;
 
         void clear_all_catalogues();
         void add_catalogue( trans_catalogue cat );
