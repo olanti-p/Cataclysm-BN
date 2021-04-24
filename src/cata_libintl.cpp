@@ -471,31 +471,30 @@ void trans_catalogue::process_file_header()
 
 void trans_catalogue::check_string_terminators()
 {
-    const auto check_string = [this]( bool nullt, u32 addr ) {
+    const auto check_string = [this]( u32 addr ) {
+        // Check that string with its null terminator (not included in string length)
+        // does not extend beyond file boundaries.
         string_info s = get_string_info( addr );
-        if( s.address + s.length + ( nullt ? 1 : 0 ) > buf_size() ) {
+        if( s.address + s.length + 1 > buf_size() ) {
             std::string e = string_format(
                                 "string_info at %#x: extends beyond EOF (len:%#x addr:%#x file size:%#x)",
                                 addr, s.length, s.address, buf_size()
                             );
             throw std::runtime_error( e );
         }
-        if( nullt ) {
-            // The byte following the string should be 0.
-            // It's not counted towards string size.
-            u8 terminator = get_u8( s.address + s.length );
-            if( terminator != 0 ) {
-                std::string e = string_format(
-                                    "string_info at %#x: missing null terminator",
-                                    addr
-                                );
-                throw std::runtime_error( e );
-            }
+        // Also check for existence of the null byte.
+        u8 terminator = get_u8( s.address + s.length );
+        if( terminator != 0 ) {
+            std::string e = string_format(
+                                "string_info at %#x: missing null terminator",
+                                addr
+                            );
+            throw std::runtime_error( e );
         }
     };
     for( u32 i = 0; i < number_of_strings; i++ ) {
-        check_string( false, offs_orig_table + i * MO_STRING_RECORD_STEP );
-        check_string( true, offs_trans_table + i * MO_STRING_RECORD_STEP );
+        check_string( offs_orig_table + i * MO_STRING_RECORD_STEP );
+        check_string( offs_trans_table + i * MO_STRING_RECORD_STEP );
     }
 }
 
