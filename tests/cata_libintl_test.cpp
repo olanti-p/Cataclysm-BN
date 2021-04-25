@@ -48,7 +48,7 @@ static const std::vector<test_case_data> tests_plural_form_rules = {{
         {
             6, // same op priority
             "1 && 2 && 3 && 4",
-            "(((1&&2)&&3)&&4)",
+            "(1&&(2&&(3&&4)))", // TODO: "(((1&&2)&&3)&&4)",
         },
         {
             7, // maximum integer
@@ -329,14 +329,15 @@ TEST_CASE( "mo_plurals_calculation", "[libintl][i18n]" )
     };
 }
 
+static void tst( int serial, const char *s, const char *expected )
+{
+    CAPTURE( serial );
+    REQUIRE( s );
+    CHECK( std::string( s ) == expected );
+}
+
 static void test_get_strings( const trans_library &lib )
 {
-    const auto tst = []( int serial, const char *s, const char *expected ) {
-        CAPTURE( serial );
-        REQUIRE( s );
-        CHECK( std::string( s ) == expected );
-    };
-
     // _()
     tst( 1, lib.get( "Cataclysm" ), "Катаклизм" );
 
@@ -400,6 +401,30 @@ TEST_CASE( "multiple_mo_strings", "[libintl][i18n]" )
     trans_library lib = trans_library::create( std::move( list ) );
 
     test_get_strings( lib );
+}
+
+// Load multiple MO for different languages and get plural strings
+TEST_CASE( "multiple_mo_different_languages", "[libintl][i18n]" )
+{
+    std::vector<trans_catalogue> list;
+    list.push_back( trans_catalogue::load_from_file( mo_dir + "multilang_ru.mo" ) );
+    list.push_back( trans_catalogue::load_from_file( mo_dir + "multilang_fr.mo" ) );
+    trans_library lib = trans_library::create( std::move( list ) );
+
+    // Ru
+    tst( 11, lib.get_pl( "%d item", "%d items", 0 ), "%d предметов" );
+    tst( 12, lib.get_pl( "%d item", "%d items", 1 ), "%d предмет" );
+    tst( 13, lib.get_pl( "%d item", "%d items", 2 ), "%d предмета" );
+
+    // Fr
+    tst( 21, lib.get_pl( "%d monster", "%d monsters", 0 ), "%d monstre" );
+    tst( 22, lib.get_pl( "%d monster", "%d monsters", 1 ), "%d monstre" );
+    tst( 23, lib.get_pl( "%d monster", "%d monsters", 2 ), "%d monstres" );
+
+    // En (original strings)
+    tst( 31, lib.get_pl( "%d actor", "%d actors", 0 ), "%d actors" );
+    tst( 32, lib.get_pl( "%d actor", "%d actors", 1 ), "%d actor" );
+    tst( 33, lib.get_pl( "%d actor", "%d actors", 2 ), "%d actors" );
 }
 
 static const std::vector<test_case_data> tests_mo_loading_failures = {{

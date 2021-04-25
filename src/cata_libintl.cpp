@@ -14,9 +14,10 @@
 #include <sstream>
 
 // TODO:
-// 1. tests for mo language mixing
-// 2. add note on operator precedence
-// 3. write docs & guides
+// 1. deal with a && (b && c) bullshit
+// 2. deal with double language loading on game start
+// 3. write/update docs & guides
+// 4. purge debug output
 
 // ==============================================================================================
 // Plural forms
