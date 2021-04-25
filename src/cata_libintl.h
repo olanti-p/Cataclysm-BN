@@ -12,7 +12,10 @@ namespace cata_internal
 using u32 = uint32_t;
 using u8 = uint8_t;
 
-/** Plural forms AST node type */
+/**
+ * Plural forms AST node type.
+ * Also used for token identification during parsing.
+ */
 enum class PlfOp : int {
     Mod,       // a % b
     Eq,        // a == b

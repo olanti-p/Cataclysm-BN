@@ -178,6 +178,19 @@ ParseRet plf_get_cmp( const PlfTStream &ts );
 ParseRet plf_get_mod( const PlfTStream &ts );
 ParseRet plf_get_value( const PlfTStream &ts );
 
+// Gettext plf expression follows same operator precedence as C
+PlfNodePtr parse_plural_rules( const std::string &s )
+{
+    PlfTStream tokstr( &s );
+    ParseRet ret = plf_get_expr( tokstr );
+    if( ret.ts.has_tokens() ) {
+        PlfToken tok = ret.ts.peek();
+        std::string e = string_format( "unexpected token at pos %d", tok.start );
+        throw std::runtime_error( e );
+    }
+    return std::move( ret.expr );
+}
+
 static bool plf_try_binary_op( ParseRet &left, PlfOp op, ParserPtr parser )
 {
     const PlfTStream &ts = left.ts;
@@ -285,18 +298,6 @@ ParseRet plf_get_value( const PlfTStream &ts )
         std::string e = string_format( "expected expression at pos %d", next.start );
         throw std::runtime_error( e );
     }
-}
-
-PlfNodePtr parse_plural_rules( const std::string &s )
-{
-    PlfTStream tokstr( &s );
-    ParseRet ret = plf_get_expr( tokstr );
-    if( ret.ts.has_tokens() ) {
-        PlfToken tok = ret.ts.peek();
-        std::string e = string_format( "unexpected token at pos %d", tok.start );
-        throw std::runtime_error( e );
-    }
-    return std::move( ret.expr );
 }
 
 std::string cata_internal::PlfNode::debug_dump() const
