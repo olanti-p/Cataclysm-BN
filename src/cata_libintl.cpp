@@ -4,6 +4,7 @@
 #include "string_utils.h"
 #include "string_formatter.h"
 
+#include <algorithm>
 #include <array>
 #include <chrono>
 #include <cstring>
