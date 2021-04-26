@@ -14,51 +14,50 @@
 #include <sstream>
 
 // TODO:
-// 1. deal with a && (b && c) bullshit
-// 2. deal with double language loading on game start
-// 3. write/update docs & guides
-// 4. purge debug output
+// 1. deal with double language loading on game start
+// 2. write/update docs & guides
+// 3. purge debug output
 
-// ==============================================================================================
+// ===============================================================================================
 // Plural forms
-// ==============================================================================================
+// ===============================================================================================
+//
+// Plural forms expression evaluation is done by evaluating a simple AST built from the
+// source string. The expression follows same operator precedence as C, and the parser here
+// is based on same simplified grammar as the parser used by Poedit:
+//
+// Expr:                     // Expression
+//     OrExpr ? Expr : Expr
+//     OrExpr
+// OrExpr:                   // Logical OR
+//     AndExpr || OrExpr
+//     AndExpr
+// AndExpr:                  // Logical AND
+//     EqExpr && AndExpr
+//     EqExpr
+// EqExpr:                   // Equality
+//     CmpExpr == CmpExpr
+//     CmpExpr != CmpExpr
+//     CmpExpr
+// CmpExpr:                  // Comparison
+//     ModExpr >= ModExpr
+//     ModExpr > ModExpr
+//     ModExpr <= ModExpr
+//     ModExpr < ModExpr
+//     ModExpr
+// ModExpr:                  // Modulo
+//     Value % Value
+//     Value
+// Value:                    // Value
+//     ( Expr )   // expression in brackets
+//     [0..9]+    // unsigned integer
+//     n          // the variable
+//
+// Note that this grammar does not cover all valid C expressions, or all valid C operators
+// (e.g. "n % 10 % 3", or "(n+1) % 2"), but that doesn't seem to cause problems.
 
 namespace cata_internal
 {
-unsigned long PlfNode::eval( unsigned long n ) const
-{
-    switch( op ) {
-        case PlfOp::Mod:
-            return a->eval( n ) % b->eval( n );
-        case PlfOp::Eq:
-            return a->eval( n ) == b->eval( n );
-        case PlfOp::NotEq:
-            return a->eval( n ) != b->eval( n );
-        case PlfOp::GreaterEq:
-            return a->eval( n ) >= b->eval( n );
-        case PlfOp::Greater:
-            return a->eval( n ) > b->eval( n );
-        case PlfOp::LessEq:
-            return a->eval( n ) <= b->eval( n );
-        case PlfOp::Less:
-            return a->eval( n ) < b->eval( n );
-        case PlfOp::And:
-            return a->eval( n ) && b->eval( n );
-        case PlfOp::Or:
-            return a->eval( n ) || b->eval( n );
-        case PlfOp::TerCond:
-            return a->eval( n ) ? b->eval( n ) : c->eval( n );
-        case PlfOp::Literal:
-            return literal_val;
-        case PlfOp::Variable:
-            return n;
-        default:
-            // unreachable
-            assert( false );
-    }
-    return 0;
-}
-
 struct PlfToken {
     PlfOp kind;
     unsigned long num;
@@ -179,7 +178,6 @@ ParseRet plf_get_cmp( const PlfTStream &ts );
 ParseRet plf_get_mod( const PlfTStream &ts );
 ParseRet plf_get_value( const PlfTStream &ts );
 
-// Gettext plf expression follows same operator precedence as C
 PlfNodePtr parse_plural_rules( const std::string &s )
 {
     PlfTStream tokstr( &s );
@@ -243,10 +241,10 @@ ParseRet plf_get_and( const PlfTStream &ts )
 ParseRet plf_get_eq( const PlfTStream &ts )
 {
     ParseRet ret = plf_get_cmp( ts );
-    if( plf_try_binary_op( ret, PlfOp::Eq, plf_get_eq ) ) {
+    if( plf_try_binary_op( ret, PlfOp::Eq, plf_get_cmp ) ) {
         return ret;
     }
-    plf_try_binary_op( ret, PlfOp::NotEq, plf_get_eq );
+    plf_try_binary_op( ret, PlfOp::NotEq, plf_get_cmp );
     return ret;
 }
 
@@ -301,6 +299,40 @@ ParseRet plf_get_value( const PlfTStream &ts )
     }
 }
 
+unsigned long PlfNode::eval( unsigned long n ) const
+{
+    switch( op ) {
+        case PlfOp::Mod:
+            return a->eval( n ) % b->eval( n );
+        case PlfOp::Eq:
+            return a->eval( n ) == b->eval( n );
+        case PlfOp::NotEq:
+            return a->eval( n ) != b->eval( n );
+        case PlfOp::GreaterEq:
+            return a->eval( n ) >= b->eval( n );
+        case PlfOp::Greater:
+            return a->eval( n ) > b->eval( n );
+        case PlfOp::LessEq:
+            return a->eval( n ) <= b->eval( n );
+        case PlfOp::Less:
+            return a->eval( n ) < b->eval( n );
+        case PlfOp::And:
+            return a->eval( n ) && b->eval( n );
+        case PlfOp::Or:
+            return a->eval( n ) || b->eval( n );
+        case PlfOp::TerCond:
+            return a->eval( n ) ? b->eval( n ) : c->eval( n );
+        case PlfOp::Literal:
+            return literal_val;
+        case PlfOp::Variable:
+            return n;
+        default:
+            // unreachable
+            assert( false );
+    }
+    return 0;
+}
+
 std::string cata_internal::PlfNode::debug_dump() const
 {
     std::ostringstream ss;
@@ -333,9 +365,9 @@ std::string cata_internal::PlfNode::debug_dump() const
 }
 } // namespace cata_internal
 
-// ==============================================================================================
+// ===============================================================================================
 // Translation catalogue
-// ==============================================================================================
+// ===============================================================================================
 
 constexpr cata_internal::u32 MO_STRING_RECORD_STEP = 8;
 
@@ -688,9 +720,9 @@ const char *trans_catalogue::get_nth_pl_translation( u32 n, unsigned long num ) 
     return nullptr;
 }
 
-// ==============================================================================================
+// ===============================================================================================
 // Translation library
-// ==============================================================================================
+// ===============================================================================================
 
 std::vector<trans_library::string_descriptor>::const_iterator trans_library::find_in_table(
     const char *id ) const

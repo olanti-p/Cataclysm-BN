@@ -36,19 +36,19 @@ static const std::vector<test_case_data> tests_plural_form_rules = {{
             "(n?(1?2:3):4)",
         },
         {
-            4, // ternary op priority
-            "n==1?n%2:n%3",
-            "((n==1)?(n%2):(n%3))",
+            4, // same op
+            "1 && 2 && 3 && 4",
+            "(1&&(2&&(3&&4)))",
         },
         {
-            5, // simple op priority
+            5, // binary op priority
             "n%10==1 && n%100!=11",
             "(((n%10)==1)&&((n%100)!=11))",
         },
         {
-            6, // same op priority
-            "1 && 2 && 3 && 4",
-            "(1&&(2&&(3&&4)))", // TODO: "(((1&&2)&&3)&&4)",
+            6, // ternary op priority
+            "n==1?n%2:n%3",
+            "((n==1)?(n%2):(n%3))",
         },
         {
             7, // maximum integer
