@@ -555,3 +555,54 @@ TEST_CASE( "gnu_gettext_plurals", "[libintl][i18n]" )
         REQUIRE( ptr );
     }
 }
+
+#include <random>
+#include <algorithm>
+#include <iterator>
+#include <iostream>
+#include <vector>
+
+TEST_CASE( "get_string_benchmark", "[libintl][i18n]" )
+{
+    std::string path = "lang/mo/ru_RU/LC_MESSAGES/cataclysm-bn.mo";
+    if( !file_exist( path ) ) {
+        WARN( "Skipping (file not found)" );
+        return;
+    }
+
+    trans_catalogue cat = std::move( trans_catalogue::load_from_file( path ) );
+
+    size_t num = cat.get_num_strings();
+    std::vector<std::string> originals;
+    for( size_t i = 0; i < num; i++ ) {
+        originals.push_back( cat.get_nth_orig_string( i ) );
+    }
+
+    std::vector<trans_catalogue> list;
+    list.push_back( std::move( cat ) );
+    trans_library lib = trans_library::create( std::move( list ) );
+
+    std::random_device rd;
+    std::mt19937 g( rd() );
+    std::shuffle( originals.begin(), originals.end(), g );
+
+    const auto run_once = [&]() {
+        for( const std::string &s : originals ) {
+            lib.get( s.c_str() );
+        }
+    };
+
+    // Warm-up
+    run_once();
+
+    // Actual bench
+    auto start_tick = std::chrono::steady_clock::now();
+    for( int i = 0; i < 10; i++ ) {
+        run_once();
+    }
+    auto end_tick = std::chrono::steady_clock::now();
+
+    int64_t diff = std::chrono::duration_cast<std::chrono::milliseconds>(
+                       end_tick - start_tick ).count();
+    std::cerr << string_format( "Bench result: %d ms", diff ) << std::endl;
+}
