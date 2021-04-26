@@ -570,16 +570,14 @@ TEST_CASE( "get_string_benchmark", "[libintl][i18n]" )
         return;
     }
 
-    trans_catalogue cat = std::move( trans_catalogue::load_from_file( path ) );
+    std::vector<trans_catalogue> list;
+    list.push_back( trans_catalogue::load_from_file( path ) );
 
-    size_t num = cat.get_num_strings();
+    size_t num = list.back().get_num_strings();
     std::vector<std::string> originals;
     for( size_t i = 0; i < num; i++ ) {
-        originals.push_back( cat.get_nth_orig_string( i ) );
+        originals.push_back( list.back().get_nth_orig_string( i ) );
     }
-
-    std::vector<trans_catalogue> list;
-    list.push_back( std::move( cat ) );
     trans_library lib = trans_library::create( std::move( list ) );
 
     std::random_device rd;
@@ -596,13 +594,17 @@ TEST_CASE( "get_string_benchmark", "[libintl][i18n]" )
     run_once();
 
     // Actual bench
+    constexpr size_t ITERATIONS = 10;
     auto start_tick = std::chrono::steady_clock::now();
-    for( int i = 0; i < 10; i++ ) {
+    for( size_t i = 0; i < ITERATIONS; i++ ) {
         run_once();
     }
     auto end_tick = std::chrono::steady_clock::now();
 
     int64_t diff = std::chrono::duration_cast<std::chrono::milliseconds>(
                        end_tick - start_tick ).count();
-    std::cerr << string_format( "Bench result: %d ms", diff ) << std::endl;
+    std::cerr << string_format(
+                  "Bench result: %d ms  %d x %d strings",
+                  diff, originals.size(), ITERATIONS
+              ) << std::endl;
 }
