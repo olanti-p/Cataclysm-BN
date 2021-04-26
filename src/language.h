@@ -113,6 +113,12 @@ void set_language();
  */
 const language_info &get_language();
 
+/**
+ * Get prioritized list of substrings for language-dependent file paths.
+ * The substrings can be used as file/folder names or as prefixes/suffixes.
+ */
+std::vector<std::string> get_lang_path_substring( const std::string &lang_id );
+
 #if defined(LOCALIZE)
 class trans_library;
 namespace l10n_data
