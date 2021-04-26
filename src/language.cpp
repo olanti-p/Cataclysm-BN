@@ -538,15 +538,21 @@ trans_library &get_library()
 }
 
 
-static void add_cat_if_exists( std::vector<trans_catalogue> &list, const std::string &file_path )
+static void add_cat_if_exists( std::vector<trans_catalogue> &list, const std::string &lang_id,
+                               const std::string &path_start, const std::string &path_end )
 {
-    if( !file_exist( file_path ) ) {
-        return;
-    }
-    try {
-        list.push_back( trans_catalogue::load_from_file( file_path ) );
-    } catch( std::runtime_error err ) {
-        debugmsg( "Failed to load translation catalogue '%s': %s", file_path, err.what() );
+    std::vector<std::string> opts = get_lang_path_substring( lang_id );
+    for( const std::string &s : opts ) {
+        std::string path = path_start + s + path_end;
+        if( !file_exist( path ) ) {
+            continue;
+        }
+        try {
+            list.push_back( trans_catalogue::load_from_file( path ) );
+        } catch( std::runtime_error err ) {
+            debugmsg( "Failed to load translation catalogue '%s': %s", path, err.what() );
+        }
+        break;
     }
 }
 
@@ -554,8 +560,10 @@ static void add_base_catalogue( std::vector<trans_catalogue> &list, const std::s
 {
     // TODO: split source code strings from data strings
     //       and load data translations from separate file(s)
-    std::string path = PATH_INFO::base_path() + "lang/mo/" + lang_id + "/LC_MESSAGES/cataclysm-bn.mo";
-    add_cat_if_exists( list, path );
+    add_cat_if_exists( list, lang_id,
+                       PATH_INFO::base_path() + "lang/mo/",
+                       "/LC_MESSAGES/cataclysm-bn.mo"
+                     );
 }
 
 static void add_mod_catalogues( std::vector<trans_catalogue> &list, const std::string &lang_id )
@@ -566,8 +574,7 @@ static void add_mod_catalogues( std::vector<trans_catalogue> &list, const std::s
 
     const std::vector<mod_id> &mods = world_generator->active_world->active_mod_order;
     for( const mod_id &mod : mods ) {
-        std::string path = mod.obj().path + "/lang/" + lang_id + ".mo";
-        add_cat_if_exists( list, path );
+        add_cat_if_exists( list, lang_id, mod.obj().path + "/lang/", ".mo" );
     }
 }
 
