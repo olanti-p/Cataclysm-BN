@@ -577,7 +577,7 @@ trans_catalogue::plf_header_data trans_catalogue::parse_plf_header( const meta_h
             break;
         }
         if( !found ) {
-            // Default to English rules
+            // Default to Germanic rules (English, German, Dutch, ...)
             ret.num = 2;
             ret.rules = cata_internal::parse_plural_rules( "n!=1" );
             return ret;
