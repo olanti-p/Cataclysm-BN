@@ -839,7 +839,12 @@ const char *trans_library::get_ctx( const char *ctx, const char *msgid ) const
     buf += ctx;
     buf += '\4';
     buf += msgid;
-    return get( buf.c_str() );
+    const char *ret = lookup_string_in_table( buf.c_str() );
+    if( ret ) {
+        return ret;
+    } else {
+        return msgid;
+    }
 }
 
 const char *trans_library::get_ctx_pl( const char *ctx, const char *msgid, const char *msgid_pl,
@@ -849,6 +854,11 @@ const char *trans_library::get_ctx_pl( const char *ctx, const char *msgid, const
     buf += ctx;
     buf += '\4';
     buf += msgid;
-    return get_pl( buf.c_str(), msgid_pl, n );
+    const char *ret = lookup_pl_string_in_table( buf.c_str(), n );
+    if( ret ) {
+        return ret;
+    } else {
+        return ( n == 1 ) ? msgid : msgid_pl;
+    }
 }
 } // namespace cata_internal
