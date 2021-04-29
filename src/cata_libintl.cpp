@@ -14,8 +14,8 @@
 #include <sstream>
 
 // TODO:
-// 1. deal with double language loading on game start
-// 2. write/update docs & guides
+// 1. write/update docs & guides
+// 2. rename all wrongly-named shit
 // 3. purge debug output
 
 // ===============================================================================================
