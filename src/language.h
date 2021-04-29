@@ -123,11 +123,12 @@ std::vector<std::string> get_lang_path_substring( const std::string &lang_id );
 namespace cata_libintl
 {
 class trans_library;
-}
+} // namespace cata_libintl
 
 namespace l10n_data
 {
-cata_libintl::trans_library &get_library();
+const cata_libintl::trans_library &get_library();
+
 void reload_catalogues();
 void unload_catalogues();
 void load_mod_catalogues();

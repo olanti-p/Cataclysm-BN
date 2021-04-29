@@ -90,7 +90,7 @@ static void reload_names()
 // (DebugLog does not append newlines, so we have to do it ourselves).
 #define dbg(lvl, ...) \
     if (!test_mode || lvl & D_ERROR ) { \
-        DebugLog(lvl, D_MAIN) << string_format(__VA_ARGS__); \
+        DebugLog(lvl, D_MAIN) << string_format(__VA_ARGS__) << std::flush; \
     } else { \
         cata_printf(__VA_ARGS__); \
         cata_printf("\n"); \
@@ -534,12 +534,17 @@ using cata_libintl::trans_catalogue;
 
 namespace l10n_data
 {
-trans_library &get_library()
+static trans_library trans_lib_singleton;
+const trans_library &get_library()
 {
-    static trans_library trans_lib_singleton;
     return trans_lib_singleton;
 }
 
+static void set_library( trans_library lib )
+{
+    trans_lib_singleton = std::move( lib );
+    invalidate_translations();
+}
 
 static void add_cat_if_exists( std::vector<trans_catalogue> &list, const std::string &lang_id,
                                const std::string &path_start, const std::string &path_end )
@@ -569,16 +574,17 @@ static void add_base_catalogue( std::vector<trans_catalogue> &list, const std::s
                      );
 }
 
-static void add_mod_catalogues( std::vector<trans_catalogue> &list, const std::string &lang_id )
+static bool add_mod_catalogues( std::vector<trans_catalogue> &list, const std::string &lang_id )
 {
     if( !world_generator || !world_generator->active_world ) {
-        return;
+        return false;
     }
 
     const std::vector<mod_id> &mods = world_generator->active_world->active_mod_order;
     for( const mod_id &mod : mods ) {
         add_cat_if_exists( list, lang_id, mod.obj().path + "/lang/", ".mo" );
     }
+    return true;
 }
 
 void reload_catalogues()
@@ -586,23 +592,22 @@ void reload_catalogues()
     if( !gettext_use_modular ) {
         return;
     }
-    dbg( D_INFO, "[lang] Reloading all catalogues." );
+    dbg( D_INFO, "[trans] Reloading all catalogues." );
 
     std::vector<trans_catalogue> list;
     add_base_catalogue( list, get_language().id );
     add_mod_catalogues( list, get_language().id );
-    get_library() = trans_library::create( std::move( list ) );
-
-    invalidate_translations();
+    set_library( trans_library::create( std::move( list ) ) );
 }
+
+static bool mod_catalogues_loaded = false;
 
 void unload_catalogues()
 {
-    dbg( D_INFO, "[lang] Unloading all catalogues." );
+    dbg( D_INFO, "[trans] Unloading all catalogues." );
 
-    get_library() = trans_library::create( {} );
-
-    invalidate_translations();
+    mod_catalogues_loaded = false;
+    set_library( trans_library::create( {} ) );
 }
 
 void load_mod_catalogues()
@@ -610,28 +615,26 @@ void load_mod_catalogues()
     if( !gettext_use_modular ) {
         return;
     }
-    dbg( D_INFO, "[lang] Loading mod catalogues." );
+    dbg( D_INFO, "[trans] Loading mod catalogues." );
 
+    assert( !mod_catalogues_loaded );
     std::vector<trans_catalogue> list;
     add_base_catalogue( list, get_language().id );
-    add_mod_catalogues( list, get_language().id );
-    get_library() = trans_library::create( std::move( list ) );
-
-    invalidate_translations();
+    mod_catalogues_loaded = add_mod_catalogues( list, get_language().id );
+    set_library( trans_library::create( std::move( list ) ) );
 }
 
 void unload_mod_catalogues()
 {
-    if( !gettext_use_modular ) {
+    if( !gettext_use_modular || !mod_catalogues_loaded ) {
         return;
     }
-    dbg( D_INFO, "[lang] Unloading mod catalogues." );
+    dbg( D_INFO, "[trans] Unloading mod catalogues." );
 
+    mod_catalogues_loaded = false;
     std::vector<trans_catalogue> list;
     add_base_catalogue( list, get_language().id );
-    get_library() = trans_library::create( std::move( list ) );
-
-    invalidate_translations();
+    set_library( trans_library::create( std::move( list ) ) );
 }
 
 } // namespace l10n_data
