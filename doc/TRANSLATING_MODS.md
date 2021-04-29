@@ -1,11 +1,12 @@
 # Translating mods for Cataclysm: BN
 
 ## Disclaimer
-This document aims to give a full, if brief, explanation on how to set up and operate
+This document aims to give a brief explanation on how to set up and operate
 mod translation workflow for Cataclysm: Bright Nights
 
 While it's possible to use Transifex or any other platform or software that supports gettext,
-this document only gives examples on how to do it with [Poedit](https://poedit.net/).
+this document only gives examples on how to do it with [Poedit](https://poedit.net/) and 
+command-line [GNU gettext utilities](https://www.gnu.org/software/gettext/).
 
 To get some generic tips on translating strings for Cataclysm: Bright Nights and its mods, see [TRANSLATING.md](TRANSLATING.md).
 
@@ -50,62 +51,60 @@ Step 1 in both workflows requires you to set up environment for string extractio
 Steps 2-4 can be done using translation software either by the mod author/maintainer, or by the translator.
 
 ## Setting up environment for string extraction
-### Installing software
-This part will need to be done only once.
-#### Linux
-You'll need GNU gettext utilities, python and git. They can be installed with
+### 1. Python
+You'll need Python 3 with `polib` library installed.
+There are many tutorials online on how to install Python 3 and `pip`, Python's package manager, and the `polib` library can be installed via
 ```bash
-sudo apt-get install gettext python git
+pip install polib
 ```
+On Windows, make sure to add Python to the `PATH` variable (look for tutorials if you don't know how).
 
-#### Mac
-You'll need GNU gettext utilities, python and git. They can be installed with
-```bash
-brew install gettext python git
-```
+### 2. Scripts
+Scripts for extracting strings from JSON files can be found in the `lang` directory of the game repository.
 
-#### Windows
-If you have a compilation environment for the game set up on your computer, Cygwin or MSYS2,
-then you should already have everything installed and ready.
-
-Otherwise, setting up environment for string extraction follows the same steps as setting up compilation
-environment - except you won't need to install as much packages.
-
-##### Using Cygwin
-Follow `Installation` and `Configuration` parts of [COMPILING-CYGWIN.md](COMPILING/COMPILING-CYGWIN.md) guide,
-except instead of installing all packages required for compilation install only the ones required for cloning and string extraction:
-```bash
-apt-cyg install git gettext python3
-```
-
-##### Using MSYS2
-Follow `Prerequisites` and `Installation` parts of [COMPILING-MSYS.md](COMPILING/COMPILING-MSYS.md) guide,
-except instead of installing all packages required for compilation install only the ones required for cloning and string extraction:
-```bash
-pacman -S git gettext mingw-w64-x86_64-python
-```
-
-### Obtaining scripts
-Scripts for extracting strings from JSON files are bundled with the game repository.
-
-Either download source code for the game from latest release on github (it should be at the bottom of each release)
-and extract it into an empty directory, or open the terminal and clone Cataclysm-BN repository with following command line:
-**Note:**  Adding `--depth=1` will create a shallow clone, which marginally reduces repository download size and size on disk at the cost of repository history. However, a shallow clone is enough for our use case.
-
+Either download the game's source code from latest release on github (`Source code (zip)` at the bottom of each release)
+and extract it into an empty directory, or, if you have git, clone Cataclysm-BN repository:
 ```bash
 git clone https://github.com/cataclysmbnteam/Cataclysm-BN.git --depth=1
 ```
 
-Once the operation is complete, your cloned repository should reside in newly created `Cataclysm-BN` folder.
-
 ## Extracting strings
-Open the terminal in repository folder and run 
-```bash
-lang/update_mod_pot.sh path/to/your/mod/ output/file/name.pot
+### Windows
+Create a batch script (`.bat` file) with the following contents:
+```bat
+if not exist lang mkdir lang
+python.exe C:\path\to\extract_json_strings.py -i .\ -o lang\index.pot --project YourModName
+python.exe C:\path\to\dedup_pot_file.py lang\index.pot
+pause
 ```
-Where `path/to/your/mod/` is path to your mod folder (the one with `modinfo.json` in it),
-and `output/file/name.pot` is the name of the resulting POT file.
-If output file name is omitted, the script will output to `path/to/your/mod/lang/index.pot`.
+Replace `C:\path\to\extract_json_strings.py` and `C:\path\to\dedup_pot_file.py` with actual paths to `extract_json_strings.py` and `dedup_pot_file.py` scripts, and `YourModName` with the mod's name (doesn't have to match exactly). If either paths or mod's name contain spaces, surround them in quotes (e.g. `python.exe "C:\My Games\Cata\lang\dedup_pot_file.py" lang\index.pot`).
+You'll probably want to keep this `.bat` file if you plan on updating translations in the future.
+
+Finally, either move the `.bat` into the mod's folder and double-click to run, or open command prompt and run the `.bat` from the mod's folder:
+```bat
+cd /d C:\path\to\your\mod\folder
+C:\path\to\your\batfile.bat
+```
+This will create `lang` subdirectory in the mod's folder with translation template file (`index.pot`) inside.
+
+### Linux/MacOS
+Create a bash script (`.sh` file) with the following contents:
+```bash
+mkdir -p lang
+python /path/to/extract_json_strings.py -i . -o lang/index.pot --project YourModName
+python /path/to/dedup_pot_file.py lang/index.pot
+```
+Replace `/path/to/extract_json_strings.py` and `/path/to/dedup_pot_file.py` with actual paths to `extract_json_strings.py` and `dedup_pot_file.py` scripts, and `YourModName` with the mod's name (doesn't have to match exactly). If either paths or mod's name contain spaces, surround them in quotes (e.g. `python "/path/with spaces/dedup_pot_file.py" lang/index.pot`).
+You'll probably want to keep this `.sh` file if you plan on updating translations in the future.
+Don't forget to mark it as executable via file properties or terminal command:
+```bash
+chmod +x your_script.sh
+```
+Finally, open the terminal in mod folder and run the script from there:
+```bash
+path/to/your_script.sh
+```
+This will create `lang` subdirectory in the mod's folder with translation template file (`index.pot`) inside.
 
 ## Creating new PO
 Before creating PO file, you need to choose language id.
@@ -116,20 +115,39 @@ In this list, each entry has its own id in form of `ln_LN`, where `ln` determine
 You can either use full `ln_LN` for exact language+dialect match,
 or `ln` if you want the game to use your MO regardless of dialect.
 
+### Poedit
 1. Open the POT file with Poedit
 2. Press "Create new translation" button (should show up near the bottom)
 3. In language selection dialog, enter language id you chose
 4. Save the file as `path/to/your/mod/lang/LANG.po` where `LANG` is the same language id
 
+### msginit
+```bash
+msginit -i lang/index.pot -o lang/LANG.po -l LANG.UTF-8 --no-translator
+```
+Where `LANG` is the language id you chose
+
 ## Updating existing PO
+### Poedit
 1. Open the PO file with Poedit
 2. Choose `Catalog->Update from POT file...` and select the new POT file
 3. Save the file
 
+### msgmerge
+```bash
+msgmerge lang/LANG.po lang/index.pot
+```
+
 ## Compiling PO into MO
+### Poedit
 1. Open the PO file with Poedit
 2. Make sure MO file will be encoded using UTF-8 (`Catalog->Properties->"Translation properties" tab->Charset`)
 3. By default, each time PO file is saved Poedit automatically compiles it into MO, but the same can also be done explicitly via `File->Compile to MO...`
+
+### msgfmt
+```
+msgfmt -o lang/LANG.mo lang/LANG.po
+```
 
 ## Adding MO file to the mod
 When loading mod files, the game automatically searches for MO files in `lang` mod subdirectory.
@@ -163,9 +181,13 @@ mods/
 ```
 
 ## Miscellaneous notes
-### MO load order
+### Is it possible to use arbitrary location or names for MO files?
+No. The game looks for MO files with specific names that are located in the mod's `lang` directory. If you'll put it anywhere else, or use you own file names (e.g. `french.mo`, `german.mo`), it won't work.
+However, any mod can use any other mod's translation files to translate it's strings. This makes it possible to create mods that are purely "translation packs" for other mods (or mod collections).
+
+### Dialects and MO load order
 When loading MO files, the game looks for the file with exact language and dialect match.
-If it is absent, then the game looks for a file without explicitly specified dialect.
+If such file is absent, then it looks for a file with no dialect.
 
 For example, when using `Español (España)` the load order is
 1. `es_ES.mo`
