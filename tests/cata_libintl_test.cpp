@@ -8,6 +8,8 @@
 #include <array>
 #include <iostream>
 
+using namespace cata_libintl;
+
 struct test_case_data {
     int serial;
     std::string input;
@@ -172,14 +174,14 @@ TEST_CASE( "mo_plurals_parsing", "[libintl][i18n]" )
 {
     for( const auto &it : tests_plural_form_rules ) {
         CAPTURE( it.serial );
-        cata_internal::PlfNodePtr ptr = cata_internal::parse_plural_rules( it.input );
+        PlfNodePtr ptr = parse_plural_rules( it.input );
         REQUIRE( ptr );
         CHECK( ptr->debug_dump() == it.expected );
     }
     for( const auto &it : tests_plural_form_rules_fail ) {
         CAPTURE( it.serial );
         try {
-            cata_internal::PlfNodePtr ptr = cata_internal::parse_plural_rules( it.input );
+            PlfNodePtr ptr = parse_plural_rules( it.input );
             CAPTURE( ptr->debug_dump() );
             FAIL_CHECK();
         } catch( std::runtime_error err ) {
@@ -219,7 +221,7 @@ TEST_CASE( "mo_plurals_calculation", "[libintl][i18n]" )
     // "n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2";
     //                                 ^^^-- this part was changed
     // The change was done so that this expression would include *every* supported operator
-    cata_internal::PlfNodePtr expr = cata_internal::parse_plural_rules( expr_raw );
+    PlfNodePtr expr = parse_plural_rules( expr_raw );
 
     SECTION( "Produces expected values for small numbers" ) {
         for( size_t i = 0; i < NUM_MANUAL_FORMS; i++ ) {
@@ -310,8 +312,8 @@ TEST_CASE( "mo_plurals_calculation", "[libintl][i18n]" )
 
         for( const rules &it : rules_to_compare ) {
             CAPTURE( it.serial );
-            cata_internal::PlfNodePtr expr_gnu = cata_internal::parse_plural_rules( it.gnu );
-            cata_internal::PlfNodePtr expr_tfx = cata_internal::parse_plural_rules( it.tfx );
+            PlfNodePtr expr_gnu = parse_plural_rules( it.gnu );
+            PlfNodePtr expr_tfx = parse_plural_rules( it.tfx );
 
             for( size_t i = 0; i < CHECK_TOTAL; i++ ) {
                 static std::uniform_int_distribution<unsigned long> rng_uint_dist;
@@ -551,7 +553,7 @@ TEST_CASE( "gnu_gettext_plurals", "[libintl][i18n]" )
         std::string input = it.value;
         input.pop_back();
         input = input.substr( 19 );
-        cata_internal::PlfNodePtr ptr = cata_internal::parse_plural_rules( input );
+        PlfNodePtr ptr = parse_plural_rules( input );
         REQUIRE( ptr );
     }
 }

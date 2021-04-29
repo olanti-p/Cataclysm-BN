@@ -529,6 +529,9 @@ bool localized_comparator::operator()( const std::wstring &l, const std::wstring
 // ==============================================================================================
 
 #if defined(LOCALIZE)
+using cata_libintl::trans_library;
+using cata_libintl::trans_catalogue;
+
 namespace l10n_data
 {
 trans_library &get_library()

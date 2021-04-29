@@ -120,10 +120,14 @@ const language_info &get_language();
 std::vector<std::string> get_lang_path_substring( const std::string &lang_id );
 
 #if defined(LOCALIZE)
+namespace cata_libintl
+{
 class trans_library;
+}
+
 namespace l10n_data
 {
-trans_library &get_library();
+cata_libintl::trans_library &get_library();
 void reload_catalogues();
 void unload_catalogues();
 void load_mod_catalogues();

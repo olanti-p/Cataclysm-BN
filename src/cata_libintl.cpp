@@ -56,7 +56,7 @@
 // Note that this grammar does not cover all valid C expressions, or all valid C operators
 // (e.g. "n % 10 % 3", or "(n+1) % 2"), but that doesn't seem to cause problems.
 
-namespace cata_internal
+namespace cata_libintl
 {
 struct PlfToken {
     PlfOp kind;
@@ -333,7 +333,7 @@ unsigned long PlfNode::eval( unsigned long n ) const
     return 0;
 }
 
-std::string cata_internal::PlfNode::debug_dump() const
+std::string PlfNode::debug_dump() const
 {
     std::ostringstream ss;
     ss.imbue( std::locale::classic() );
@@ -363,13 +363,12 @@ std::string cata_internal::PlfNode::debug_dump() const
     }
     return ss.str();
 }
-} // namespace cata_internal
 
 // ===============================================================================================
 // Translation catalogue
 // ===============================================================================================
 
-constexpr cata_internal::u32 MO_STRING_RECORD_STEP = 8;
+constexpr u32 MO_STRING_RECORD_STEP = 8;
 
 trans_catalogue trans_catalogue::load_from_file( const std::string &file_path )
 {
@@ -400,7 +399,7 @@ trans_catalogue trans_catalogue::load_from_file( const std::string &file_path )
     return ret;
 }
 
-cata_internal::u8 trans_catalogue::get_u8( u32 addr ) const
+u8 trans_catalogue::get_u8( u32 addr ) const
 {
     if( addr + 1 > buf_size() ) {
         std::string e = string_format( "tried get_u8() at addr %#x with file size %#x", addr, buf_size() );
@@ -410,7 +409,7 @@ cata_internal::u8 trans_catalogue::get_u8( u32 addr ) const
     return get_u8_unsafe( addr );
 }
 
-cata_internal::u32 trans_catalogue::get_u32( u32 addr ) const
+u32 trans_catalogue::get_u32( u32 addr ) const
 {
     if( addr + 4 > buf_size() ) {
         std::string e = string_format( "tried get_u32() at addr %#x with file size %#x", addr, buf_size() );
@@ -611,7 +610,7 @@ trans_catalogue::plf_header_data trans_catalogue::parse_plf_header( const meta_h
         if( !found ) {
             // Default to Germanic rules (English, German, Dutch, ...)
             ret.num = 2;
-            ret.rules = cata_internal::parse_plural_rules( "n!=1" );
+            ret.rules = parse_plural_rules( "n!=1" );
             return ret;
         }
     }
@@ -649,7 +648,7 @@ trans_catalogue::plf_header_data trans_catalogue::parse_plf_header( const meta_h
         }
         plf_rules_raw = plf_rules_raw.substr( 8 ); // 8 is length of " plural=" string
         try {
-            ret.rules = cata_internal::parse_plural_rules( plf_rules_raw );
+            ret.rules = parse_plural_rules( plf_rules_raw );
         } catch( std::runtime_error err ) {
             std::string e = string_format( "failed to parse plural forms formula: %s", err.what() );
             throw std::runtime_error( e );
@@ -852,3 +851,4 @@ const char *trans_library::get_ctx_pl( const char *ctx, const char *msgid, const
     buf += msgid;
     return get_pl( buf.c_str(), msgid_pl, n );
 }
+} // namespace cata_internal

@@ -6,11 +6,10 @@
 #include <string>
 #include <vector>
 
-namespace cata_internal
+namespace cata_libintl
 {
-
-using u32 = uint32_t;
 using u8 = uint8_t;
+using u32 = uint32_t;
 
 /**
  * Plural forms AST node type.
@@ -60,8 +59,6 @@ struct PlfNode {
  */
 PlfNodePtr parse_plural_rules( const std::string &s );
 
-} // namespace cata_internal
-
 /**
  * Translation catalogue. Corresponds to single MO file.
  *
@@ -70,19 +67,15 @@ PlfNodePtr parse_plural_rules( const std::string &s );
  */
 class trans_catalogue
 {
-    public:
-        // ======== DECLARATIONS =========
-        using u8 = cata_internal::u8;
-        using u32 = cata_internal::u32;
-
     private:
+        // ======== DECLARATIONS =========
         struct string_info {
             u32 length;
             u32 address;
         };
         struct plf_header_data {
             unsigned long num;
-            cata_internal::PlfNodePtr rules;
+            PlfNodePtr rules;
         };
         using meta_headers = std::vector<std::string>;
 
@@ -91,7 +84,7 @@ class trans_catalogue
         bool is_little_endian = true; // File endianness
         std::string buf; // Data buffer
         unsigned long num_plural_forms = 0; // Number of plural forms
-        cata_internal::PlfNodePtr plf_rules = nullptr; // Plural forms expression
+        PlfNodePtr plf_rules = nullptr; // Plural forms expression
         u32 number_of_strings = 0; // Number of strings (ids-translations pairs)
         u32 offs_orig_table = 0; // Offset of table with original strings
         u32 offs_trans_table = 0; // Offset of table with translated strings
@@ -166,11 +159,8 @@ class trans_catalogue
  */
 class trans_library
 {
-    public:
-        // ======== DECLARATIONS =========
-        using u32 = cata_internal::u32;
-
     private:
+        // ======== DECLARATIONS =========
         // Describes single string within the library
         struct string_descriptor {
             u32 catalogue;
@@ -203,5 +193,6 @@ class trans_library
         const char *get_ctx_pl( const char *ctx, const char *msgid, const char *msgid_pl,
                                 unsigned long n ) const;
 };
+} // cata_libintl
 
 #endif // CATA_SRC_CATA_LIBINTL_H
