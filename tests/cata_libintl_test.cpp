@@ -370,6 +370,16 @@ static void test_get_strings( const trans_library &lib )
 
     // Metadata entry should not be revealed
     tst( 51, lib.get( "" ), "" );
+
+    // If translation is missing, original string is returned. Plural forms follow Germanic rules.
+    tst( 61, lib.get( "Catsplosion" ), "Catsplosion" );
+    tst( 62, lib.get_ctx( "missing", "Test" ), "Test" );
+    tst( 63, lib.get_pl( "%d tool", "%d tools", 1 ), "%d tool" );
+    tst( 64, lib.get_pl( "%d tool", "%d tools", 2 ), "%d tools" );
+    tst( 65, lib.get_pl( "%d tool", "%d tools", 5 ), "%d tools" );
+    tst( 66, lib.get_ctx_pl( "time of year", "%d spring", "%d springs", 1 ), "%d spring" );
+    tst( 67, lib.get_ctx_pl( "time of year", "%d spring", "%d springs", 2 ), "%d springs" );
+    tst( 68, lib.get_ctx_pl( "time of year", "%d spring", "%d springs", 5 ), "%d springs" );
 }
 
 static const std::string mo_dir = "tests/data/cata_libintl/";
