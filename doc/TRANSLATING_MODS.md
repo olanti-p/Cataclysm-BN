@@ -51,7 +51,6 @@ Step 1 in both workflows requires you to set up environment for string extractio
 Steps 2-4 can be done using translation software either by the mod author/maintainer, or by the translator.
 
 ## Setting up environment for string extraction
-### 1. Python
 You'll need Python 3 with `polib` library installed.
 There are many tutorials online on how to install Python 3 and `pip`, Python's package manager, and the `polib` library can be installed via
 ```bash
@@ -59,43 +58,38 @@ pip install polib
 ```
 On Windows, make sure to add Python to the `PATH` variable (look for tutorials if you don't know how).
 
-### 2. Scripts
-Scripts for extracting strings from JSON files can be found in the `lang` directory of the game repository.
-
-Either download the game's source code from latest release on github (`Source code (zip)` at the bottom of each release)
-and extract it into an empty directory, or, if you have git, clone Cataclysm-BN repository:
-```bash
-git clone https://github.com/cataclysmbnteam/Cataclysm-BN.git --depth=1
-```
+Scripts for extracting strings from JSON files can be found in the `lang` subdirectory of the game.
 
 ## Extracting strings
 ### Windows
-Create a batch script (`.bat` file) with the following contents:
+Create a `lang` folder inside the mod's folder, and put inside a batch script (`.bat` file) with the following contents:
 ```bat
-if not exist lang mkdir lang
-python.exe C:\path\to\extract_json_strings.py -i .\ -o lang\index.pot --project YourModName
-python.exe C:\path\to\dedup_pot_file.py lang\index.pot
+python.exe C:\path\to\extract_json_strings.py -i .. -o index.pot --project YourModName
+python.exe C:\path\to\dedup_pot_file.py index.pot
+echo Done!
 pause
 ```
-Replace `C:\path\to\extract_json_strings.py` and `C:\path\to\dedup_pot_file.py` with actual paths to `extract_json_strings.py` and `dedup_pot_file.py` scripts, and `YourModName` with the mod's name (doesn't have to match exactly). If either paths or mod's name contain spaces, surround them in quotes (e.g. `python.exe "C:\My Games\Cata\lang\dedup_pot_file.py" lang\index.pot`).
+Replace `C:\path\to\extract_json_strings.py` and `C:\path\to\dedup_pot_file.py` with actual paths to `extract_json_strings.py` and `dedup_pot_file.py` scripts, and `YourModName` with the mod's name (doesn't have to match exactly). If either paths or mod's name contain spaces, surround them in quotes (e.g. `python.exe "C:\My Games\Cata\lang\dedup_pot_file.py" lang\index.pot`). You can use relative paths: e.g. if the mod is inside `data\mods\`, the paths would be `..\..\..\..\lang\extract_json_strings.py` and `..\..\..\..\lang\dedup_pot_file.py`.
+
 You'll probably want to keep this `.bat` file if you plan on updating translations in the future.
 
-Finally, either move the `.bat` into the mod's folder and double-click to run, or open command prompt and run the `.bat` from the mod's folder:
+Finally, either double-click to run, or open command prompt and run the `.bat` from the mod's folder:
 ```bat
-cd /d C:\path\to\your\mod\folder
-C:\path\to\your\batfile.bat
+cd /d C:\path\to\your\mod\folder\lang
+your_file.bat
 ```
-This will create `lang` subdirectory in the mod's folder with translation template file (`index.pot`) inside.
+This will create translation template file `index.pot`.
 
 ### Linux/MacOS
-Create a bash script (`.sh` file) with the following contents:
+Create a `lang` folder inside the mod's folder, and put inside a bash script (`.sh` file) with the following contents:
 ```bash
-mkdir -p lang
-python /path/to/extract_json_strings.py -i . -o lang/index.pot --project YourModName
-python /path/to/dedup_pot_file.py lang/index.pot
+python /path/to/extract_json_strings.py -i .. -o index.pot --project YourModName
+python /path/to/dedup_pot_file.py index.pot
+echo Done!
 ```
-Replace `/path/to/extract_json_strings.py` and `/path/to/dedup_pot_file.py` with actual paths to `extract_json_strings.py` and `dedup_pot_file.py` scripts, and `YourModName` with the mod's name (doesn't have to match exactly). If either paths or mod's name contain spaces, surround them in quotes (e.g. `python "/path/with spaces/dedup_pot_file.py" lang/index.pot`).
+Replace `/path/to/extract_json_strings.py` and `/path/to/dedup_pot_file.py` with actual paths to `extract_json_strings.py` and `dedup_pot_file.py` scripts, and `YourModName` with the mod's name (doesn't have to match exactly). If either paths or mod's name contain spaces, surround them in quotes (e.g. `python "/path/with spaces/dedup_pot_file.py" lang/index.pot`). You can use relative paths: e.g. if the mod is inside `data/mods/`, the paths would be `../../../../lang/extract_json_strings.py` and `../../../../lang/dedup_pot_file.py`.
 You'll probably want to keep this `.sh` file if you plan on updating translations in the future.
+
 Don't forget to mark it as executable via file properties or terminal command:
 ```bash
 chmod +x your_script.sh
@@ -142,7 +136,8 @@ msgmerge lang/LANG.po lang/index.pot
 ### Poedit
 1. Open the PO file with Poedit
 2. Make sure MO file will be encoded using UTF-8 (`Catalog->Properties->"Translation properties" tab->Charset`)
-3. By default, each time PO file is saved Poedit automatically compiles it into MO, but the same can also be done explicitly via `File->Compile to MO...`
+3. By default, each time PO file is saved Poedit automatically compiles it into MO,
+   but the same can also be done explicitly via `File->Compile to MO...`
 
 ### msgfmt
 ```
@@ -163,7 +158,7 @@ mods/
             zh_CN.mo
 ```
 
-**Note:**  Storing PO and POT files in the same `lang` subdirectory may make it easier to keep track of them.
+**Note:**  Storing your script, and PO/POT files in the same `lang` subdirectory may make it easier to keep track of them.
 The game ignores these files, and your mod folder structure will look like this:
 
 ```
@@ -171,8 +166,9 @@ mods/
     YourMod/
         modinfo.json
         lang/
-        	index.pot
-        	es.po
+            extract.bat  (extract.sh on MacOS/Linux)
+            index.pot
+            es.po
             es.mo
             pt_BR.po
             pt_BR.mo
@@ -183,7 +179,31 @@ mods/
 ## Miscellaneous notes
 ### Is it possible to use arbitrary location or names for MO files?
 No. The game looks for MO files with specific names that are located in the mod's `lang` directory. If you'll put it anywhere else, or use you own file names (e.g. `french.mo`, `german.mo`), it won't work.
-However, any mod can use any other mod's translation files to translate it's strings. This makes it possible to create mods that are purely "translation packs" for other mods (or mod collections).
+
+However, any mod can automatically use any other mod's translation files to translate it's strings. This makes it possible to create mods that are purely "translation packs" for other mods (or mod collections), if you'd rather for whatever reason keep the mod and MO separate.
+
+### Is it necessary to run the script from the mod's lang folder, or keep it there?
+No, it's just convenient to.
+
+POT files allow saving references to each string's origin file,
+and the extraction script prepends each reference with the input path passed via `-i` argument
+(this is necessary because the script supports pulling strings from multiple input paths at the same time).
+
+When running from mod's lang folder, the input path is very short `..`, and the resulting references look nice and clean.
+
+Also, you don't have to worry about correct working directory if you run the script from the file explorer.
+
+### Reloading translations in a running game
+Open debug menu and select `Info...->Reload translations`, and the game will reload all MO files from disk.
+
+This makes it easy to see how translated string looks in game, provided the translator has a way to compile MO files.
+
+Example workflow with Poedit:
+1. Translate a string
+2. Hit Ctrl+S
+3. Alt+Tab into the game
+4. Reload translation files via debug menu
+5. The game now displays translated string
 
 ### Dialects and MO load order
 When loading MO files, the game looks for the file with exact language and dialect match.
@@ -199,14 +219,10 @@ And when using `Español (Argentina)` the load order is
 
 Thus, `es.mo` would be loaded for either dialect of Spanish if the exact translation files are not present.
 
-### Reloading translations in a running game
-Open debug menu and select `Info...->Reload translations`, and the game will reload all MO files from disk.
+### What if 2 or more mods provide different translations for same string?
+Then the game uses translation from the first such mod in the mod loading order.
 
-This makes it easy to see how translated string looks in game, provided the translator has a way to compile MO files.
+The in-repo mods (including the core content "mod") are an exception: all of them use single MO file,
+which is loaded at all times and always takes priority over 3-rd party translations.
 
-Example workflow with Poedit:
-1. Translate a string
-2. Hit Ctrl+S
-3. Alt+Tab into the game
-4. Reload translation files via debug menu
-5. The game now displays translated string
+If you want a different translation from the one in the base game, add a translation context to your string.
