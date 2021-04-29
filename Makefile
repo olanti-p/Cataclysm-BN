@@ -382,7 +382,8 @@ endif
 CXXFLAGS += $(WARNINGS) $(DEBUG) $(DEBUGSYMS) $(PROFILE) $(OTHERS) -MMD -MP
 TOOL_CXXFLAGS = -DCATA_IN_TOOL
 
-BINDIST_EXTRAS += README.md data doc LICENSE.txt LICENSE-OFL-Terminus-Font.txt $(JSON_FORMATTER_BIN)
+MOD_TRANSLATION_SCRIPTS = lang/extract_json_strings.py lang/dedup_pot_file.py
+BINDIST_EXTRAS += README.md data doc LICENSE.txt LICENSE-OFL-Terminus-Font.txt $(JSON_FORMATTER_BIN) $(MOD_TRANSLATION_SCRIPTS)
 BINDIST    = $(BUILD_PREFIX)cataclysmbn-$(VERSION).tar.gz
 W32BINDIST = $(BUILD_PREFIX)cataclysmbn-$(VERSION).zip
 BINDIST_CMD    = tar --transform=s@^$(BINDIST_DIR)@cataclysmbn-$(VERSION)@ -czvf $(BINDIST) $(BINDIST_DIR)
