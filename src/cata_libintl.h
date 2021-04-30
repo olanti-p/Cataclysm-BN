@@ -49,7 +49,6 @@ struct PlfNode {
     PlfOp op = PlfOp::NumOps;
 
     unsigned long eval( unsigned long n ) const;
-
     std::string debug_dump() const;
 };
 
@@ -68,7 +67,6 @@ PlfNodePtr parse_plural_rules( const std::string &s );
 class trans_catalogue
 {
     private:
-        // ======== DECLARATIONS =========
         // Represents 1 entry in MO string table
         struct string_descr {
             u32 length;
@@ -93,6 +91,9 @@ class trans_catalogue
 
         explicit trans_catalogue( std::string buffer );
 
+        inline void set_buffer( std::string buffer ) {
+            buffer = std::move( buffer );
+        }
         inline u32 buf_size() const {
             return static_cast<u32>( buffer.size() );
         }
@@ -117,17 +118,13 @@ class trans_catalogue
             }
         }
 
+        string_descr get_string_descr( u32 offs ) const;
+        string_descr get_string_descr_unsafe( u32 offs ) const;
+
         inline const char *offs_to_cstr( u32 offs ) const {
             return &buffer[offs];
         }
 
-        string_descr get_string_descr( u32 offs ) const;
-        string_descr get_string_descr_unsafe( u32 offs ) const;
-
-        // MO loading
-        inline void set_buffer( std::string buffer ) {
-            buffer = std::move( buffer );
-        }
         void process_file_header();
         void check_string_terminators();
         void check_string_plurals();
@@ -142,14 +139,15 @@ class trans_catalogue
          */
         static trans_catalogue load_from_file( const std::string &file_path );
 
+        /** Number of entries in the catalogue. */
         inline u32 get_num_strings() const {
             return number_of_strings;
         }
-
+        /** Get singular translated string of given entry. */
         const char *get_nth_translation( u32 n ) const;
+        /** Get correct plural translated string of given entry for given number. */
         const char *get_nth_pl_translation( u32 n, unsigned long num ) const;
-
-        // Debug
+        /** Get original msgid (with msgctxt) of given entry. */
         const char *get_nth_orig_string( u32 n ) const;
 };
 
@@ -160,31 +158,25 @@ class trans_catalogue
 class trans_library
 {
     private:
-        // ======== DECLARATIONS =========
         // Describes which catalogue the string comes from
         struct library_string_descr {
             u32 catalogue;
             u32 entry;
         };
 
-        // =========== MEMBERS ===========
-
         // Full index of loaded strings
-        std::vector<library_string_descr> string_vec;
+        std::vector<library_string_descr> strings;
 
         // Full index of loaded catalogues
         std::vector<trans_catalogue> catalogues;
 
-        // =========== METHODS ===========
-
-        std::vector<library_string_descr>::const_iterator find_in_table( const char *id ) const;
-
         void build_string_table();
-
-        const char *lookup_string_in_table( const char *id ) const;
-        const char *lookup_pl_string_in_table( const char *id, unsigned long n ) const;
+        std::vector<library_string_descr>::const_iterator find_entry( const char *id ) const;
+        const char *lookup_string( const char *id ) const;
+        const char *lookup_pl_string( const char *id, unsigned long n ) const;
 
     public:
+        /** Create new library from catalogues. */
         static trans_library create( std::vector<trans_catalogue> catalogues );
 
         const char *get( const char *msgid ) const;

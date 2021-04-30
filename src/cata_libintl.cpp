@@ -368,7 +368,7 @@ std::string PlfNode::debug_dump() const
 // Translation catalogue
 // ===============================================================================================
 
-constexpr u32 MO_STRING_RECORD_STEP = 8;
+constexpr u32 MO_STRING_DESCR_SIZE = 8;
 
 trans_catalogue trans_catalogue::load_from_file( const std::string &file_path )
 {
@@ -508,8 +508,8 @@ void trans_catalogue::check_string_terminators()
         }
     };
     for( u32 i = 0; i < number_of_strings; i++ ) {
-        check_string( offs_orig_table + i * MO_STRING_RECORD_STEP );
-        check_string( offs_trans_table + i * MO_STRING_RECORD_STEP );
+        check_string( offs_orig_table + i * MO_STRING_DESCR_SIZE );
+        check_string( offs_trans_table + i * MO_STRING_DESCR_SIZE );
     }
 }
 
@@ -517,7 +517,7 @@ void trans_catalogue::check_string_plurals()
 {
     // Skip metadata (the 0th entry)
     for( u32 i = 1; i < number_of_strings; i++ ) {
-        string_descr info = get_string_descr_unsafe( offs_orig_table + i * MO_STRING_RECORD_STEP );
+        string_descr info = get_string_descr_unsafe( offs_orig_table + i * MO_STRING_DESCR_SIZE );
 
         // Check for null byte - msgid/msgid_plural separator
         bool has_plurals = false;
@@ -533,7 +533,7 @@ void trans_catalogue::check_string_plurals()
         }
 
         // Count null bytes - each plural form is a null-terminated string (including last one)
-        u32 offs_tr = offs_trans_table + i * MO_STRING_RECORD_STEP;
+        u32 offs_tr = offs_trans_table + i * MO_STRING_DESCR_SIZE;
         string_descr info_tr = get_string_descr_unsafe( offs_tr );
         unsigned long plural_forms = 0;
         for( u32 j = info_tr.offset; j <= info_tr.offset + info_tr.length; j++ ) {
@@ -681,16 +681,16 @@ trans_catalogue::trans_catalogue( std::string buffer )
 
 const char *trans_catalogue::get_nth_orig_string( u32 n ) const
 {
-    u32 record_addr = offs_orig_table + n * MO_STRING_RECORD_STEP;
-    string_descr r = get_string_descr_unsafe( record_addr );
+    u32 descr_offs = offs_orig_table + n * MO_STRING_DESCR_SIZE;
+    string_descr r = get_string_descr_unsafe( descr_offs );
 
     return offs_to_cstr( r.offset );
 }
 
 const char *trans_catalogue::get_nth_translation( u32 n ) const
 {
-    u32 record_addr = offs_trans_table + n * MO_STRING_RECORD_STEP;
-    string_descr r = get_string_descr_unsafe( record_addr );
+    u32 descr_offs = offs_trans_table + n * MO_STRING_DESCR_SIZE;
+    string_descr r = get_string_descr_unsafe( descr_offs );
 
     return offs_to_cstr( r.offset );
 }
@@ -698,8 +698,8 @@ const char *trans_catalogue::get_nth_translation( u32 n ) const
 const char *trans_catalogue::get_nth_pl_translation( u32 n, unsigned long num ) const
 {
     constexpr u8 PLF_SEPARATOR = 0;
-    u32 record_addr = offs_trans_table + n * MO_STRING_RECORD_STEP;
-    string_descr r = get_string_descr_unsafe( record_addr );
+    u32 descr_offs = offs_trans_table + n * MO_STRING_DESCR_SIZE;
+    string_descr r = get_string_descr_unsafe( descr_offs );
 
     unsigned long plf = plurals.expr->eval( num );
 
@@ -707,11 +707,11 @@ const char *trans_catalogue::get_nth_pl_translation( u32 n, unsigned long num ) 
         return offs_to_cstr( r.offset );
     }
     unsigned long curr_plf = 0;
-    for( u32 addr = r.offset; addr <= r.offset + r.length; addr++ ) {
-        if( get_u8_unsafe( addr ) == PLF_SEPARATOR ) {
+    for( u32 offs = r.offset; offs <= r.offset + r.length; offs++ ) {
+        if( get_u8_unsafe( offs ) == PLF_SEPARATOR ) {
             curr_plf += 1;
             if( plf == curr_plf ) {
-                return offs_to_cstr( addr + 1 );
+                return offs_to_cstr( offs + 1 );
             }
         }
     }
@@ -722,52 +722,52 @@ const char *trans_catalogue::get_nth_pl_translation( u32 n, unsigned long num ) 
 // Translation library
 // ===============================================================================================
 
-std::vector<trans_library::library_string_descr>::const_iterator trans_library::find_in_table(
+std::vector<trans_library::library_string_descr>::const_iterator trans_library::find_entry(
     const char *id ) const
 {
-    auto it = std::lower_bound( string_vec.begin(), string_vec.end(),
+    auto it = std::lower_bound( strings.begin(), strings.end(),
     id, [this]( const library_string_descr & a_descr, const char *b ) -> bool {
         const char *a = this->catalogues[a_descr.catalogue].get_nth_orig_string( a_descr.entry );
         return strcmp( a, b ) < 0;
     } );
 
-    if( it != string_vec.end() ) {
+    if( it != strings.end() ) {
         const char *found = catalogues[it->catalogue].get_nth_orig_string( it->entry );
         if( strcmp( id, found ) == 0 ) {
             return it;
         }
     }
 
-    return string_vec.end();
+    return strings.end();
 }
 
 void trans_library::build_string_table()
 {
-    assert( string_vec.empty() );
+    assert( strings.empty() );
 
     for( u32 i_cat = 0; i_cat < catalogues.size(); i_cat++ ) {
         const trans_catalogue &cat = catalogues[i_cat];
         u32 num = cat.get_num_strings();
         // 0th entry is the metadata, we skip it
-        string_vec.reserve( num - 1 );
+        strings.reserve( num - 1 );
         for( u32 i = 1; i < num; i++ ) {
             const char *i_cstr = cat.get_nth_orig_string( i );
 
-            auto it = std::lower_bound( string_vec.begin(), string_vec.end(),
+            auto it = std::lower_bound( strings.begin(), strings.end(),
             i_cstr, [this]( const library_string_descr & a_descr, const char *b ) -> bool {
                 const char *a = this->catalogues[a_descr.catalogue].get_nth_orig_string( a_descr.entry );
                 return strcmp( a, b ) < 0;
             } );
 
             library_string_descr desc = { i_cat, i };
-            if( it == string_vec.end() ) {
+            if( it == strings.end() ) {
                 // Not found, or all elements are greater
-                string_vec.push_back( desc );
+                strings.push_back( desc );
             } else if( strcmp( catalogues[it->catalogue].get_nth_orig_string( it->entry ), i_cstr ) == 0 ) {
                 // Don't overwrite existing strings
                 continue;
             } else {
-                string_vec.insert( it, desc );
+                strings.insert( it, desc );
             }
         }
     }
@@ -794,19 +794,19 @@ trans_library trans_library::create( std::vector<trans_catalogue> catalogues )
     return lib;
 }
 
-const char *trans_library::lookup_string_in_table( const char *id ) const
+const char *trans_library::lookup_string( const char *id ) const
 {
-    auto it = find_in_table( id );
-    if( it == string_vec.end() ) {
+    auto it = find_entry( id );
+    if( it == strings.end() ) {
         return nullptr;
     }
     return catalogues[it->catalogue].get_nth_translation( it->entry );
 }
 
-const char *trans_library::lookup_pl_string_in_table( const char *id, unsigned long n ) const
+const char *trans_library::lookup_pl_string( const char *id, unsigned long n ) const
 {
-    auto it = find_in_table( id );
-    if( it == string_vec.end() ) {
+    auto it = find_entry( id );
+    if( it == strings.end() ) {
         return nullptr;
     }
     return catalogues[it->catalogue].get_nth_pl_translation( it->entry, n );
@@ -814,7 +814,7 @@ const char *trans_library::lookup_pl_string_in_table( const char *id, unsigned l
 
 const char *trans_library::get( const char *msgid ) const
 {
-    const char *ret = lookup_string_in_table( msgid );
+    const char *ret = lookup_string( msgid );
     if( ret ) {
         return ret;
     } else {
@@ -824,7 +824,7 @@ const char *trans_library::get( const char *msgid ) const
 
 const char *trans_library::get_pl( const char *msgid, const char *msgid_pl, unsigned long n ) const
 {
-    const char *ret = lookup_pl_string_in_table( msgid, n );
+    const char *ret = lookup_pl_string( msgid, n );
     if( ret ) {
         return ret;
     } else {
@@ -839,7 +839,7 @@ const char *trans_library::get_ctx( const char *ctx, const char *msgid ) const
     buf += ctx;
     buf += '\4';
     buf += msgid;
-    const char *ret = lookup_string_in_table( buf.c_str() );
+    const char *ret = lookup_string( buf.c_str() );
     if( ret ) {
         return ret;
     } else {
@@ -855,7 +855,7 @@ const char *trans_library::get_ctx_pl( const char *ctx, const char *msgid, const
     buf += ctx;
     buf += '\4';
     buf += msgid;
-    const char *ret = lookup_pl_string_in_table( buf.c_str(), n );
+    const char *ret = lookup_pl_string( buf.c_str(), n );
     if( ret ) {
         return ret;
     } else {
