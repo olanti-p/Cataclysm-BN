@@ -298,7 +298,8 @@ static std::vector<plf_calc_test_case> plf_calc_test_cases {{
             "2011122222"
             "2011122222"
         },
-    }};
+    }
+};
 
 static void do_plf_calc_test( const plf_calc_test_case &test )
 {
@@ -643,7 +644,7 @@ static void do_single_bench( const size_t iterations, const std::string &descr,
 
 static std::string get_bench_file()
 {
-    // Using Russian here because it's big
+    // Using Russian here because it's the largest one
     std::string path = "lang/mo/ru_RU/LC_MESSAGES/cataclysm-bn.mo";
     if( !file_exist( path ) ) {
         WARN( "Skipping (file not found)" );
