@@ -73,9 +73,9 @@ class trans_catalogue
             u32 length;
             u32 address;
         };
-        struct plf_header_data {
-            unsigned long num;
-            PlfNodePtr rules;
+        struct catalogue_plurals_info {
+            unsigned long num = 0;
+            PlfNodePtr expr = nullptr;
         };
         using meta_headers = std::vector<std::string>;
 
@@ -83,9 +83,8 @@ class trans_catalogue
 
         bool is_little_endian = true; // File endianness
         std::string buf; // Data buffer
-        unsigned long num_plural_forms = 0; // Number of plural forms
-        PlfNodePtr plf_rules = nullptr; // Plural forms expression
-        u32 number_of_strings = 0; // Number of strings (ids-translations pairs)
+        catalogue_plurals_info plurals; // Plural rules
+        u32 number_of_strings = 0; // Number of strings (id-translation pairs)
         u32 offs_orig_table = 0; // Offset of table with original strings
         u32 offs_trans_table = 0; // Offset of table with translated strings
 
@@ -133,7 +132,7 @@ class trans_catalogue
         void check_string_plurals();
         std::string get_metadata() const;
         static void check_encoding( const meta_headers &headers );
-        static plf_header_data parse_plf_header( const meta_headers &headers );
+        static catalogue_plurals_info parse_plf_header( const meta_headers &headers );
 
     public:
         /**

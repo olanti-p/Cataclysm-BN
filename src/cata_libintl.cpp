@@ -515,7 +515,7 @@ void trans_catalogue::check_string_terminators()
 
 void trans_catalogue::check_string_plurals()
 {
-    // Skip 0th metadata entry
+    // Skip metadata (the 0th entry)
     for( u32 i = 1; i < number_of_strings; i++ ) {
         string_info info = get_string_info_unsafe( offs_orig_table + i * MO_STRING_RECORD_STEP );
 
@@ -543,10 +543,10 @@ void trans_catalogue::check_string_plurals()
         }
 
         // Number of plural forms should match the number specified in metadata
-        if( plural_forms != this->num_plural_forms ) {
+        if( plural_forms != this->plurals.num ) {
             std::string e = string_format(
                                 "string_info at %#x: expected %d plural forms, got %d",
-                                addr_tr, this->num_plural_forms, plural_forms
+                                addr_tr, this->plurals.num, plural_forms
                             );
             throw std::runtime_error( e );
         }
@@ -589,11 +589,12 @@ void trans_catalogue::check_encoding( const meta_headers &headers )
     }
 }
 
-trans_catalogue::plf_header_data trans_catalogue::parse_plf_header( const meta_headers &headers )
+trans_catalogue::catalogue_plurals_info trans_catalogue::parse_plf_header(
+    const meta_headers &headers )
 {
     constexpr unsigned long MAX_PLURAL_FORMS = 8;
 
-    plf_header_data ret;
+    catalogue_plurals_info ret;
 
     // Parse Plural-Forms header.
     std::string plf_raw;
@@ -610,7 +611,7 @@ trans_catalogue::plf_header_data trans_catalogue::parse_plf_header( const meta_h
         if( !found ) {
             // Default to Germanic rules (English, German, Dutch, ...)
             ret.num = 2;
-            ret.rules = parse_plural_rules( "n!=1" );
+            ret.expr = parse_plural_rules( "n!=1" );
             return ret;
         }
     }
@@ -648,7 +649,7 @@ trans_catalogue::plf_header_data trans_catalogue::parse_plf_header( const meta_h
         }
         plf_rules_raw = plf_rules_raw.substr( 8 ); // 8 is length of " plural=" string
         try {
-            ret.rules = parse_plural_rules( plf_rules_raw );
+            ret.expr = parse_plural_rules( plf_rules_raw );
         } catch( std::runtime_error err ) {
             std::string e = string_format( "failed to parse plural forms formula: %s", err.what() );
             throw std::runtime_error( e );
@@ -673,9 +674,7 @@ trans_catalogue::trans_catalogue( std::string buffer )
     meta_headers headers = string_split( meta_raw, '\n' );
 
     check_encoding( headers );
-    plf_header_data plf = parse_plf_header( headers );
-    this->num_plural_forms = plf.num;
-    this->plf_rules = std::move( plf.rules );
+    this->plurals = parse_plf_header( headers );
 
     check_string_plurals();
 }
@@ -702,9 +701,9 @@ const char *trans_catalogue::get_nth_pl_translation( u32 n, unsigned long num ) 
     u32 record_addr = offs_trans_table + n * MO_STRING_RECORD_STEP;
     string_info r = get_string_info_unsafe( record_addr );
 
-    unsigned long plf = plf_rules->eval( num );
+    unsigned long plf = plurals.expr->eval( num );
 
-    if( plf == 0 || plf >= num_plural_forms ) {
+    if( plf == 0 || plf >= plurals.num ) {
         return addr_to_cstr( r.address );
     }
     unsigned long curr_plf = 0;
@@ -836,6 +835,7 @@ const char *trans_library::get_pl( const char *msgid, const char *msgid_pl, unsi
 const char *trans_library::get_ctx( const char *ctx, const char *msgid ) const
 {
     std::string buf;
+    buf.reserve( strlen( ctx ) + 1 + strlen( msgid ) );
     buf += ctx;
     buf += '\4';
     buf += msgid;
@@ -851,6 +851,7 @@ const char *trans_library::get_ctx_pl( const char *ctx, const char *msgid, const
                                        unsigned long n ) const
 {
     std::string buf;
+    buf.reserve( strlen( ctx ) + 1 + strlen( msgid ) );
     buf += ctx;
     buf += '\4';
     buf += msgid;
