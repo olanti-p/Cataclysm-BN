@@ -399,38 +399,38 @@ trans_catalogue trans_catalogue::load_from_file( const std::string &file_path )
     return ret;
 }
 
-u8 trans_catalogue::get_u8( u32 addr ) const
+u8 trans_catalogue::get_u8( u32 offs ) const
 {
-    if( addr + 1 > buf_size() ) {
-        std::string e = string_format( "tried get_u8() at addr %#x with file size %#x", addr, buf_size() );
+    if( offs + 1 > buf_size() ) {
+        std::string e = string_format( "tried get_u8() at offs %#x with file size %#x", offs, buf_size() );
         throw std::runtime_error( e );
     }
 
-    return get_u8_unsafe( addr );
+    return get_u8_unsafe( offs );
 }
 
-u32 trans_catalogue::get_u32( u32 addr ) const
+u32 trans_catalogue::get_u32( u32 offs ) const
 {
-    if( addr + 4 > buf_size() ) {
-        std::string e = string_format( "tried get_u32() at addr %#x with file size %#x", addr, buf_size() );
+    if( offs + 4 > buf_size() ) {
+        std::string e = string_format( "tried get_u32() at offs %#x with file size %#x", offs, buf_size() );
         throw std::runtime_error( e );
     }
-    return get_u32_unsafe( addr );
+    return get_u32_unsafe( offs );
 }
 
-trans_catalogue::string_info trans_catalogue::get_string_info( u32 addr ) const
+trans_catalogue::string_info trans_catalogue::get_string_info( u32 offs ) const
 {
     string_info ret;
-    ret.length = get_u32( addr );
-    ret.address = get_u32( addr + 4 );
+    ret.length = get_u32( offs );
+    ret.address = get_u32( offs + 4 );
     return ret;
 }
 
-trans_catalogue::string_info trans_catalogue::get_string_info_unsafe( u32 addr ) const
+trans_catalogue::string_info trans_catalogue::get_string_info_unsafe( u32 offs ) const
 {
     string_info ret;
-    ret.length = get_u32_unsafe( addr );
-    ret.address = get_u32_unsafe( addr + 4 );
+    ret.length = get_u32_unsafe( offs );
+    ret.address = get_u32_unsafe( offs + 4 );
     return ret;
 }
 
@@ -458,42 +458,43 @@ void trans_catalogue::process_file_header()
 {
     constexpr u32 MO_MAGIC_NUMBER_LE = 0x950412de;
     constexpr u32 MO_MAGIC_NUMBER_BE = 0xde120495;
-    constexpr u32 MO_MAGIC_NUMBER_ADDR = 0;
     constexpr u32 MO_SUPPORTED_REVISION = 0;
-    constexpr u32 MO_REVISION_ADDR = 4;
-    constexpr u32 MO_NUM_STRINGS_ADDR = 8;
-    constexpr u32 MO_ORIG_TABLE_OFFSET_ADDR = 12;
-    constexpr u32 MO_TRANS_TABLE_OFFSET_ADDR = 16;
 
-    u32 magic = this->buf.size() > 4 ? get_u32( MO_MAGIC_NUMBER_ADDR ) : 0;
+    constexpr u32 OFFS_MAGIC_NUMBER = 0;
+    constexpr u32 OFFS_REVISION = 4;
+    constexpr u32 OFFS_NUM_STRINGS = 8;
+    constexpr u32 OFFS_ORIG_TABLE_BEGIN = 12;
+    constexpr u32 OFFS_TRANS_TABLE_BEGIN = 16;
+
+    u32 magic = this->buf.size() > 4 ? get_u32( OFFS_MAGIC_NUMBER ) : 0;
     if( magic != MO_MAGIC_NUMBER_LE && magic != MO_MAGIC_NUMBER_BE ) {
         throw std::runtime_error( "not a MO file" );
     }
     this->is_little_endian = magic == MO_MAGIC_NUMBER_LE;
-    if( get_u32( MO_REVISION_ADDR ) != MO_SUPPORTED_REVISION ) {
+    if( get_u32( OFFS_REVISION ) != MO_SUPPORTED_REVISION ) {
         std::string e = string_format(
                             "expected revision %d, got %d",
                             MO_SUPPORTED_REVISION,
-                            get_u32( MO_REVISION_ADDR )
+                            get_u32( OFFS_REVISION )
                         );
         throw std::runtime_error( e );
     }
 
-    number_of_strings = get_u32( MO_NUM_STRINGS_ADDR );
-    offs_orig_table = get_u32( MO_ORIG_TABLE_OFFSET_ADDR );
-    offs_trans_table = get_u32( MO_TRANS_TABLE_OFFSET_ADDR );
+    number_of_strings = get_u32( OFFS_NUM_STRINGS );
+    offs_orig_table = get_u32( OFFS_ORIG_TABLE_BEGIN );
+    offs_trans_table = get_u32( OFFS_TRANS_TABLE_BEGIN );
 }
 
 void trans_catalogue::check_string_terminators()
 {
-    const auto check_string = [this]( u32 addr ) {
+    const auto check_string = [this]( u32 offs ) {
         // Check that string with its null terminator (not included in string length)
         // does not extend beyond file boundaries.
-        string_info s = get_string_info( addr );
+        string_info s = get_string_info( offs );
         if( s.address + s.length + 1 > buf_size() ) {
             std::string e = string_format(
-                                "string_info at %#x: extends beyond EOF (len:%#x addr:%#x file size:%#x)",
-                                addr, s.length, s.address, buf_size()
+                                "string_info at offs %#x: extends beyond EOF (len:%#x offs:%#x fsize:%#x)",
+                                offs, s.length, s.address, buf_size()
                             );
             throw std::runtime_error( e );
         }
@@ -501,8 +502,8 @@ void trans_catalogue::check_string_terminators()
         u8 terminator = get_u8( s.address + s.length );
         if( terminator != 0 ) {
             std::string e = string_format(
-                                "string_info at %#x: missing null terminator",
-                                addr
+                                "string_info at offs %#x: missing null terminator",
+                                offs
                             );
             throw std::runtime_error( e );
         }
@@ -533,8 +534,8 @@ void trans_catalogue::check_string_plurals()
         }
 
         // Count null bytes - each plural form is a null-terminated string (including last one)
-        u32 addr_tr = offs_trans_table + i * MO_STRING_RECORD_STEP;
-        string_info info_tr = get_string_info_unsafe( addr_tr );
+        u32 offs_tr = offs_trans_table + i * MO_STRING_RECORD_STEP;
+        string_info info_tr = get_string_info_unsafe( offs_tr );
         unsigned long plural_forms = 0;
         for( u32 j = info_tr.address; j <= info_tr.address + info_tr.length; j++ ) {
             if( get_u8_unsafe( j ) == 0 ) {
@@ -545,8 +546,8 @@ void trans_catalogue::check_string_plurals()
         // Number of plural forms should match the number specified in metadata
         if( plural_forms != this->plurals.num ) {
             std::string e = string_format(
-                                "string_info at %#x: expected %d plural forms, got %d",
-                                addr_tr, this->plurals.num, plural_forms
+                                "string_info at offs %#x: expected %d plural forms, got %d",
+                                offs_tr, this->plurals.num, plural_forms
                             );
             throw std::runtime_error( e );
         }

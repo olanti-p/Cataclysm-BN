@@ -96,32 +96,32 @@ class trans_catalogue
             return static_cast<u32>( buf.size() );
         }
 
-        u8 get_u8( u32 addr ) const;
-        inline u8 get_u8_unsafe( u32 addr ) const {
-            return static_cast<u8>( buf[addr] );
+        u8 get_u8( u32 offs ) const;
+        inline u8 get_u8_unsafe( u32 offs ) const {
+            return static_cast<u8>( buf[offs] );
         }
 
-        u32 get_u32( u32 addr ) const;
-        inline u32 get_u32_unsafe( u32 addr ) const {
+        u32 get_u32( u32 offs ) const;
+        inline u32 get_u32_unsafe( u32 offs ) const {
             if( is_little_endian ) {
-                return get_u8_unsafe( addr ) |
-                       get_u8_unsafe( addr + 1 ) << 8 |
-                       get_u8_unsafe( addr + 2 ) << 16 |
-                       get_u8_unsafe( addr + 3 ) << 24;
+                return get_u8_unsafe( offs ) |
+                       get_u8_unsafe( offs + 1 ) << 8 |
+                       get_u8_unsafe( offs + 2 ) << 16 |
+                       get_u8_unsafe( offs + 3 ) << 24;
             } else {
-                return get_u8_unsafe( addr + 3 ) |
-                       get_u8_unsafe( addr + 2 ) << 8 |
-                       get_u8_unsafe( addr + 1 ) << 16 |
-                       get_u8_unsafe( addr ) << 24;
+                return get_u8_unsafe( offs + 3 ) |
+                       get_u8_unsafe( offs + 2 ) << 8 |
+                       get_u8_unsafe( offs + 1 ) << 16 |
+                       get_u8_unsafe( offs ) << 24;
             }
         }
 
-        inline const char *addr_to_cstr( u32 addr ) const {
-            return &buf[addr];
+        inline const char *addr_to_cstr( u32 offs ) const {
+            return &buf[offs];
         }
 
-        string_info get_string_info( u32 addr ) const;
-        string_info get_string_info_unsafe( u32 addr ) const;
+        string_info get_string_info( u32 offs ) const;
+        string_info get_string_info_unsafe( u32 offs ) const;
 
         // MO loading
         inline void set_buffer( std::string buffer ) {
