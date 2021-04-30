@@ -15,7 +15,7 @@
 
 ## Intro
 This document aims to give a brief explanation on how to set up and operate
-mod translation workflow for Cataclysm: Bright Nights
+mod translation workflow for Cataclysm: Bright Nights.
 
 While it's possible to use Transifex or any other platform or software that supports gettext,
 this document only gives examples on how to do it with [Poedit](https://poedit.net/) and 
@@ -76,6 +76,12 @@ On Windows, make sure to add Python to the `PATH` variable (look for tutorials i
 Scripts for extracting strings from JSON files can be found in the `lang` subdirectory of the game.
 
 ## Extracting strings
+To extract strings, you'll need to run 2 python scripts, one of which requires additional configuration.
+
+While it's easy to do once, you'll need to run them again in the future if the mod is under development and
+you plan on keeping translations up-to-date. The easiest way to automate that is to create _another_ script
+(batch or bash, depending on your OS) that would take care of the process for you.
+
 ### Windows
 Create a `lang` folder inside the mod's folder, and put inside a batch script (`.bat` file) with the following contents:
 ```bat
@@ -85,19 +91,22 @@ echo Done!
 pause
 ```
 Replace `C:\path\to\extract_json_strings.py` and `C:\path\to\dedup_pot_file.py` with actual paths to
-`extract_json_strings.py` and `dedup_pot_file.py` scripts, and `YourModName` with the mod's name (doesn't have to match exactly).
-If either paths or mod's name contain spaces, surround them with quotes (e.g. `python.exe "C:\My Games\Cata\lang\dedup_pot_file.py" lang\index.pot`).
+`extract_json_strings.py` and `dedup_pot_file.py` scripts. If either paths or mod's name contain spaces,
+surround them with quotes (e.g. `python.exe "C:\My Games\Cata\lang\dedup_pot_file.py" lang\index.pot`).
 You can use relative paths: e.g. if the mod is inside `data\mods\`,
 the paths would be `..\..\..\..\lang\extract_json_strings.py` and `..\..\..\..\lang\dedup_pot_file.py`.
 
-You'll probably want to keep this `.bat` file if you plan on updating translations in the future.
+**TODO:**
+~ Replace `YourModName` with the mod's name. This will show up as project name in translation software (at least it does in Poedit), and
+~ doesn't have to match exactly - this is what translation software will
+~ likely use for the project name);
 
-Finally, either double-click to run, or open command prompt and run the `.bat` from the mod's `lang` folder:
+To run the script, either double-click on it from File Explorer, or open command prompt and execute it from the mod's `lang` folder:
 ```bat
 cd /d C:\path\to\your\mod\folder\lang
 your_file.bat
 ```
-Once it completes, you should see a new translation template file `index.pot` that contains all strings extracted from the mod.
+Once the process completes, you should see a new translation template file `index.pot` that contains all strings extracted from the mod.
 
 ### Linux/MacOS
 Create a `lang` folder inside the mod's folder, and put inside a bash script (`.sh` file) with the following contents:
@@ -107,22 +116,19 @@ python /path/to/dedup_pot_file.py index.pot
 echo Done!
 ```
 Replace `/path/to/extract_json_strings.py` and `/path/to/dedup_pot_file.py` with actual paths to
-`extract_json_strings.py` and `dedup_pot_file.py` scripts, and `YourModName` with the mod's name (doesn't have to match exactly).
-If either paths or mod's name contain spaces, surround them with quotes (e.g. `python "/path/with spaces/dedup_pot_file.py" lang/index.pot`).
+`extract_json_strings.py` and `dedup_pot_file.py` scripts. If either paths or mod's name contain spaces,
+surround them with quotes (e.g. `python "/path/with spaces/dedup_pot_file.py" lang/index.pot`).
 You can use relative paths: e.g. if the mod is inside `data/mods/`,
 the paths would be `../../../../lang/extract_json_strings.py` and `../../../../lang/dedup_pot_file.py`.
-
-You'll probably want to keep this `.sh` file if you plan on updating translations in the future.
 
 Don't forget to mark it as executable via file properties or terminal command:
 ```bash
 chmod +x your_script.sh
 ```
-Finally, open the terminal in mod's `lang` folder and run the script from there:
-```bash
-your_script.sh
-```
-Once it completes, you should see a new translation template file `index.pot` that contains all strings extracted from the mod.
+
+To run the script, open the terminal in mod's `lang` folder and type in script name.
+
+Once the process completes, you should see a new translation template file `index.pot` that contains all strings extracted from the mod.
 
 ## Creating new PO
 Before creating PO file, you need to choose language id.
