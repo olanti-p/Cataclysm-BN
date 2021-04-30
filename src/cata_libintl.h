@@ -179,11 +179,23 @@ class trans_library
         /** Create new library from catalogues. */
         static trans_library create( std::vector<trans_catalogue> catalogues );
 
+        /**
+         * Get translated string.
+         *
+         * @param msgid - message id
+         * @param ctx - message context
+         * @param msgid_pld - message id in plural form (n!=1)
+         * @param n - number to choose plural form for
+         * @returns If translation is found, returns translated string. Otherwise, returns original string.
+         *
+         * @{
+         */
         const char *get( const char *msgid ) const;
         const char *get_pl( const char *msgid, const char *msgid_pl, unsigned long n ) const;
         const char *get_ctx( const char *ctx, const char *msgid ) const;
         const char *get_ctx_pl( const char *ctx, const char *msgid, const char *msgid_pl,
                                 unsigned long n ) const;
+        /** @} */
 };
 } // cata_libintl
 
