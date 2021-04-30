@@ -2,15 +2,18 @@
 
 #include "catch/catch.hpp"
 #include "filesystem.h"
+#include "fstream_utils.h"
 #include "rng.h"
 #include "string_formatter.h"
 
 #include <algorithm>
 #include <array>
+#include <functional>
 #include <iostream>
 #include <iterator>
 #include <random>
 #include <vector>
+#include <sstream>
 
 using namespace cata_libintl;
 
@@ -604,18 +607,63 @@ TEST_CASE( "load_all_base_game_mos", "[libintl][i18n]" )
     }
 }
 
-// Measure how long it takes to find all strings in a MO file
-TEST_CASE( "get_string_benchmark", "[libintl][i18n]" )
+static std::string fmt_duration( int64_t ns )
+{
+    if( ns > 1'000'000 ) {
+        return string_format( "%.3f ms", static_cast<float>( ns ) / 1'000'000.0f );
+    } else if( ns > 1'000 ) {
+        return string_format( "%.3f mcs", static_cast<float>( ns ) / 1'000.0f );
+    } else {
+        return string_format( "%d ns", ns );
+    }
+}
+
+static void do_single_bench( const size_t iterations, const std::string &descr,
+                             std::function<void()> func )
+{
+    // Warm-up
+    func();
+
+    // Actual bench
+    auto start = std::chrono::steady_clock::now();
+    for( size_t i = 0; i < iterations; i++ ) {
+        func();
+    }
+    auto end = std::chrono::steady_clock::now();
+    auto dur = end - start;
+
+    int64_t ns = std::chrono::duration_cast<std::chrono::nanoseconds>( dur ).count();
+
+    cata_printf( "--- Bench report ---" );
+    cata_printf( " Discription: %s", descr );
+    cata_printf( " Iterations:  %d", iterations );
+    cata_printf( " Total time:  %s", fmt_duration( ns ) );
+    cata_printf( " Iter time:   %s", fmt_duration( ns / static_cast<int64_t>( iterations ) ) );
+}
+
+static std::string get_bench_file()
 {
     // Using Russian here because it's big
     std::string path = "lang/mo/ru_RU/LC_MESSAGES/cataclysm-bn.mo";
     if( !file_exist( path ) ) {
         WARN( "Skipping (file not found)" );
+        return "";
+    }
+    std::stringstream buffer;
+    buffer << cata_ifstream().mode( cata_ios_mode::binary ).open( path )->rdbuf();
+    return buffer.str();
+}
+
+// Measure how long it takes to find all strings in a MO file
+TEST_CASE( "bench_mo_get_string", "[libintl][i18n][.]" )
+{
+    std::string data = get_bench_file();
+    if( data.empty() ) {
         return;
     }
 
     std::vector<trans_catalogue> list;
-    list.push_back( trans_catalogue::load_from_file( path ) );
+    list.push_back( trans_catalogue::load_from_memory( data ) );
 
     size_t num = list.back().get_num_strings();
     std::vector<std::string> originals;
@@ -634,21 +682,43 @@ TEST_CASE( "get_string_benchmark", "[libintl][i18n]" )
         }
     };
 
-    // Warm-up
-    run_once();
+    do_single_bench( 100, string_format( "get %d strings", originals.size() ), run_once );
+}
 
-    // Actual bench
-    constexpr size_t ITERATIONS = 10;
-    auto start_tick = std::chrono::steady_clock::now();
-    for( size_t i = 0; i < ITERATIONS; i++ ) {
-        run_once();
+// Measure how long it takes to parse single MO file
+TEST_CASE( "bench_mo_get_string", "[libintl][i18n][.]" )
+{
+    std::string data = get_bench_file();
+    if( data.empty() ) {
+        return;
     }
-    auto end_tick = std::chrono::steady_clock::now();
 
-    int64_t diff = std::chrono::duration_cast<std::chrono::milliseconds>(
-                       end_tick - start_tick ).count();
-    std::cerr << string_format(
-                  "Bench result: %d ms  %d x %d strings",
-                  diff, originals.size(), ITERATIONS
-              ) << std::endl;
+    const auto run_once = [&]() {
+        trans_catalogue::load_from_memory( data );
+    };
+
+    int n = trans_catalogue::load_from_memory( data ).get_num_strings();
+
+    do_single_bench( 100, string_format( "parse MO file (%d bytes, %d strings)", data.size(), n ),
+                     run_once );
+}
+
+// Measure how long it takes to parse single MO file + assemble library
+TEST_CASE( "bench_mo_get_string", "[libintl][i18n][.]" )
+{
+    std::string data = get_bench_file();
+    if( data.empty() ) {
+        return;
+    }
+
+    const auto run_once = [&]() {
+        std::vector<trans_catalogue> list;
+        list.push_back( trans_catalogue::load_from_memory( data ) );
+        trans_library::create( std::move( list ) );
+    };
+
+    int n = trans_catalogue::load_from_memory( data ).get_num_strings();
+
+    do_single_bench( 100, string_format( "parse MO file (%d bytes, %d strings) + assemble lib",
+                                         data.size(), n ), run_once );
 }

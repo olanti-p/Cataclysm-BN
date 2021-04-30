@@ -152,6 +152,11 @@ class trans_catalogue
          * @throws on failure.
          */
         static trans_catalogue load_from_file( const std::string &file_path );
+        /**
+         * Load translation catalogue from given MO file in memory.
+         * @throws on failure.
+         */
+        static trans_catalogue load_from_memory( std::string mo_file );
 
         /** Number of entries in the catalogue. */
         inline u32 get_num_strings() const {

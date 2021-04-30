@@ -365,7 +365,12 @@ trans_catalogue trans_catalogue::load_from_file( const std::string &file_path )
     if( file.fail() ) {
         throw std::runtime_error( "failed to read file" );
     }
-    return trans_catalogue( buffer.str() );
+    return load_from_memory( buffer.str() );
+}
+
+trans_catalogue trans_catalogue::load_from_memory( std::string mo_file )
+{
+    return trans_catalogue( std::move( mo_file ) );
 }
 
 u8 trans_catalogue::get_u8( u32 offs ) const
