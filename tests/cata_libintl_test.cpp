@@ -655,7 +655,7 @@ static std::string get_bench_file()
 }
 
 // Measure how long it takes to find all strings in a MO file
-TEST_CASE( "bench_mo_get_string", "[libintl][i18n][.]" )
+TEST_CASE( "bench_get_translated_string", "[libintl][i18n][.]" )
 {
     std::string data = get_bench_file();
     if( data.empty() ) {
@@ -686,7 +686,7 @@ TEST_CASE( "bench_mo_get_string", "[libintl][i18n][.]" )
 }
 
 // Measure how long it takes to parse single MO file
-TEST_CASE( "bench_mo_get_string", "[libintl][i18n][.]" )
+TEST_CASE( "bench_parse_mo", "[libintl][i18n][.]" )
 {
     std::string data = get_bench_file();
     if( data.empty() ) {
@@ -704,7 +704,7 @@ TEST_CASE( "bench_mo_get_string", "[libintl][i18n][.]" )
 }
 
 // Measure how long it takes to parse single MO file + assemble library
-TEST_CASE( "bench_mo_get_string", "[libintl][i18n][.]" )
+TEST_CASE( "bench_asssemble_trans_lib", "[libintl][i18n][.]" )
 {
     std::string data = get_bench_file();
     if( data.empty() ) {
