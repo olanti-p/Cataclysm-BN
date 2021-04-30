@@ -485,7 +485,7 @@ std::vector<std::string> get_lang_path_substring( const std::string &lang_id )
         // Id with dialect specified ('en_US', 'fr_FR', etc.)
         // First try loading exact resource, then try dialect-agnostic resource.
         std::string lang_only = lang_id.substr( 0, p );
-        return { { lang_id, lang_only } };
+        return { { std::string( lang_id ), lang_only } };
     }
 }
 
