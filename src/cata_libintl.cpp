@@ -779,7 +779,7 @@ trans_library trans_library::create( std::vector<trans_catalogue> catalogues )
                        end_tick - start_tick ).count();
 
     u32 num_total = 0;
-    for( const trans_catalogue &cat : catalogues ) {
+    for( const trans_catalogue &cat : lib.catalogues ) {
         num_total += cat.get_num_strings();
     }
     std::cerr << string_format( "[libintl] Took %d ms to sort %d strings", diff,
