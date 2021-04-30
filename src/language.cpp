@@ -596,7 +596,6 @@ void reload_catalogues()
     if( !gettext_use_modular ) {
         return;
     }
-    dbg( D_INFO, "[trans] Reloading all catalogues." );
 
     std::vector<trans_catalogue> list;
     add_base_catalogue( list, get_language().id );
@@ -608,8 +607,6 @@ static bool mod_catalogues_loaded = false;
 
 void unload_catalogues()
 {
-    dbg( D_INFO, "[trans] Unloading all catalogues." );
-
     mod_catalogues_loaded = false;
     set_library( trans_library::create( {} ) );
 }
@@ -619,7 +616,6 @@ void load_mod_catalogues()
     if( !gettext_use_modular ) {
         return;
     }
-    dbg( D_INFO, "[trans] Loading mod catalogues." );
 
     assert( !mod_catalogues_loaded );
     std::vector<trans_catalogue> list;
@@ -633,7 +629,6 @@ void unload_mod_catalogues()
     if( !gettext_use_modular || !mod_catalogues_loaded ) {
         return;
     }
-    dbg( D_INFO, "[trans] Unloading mod catalogues." );
 
     mod_catalogues_loaded = false;
     std::vector<trans_catalogue> list;

@@ -6,16 +6,10 @@
 
 #include <algorithm>
 #include <array>
-#include <chrono>
 #include <cstring>
 #include <iostream>
 #include <limits>
-#include <locale>
 #include <sstream>
-
-// TODO:
-// 1. purge debug output
-// 2. take another look at everything
 
 // ===============================================================================================
 // Plural forms
@@ -334,33 +328,24 @@ unsigned long PlfNode::eval( unsigned long n ) const
 
 std::string PlfNode::debug_dump() const
 {
-    std::ostringstream ss;
-    ss.imbue( std::locale::classic() );
-    std::string ops = "";
     switch( op ) {
         case PlfOp::TerCond:
-            ss << "(" << a->debug_dump() << "?" << b->debug_dump() << ":" << c->debug_dump() << ")";
-            break;
+            return string_format( "(%s?%s:%s)", a->debug_dump(), b->debug_dump(), c->debug_dump() );
         case PlfOp::Literal:
-            ss << literal_val;
-            break;
+            return string_format( "%d", literal_val );
         case PlfOp::Variable:
-            ss << "n";
-            break;
-        default:
-            ops = "x";
+            return "n";
+        default: {
+            std::string ops = "x";
             for( const auto &it : simple_tokens ) {
                 if( it.second == op ) {
                     ops = it.first;
                     break;
                 }
             }
-            break;
+            return string_format( "(%s%s%s)", a->debug_dump(), ops, b->debug_dump() );
+        }
     }
-    if( !ops.empty() ) {
-        ss << "(" << a->debug_dump() << ops << b->debug_dump() << ")";
-    }
-    return ss.str();
 }
 
 // ===============================================================================================
@@ -371,8 +356,6 @@ constexpr u32 MO_STRING_DESCR_SIZE = 8;
 
 trans_catalogue trans_catalogue::load_from_file( const std::string &file_path )
 {
-    auto start_tick = std::chrono::steady_clock::now();
-
     std::stringstream buffer;
     cata_ifstream file = std::move( cata_ifstream().mode( cata_ios_mode::binary ).open( file_path ) );
     if( !file.is_open() ) {
@@ -382,20 +365,7 @@ trans_catalogue trans_catalogue::load_from_file( const std::string &file_path )
     if( file.fail() ) {
         throw std::runtime_error( "failed to read file" );
     }
-
-    auto read_tick = std::chrono::steady_clock::now();
-
-    trans_catalogue ret = trans_catalogue( buffer.str() );
-
-    auto end_tick = std::chrono::steady_clock::now();
-
-    int64_t diff_read = std::chrono::duration_cast<std::chrono::milliseconds>(
-                            read_tick - start_tick ).count();
-    int64_t diff_parse = std::chrono::duration_cast<std::chrono::milliseconds>(
-                             end_tick - read_tick ).count();
-    std::cerr << string_format( "[libintl] Took %d/%d ms to load %s", diff_read, diff_parse,
-                                file_path ) << std::endl;
-    return ret;
+    return trans_catalogue( buffer.str() );
 }
 
 u8 trans_catalogue::get_u8( u32 offs ) const
@@ -664,8 +634,7 @@ trans_catalogue::trans_catalogue( std::string buffer )
     process_file_header();
     check_string_terminators();
 
-    std::string meta_raw = get_metadata();
-    meta_headers headers = string_split( meta_raw, '\n' );
+    meta_headers headers = string_split( get_metadata(), '\n' );
 
     check_encoding( headers );
     this->plurals = parse_plf_header( headers );
@@ -771,20 +740,7 @@ trans_library trans_library::create( std::vector<trans_catalogue> catalogues )
 {
     trans_library lib;
     lib.catalogues = std::move( catalogues );
-
-    auto start_tick = std::chrono::steady_clock::now();
     lib.build_string_table();
-    auto end_tick = std::chrono::steady_clock::now();
-    int64_t diff = std::chrono::duration_cast<std::chrono::milliseconds>(
-                       end_tick - start_tick ).count();
-
-    u32 num_total = 0;
-    for( const trans_catalogue &cat : lib.catalogues ) {
-        num_total += cat.get_num_strings();
-    }
-    std::cerr << string_format( "[libintl] Took %d ms to sort %d strings", diff,
-                                num_total ) << std::endl;
-
     return lib;
 }
 
