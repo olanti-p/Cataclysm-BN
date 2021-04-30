@@ -6,7 +6,7 @@
 - [Setting up environment for string extraction](#setting-up-environment-for-string-extraction)
 - [Extracting strings](#extracting-strings)
   * [Windows](#windows)
-  * [Linux/MacOS](#linux-macos)
+  * [Linux and OSX](#linux-and-osx)
 - [Creating new PO](#creating-new-po)
 - [Updating existing PO](#updating-existing-po)
 - [Compiling PO into MO](#compiling-po-into-mo)
@@ -105,7 +105,7 @@ your_file.bat
 ```
 Once the process completes, you should see a new translation template file `index.pot` that contains all strings extracted from the mod.
 
-### Linux/MacOS
+### Linux and OSX
 Create a `lang` folder inside the mod's folder, and put inside a bash script (`.sh` file) with the following contents:
 ```bash
 python /path/to/extract_json_strings.py -i .. -o index.pot --project YourModName
