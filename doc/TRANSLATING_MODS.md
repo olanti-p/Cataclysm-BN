@@ -1,6 +1,19 @@
 # Translating mods for Cataclysm: BN
 
-## Disclaimer
+- [Intro](#intro)
+- [A short glossary](#a-short-glossary)
+- [Workflow overview](#workflow-overview)
+- [Setting up environment for string extraction](#setting-up-environment-for-string-extraction)
+- [Extracting strings](#extracting-strings)
+ * [Windows](#windows)
+ * [Linux/MacOS](#linux-macos)
+- [Creating new PO](#creating-new-po)
+- [Updating existing PO](#updating-existing-po)
+- [Compiling PO into MO](#compiling-po-into-mo)
+- [Adding MO file to the mod](#adding-mo-file-to-the-mod)
+- [Miscellaneous notes](#miscellaneous-notes)
+
+## Intro
 This document aims to give a brief explanation on how to set up and operate
 mod translation workflow for Cataclysm: Bright Nights
 
