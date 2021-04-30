@@ -357,7 +357,7 @@ static void do_plf_calc_test( const plf_calc_test_case &test )
 }
 
 // MO Plural forms calculation
-TEST_CASE( "mo_plurals_calculation", "[libintl][i18n]" )
+TEST_CASE( "mo_plurals_calculation", "[libintl][i18n][.]" )
 {
     for( const auto &test : plf_calc_test_cases ) {
         CAPTURE( test.serial );
@@ -372,7 +372,7 @@ TEST_CASE( "mo_plurals_calculation", "[libintl][i18n]" )
 //
 // This test reaffirms the assumption that both Transifex's and GNU's plf expressions
 // produce same values for integer numbers.
-TEST_CASE( "gnu_transifex_rules_equal", "[libintl][i18n]" )
+TEST_CASE( "gnu_transifex_rules_equal", "[libintl][i18n][.]" )
 {
     constexpr size_t CHECK_TOTAL = 1'000'000;
 
