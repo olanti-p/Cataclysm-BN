@@ -553,7 +553,7 @@ static const std::vector<test_case_data> tests_mo_loading_failures = {{
         {
             3, // wrong charset (only UTF-8 is supported)
             "wrong_charset_ru.mo",
-            "unexpected value in Content-Type header (wrong charset?)",
+            "unrecognized value in Content-Type header (wrong charset?). Expected \"Content-Type: text/plain; charset=UTF-8\"",
         },
         {
             4, // one of the strings extends beyond end of file

@@ -524,6 +524,12 @@ void trans_catalogue::check_string_plurals()
 
 void trans_catalogue::check_encoding( const meta_headers &headers )
 {
+    // HACK: The checks here are rather crude and don't account for
+    //       possible extra spaces or wrong capitalization.
+    //       However, we don't expect people to manually configure
+    //       these headers (there're tons of software for that),
+    //       and the strings here match output of our own scripts and
+    //       Poedit/xgettext/Transifex, so leaving as is should be fine.
     {
         bool found = false;
         for( const std::string &entry : headers ) {
@@ -531,8 +537,12 @@ void trans_catalogue::check_encoding( const meta_headers &headers )
                 continue;
             }
             found = true;
-            if( entry != "Content-Type: text/plain; charset=UTF-8" ) {
-                throw std::runtime_error( "unexpected value in Content-Type header (wrong charset?)" );
+            static const std::string expected = "Content-Type: text/plain; charset=UTF-8";
+            if( entry != expected ) {
+                std::string e =
+                    string_format( "unrecognized value in Content-Type header (wrong charset?). Expected \"%s\"",
+                                   expected );
+                throw std::runtime_error( e );
             }
             break;
         }
@@ -547,8 +557,12 @@ void trans_catalogue::check_encoding( const meta_headers &headers )
                 continue;
             }
             found = true;
-            if( entry != "Content-Transfer-Encoding: 8bit" ) {
-                throw std::runtime_error( "unexpected value in Content-Transfer-Encoding header" );
+            static const std::string expected = "Content-Transfer-Encoding: 8bit";
+            if( entry != expected ) {
+                std::string e =
+                    string_format( "unrecognized value in Content-Transfer-Encoding header. Expected \"%s\"",
+                                   expected );
+                throw std::runtime_error( e );
             }
             break;
         }
@@ -562,6 +576,11 @@ trans_catalogue::catalogue_plurals_info trans_catalogue::parse_plf_header(
     const meta_headers &headers )
 {
     constexpr unsigned long MAX_PLURAL_FORMS = 8;
+
+    // HACK: Same as with encoding headers, we expect this header to be
+    //       automatically generated. This "parser" here succeeds with
+    //       MO files compiled from PO created with Transifex/Poedit/msginit,
+    //       and that'll probably extend to majority of other software.
 
     catalogue_plurals_info ret;
 

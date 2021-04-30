@@ -6,6 +6,23 @@
 #include <string>
 #include <vector>
 
+/**
+ * Translation system for Cataclysm: Bright Nights.
+ *
+ * Implements translated string lookup within gettext MO files
+ * with full support for integer plural forms.
+ *
+ * Key differences from GNU libintl:
+ * 1. Does not support translation domains
+ * 2. Does not support encoding conversion, operates on UTF-8 only
+ * 3. Does not depend on locale / environment variables
+ * 4. Supports loading MO files from arbitrary paths
+ * 5. Supports loading multiple MO files into a single "domain"
+ *
+ * For MO file structure, see GNU gettext manual:
+ * https://www.gnu.org/software/gettext/manual/
+ */
+
 namespace cata_libintl
 {
 using u8 = uint8_t;
@@ -60,9 +77,6 @@ PlfNodePtr parse_plural_rules( const std::string &s );
 
 /**
  * Translation catalogue. Corresponds to single MO file.
- *
- * For reference on MO files, see 'GNU gettext utilities' manual:
- * https://www.gnu.org/software/gettext/manual/html_node/MO-Files.html
  */
 class trans_catalogue
 {
