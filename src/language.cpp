@@ -561,7 +561,7 @@ static void add_cat_if_exists( std::vector<trans_catalogue> &list, const std::st
         }
         try {
             list.push_back( trans_catalogue::load_from_file( path ) );
-        } catch( std::runtime_error err ) {
+        } catch( const std::runtime_error& err ) {
             debugmsg( "Failed to load translation catalogue '%s': %s", path, err.what() );
         }
         break;
