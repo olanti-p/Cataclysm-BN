@@ -48,11 +48,13 @@ Updating existing translations is done as follows:
 5. Replace old MO in the mod files with new version
 
 Step 1 in both workflows requires you to set up environment for string extraction (see below).
+
 Steps 2-4 can be done using translation software either by the mod author/maintainer, or by the translator.
 
 ## Setting up environment for string extraction
 You'll need Python 3 with `polib` library installed.
-There are many tutorials online on how to install Python 3 and `pip`, Python's package manager, and the `polib` library can be installed via
+There are many tutorials online on how to install Python 3 and `pip`,
+Python's package manager, and the `polib` library can be installed via
 ```bash
 pip install polib
 ```
@@ -69,16 +71,20 @@ python.exe C:\path\to\dedup_pot_file.py index.pot
 echo Done!
 pause
 ```
-Replace `C:\path\to\extract_json_strings.py` and `C:\path\to\dedup_pot_file.py` with actual paths to `extract_json_strings.py` and `dedup_pot_file.py` scripts, and `YourModName` with the mod's name (doesn't have to match exactly). If either paths or mod's name contain spaces, surround them in quotes (e.g. `python.exe "C:\My Games\Cata\lang\dedup_pot_file.py" lang\index.pot`). You can use relative paths: e.g. if the mod is inside `data\mods\`, the paths would be `..\..\..\..\lang\extract_json_strings.py` and `..\..\..\..\lang\dedup_pot_file.py`.
+Replace `C:\path\to\extract_json_strings.py` and `C:\path\to\dedup_pot_file.py` with actual paths to
+`extract_json_strings.py` and `dedup_pot_file.py` scripts, and `YourModName` with the mod's name (doesn't have to match exactly).
+If either paths or mod's name contain spaces, surround them with quotes (e.g. `python.exe "C:\My Games\Cata\lang\dedup_pot_file.py" lang\index.pot`).
+You can use relative paths: e.g. if the mod is inside `data\mods\`,
+the paths would be `..\..\..\..\lang\extract_json_strings.py` and `..\..\..\..\lang\dedup_pot_file.py`.
 
 You'll probably want to keep this `.bat` file if you plan on updating translations in the future.
 
-Finally, either double-click to run, or open command prompt and run the `.bat` from the mod's folder:
+Finally, either double-click to run, or open command prompt and run the `.bat` from the mod's `lang` folder:
 ```bat
 cd /d C:\path\to\your\mod\folder\lang
 your_file.bat
 ```
-This will create translation template file `index.pot`.
+Once it completes, you should see a new translation template file `index.pot` that contains all strings extracted from the mod.
 
 ### Linux/MacOS
 Create a `lang` folder inside the mod's folder, and put inside a bash script (`.sh` file) with the following contents:
@@ -87,18 +93,23 @@ python /path/to/extract_json_strings.py -i .. -o index.pot --project YourModName
 python /path/to/dedup_pot_file.py index.pot
 echo Done!
 ```
-Replace `/path/to/extract_json_strings.py` and `/path/to/dedup_pot_file.py` with actual paths to `extract_json_strings.py` and `dedup_pot_file.py` scripts, and `YourModName` with the mod's name (doesn't have to match exactly). If either paths or mod's name contain spaces, surround them in quotes (e.g. `python "/path/with spaces/dedup_pot_file.py" lang/index.pot`). You can use relative paths: e.g. if the mod is inside `data/mods/`, the paths would be `../../../../lang/extract_json_strings.py` and `../../../../lang/dedup_pot_file.py`.
+Replace `/path/to/extract_json_strings.py` and `/path/to/dedup_pot_file.py` with actual paths to
+`extract_json_strings.py` and `dedup_pot_file.py` scripts, and `YourModName` with the mod's name (doesn't have to match exactly).
+If either paths or mod's name contain spaces, surround them with quotes (e.g. `python "/path/with spaces/dedup_pot_file.py" lang/index.pot`).
+You can use relative paths: e.g. if the mod is inside `data/mods/`,
+the paths would be `../../../../lang/extract_json_strings.py` and `../../../../lang/dedup_pot_file.py`.
+
 You'll probably want to keep this `.sh` file if you plan on updating translations in the future.
 
 Don't forget to mark it as executable via file properties or terminal command:
 ```bash
 chmod +x your_script.sh
 ```
-Finally, open the terminal in mod folder and run the script from there:
+Finally, open the terminal in mod's `lang` folder and run the script from there:
 ```bash
-path/to/your_script.sh
+your_script.sh
 ```
-This will create `lang` subdirectory in the mod's folder with translation template file (`index.pot`) inside.
+Once it completes, you should see a new translation template file `index.pot` that contains all strings extracted from the mod.
 
 ## Creating new PO
 Before creating PO file, you need to choose language id.
@@ -178,9 +189,12 @@ mods/
 
 ## Miscellaneous notes
 ### Is it possible to use arbitrary location or names for MO files?
-No. The game looks for MO files with specific names that are located in the mod's `lang` directory. If you'll put it anywhere else, or use you own file names (e.g. `french.mo`, `german.mo`), it won't work.
+No. The game looks for MO files with specific names that are located in the mod's `lang` directory.
+If you'll put it anywhere else, or use you own file names (e.g. `french.mo`, `german.mo`), it won't work.
 
-However, any mod can automatically use any other mod's translation files to translate it's strings. This makes it possible to create mods that are purely "translation packs" for other mods (or mod collections), if you'd rather for whatever reason keep the mod and MO separate.
+However, any mod will automatically try to use any other mod's translation files to translate it's strings.
+This makes it possible to create mods that are purely "translation packs" for other mods (or mod collections),
+if you'd rather for whatever reason keep the mod and MO separate.
 
 ### Is it necessary to run the script from the mod's lang folder, or keep it there?
 No, it's just convenient to.
@@ -191,7 +205,8 @@ and the extraction script prepends each reference with the input path passed via
 
 When running from mod's lang folder, the input path is very short `..`, and the resulting references look nice and clean.
 
-Also, you don't have to worry about correct working directory if you run the script from the file explorer.
+Also, when keeping extraction script inside `lang` folder you don't have to worry about correct
+working directory if you run it directly from the file explorer.
 
 ### Reloading translations in a running game
 Open debug menu and select `Info...->Reload translations`, and the game will reload all MO files from disk.
