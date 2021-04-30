@@ -809,21 +809,13 @@ const char *trans_library::lookup_pl_string( const char *id, unsigned long n ) c
 const char *trans_library::get( const char *msgid ) const
 {
     const char *ret = lookup_string( msgid );
-    if( ret ) {
-        return ret;
-    } else {
-        return msgid;
-    }
+    return ret ? ret : msgid;
 }
 
 const char *trans_library::get_pl( const char *msgid, const char *msgid_pl, unsigned long n ) const
 {
     const char *ret = lookup_pl_string( msgid, n );
-    if( ret ) {
-        return ret;
-    } else {
-        return ( n == 1 ) ? msgid : msgid_pl;
-    }
+    return ret ? ret : ( n == 1  ? msgid : msgid_pl );
 }
 
 const char *trans_library::get_ctx( const char *msgctxt, const char *msgid ) const
@@ -834,11 +826,7 @@ const char *trans_library::get_ctx( const char *msgctxt, const char *msgid ) con
     buf += '\4';
     buf += msgid;
     const char *ret = lookup_string( buf.c_str() );
-    if( ret ) {
-        return ret;
-    } else {
-        return msgid;
-    }
+    return ret ? ret : msgid;
 }
 
 const char *trans_library::get_ctx_pl( const char *msgctxt, const char *msgid, const char *msgid_pl,
@@ -850,10 +838,6 @@ const char *trans_library::get_ctx_pl( const char *msgctxt, const char *msgid, c
     buf += '\4';
     buf += msgid;
     const char *ret = lookup_pl_string( buf.c_str(), n );
-    if( ret ) {
-        return ret;
-    } else {
-        return ( n == 1 ) ? msgid : msgid_pl;
-    }
+    return ret ? ret : ( n == 1  ? msgid : msgid_pl );
 }
 } // namespace cata_internal
