@@ -22,78 +22,83 @@ struct test_case_data {
 
 static const std::vector<test_case_data> tests_plural_form_rules = {{
         {
-            0, // a valid expression
+            1, // a valid expression
             "n%2",
             "(n%2)",
         },
         {
-            1, // same as previous, but with brackets and spaces
+            2, // same as previous, but with brackets and spaces
             " ( n % 2 ) ",
             "(n%2)",
         },
         {
-            2, // ternary op
+            3, // same as previous, but with multiple brackets
+            " (( ( ( n % 2 )   )) )",
+            "(n%2)",
+        },
+        {
+            4, // ternary op
             "n?0:1",
             "(n?0:1)",
         },
         {
-            3, // two ternary ops
+            5, // two ternary ops
             "n?1?2:3:4",
             "(n?(1?2:3):4)",
         },
         {
-            4, // same op
+            6, // same op
             "1 && 2 && 3 && 4",
             "(1&&(2&&(3&&4)))",
         },
         {
-            5, // binary op priority
+            7, // binary op priority
             "n%10==1 && n%100!=11",
             "(((n%10)==1)&&((n%100)!=11))",
         },
         {
-            6, // ternary op priority
+            8, // ternary op priority
             "n==1?n%2:n%3",
             "((n==1)?(n%2):(n%3))",
         },
         {
-            7, // maximum integer
+            9, // maximum integer
             "n == 4294967295 ? 1 : 0",
             "((n==4294967295)?1:0)",
         },
         {
-            8, // Japanese, Korean
+            10, // Japanese, Korean
             "0",
             "0",
         },
         {
-            9, // Germanic languages (including English)
+            11, // Germanic languages (including English)
             "n!=1",
             "(n!=1)",
         },
         {
-            10, // French, Brazilian
+            12, // French, Brazilian
             "n>1",
             "(n>1)",
         },
         {
-            11, // Latvian
+            13, // Latvian
             "n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2",
             "((((n%10)==1)&&((n%100)!=11))?0:((n!=0)?1:2))",
         },
         {
-            12, // Polish
+            14, // Polish
             "n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2",
             "((n==1)?0:((((n%10)>=2)&&(((n%10)<=4)&&(((n%100)<10)||((n%100)>=20))))?1:2))",
         },
         {
-            13, // Russian, Lithuanian, Ukrainian, Belarusian, Serbian, Croatian
+            15, // Russian, Lithuanian, Ukrainian, Belarusian, Serbian, Croatian
             "n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2",
             "((((n%10)==1)&&((n%100)!=11))?0:((((n%10)>=2)&&(((n%10)<=4)&&(((n%100)<10)||((n%100)>=20))))?1:2))",
         },
         {
-            14, // Slovenian
-            "(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3)",
+            16, // Slovenian
+            "n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3",
             "((n%100)==1)?0:(((n%100)==2)?1:((((n%100)==3)||((n%100)==4))?2:3))",
         },
     }
