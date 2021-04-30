@@ -191,7 +191,8 @@ class trans_library
          * @param msgctxt - translation context
          * @param n - number to choose plural form for
          * @returns If translation is found, returns translated string or correct plural form.
-         *          Otherwise, returns original string or original plural string depending on n (n==1 ? msgid : msgid_pl).
+         *          Otherwise, returns original string or original plural string
+         *          depending on n (n==1 ? msgid : msgid_pl).
          *
          * @{
          */
