@@ -477,16 +477,20 @@ void update_global_locale()
 
 std::vector<std::string> get_lang_path_substring( const std::string &lang_id )
 {
+    std::vector<std::string> ret;
+
     const size_t p = lang_id.find( '_' );
     if( p == std::string::npos ) {
         // Dialect-agnostic id ('en', 'fr', 'de', etc.)
-        return { { lang_id } };
+        ret.push_back( lang_id );
     } else {
         // Id with dialect specified ('en_US', 'fr_FR', etc.)
         // First try loading exact resource, then try dialect-agnostic resource.
         std::string lang_only = lang_id.substr( 0, p );
-        return { { std::string( lang_id ), lang_only } };
+        ret.push_back( lang_id );
+        ret.push_back( lang_only );
     }
+    return ret;
 }
 
 bool localized_comparator::operator()( const std::string &l, const std::string &r ) const
