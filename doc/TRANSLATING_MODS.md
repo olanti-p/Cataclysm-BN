@@ -96,10 +96,7 @@ surround them with quotes (e.g. `python.exe "C:\My Games\Cata\lang\dedup_pot_fil
 You can use relative paths: e.g. if the mod is inside `data\mods\`,
 the paths would be `..\..\..\..\lang\extract_json_strings.py` and `..\..\..\..\lang\dedup_pot_file.py`.
 
-**TODO:**
-~ Replace `YourModName` with the mod's name. This will show up as project name in translation software (at least it does in Poedit), and
-~ doesn't have to match exactly - this is what translation software will
-~ likely use for the project name);
+Replace `YourModName` with the mod's name (doesn't have to match exactly).
 
 To run the script, either double-click on it from File Explorer, or open command prompt and execute it from the mod's `lang` folder:
 ```bat
@@ -120,6 +117,8 @@ Replace `/path/to/extract_json_strings.py` and `/path/to/dedup_pot_file.py` with
 surround them with quotes (e.g. `python "/path/with spaces/dedup_pot_file.py" lang/index.pot`).
 You can use relative paths: e.g. if the mod is inside `data/mods/`,
 the paths would be `../../../../lang/extract_json_strings.py` and `../../../../lang/dedup_pot_file.py`.
+
+Replace `YourModName` with the mod's name (doesn't have to match exactly).
 
 Don't forget to mark it as executable via file properties or terminal command:
 ```bash
