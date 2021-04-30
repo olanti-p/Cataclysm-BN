@@ -1,7 +1,6 @@
 [
   {
     "//": "See language.h for documentation",
-    "//2": "TODO: ALPHA - fix language detection on Linux",
     "id": "en_US",
     "name": "English",
     "locale": "en_US.UTF-8",
