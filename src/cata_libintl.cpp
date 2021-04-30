@@ -116,7 +116,7 @@ struct PlfTStream {
                         throw std::out_of_range( "stoul" );
                     }
                     return PlfToken{ PlfOp::Literal, ul, start_pos, pos - start_pos };
-                } catch( std::logic_error err ) {
+                } catch( const std::logic_error &err ) {
                     std::string e = string_format( "invalid number '%s' at pos %d", tok, start_pos );
                     throw std::runtime_error( e );
                 }
@@ -598,7 +598,7 @@ trans_catalogue::catalogue_plurals_info trans_catalogue::parse_plf_header(
         plf_n_raw = plf_n_raw.substr( 10 ); // 10 is length of " nplurals=" string
         try {
             ret.num = std::stoul( plf_n_raw );
-        } catch( std::runtime_error err ) {
+        } catch( const std::runtime_error &err ) {
             std::string e = string_format( "failed to parse Plural-Forms nplurals number '%s': %s", plf_n_raw,
                                            err.what() );
             throw std::runtime_error( e );
@@ -619,7 +619,7 @@ trans_catalogue::catalogue_plurals_info trans_catalogue::parse_plf_header(
         plf_rules_raw = plf_rules_raw.substr( 8 ); // 8 is length of " plural=" string
         try {
             ret.expr = parse_plural_rules( plf_rules_raw );
-        } catch( std::runtime_error err ) {
+        } catch( const std::runtime_error &err ) {
             std::string e = string_format( "failed to parse plural forms formula: %s", err.what() );
             throw std::runtime_error( e );
         }
