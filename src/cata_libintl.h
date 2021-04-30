@@ -69,9 +69,10 @@ class trans_catalogue
 {
     private:
         // ======== DECLARATIONS =========
-        struct string_info {
+        // Represents 1 entry in MO string table
+        struct string_descr {
             u32 length;
-            u32 address;
+            u32 offset;
         };
         struct catalogue_plurals_info {
             unsigned long num = 0;
@@ -120,8 +121,8 @@ class trans_catalogue
             return &buffer[offs];
         }
 
-        string_info get_string_info( u32 offs ) const;
-        string_info get_string_info_unsafe( u32 offs ) const;
+        string_descr get_string_descr( u32 offs ) const;
+        string_descr get_string_descr_unsafe( u32 offs ) const;
 
         // MO loading
         inline void set_buffer( std::string buffer ) {
@@ -160,8 +161,8 @@ class trans_library
 {
     private:
         // ======== DECLARATIONS =========
-        // Describes single string within the library
-        struct string_descriptor {
+        // Describes which catalogue the string comes from
+        struct library_string_descr {
             u32 catalogue;
             u32 entry;
         };
@@ -169,14 +170,14 @@ class trans_library
         // =========== MEMBERS ===========
 
         // Full index of loaded strings
-        std::vector<string_descriptor> string_vec;
+        std::vector<library_string_descr> string_vec;
 
         // Full index of loaded catalogues
         std::vector<trans_catalogue> catalogues;
 
         // =========== METHODS ===========
 
-        std::vector<string_descriptor>::const_iterator find_in_table( const char *id ) const;
+        std::vector<library_string_descr>::const_iterator find_in_table( const char *id ) const;
 
         void build_string_table();
 

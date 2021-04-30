@@ -417,19 +417,19 @@ u32 trans_catalogue::get_u32( u32 offs ) const
     return get_u32_unsafe( offs );
 }
 
-trans_catalogue::string_info trans_catalogue::get_string_info( u32 offs ) const
+trans_catalogue::string_descr trans_catalogue::get_string_descr( u32 offs ) const
 {
-    string_info ret;
+    string_descr ret;
     ret.length = get_u32( offs );
-    ret.address = get_u32( offs + 4 );
+    ret.offset = get_u32( offs + 4 );
     return ret;
 }
 
-trans_catalogue::string_info trans_catalogue::get_string_info_unsafe( u32 offs ) const
+trans_catalogue::string_descr trans_catalogue::get_string_descr_unsafe( u32 offs ) const
 {
-    string_info ret;
+    string_descr ret;
     ret.length = get_u32_unsafe( offs );
-    ret.address = get_u32_unsafe( offs + 4 );
+    ret.offset = get_u32_unsafe( offs + 4 );
     return ret;
 }
 
@@ -439,7 +439,7 @@ std::string trans_catalogue::get_metadata() const
     // Since the strings are sorted in lexicographical order, this will be the first string.
     constexpr u32 METADATA_STRING_LEN = 0;
 
-    string_info k = get_string_info_unsafe( offs_orig_table );
+    string_descr k = get_string_descr_unsafe( offs_orig_table );
 
     if( k.length != METADATA_STRING_LEN ) {
         std::string e = string_format(
@@ -449,8 +449,8 @@ std::string trans_catalogue::get_metadata() const
         throw std::runtime_error( e );
     }
 
-    string_info v = get_string_info_unsafe( offs_trans_table );
-    return std::string( offs_to_cstr( v.address ) );
+    string_descr v = get_string_descr_unsafe( offs_trans_table );
+    return std::string( offs_to_cstr( v.offset ) );
 }
 
 void trans_catalogue::process_file_header()
@@ -489,19 +489,19 @@ void trans_catalogue::check_string_terminators()
     const auto check_string = [this]( u32 offs ) {
         // Check that string with its null terminator (not included in string length)
         // does not extend beyond file boundaries.
-        string_info s = get_string_info( offs );
-        if( s.address + s.length + 1 > buf_size() ) {
+        string_descr s = get_string_descr( offs );
+        if( s.offset + s.length + 1 > buf_size() ) {
             std::string e = string_format(
-                                "string_info at offs %#x: extends beyond EOF (len:%#x offs:%#x fsize:%#x)",
-                                offs, s.length, s.address, buf_size()
+                                "string_descr at offs %#x: extends beyond EOF (len:%#x offs:%#x fsize:%#x)",
+                                offs, s.length, s.offset, buf_size()
                             );
             throw std::runtime_error( e );
         }
         // Also check for existence of the null byte.
-        u8 terminator = get_u8( s.address + s.length );
+        u8 terminator = get_u8( s.offset + s.length );
         if( terminator != 0 ) {
             std::string e = string_format(
-                                "string_info at offs %#x: missing null terminator",
+                                "string_descr at offs %#x: missing null terminator",
                                 offs
                             );
             throw std::runtime_error( e );
@@ -517,11 +517,11 @@ void trans_catalogue::check_string_plurals()
 {
     // Skip metadata (the 0th entry)
     for( u32 i = 1; i < number_of_strings; i++ ) {
-        string_info info = get_string_info_unsafe( offs_orig_table + i * MO_STRING_RECORD_STEP );
+        string_descr info = get_string_descr_unsafe( offs_orig_table + i * MO_STRING_RECORD_STEP );
 
         // Check for null byte - msgid/msgid_plural separator
         bool has_plurals = false;
-        for( u32 j = info.address; j < info.address + info.length; j++ ) {
+        for( u32 j = info.offset; j < info.offset + info.length; j++ ) {
             if( get_u8_unsafe( j ) == 0 ) {
                 has_plurals = true;
                 break;
@@ -534,9 +534,9 @@ void trans_catalogue::check_string_plurals()
 
         // Count null bytes - each plural form is a null-terminated string (including last one)
         u32 offs_tr = offs_trans_table + i * MO_STRING_RECORD_STEP;
-        string_info info_tr = get_string_info_unsafe( offs_tr );
+        string_descr info_tr = get_string_descr_unsafe( offs_tr );
         unsigned long plural_forms = 0;
-        for( u32 j = info_tr.address; j <= info_tr.address + info_tr.length; j++ ) {
+        for( u32 j = info_tr.offset; j <= info_tr.offset + info_tr.length; j++ ) {
             if( get_u8_unsafe( j ) == 0 ) {
                 plural_forms += 1;
             }
@@ -545,7 +545,7 @@ void trans_catalogue::check_string_plurals()
         // Number of plural forms should match the number specified in metadata
         if( plural_forms != this->plurals.num ) {
             std::string e = string_format(
-                                "string_info at offs %#x: expected %d plural forms, got %d",
+                                "string_descr at offs %#x: expected %d plural forms, got %d",
                                 offs_tr, this->plurals.num, plural_forms
                             );
             throw std::runtime_error( e );
@@ -682,32 +682,32 @@ trans_catalogue::trans_catalogue( std::string buffer )
 const char *trans_catalogue::get_nth_orig_string( u32 n ) const
 {
     u32 record_addr = offs_orig_table + n * MO_STRING_RECORD_STEP;
-    string_info r = get_string_info_unsafe( record_addr );
+    string_descr r = get_string_descr_unsafe( record_addr );
 
-    return offs_to_cstr( r.address );
+    return offs_to_cstr( r.offset );
 }
 
 const char *trans_catalogue::get_nth_translation( u32 n ) const
 {
     u32 record_addr = offs_trans_table + n * MO_STRING_RECORD_STEP;
-    string_info r = get_string_info_unsafe( record_addr );
+    string_descr r = get_string_descr_unsafe( record_addr );
 
-    return offs_to_cstr( r.address );
+    return offs_to_cstr( r.offset );
 }
 
 const char *trans_catalogue::get_nth_pl_translation( u32 n, unsigned long num ) const
 {
     constexpr u8 PLF_SEPARATOR = 0;
     u32 record_addr = offs_trans_table + n * MO_STRING_RECORD_STEP;
-    string_info r = get_string_info_unsafe( record_addr );
+    string_descr r = get_string_descr_unsafe( record_addr );
 
     unsigned long plf = plurals.expr->eval( num );
 
     if( plf == 0 || plf >= plurals.num ) {
-        return offs_to_cstr( r.address );
+        return offs_to_cstr( r.offset );
     }
     unsigned long curr_plf = 0;
-    for( u32 addr = r.address; addr <= r.address + r.length; addr++ ) {
+    for( u32 addr = r.offset; addr <= r.offset + r.length; addr++ ) {
         if( get_u8_unsafe( addr ) == PLF_SEPARATOR ) {
             curr_plf += 1;
             if( plf == curr_plf ) {
@@ -722,11 +722,11 @@ const char *trans_catalogue::get_nth_pl_translation( u32 n, unsigned long num ) 
 // Translation library
 // ===============================================================================================
 
-std::vector<trans_library::string_descriptor>::const_iterator trans_library::find_in_table(
+std::vector<trans_library::library_string_descr>::const_iterator trans_library::find_in_table(
     const char *id ) const
 {
     auto it = std::lower_bound( string_vec.begin(), string_vec.end(),
-    id, [this]( const string_descriptor & a_descr, const char *b ) -> bool {
+    id, [this]( const library_string_descr & a_descr, const char *b ) -> bool {
         const char *a = this->catalogues[a_descr.catalogue].get_nth_orig_string( a_descr.entry );
         return strcmp( a, b ) < 0;
     } );
@@ -754,12 +754,12 @@ void trans_library::build_string_table()
             const char *i_cstr = cat.get_nth_orig_string( i );
 
             auto it = std::lower_bound( string_vec.begin(), string_vec.end(),
-            i_cstr, [this]( const string_descriptor & a_descr, const char *b ) -> bool {
+            i_cstr, [this]( const library_string_descr & a_descr, const char *b ) -> bool {
                 const char *a = this->catalogues[a_descr.catalogue].get_nth_orig_string( a_descr.entry );
                 return strcmp( a, b ) < 0;
             } );
 
-            string_descriptor desc = { i_cat, i };
+            library_string_descr desc = { i_cat, i };
             if( it == string_vec.end() ) {
                 // Not found, or all elements are greater
                 string_vec.push_back( desc );
