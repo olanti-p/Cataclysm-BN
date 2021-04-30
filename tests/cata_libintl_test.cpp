@@ -634,11 +634,11 @@ static void do_single_bench( const size_t iterations, const std::string &descr,
 
     int64_t ns = std::chrono::duration_cast<std::chrono::nanoseconds>( dur ).count();
 
-    cata_printf( "--- Bench report ---" );
-    cata_printf( " Discription: %s", descr );
-    cata_printf( " Iterations:  %d", iterations );
-    cata_printf( " Total time:  %s", fmt_duration( ns ) );
-    cata_printf( " Iter time:   %s", fmt_duration( ns / static_cast<int64_t>( iterations ) ) );
+    cata_printf( "--- Bench report ---\n" );
+    cata_printf( " Discription:  %s\n", descr );
+    cata_printf( " Iterations:   %d\n", iterations );
+    cata_printf( " Time (total): %s\n", fmt_duration( ns ) );
+    cata_printf( " Time (avg):   %s\n", fmt_duration( ns / static_cast<int64_t>( iterations ) ) );
 }
 
 static std::string get_bench_file()

@@ -139,18 +139,13 @@ TEST_CASE( "translations_actually_translate", "[translations][i18n]" )
     std::string lang_default = get_option<std::string>( USE_LANG );
     bool modular_default = get_option<bool>( MODULAR );
 
-    // Test both regular translations & new modular system
-    for( int mi = 0; mi < 2; mi++ ) {
-        if( mi == 0 && skip_gnu_gettext ) {
-            continue;
-        }
-        bool modular = mi == 1;
+    const auto test_system = [&]( const std::string modular ) {
         for( const auto &test : test_cases ) {
             CAPTURE( modular );
             CAPTURE( test.first );
 
             get_options().get_option( USE_LANG ).setValue( test.first );
-            get_options().get_option( MODULAR ).setValue( modular ? "True" : "False" );
+            get_options().get_option( MODULAR ).setValue( modular );
             get_options().save();
             CHECK( get_option<std::string>( USE_LANG ) == test.first );
 
@@ -160,7 +155,15 @@ TEST_CASE( "translations_actually_translate", "[translations][i18n]" )
             const char *translated = pgettext( test_msgctx, test_msgid );
             CHECK( test.second == translated );
         }
+    };
+
+    // Test GNU gettext
+    if( !skip_gnu_gettext ) {
+        test_system( "False" );
     }
+
+    // Test cata_libintl
+    test_system( "True" );
 
     // Restore language
     get_options().get_option( USE_LANG ).setValue( lang_default );
