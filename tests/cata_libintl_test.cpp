@@ -463,7 +463,7 @@ static const std::vector<test_case_data> tests_mo_loading_failures = {{
         {
             4, // one of the strings extends beyond end of file
             "single_ru_string_ignores_eof.mo",
-            "string_descr at offs 0x84: extends beyond EOF (len:0x16 addr:0x35f file size:0x375)",
+            "string_descr at offs 0x84: extends beyond EOF (len:0x16 offs:0x35f fsize:0x375)",
         },
         {
             5, // one of the strings is missing null terminator

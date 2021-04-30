@@ -14,9 +14,8 @@
 #include <sstream>
 
 // TODO:
-// 1. write/update docs & guides
-// 2. rename all wrongly-named shit
-// 3. purge debug output
+// 1. purge debug output
+// 2. take another look at everything
 
 // ===============================================================================================
 // Plural forms
@@ -105,7 +104,7 @@ struct PlfTStream {
         size_t pos = this->pos;
         while( pos < end ) {
             char c = ( *s )[pos];
-            if( c == ' ' || c == '\n' || c == '\r' || c == '\t' ) {
+            if( c == ' ' || c == '\t' ) {
                 // skip whitespace
                 pos++;
                 continue;
@@ -832,11 +831,11 @@ const char *trans_library::get_pl( const char *msgid, const char *msgid_pl, unsi
     }
 }
 
-const char *trans_library::get_ctx( const char *ctx, const char *msgid ) const
+const char *trans_library::get_ctx( const char *msgctxt, const char *msgid ) const
 {
     std::string buf;
-    buf.reserve( strlen( ctx ) + 1 + strlen( msgid ) );
-    buf += ctx;
+    buf.reserve( strlen( msgctxt ) + 1 + strlen( msgid ) );
+    buf += msgctxt;
     buf += '\4';
     buf += msgid;
     const char *ret = lookup_string( buf.c_str() );
@@ -847,12 +846,12 @@ const char *trans_library::get_ctx( const char *ctx, const char *msgid ) const
     }
 }
 
-const char *trans_library::get_ctx_pl( const char *ctx, const char *msgid, const char *msgid_pl,
+const char *trans_library::get_ctx_pl( const char *msgctxt, const char *msgid, const char *msgid_pl,
                                        unsigned long n ) const
 {
     std::string buf;
-    buf.reserve( strlen( ctx ) + 1 + strlen( msgid ) );
-    buf += ctx;
+    buf.reserve( strlen( msgctxt ) + 1 + strlen( msgid ) );
+    buf += msgctxt;
     buf += '\4';
     buf += msgid;
     const char *ret = lookup_pl_string( buf.c_str(), n );

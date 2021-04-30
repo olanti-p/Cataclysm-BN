@@ -176,24 +176,29 @@ class trans_library
         const char *lookup_pl_string( const char *id, unsigned long n ) const;
 
     public:
-        /** Create new library from catalogues. */
+        /**
+         * Create new library from catalogues.
+         *
+         * If 2 or more catalogues have entries with same id (msgid + optional msgctxt),
+         * only the entry from the first such catalogue is used.
+         */
         static trans_library create( std::vector<trans_catalogue> catalogues );
 
         /**
-         * Get translated string.
-         *
-         * @param msgid - message id
-         * @param ctx - message context
-         * @param msgid_pld - message id in plural form (n!=1)
+         * @name Translation lookup
+         * @param msgid - singular original string
+         * @param msgid_pl - plural original string
+         * @param msgctxt - translation context
          * @param n - number to choose plural form for
-         * @returns If translation is found, returns translated string. Otherwise, returns original string.
+         * @returns If translation is found, returns translated string or correct plural form.
+         *          Otherwise, returns original string or original plural string depending on n (n==1 ? msgid : msgid_pl).
          *
          * @{
          */
         const char *get( const char *msgid ) const;
         const char *get_pl( const char *msgid, const char *msgid_pl, unsigned long n ) const;
-        const char *get_ctx( const char *ctx, const char *msgid ) const;
-        const char *get_ctx_pl( const char *ctx, const char *msgid, const char *msgid_pl,
+        const char *get_ctx( const char *msgctxt, const char *msgid ) const;
+        const char *get_ctx_pl( const char *msgctxt, const char *msgid, const char *msgid_pl,
                                 unsigned long n ) const;
         /** @} */
 };
