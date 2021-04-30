@@ -198,7 +198,7 @@ TEST_CASE( "mo_plurals_parsing", "[libintl][i18n]" )
             PlfNodePtr ptr = parse_plural_rules( it.input );
             CAPTURE( ptr->debug_dump() );
             FAIL_CHECK();
-        } catch( std::runtime_error err ) {
+        } catch( const std::runtime_error &err ) {
             CHECK( err.what() == it.expected );
         }
     }
@@ -424,7 +424,7 @@ TEST_CASE( "gnu_transifex_rules_equal", "[libintl][i18n]" )
             }
         }
     }
-};
+}
 
 static void tst( int serial, const char *s, const char *expected )
 {
@@ -576,7 +576,7 @@ TEST_CASE( "mo_loading_failure", "[libintl][i18n]" )
         try {
             trans_catalogue::load_from_file( mo_dir + it.input );
             FAIL_CHECK();
-        } catch( std::runtime_error err ) {
+        } catch( const std::runtime_error &err ) {
             CHECK( err.what() == it.expected );
         }
     }
@@ -597,7 +597,7 @@ TEST_CASE( "load_all_base_game_mos", "[libintl][i18n]" )
             std::vector<trans_catalogue> list;
             list.push_back( trans_catalogue::load_from_file( file ) );
             trans_library lib = trans_library::create( std::move( list ) );
-        } catch( std::runtime_error err ) {
+        } catch( const std::runtime_error &err ) {
             CAPTURE( err.what() );
             FAIL_CHECK();
         }
