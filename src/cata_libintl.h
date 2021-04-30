@@ -92,7 +92,7 @@ class trans_catalogue
         explicit trans_catalogue( std::string buffer );
 
         inline void set_buffer( std::string buffer ) {
-            buffer = std::move( buffer );
+            this->buffer = std::move( buffer );
         }
         inline u32 buf_size() const {
             return static_cast<u32>( buffer.size() );

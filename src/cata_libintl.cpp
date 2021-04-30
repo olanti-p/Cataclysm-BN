@@ -660,11 +660,6 @@ trans_catalogue::catalogue_plurals_info trans_catalogue::parse_plf_header(
 
 trans_catalogue::trans_catalogue( std::string buffer )
 {
-    size_t n = buffer.size();
-    this->buffer.reserve( n );
-    this->buffer.resize( n );
-    memcpy( &this->buffer[0], &buffer[0], n );
-
     set_buffer( std::move( buffer ) );
     process_file_header();
     check_string_terminators();
