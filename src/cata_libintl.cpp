@@ -405,7 +405,6 @@ u8 trans_catalogue::get_u8( u32 offs ) const
         std::string e = string_format( "tried get_u8() at offs %#x with file size %#x", offs, buf_size() );
         throw std::runtime_error( e );
     }
-
     return get_u8_unsafe( offs );
 }
 
@@ -451,7 +450,7 @@ std::string trans_catalogue::get_metadata() const
     }
 
     string_info v = get_string_info_unsafe( offs_trans_table );
-    return std::string( addr_to_cstr( v.address ) );
+    return std::string( offs_to_cstr( v.address ) );
 }
 
 void trans_catalogue::process_file_header()
@@ -466,7 +465,7 @@ void trans_catalogue::process_file_header()
     constexpr u32 OFFS_ORIG_TABLE_BEGIN = 12;
     constexpr u32 OFFS_TRANS_TABLE_BEGIN = 16;
 
-    u32 magic = this->buf.size() > 4 ? get_u32( OFFS_MAGIC_NUMBER ) : 0;
+    u32 magic = this->buffer.size() > 4 ? get_u32( OFFS_MAGIC_NUMBER ) : 0;
     if( magic != MO_MAGIC_NUMBER_LE && magic != MO_MAGIC_NUMBER_BE ) {
         throw std::runtime_error( "not a MO file" );
     }
@@ -663,9 +662,9 @@ trans_catalogue::catalogue_plurals_info trans_catalogue::parse_plf_header(
 trans_catalogue::trans_catalogue( std::string buffer )
 {
     size_t n = buffer.size();
-    this->buf.reserve( n );
-    this->buf.resize( n );
-    memcpy( &this->buf[0], &buffer[0], n );
+    this->buffer.reserve( n );
+    this->buffer.resize( n );
+    memcpy( &this->buffer[0], &buffer[0], n );
 
     set_buffer( std::move( buffer ) );
     process_file_header();
@@ -685,7 +684,7 @@ const char *trans_catalogue::get_nth_orig_string( u32 n ) const
     u32 record_addr = offs_orig_table + n * MO_STRING_RECORD_STEP;
     string_info r = get_string_info_unsafe( record_addr );
 
-    return addr_to_cstr( r.address );
+    return offs_to_cstr( r.address );
 }
 
 const char *trans_catalogue::get_nth_translation( u32 n ) const
@@ -693,7 +692,7 @@ const char *trans_catalogue::get_nth_translation( u32 n ) const
     u32 record_addr = offs_trans_table + n * MO_STRING_RECORD_STEP;
     string_info r = get_string_info_unsafe( record_addr );
 
-    return addr_to_cstr( r.address );
+    return offs_to_cstr( r.address );
 }
 
 const char *trans_catalogue::get_nth_pl_translation( u32 n, unsigned long num ) const
@@ -705,14 +704,14 @@ const char *trans_catalogue::get_nth_pl_translation( u32 n, unsigned long num ) 
     unsigned long plf = plurals.expr->eval( num );
 
     if( plf == 0 || plf >= plurals.num ) {
-        return addr_to_cstr( r.address );
+        return offs_to_cstr( r.address );
     }
     unsigned long curr_plf = 0;
     for( u32 addr = r.address; addr <= r.address + r.length; addr++ ) {
         if( get_u8_unsafe( addr ) == PLF_SEPARATOR ) {
             curr_plf += 1;
             if( plf == curr_plf ) {
-                return addr_to_cstr( addr + 1 );
+                return offs_to_cstr( addr + 1 );
             }
         }
     }

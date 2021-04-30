@@ -82,7 +82,7 @@ class trans_catalogue
         // =========== MEMBERS ===========
 
         bool is_little_endian = true; // File endianness
-        std::string buf; // Data buffer
+        std::string buffer; // Data buffer
         catalogue_plurals_info plurals; // Plural rules
         u32 number_of_strings = 0; // Number of strings (id-translation pairs)
         u32 offs_orig_table = 0; // Offset of table with original strings
@@ -93,12 +93,12 @@ class trans_catalogue
         explicit trans_catalogue( std::string buffer );
 
         inline u32 buf_size() const {
-            return static_cast<u32>( buf.size() );
+            return static_cast<u32>( buffer.size() );
         }
 
         u8 get_u8( u32 offs ) const;
         inline u8 get_u8_unsafe( u32 offs ) const {
-            return static_cast<u8>( buf[offs] );
+            return static_cast<u8>( buffer[offs] );
         }
 
         u32 get_u32( u32 offs ) const;
@@ -116,8 +116,8 @@ class trans_catalogue
             }
         }
 
-        inline const char *addr_to_cstr( u32 offs ) const {
-            return &buf[offs];
+        inline const char *offs_to_cstr( u32 offs ) const {
+            return &buffer[offs];
         }
 
         string_info get_string_info( u32 offs ) const;
@@ -125,7 +125,7 @@ class trans_catalogue
 
         // MO loading
         inline void set_buffer( std::string buffer ) {
-            buf = std::move( buffer );
+            buffer = std::move( buffer );
         }
         void process_file_header();
         void check_string_terminators();
