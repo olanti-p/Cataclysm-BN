@@ -551,6 +551,7 @@ provided for terrains added by mods. A string equivalent is always present, i.e.
 t_basalt
 "t_basalt"
 */
+// NOLINTNEXTLINE(cata-static-int_id-constants)
 extern ter_id t_null,
        // Ground
        t_dirt, t_sand, t_clay, t_dirtmound, t_pit_shallow, t_pit, t_grave, t_grave_new,
@@ -670,6 +671,7 @@ runtime index: furn_id
 furn_id refers to a position in the furnlist[] where the furn_t struct is stored. See note
 about ter_id above.
 */
+// NOLINTNEXTLINE(cata-static-int_id-constants)
 extern furn_id f_null,
        f_hay, f_cattails,
        f_rubble, f_rubble_rock, f_wreckage, f_ash,
