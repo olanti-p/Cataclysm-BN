@@ -1344,6 +1344,9 @@ void game::calc_driving_offset( vehicle *veh )
     set_driving_view_offset( point( offset.x, offset.y ) );
 }
 
+bool first_measure = true;
+std::chrono::system_clock::time_point start_measure, end_measure;
+
 // MAIN GAME LOOP
 // Returns true if game is over (death, saved, quit, etc)
 bool game::do_turn()
@@ -1423,6 +1426,14 @@ bool game::do_turn()
 
     if( !u.has_effect( efftype_id( "sleep" ) ) || uquit == QUIT_WATCH ) {
         if( u.moves > 0 || uquit == QUIT_WATCH ) {
+            end_measure = std::chrono::system_clock::now();
+            if( first_measure ) {
+                first_measure = false;
+            } else {
+                const auto diff = end_measure - start_measure;
+                int64_t mcs = std::chrono::duration_cast<std::chrono::microseconds>( diff ).count();
+                cata_printf( "Step took %lld mcs", mcs );
+            }
             while( u.moves > 0 || uquit == QUIT_WATCH ) {
                 cleanup_dead();
                 mon_info_update();
@@ -1454,6 +1465,7 @@ bool game::do_turn()
                     process_activity();
                 }
             }
+            start_measure = std::chrono::system_clock::now();
             // Reset displayed sound markers now that the turn is over.
             // We only want this to happen if the player had a chance to examine the sounds.
             sounds::reset_markers();
