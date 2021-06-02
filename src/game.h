@@ -195,9 +195,10 @@ class game
          */
         void on_options_changed();
 
-    protected:
+    private:
         /** Loads dynamic data from the given directory. May throw. */
         void load_data_from_dir( const std::string &path, const std::string &src, loading_ui &ui );
+        void draw_ter();
     public:
         void setup();
         /** Saving and loading functions. */
@@ -222,8 +223,6 @@ class game
         void invalidate_main_ui_adaptor() const;
         void mark_main_ui_adaptor_resize() const;
         void draw();
-        void draw_ter( bool draw_sounds = true );
-        void draw_ter( const tripoint &center, bool looking = false, bool draw_sounds = true );
 
         class draw_callback_t
         {

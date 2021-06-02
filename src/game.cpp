@@ -3475,27 +3475,19 @@ bool game::is_in_viewport( const tripoint &p, int margin ) const
            ( std::abs( diff.y ) <= getmaxy( w_terrain ) / 2 - margin );
 }
 
-void game::draw_ter( const bool draw_sounds )
+void game::draw_ter()
 {
-    draw_ter( u.pos() + u.view_offset, is_looking,
-              draw_sounds );
-}
+    const tripoint center = u.pos() + u.view_offset;
 
-void game::draw_ter( const tripoint &center, const bool looking, const bool draw_sounds )
-{
     ter_view_p = center;
 
     // TODO: Make it not rebuild the cache all the time (cache point+moves?)
-    if( !looking ) {
-        // If we're looking, the cache is built at start (entering looking mode)
-        m.build_map_cache( center.z );
-    }
+    // If we're looking, the cache is built at start (entering looking mode)
+    m.build_map_cache( center.z );
 
     m.draw( w_terrain, center );
 
-    if( draw_sounds ) {
-        draw_footsteps( w_terrain, tripoint( -center.x, -center.y, center.z ) + point( POSX, POSY ) );
-    }
+    draw_footsteps( w_terrain, tripoint( -center.x, -center.y, center.z ) + point( POSX, POSY ) );
 
     for( Creature &critter : all_creatures() ) {
         draw_critter( critter, center );
@@ -3510,7 +3502,7 @@ void game::draw_ter( const tripoint &center, const bool looking, const bool draw
                   POSY - u.posy() ), c_white, 'X' );
     }
 
-    if( u.controlling_vehicle && !looking ) {
+    if( u.controlling_vehicle ) {
         draw_veh_dir_indicator( false );
         draw_veh_dir_indicator( true );
     }
