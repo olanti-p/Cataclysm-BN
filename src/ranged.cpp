@@ -1594,7 +1594,11 @@ std::vector<tripoint> target_handler::target_ui( player &pc, target_mode mode,
                     mvwputch( w_target, point( j, i ), c_white, ' ' );
                 }
             }
-            g->draw_ter( center, true );
+            {
+                restore_on_out_of_scope<tripoint> restore_me( pc.view_offset );
+                pc.view_offset = center - pc.pos();
+                g->draw();
+            }
             int line_number = 1;
             Creature *critter = g->critter_at( dst, true );
             const int relative_elevation = dst.z - pc.pos().z;
@@ -1734,11 +1738,10 @@ std::vector<tripoint> target_handler::target_ui( player &pc, target_mode mode,
                 draw_throw_aim( pc, w_target, line_number, ctxt, *relevant, dst, true );
             }
 
-            wrefresh( g->w_terrain );
-            g->draw_panels();
+            wnoutrefresh( g->w_terrain );
             draw_targeting_window( w_target, relevant ? relevant->tname() : _( "turrets" ),
                                    mode, ctxt, aim_types, tiny, src == dst );
-            wrefresh( w_target );
+            wnoutrefresh( w_target );
 
             catacurses::refresh();
         }
@@ -2177,7 +2180,11 @@ std::vector<tripoint> target_handler::target_ui( spell &casting, const bool no_f
                 mvwputch( w_target, point( j, i ), c_white, ' ' );
             }
         }
-        g->draw_ter( center, true );
+        {
+            restore_on_out_of_scope<tripoint> restore_me( pc.view_offset );
+            pc.view_offset = center - pc.pos();
+            g->draw();
+        }
         int line_number = 1;
         Creature *critter = g->critter_at( dst, true );
         const int relative_elevation = dst.z - pc.pos().z;
@@ -2264,10 +2271,10 @@ std::vector<tripoint> target_handler::target_ui( spell &casting, const bool no_f
             critter->print_info( w_target, line_number, available_lines, 1 );
         }
 
-        wrefresh( g->w_terrain );
+        wnoutrefresh( g->w_terrain );
         draw_targeting_window( w_target, casting.name(),
                                TARGET_MODE_SPELL, ctxt, aim_types, tiny );
-        wrefresh( w_target );
+        wnoutrefresh( w_target );
 
         catacurses::refresh();
 
