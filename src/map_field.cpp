@@ -399,7 +399,7 @@ void map::process_fields_in_submap( submap *const current_submap,
 
     tripoint thep;
     thep.z = submap.z;
-    const oter_id &om_ter = overmap_buffer.ter( tripoint_abs_omt( sm_to_omt_copy( submap ) ) );
+    const oter_id &om_ter = overmap_buffer.ter( sm_to_omt_copy( submap ) );
 
     // Initialize the map tile wrapper
     maptile map_tile( current_submap, 0, 0 );

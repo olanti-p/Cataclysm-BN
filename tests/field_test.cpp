@@ -1,6 +1,7 @@
 #include "catch/catch.hpp"
 
 #include "field.h"
+#include "field_type.h"
 #include "map.h"
 #include "map_iterator.h"
 #include "type_id.h"
@@ -9,7 +10,7 @@
 
 #include <algorithm>
 
-static int count_fields( const field_type_str_id &field_type )
+static int count_fields( const field_type_id &field_type )
 {
     map &m = get_map();
     int live_fields = 0;

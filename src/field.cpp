@@ -5,7 +5,7 @@
 
 #include "calendar.h"
 #include "int_id.h"
-#include "make_static.h"
+#include "math_defines.h"
 #include "rng.h"
 
 int field_entry::move_cost() const
@@ -144,7 +144,7 @@ void field_entry::do_decay()
     age += 1_turns;
     if( type.obj().half_life > 0_turns && get_field_age() > 0_turns ) {
         // Legacy handling for fire because it's weird and complicated.
-        if( type == STATIC( field_type_str_id( "fd_fire" ) ) ) {
+        if( type == fd_fire ) {
             if( to_turns<int>( type->half_life ) < dice( 2, to_turns<int>( age ) ) ) {
                 set_field_age( 0_turns );
                 set_field_intensity( get_field_intensity() - 1 );
