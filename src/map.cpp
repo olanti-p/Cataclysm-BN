@@ -5591,6 +5591,18 @@ static int get_memory_at( const tripoint &p )
     return ' ';
 }
 
+// A little helper to draw footstep glyphs.
+static void draw_footsteps( const catacurses::window &window, const tripoint &offset )
+{
+    for( const auto &footstep : sounds::get_footstep_markers() ) {
+        char glyph = '?';
+        if( footstep.z != offset.z ) { // Here z isn't an offset, but a coordinate
+            glyph = footstep.z > offset.z ? '^' : 'v';
+        }
+        mvwputch( window, footstep.xy() + offset.xy(), c_yellow, glyph );
+    }
+}
+
 void map::draw( const catacurses::window &w, const tripoint &center )
 {
     // We only need to draw anything if we're not in tiles mode.
@@ -5717,6 +5729,8 @@ void map::draw( const catacurses::window &w, const tripoint &center )
             draw_maptile( w, p, curr_maptile, mm_params );
         }
     }
+
+    draw_footsteps( w, tripoint( -center.x, -center.y, center.z ) + point( POSX, POSY ) );
 }
 
 void map::drawsq( const catacurses::window &w, const tripoint &p,

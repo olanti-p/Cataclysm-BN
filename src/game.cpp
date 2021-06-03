@@ -3164,19 +3164,6 @@ void game::disp_NPCs()
     }
 }
 
-// A little helper to draw footstep glyphs.
-static void draw_footsteps( const catacurses::window &window, const tripoint &offset )
-{
-    for( const auto &footstep : sounds::get_footstep_markers() ) {
-        char glyph = '?';
-        if( footstep.z != offset.z ) { // Here z isn't an offset, but a coordinate
-            glyph = footstep.z > offset.z ? '^' : 'v';
-        }
-
-        mvwputch( window, footstep.xy() + offset.xy(), c_yellow, glyph );
-    }
-}
-
 shared_ptr_fast<ui_adaptor> game::create_or_get_main_ui_adaptor()
 {
     shared_ptr_fast<ui_adaptor> ui = main_ui_adaptor.lock();
@@ -3482,8 +3469,6 @@ void game::draw_ter()
     ter_view_p = center;
 
     m.draw( w_terrain, center );
-
-    draw_footsteps( w_terrain, tripoint( -center.x, -center.y, center.z ) + point( POSX, POSY ) );
 
     for( Creature &critter : all_creatures() ) {
         draw_critter( critter, center );
