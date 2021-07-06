@@ -541,6 +541,12 @@ bool zone_data::set_type()
     return false;
 }
 
+void zone_data::set_faction( const faction_id &fid )
+{
+    zone_manager::get_manager().zone_edited( *this );
+    faction = fid;
+}
+
 void zone_data::set_position( const std::pair<tripoint, tripoint> &position,
                               const bool manual )
 {

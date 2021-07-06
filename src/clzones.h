@@ -279,6 +279,7 @@ class zone_data
         bool set_name();
         // returns true if type is changed
         bool set_type();
+        void set_faction( const faction_id &fid );
         void set_position( const std::pair<tripoint, tripoint> &position, bool manual = true );
         void set_enabled( bool enabled_arg );
         void set_is_vehicle( bool is_vehicle_arg );

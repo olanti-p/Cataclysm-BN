@@ -2476,6 +2476,20 @@
   },
   {
     "type": "keybinding",
+    "id": "TOGGLE_CAMERA_FOLLOW",
+    "category": "ZONES_MANAGER",
+    "name": "Toggle camera centering on zone",
+    "bindings": [ { "input_method": "keyboard", "key": "*" }]
+  },
+  {
+    "type": "keybinding",
+    "id": "TOGGLE_FACTION_DISPLAY",
+    "category": "ZONES_MANAGER",
+    "name": "Toggle debug faction display",
+    "bindings": [ { "input_method": "keyboard", "key": "t" }, { "input_method": "keyboard", "key": "T" } ]
+  },
+  {
+    "type": "keybinding",
     "id": "PAGE_DOWN",
     "category": "ADVANCED_INVENTORY",
     "name": "Page down",

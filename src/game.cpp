@@ -6180,21 +6180,32 @@ static void zones_manager_shortcuts( const catacurses::window &w_info )
 {
     werase( w_info );
 
-    int tmpx = 1;
-    tmpx += shortcut_print( w_info, point( tmpx, 1 ), c_white, c_light_green, _( "<A>dd" ) ) + 2;
-    tmpx += shortcut_print( w_info, point( tmpx, 1 ), c_white, c_light_green, _( "<R>emove" ) ) + 2;
-    tmpx += shortcut_print( w_info, point( tmpx, 1 ), c_white, c_light_green, _( "<E>nable" ) ) + 2;
-    shortcut_print( w_info, point( tmpx, 1 ), c_white, c_light_green, _( "<D>isable" ) );
+    point p = point( 1, 1 );
 
-    tmpx = 1;
-    tmpx += shortcut_print( w_info, point( tmpx, 2 ), c_white, c_light_green,
-                            _( "<+-> Move up/down" ) ) + 2;
-    shortcut_print( w_info, point( tmpx, 2 ), c_white, c_light_green, _( "<Enter>-Edit" ) );
+    p.x += shortcut_print( w_info, p, c_white, c_light_green, _( "<A>dd" ) ) + 2;
+    p.x += shortcut_print( w_info, p, c_white, c_light_green, _( "<R>emove" ) ) + 2;
+    p.x += shortcut_print( w_info, p, c_white, c_light_green, _( "<E>nable" ) ) + 2;
+    shortcut_print( w_info, p, c_white, c_light_green, _( "<D>isable" ) );
 
-    tmpx = 1;
-    tmpx += shortcut_print( w_info, point( tmpx, 3 ), c_white, c_light_green,
-                            _( "<S>how all / hide distant" ) ) + 2;
-    shortcut_print( w_info, point( tmpx, 3 ), c_white, c_light_green, _( "<M>ap" ) );
+    p.x = 1;
+    p.y = 2;
+    p.x += shortcut_print( w_info, p, c_white, c_light_green, _( "<+-> Move up/down" ) ) + 2;
+    shortcut_print( w_info, p, c_white, c_light_green, _( "<Enter>-Edit" ) );
+
+    p.x = 1;
+    p.y = 3;
+    p.x += shortcut_print( w_info, p, c_white, c_light_green, _( "<S>how all / hide distant" ) ) + 2;
+    shortcut_print( w_info, p, c_white, c_light_green, _( "<M>ap" ) );
+
+    p.x = 1;
+    p.y = 4;
+    shortcut_print( w_info, p, c_white, c_light_green, _( "<*> Toggle camera autofocus" ) );
+
+    if( debug_mode ) {
+        p.x = 1;
+        p.y = 5;
+        shortcut_print( w_info, p, c_white, c_light_green, _( "<T>oggle faction display" ) );
+    }
 
     wnoutrefresh( w_info );
 }
@@ -6301,7 +6312,11 @@ void game::zones_manager()
     ctxt.register_action( "ENABLE_ZONE" );
     ctxt.register_action( "DISABLE_ZONE" );
     ctxt.register_action( "SHOW_ALL_ZONES" );
+    ctxt.register_action( "TOGGLE_CAMERA_FOLLOW" );
     ctxt.register_action( "HELP_KEYBINDINGS" );
+    if( debug_mode ) {
+        ctxt.register_action( "TOGGLE_FACTION_DISPLAY" );
+    }
 
     auto &mgr = zone_manager::get_manager();
     int start_index = 0;
@@ -6309,17 +6324,21 @@ void game::zones_manager()
     bool blink = false;
     bool stuff_changed = false;
     bool show_all_zones = false;
+    bool show_factions = false;
+    bool camera_follow = false;
     int zone_cnt = 0;
 
     // get zones on the same z-level, with distance between player and
     // zone center point <= 50 or all zones, if show_all_zones is true
     auto get_zones = [&]() {
+        std::vector<zone_manager::ref_zone_data> all_mgr_zones =
+            debug_mode ? mgr.get_all_zones() : mgr.get_zones();
         std::vector<zone_manager::ref_zone_data> zones;
         if( show_all_zones ) {
-            zones = mgr.get_zones();
+            zones = std::move( all_mgr_zones );
         } else {
             const tripoint &u_abs_pos = m.getabs( u.pos() );
-            for( zone_manager::ref_zone_data &ref : mgr.get_zones() ) {
+            for( zone_manager::ref_zone_data &ref : all_mgr_zones ) {
                 const tripoint &zone_abs_pos = ref.get().get_center_point();
                 if( u_abs_pos.z == zone_abs_pos.z && rl_dist( u_abs_pos, zone_abs_pos ) <= 50 ) {
                     zones.emplace_back( ref );
@@ -6363,6 +6382,21 @@ void game::zones_manager()
     shared_ptr_fast<draw_callback_t> zone_cb = create_zone_callback(
                 zone_start, zone_end, zone_blink, zone_cursor );
     add_draw_callback( zone_cb );
+
+    const auto update_view = [&]() {
+        u.view_offset = tripoint_zero;
+
+        if( !camera_follow || zones.empty() || !zone_start || !zone_end ) {
+            return;
+        }
+        tripoint center = ( *zone_end - *zone_start ) / 2 + *zone_start;
+        if( center.x < 0 || center.y < 0 ||
+            center.x > MAPSIZE_X || center.y > MAPSIZE_Y ||
+            center.z != u.pos().z ) {
+            return;
+        }
+        u.view_offset = center - u.pos();
+    };
 
     auto query_position =
     [&]() -> cata::optional<std::pair<tripoint, tripoint>> {
@@ -6446,9 +6480,10 @@ void game::zones_manager()
                         colorLine = ( zone.get_enabled() ) ? c_light_green : c_green;
                     }
 
-                    //Draw Zone name
+                    // Draw Zone name / faction
+                    std::string fac_name = show_factions ? i.get().get_faction().str() : zone.get_name();
                     mvwprintz( w_zones, point( 3, iNum - start_index ), colorLine,
-                               trim_by_length( zone.get_name(), 15 ) );
+                               trim_by_length( fac_name, 15 ) );
 
                     //Draw Type name
                     mvwprintz( w_zones, point( 20, iNum - start_index ), colorLine,
@@ -6521,6 +6556,10 @@ void game::zones_manager()
             show_all_zones = !show_all_zones;
             zones = get_zones();
             active_index = 0;
+        } else if( action == "TOGGLE_FACTION_DISPLAY" ) {
+            show_factions = !show_factions;
+        } else if( action == "TOGGLE_CAMERA_FOLLOW" ) {
+            camera_follow = !camera_follow;
         } else if( zone_cnt > 0 ) {
             if( action == "UP" ) {
                 active_index--;
@@ -6557,6 +6596,9 @@ void game::zones_manager()
                 as_m.entries.emplace_back( 3, zone.get_options().has_options(), '3',
                                            zone.get_type() == zone_type_id( "LOOT_CUSTOM" ) ? _( "Edit filter" ) : _( "Edit options" ) );
                 as_m.entries.emplace_back( 4, !zone.get_is_vehicle(), '4', _( "Edit position" ) );
+                if( debug_mode ) {
+                    as_m.entries.emplace_back( 5, true, '5', _( "Edit faction" ) );
+                }
                 as_m.query();
 
                 switch( as_m.ret ) {
@@ -6580,6 +6622,28 @@ void game::zones_manager()
                         if( pos && ( pos->first != zone.get_start_point() ||
                                      pos->second != zone.get_end_point() ) ) {
                             zone.set_position( *pos );
+                            stuff_changed = true;
+                        }
+                    }
+                    case 5: {
+                        std::vector<faction_id> all_factions;
+                        for( const auto &it : faction_manager_ptr->all() ) {
+                            all_factions.push_back( it.first );
+                        }
+                        uilist fsel;
+                        fsel.text = _( "Assign zone to faction:" );
+                        int selected = 0;
+                        for( size_t i = 0; i < all_factions.size(); i++ ) {
+                            if( zone.get_faction() == all_factions[i] ) {
+                                selected = static_cast<int>( i );
+                            }
+                            fsel.entries.emplace_back( all_factions[i].str() );
+                        }
+                        fsel.filterlist();
+                        fsel.set_selected( selected );
+                        fsel.query();
+                        if( fsel.ret_act == "CONFIRM" ) {
+                            zone.set_faction( all_factions[fsel.selected] );
                             stuff_changed = true;
                         }
                     }
@@ -6643,6 +6707,7 @@ void game::zones_manager()
         zone_blink = blink;
         invalidate_main_ui_adaptor();
 
+        update_view();
         ui_manager::redraw();
 
         //Wait for input
