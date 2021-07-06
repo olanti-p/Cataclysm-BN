@@ -1,3 +1,4 @@
+#pragma optimize("", off)
 #include "game.h"
 
 #include <algorithm>

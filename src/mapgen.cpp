@@ -1,3 +1,4 @@
+#pragma optimize("", off)
 #include "mapgen.h"
 
 #include <algorithm>

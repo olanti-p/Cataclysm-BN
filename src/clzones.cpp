@@ -1,3 +1,4 @@
+#pragma optimize("", off)
 #include "clzones.h"
 
 #include <algorithm>
