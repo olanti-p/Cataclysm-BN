@@ -761,6 +761,8 @@ class game
         bool save_artifacts();
         // returns false if saving failed for whatever reason
         bool save_maps();
+        // returns false if saving failed for whatever reason
+        bool save_uistate();
 #if defined(__ANDROID__)
         void save_shortcuts( std::ostream &fout );
 #endif

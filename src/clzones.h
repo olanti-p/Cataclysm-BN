@@ -430,12 +430,30 @@ class zone_manager
         // 'direct' access to zone_manager::zones, giving direct access was nono
         std::vector<ref_zone_data> get_zones( const faction_id &fac = your_fac );
         std::vector<ref_const_zone_data> get_zones( const faction_id &fac = your_fac ) const;
+        /** Get all zones for all factions. */
+        std::vector<ref_zone_data> get_all_zones();
 
         bool save_zones();
         void load_zones();
+
+        class state
+        {
+            private:
+                friend class zone_manager;
+                std::string world;
+                std::string player;
+                bool success = true;
+        };
+        state save_state();
+        void revert_changes( state &&original_state );
+        void apply_changes();
         void zone_edited( zone_data &zone );
+
+    private:
+        void load_state( state &&st );
+        void clear_vzone_changes();
         void revert_vzones();
-        void serialize( JsonOut &json ) const;
+        void serialize( JsonOut &jsout, bool player_zones ) const;
         void deserialize( JsonIn &jsin );
 };
 

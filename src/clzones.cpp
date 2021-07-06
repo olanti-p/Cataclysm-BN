@@ -1121,18 +1121,82 @@ std::vector<zone_manager::ref_const_zone_data> zone_manager::get_zones(
     return zones;
 }
 
-void zone_manager::serialize( JsonOut &json ) const
+std::vector<zone_manager::ref_zone_data> zone_manager::get_all_zones()
 {
-    json.write( zones );
+    auto zones = std::vector<ref_zone_data>();
+
+    auto vzones = g->m.get_vehicle_zones( g->get_levz() );
+    zones.reserve( this->zones.size() + vzones.size() );
+    for( auto &zone : this->zones ) {
+        zones.emplace_back( zone );
+    }
+    for( auto zone : vzones ) {
+        zones.emplace_back( *zone );
+    }
+
+    return zones;
+}
+
+bool zone_manager::save_zones()
+{
+    state st = save_state();
+    if( !st.success ) {
+        return false;
+    }
+
+    bool saved_wz = write_to_file( g->get_world_base_save_path() + "/worldzones.json", [&st](
+    std::ostream & fout ) {
+        fout << st.world;
+    }, _( "world zone data" ) );
+
+    bool saved_pz = write_to_file( g->get_player_base_save_path() + ".zones.json", [&st](
+    std::ostream & fout ) {
+        fout << st.player;
+    }, _( "player zone data" ) );
+
+    return saved_wz && saved_pz;
+}
+
+void zone_manager::load_zones()
+{
+    clear_vzone_changes();
+
+    state st;
+
+    read_from_file_optional( g->get_world_base_save_path() + "/worldzones.json",
+    [&st]( std::istream & stream ) {
+        stream >> st.world;
+    } );
+
+    read_from_file_optional( g->get_player_base_save_path() + ".zones.json",
+    [&st]( std::istream & stream ) {
+        stream >> st.player;
+    } );
+
+    load_state( std::move( st ) );
+}
+
+void zone_manager::serialize( JsonOut &jsout, bool player_zones ) const
+{
+    jsout.start_array();
+    for( const zone_data &it : zones ) {
+        const faction_id &fid = it.get_faction();
+        if( player_zones ? ( fid == your_fac ) : ( fid != your_fac ) ) {
+            jsout.write( it );
+        }
+    }
+    jsout.end_array();
 }
 
 void zone_manager::deserialize( JsonIn &jsin )
 {
-    jsin.read( zones );
-    for( auto it = zones.begin(); it != zones.end(); ++it ) {
-        const zone_type_id zone_type = it->get_type();
-        if( !has_type( zone_type ) ) {
-            zones.erase( it );
+    std::vector<zone_data> tmp_zones;
+    jsin.read( tmp_zones );
+    for( const auto &it : tmp_zones ) {
+        const zone_type_id zone_type = it.get_type();
+        if( has_type( zone_type ) ) {
+            zones.push_back( it );
+        } else {
             debugmsg( "Invalid zone type: %s", zone_type.c_str() );
         }
     }
@@ -1193,34 +1257,76 @@ void zone_data::deserialize( JsonIn &jsin )
     options = new_options;
 }
 
-bool zone_manager::save_zones()
+zone_manager::state zone_manager::save_state()
 {
-    std::string savefile = g->get_player_base_save_path() + ".zones.json";
+    clear_vzone_changes();
 
-    added_vzones.clear();
-    changed_vzones.clear();
-    removed_vzones.clear();
-    return write_to_file( savefile, [&]( std::ostream & fout ) {
-        JsonOut jsout( fout );
-        serialize( jsout );
-    }, _( "zones date" ) );
+    state st;
+
+    try {
+        st.world = serialize_wrapper( [this]( JsonOut & jsout ) {
+            serialize( jsout, false );
+        } );
+    } catch( const std::exception &err ) {
+        st.success = false;
+        debugmsg( "Failed to serialize world zones: %s", err.what() );
+    }
+    try {
+        st.player = serialize_wrapper( [this]( JsonOut & jsout ) {
+            serialize( jsout, true );
+        } );
+    } catch( const std::exception &err ) {
+        st.success = false;
+        debugmsg( "Failed to serialize player zones: %s", err.what() );
+    }
+
+    return st;
 }
 
-void zone_manager::load_zones()
+void zone_manager::clear_vzone_changes()
 {
-    std::string savefile = g->get_player_base_save_path() + ".zones.json";
-
-    read_from_file_optional( savefile, [&]( std::istream & fin ) {
-        JsonIn jsin( fin );
-        deserialize( jsin );
-    } );
-    revert_vzones();
     added_vzones.clear();
     changed_vzones.clear();
     removed_vzones.clear();
+}
+
+void zone_manager::apply_changes()
+{
+    clear_vzone_changes();
 
     cache_data();
     cache_vzones();
+}
+
+void zone_manager::revert_changes( zone_manager::state &&original_state )
+{
+    load_state( std::move( original_state ) );
+
+    revert_vzones();
+    clear_vzone_changes();
+
+    cache_data();
+    cache_vzones();
+}
+
+void zone_manager::load_state( zone_manager::state &&st )
+{
+    zones.clear();
+
+    try {
+        deserialize_wrapper( [this]( JsonIn & jsin ) {
+            deserialize( jsin );
+        }, st.world );
+    } catch( const std::exception &err ) {
+        debugmsg( "Failed to deserialize world zones: %s", err.what() );
+    }
+    try {
+        deserialize_wrapper( [this]( JsonIn & jsin ) {
+            deserialize( jsin );
+        }, st.player );
+    } catch( const std::exception &err ) {
+        debugmsg( "Failed to deserialize player zones: %s", err.what() );
+    }
 }
 
 void zone_manager::zone_edited( zone_data &zone )

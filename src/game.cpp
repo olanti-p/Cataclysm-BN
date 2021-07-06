@@ -2756,7 +2756,7 @@ bool game::load( const save_t &name )
     get_auto_pickup().load_character(); // Load character auto pickup rules
     get_auto_notes_settings().load();   // Load character auto notes settings
     get_safemode().load_character(); // Load character safemode rules
-    zone_manager::get_manager().load_zones(); // Load character world zones
+    zone_manager::get_manager().load_zones(); // Load character and world zones
     read_from_file_optional( get_world_base_save_path() + "/uistate.json", []( std::istream & stream ) {
         JsonIn jsin( stream );
         uistate.deserialize( jsin );
@@ -2954,6 +2954,14 @@ bool game::save_player_data()
            ;
 }
 
+bool game::save_uistate()
+{
+    return write_to_file( get_world_base_save_path() + "/uistate.json", [&]( std::ostream & fout ) {
+        JsonOut jsout( fout );
+        uistate.serialize( jsout );
+    }, _( "uistate data" ) );
+}
+
 event_bus &game::events()
 {
     return *event_bus_ptr;
@@ -2984,10 +2992,8 @@ bool game::save()
             !get_auto_pickup().save_character() ||
             !get_auto_notes_settings().save() ||
             !get_safemode().save_character() ||
-        !write_to_file( get_world_base_save_path() + "/uistate.json", [&]( std::ostream & fout ) {
-        JsonOut jsout( fout );
-            uistate.serialize( jsout );
-        }, _( "uistate data" ) ) ) {
+            !zone_manager::get_manager().save_zones() ||
+            !save_uistate() ) {
             return false;
         } else {
             world_generator->active_world->add_save( save_t::from_player_name( u.name ) );
@@ -6255,9 +6261,8 @@ static void zones_manager_draw_borders( const catacurses::window &w_border,
 
 void game::zones_manager()
 {
-    const tripoint stored_view_offset = u.view_offset;
-
-    u.view_offset = tripoint_zero;
+    zone_manager::state zm_orig_state = zone_manager::get_manager().save_state();
+    auto _restore_view = restore_on_out_of_scope<tripoint>( u.view_offset );
 
     const int zone_ui_height = 12;
     const int zone_options_height = 7;
@@ -6719,17 +6724,13 @@ void game::zones_manager()
     zone_cb = nullptr;
 
     if( stuff_changed ) {
-        auto &zones = zone_manager::get_manager();
+        zone_manager &zm = zone_manager::get_manager();
         if( query_yn( _( "Save changes?" ) ) ) {
-            zones.save_zones();
+            zm.apply_changes();
         } else {
-            zones.load_zones();
+            zm.revert_changes( std::move( zm_orig_state ) );
         }
-
-        zones.cache_data();
     }
-
-    u.view_offset = stored_view_offset;
 }
 
 void game::pre_print_all_tile_info( const tripoint &lp, const catacurses::window &w_info,
