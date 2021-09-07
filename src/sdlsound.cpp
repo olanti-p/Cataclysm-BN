@@ -24,6 +24,7 @@
 #include "init.h"
 #include "json.h"
 #include "loading_ui.h"
+#include "math_defines.h"
 #include "messages.h"
 #include "options.h"
 #include "path_info.h"
@@ -86,20 +87,74 @@ static inline bool check_sound( const int volume = 1 )
     return( sound_init_success && sounds::sound_enabled && volume > 0 );
 }
 
+static int opened_with_channels = 2;
+
 /**
  * Attempt to initialize an audio device.  Returns false if initialization fails.
  */
 bool init_sound()
 {
-    int audio_rate = 44100;
-    Uint16 audio_format = AUDIO_S16;
-    int audio_channels = 2;
-    int audio_buffers = 2048;
-
     // We should only need to init once
     if( !sound_init_success ) {
+        int numdri = SDL_GetNumAudioDrivers();
+        if( numdri < 0 ) {
+            dbg( DL::Warn ) << "SDL_GetNumAudioDrivers returned " << numdri << ".  Last error: " <<
+                            Mix_GetError();
+        } else {
+            dbg( DL::Info ) << "Number of audio drivers on your system: " << numdri;
+
+            for( int i = 0; i < numdri; i++ ) {
+                const char *name = SDL_GetAudioDriver( i );
+                dbg( DL::Info ) << "Audio driver: " << i << "/" << name;
+            }
+        }
+
+        int numdev = SDL_GetNumAudioDevices( 0 );
+        if( numdev < 0 ) {
+            dbg( DL::Warn ) << "SDL_GetNumAudioDevices returned " << numdev << ".  Last error: " <<
+                            Mix_GetError();
+        } else {
+            dbg( DL::Info ) << "Number of audio devices on your system: " << numdev;
+
+            for( int i = 0; i < numdev; i++ ) {
+                const char *name = SDL_GetAudioDeviceName( i, 0 );
+                dbg( DL::Info ) << "Audio device: " << i << "/" << name;
+            }
+        }
+
+        std::string dev_mode = get_option<std::string>( "SOUND_DEV_MODE" );
+        bool single_channel = dev_mode == "MONO";
+
+        int audio_rate = 44100;
+        Uint16 audio_format = AUDIO_S16;
+        int audio_channels = single_channel ? 1 : 2;
+        int audio_buffers = 2048;
+
+        dbg( DL::Info ) <<
+                        string_format( "Initializing audio mixer with: %d Hz, %d ch, format %#x, %d buffers",
+                                       audio_rate,
+                                       audio_channels,
+                                       audio_format,
+                                       audio_buffers
+                                     );
         // Mix_OpenAudio returns non-zero if something went wrong trying to open the device
         if( !Mix_OpenAudio( audio_rate, audio_format, audio_channels, audio_buffers ) ) {
+
+            int dev_rate = 0;
+            Uint16 dev_format = 0;
+            int dev_channels = 0;
+            if( Mix_QuerySpec( &dev_rate, &dev_format, &dev_channels ) ) {
+                dbg( DL::Info ) <<
+                                string_format( "Audio device specs: %d Hz, %d ch, format %#x",
+                                               audio_rate,
+                                               audio_channels,
+                                               audio_format
+                                             );
+
+            } else {
+                dbg( DL::Warn ) << "Mix_QuerySpec failed: " << Mix_GetError();
+            }
+
             Mix_AllocateChannels( 128 );
             Mix_ReserveChannels( static_cast<int>( sfx::channel::MAX_CHANNEL ) );
 
@@ -118,6 +173,7 @@ bool init_sound()
                                static_cast<int>( sfx::group::fatigue ) );
 
             sound_init_success = true;
+            opened_with_channels = audio_channels;
         } else {
             dbg( DL::Error ) << "Failed to open audio mixer, sound won't work: " << Mix_GetError();
         }
@@ -398,6 +454,9 @@ static void empty_effect( int /* chan */, void * /* stream */, int /* len */, vo
 
 static Mix_Chunk *do_pitch_shift( Mix_Chunk *s, float pitch )
 {
+    std::string pitch_mode = get_option<std::string>( "SOUND_PITCH_MODE" );
+    bool single_channel = pitch_mode == "MONO";
+
     Uint32 s_in = s->alen / 4;
     Uint32 s_out = static_cast<Uint32>( static_cast<float>( s_in ) * pitch );
     float pitch_real = static_cast<float>( s_out ) / static_cast<float>( s_in );
@@ -433,16 +492,19 @@ static Mix_Chunk *do_pitch_shift( Mix_Chunk *s, float pitch )
                                       ( end - begin + 1 ) );
         result->abuf[( 4 * i ) + 1] = static_cast<Uint8>( ( lt_out >> 8 ) & 0xFF );
         result->abuf[( 4 * i ) + 0] = static_cast<Uint8>( lt_out & 0xFF );
-        result->abuf[( 4 * i ) + 3] = static_cast<Uint8>( ( rt_out >> 8 ) & 0xFF );
-        result->abuf[( 4 * i ) + 2] = static_cast<Uint8>( rt_out & 0xFF );
+        if( single_channel ) {
+            result->abuf[( 4 * i ) + 3] = static_cast<Uint8>( ( lt_out >> 8 ) & 0xFF );
+            result->abuf[( 4 * i ) + 2] = static_cast<Uint8>( lt_out & 0xFF );
+        } else {
+            result->abuf[( 4 * i ) + 3] = static_cast<Uint8>( ( rt_out >> 8 ) & 0xFF );
+            result->abuf[( 4 * i ) + 2] = static_cast<Uint8>( rt_out & 0xFF );
+        }
     }
     return result;
 }
 
 void sfx::play_variant_sound( const std::string &id, const std::string &variant, int volume )
 {
-    add_msg( m_debug, "sound id: %s, variant: %s, volume: %d ", id, variant, volume );
-
     if( !check_sound( volume ) ) {
         return;
     }
@@ -454,6 +516,11 @@ void sfx::play_variant_sound( const std::string &id, const std::string &variant,
         }
     }
     const sound_effect &selected_sound_effect = *eff;
+
+    std::string msg = string_format( "STS id: %s\tvar: %s\tvol: %d ",
+                                     id, variant, volume );
+    dbg( DL::Info ) << msg;
+    add_msg( m_debug, "%s", msg );
 
     Mix_Chunk *effect_to_play = get_sfx_resource( selected_sound_effect.resource_id );
     Mix_VolumeChunk( effect_to_play,
@@ -467,7 +534,16 @@ void sfx::play_variant_sound( const std::string &id, const std::string &variant,
 void sfx::play_variant_sound( const std::string &id, const std::string &variant, int volume,
                               int angle, double pitch_min, double pitch_max )
 {
-    add_msg( m_debug, "sound id: %s, variant: %s, volume: %d ", id, variant, volume );
+    std::string msg = string_format(
+                          "VAR id: %s\tvar: %s\tvol: %d\tangle: %d\tpitch_min: %f\tpitch_max: %f",
+                          id,
+                          variant,
+                          volume,
+                          angle,
+                          pitch_min,
+                          pitch_max );
+    DebugLog( DL::Info, DC::SDL ) << msg;
+    add_msg( m_debug, "%s", msg );
 
     if( !check_sound( volume ) ) {
         return;
@@ -478,8 +554,11 @@ void sfx::play_variant_sound( const std::string &id, const std::string &variant,
     }
     const sound_effect &selected_sound_effect = *eff;
 
+    std::string pos_mode = get_option<std::string>( "SOUND_POS_MODE" );
+    std::string pitch_mode = get_option<std::string>( "SOUND_PITCH_MODE" );
+
     Mix_Chunk *effect_to_play = get_sfx_resource( selected_sound_effect.resource_id );
-    bool is_pitched = ( pitch_min > 0 ) && ( pitch_max > 0 );
+    bool is_pitched = ( pitch_min > 0 ) && ( pitch_max > 0 ) && ( pitch_mode != "OFF" );
     if( is_pitched ) {
         double pitch_random = rng_float( pitch_min, pitch_max );
         effect_to_play = do_pitch_shift( effect_to_play, static_cast<float>( pitch_random ) );
@@ -498,9 +577,27 @@ void sfx::play_variant_sound( const std::string &id, const std::string &variant,
         }
     }
     if( !failed ) {
-        if( Mix_SetPosition( channel, static_cast<Sint16>( angle ), 1 ) == 0 ) {
-            // Not critical
-            dbg( DL::Info ) << "Mix_SetPosition failed: " << Mix_GetError();
+        if( pos_mode == "DEFAULT" ) {
+            if( Mix_SetPosition( channel, static_cast<Sint16>( angle ), 1 ) == 0 ) {
+                // Not critical
+                dbg( DL::Warn ) << "Mix_SetPosition failed: " << Mix_GetError();
+            }
+        }
+        if( pos_mode == "DIST" || pos_mode == "ALT" ) {
+            if( Mix_SetDistance( channel, 1 ) == 0 ) {
+                // Not critical
+                dbg( DL::Warn ) << "Mix_SetDistance failed: " << Mix_GetError();
+            }
+        }
+        if( pos_mode == "ANGLE" || pos_mode == "ALT" ) {
+            float deg = ( ( angle % 360 ) + 360 ) % 360; // [0..360)
+            float rad = deg * M_PI / 180.0f;
+            int right = 155 + std::roundf( 100 * std::sinf( rad ) );
+
+            if( Mix_SetPanning( channel, 255 - right, right ) == 0 ) {
+                // Not critical
+                dbg( DL::Warn ) << "Mix_SetPanning failed: " << Mix_GetError();
+            }
         }
     }
     if( failed ) {
@@ -514,6 +611,12 @@ void sfx::play_variant_sound( const std::string &id, const std::string &variant,
 void sfx::play_ambient_variant_sound( const std::string &id, const std::string &variant, int volume,
                                       channel channel, int fade_in_duration, double pitch, int loops )
 {
+    std::string msg =
+        string_format( "AMB id: %s\tvar: %s\tvol: %d\tch: %d\tfade_in_dur: %d\tpitch: %f\tloops: %d",
+                       id, variant, volume, channel, fade_in_duration, pitch, loops );
+    DebugLog( DL::Info, DC::SDL ) << msg;
+    add_msg( m_debug, "%s", msg );
+
     if( !check_sound( volume ) ) {
         return;
     }
@@ -526,8 +629,10 @@ void sfx::play_ambient_variant_sound( const std::string &id, const std::string &
     }
     const sound_effect &selected_sound_effect = *eff;
 
+    std::string pitch_mode = get_option<std::string>( "SOUND_PITCH_MODE" );
+
     Mix_Chunk *effect_to_play = get_sfx_resource( selected_sound_effect.resource_id );
-    bool is_pitched = ( pitch > 0 );
+    bool is_pitched = ( pitch > 0 ) && ( pitch_mode != "OFF" );
     if( is_pitched ) {
         effect_to_play = do_pitch_shift( effect_to_play, static_cast<float>( pitch ) );
     }

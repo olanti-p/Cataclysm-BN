@@ -1431,6 +1431,49 @@ void options_manager::add_options_general()
        );
 
     get_option( "AMBIENT_SOUND_VOLUME" ).setPrerequisite( "SOUND_ENABLED" );
+
+    std::vector<id_and_option> sounddev_opts = { {
+            {"STEREO", to_translation( "Stereo" )},
+            {"MONO", to_translation( "Mono" )}
+        }
+    };
+
+    add( "SOUND_DEV_MODE", "general", translate_marker( "Sound device mode" ),
+         translate_marker( "Choose sound device mode.  Requires restart.  Choosing Mono will disable stereo for ALL sounds and music in the game, and will also disable angle-based positioning." ),
+         sounddev_opts, "DEFAULT", COPT_NO_SOUND_HIDE
+       );
+
+    get_option( "SOUND_DEV_MODE" ).setPrerequisite( "SOUND_ENABLED" );
+
+    std::vector<id_and_option> soundpos_opts = { {
+            {"DEFAULT", to_translation( "Distance and angle" )},
+            {"ALT", to_translation( "Distance and angle (alt)" )},
+            {"DIST", to_translation( "Distance only" )},
+            {"ANGLE", to_translation( "Angle only" )},
+            {"OFF", to_translation( "Disabled" )},
+        }
+    };
+
+    add( "SOUND_POS_MODE", "general", translate_marker( "Sound positioning" ),
+         translate_marker( "Choose sound positioning mode." ),
+         soundpos_opts, "DEFAULT", COPT_NO_SOUND_HIDE
+       );
+
+    get_option( "SOUND_POS_MODE" ).setPrerequisite( "SOUND_ENABLED" );
+
+    std::vector<id_and_option> soundpitch_opts = { {
+            {"DEFAULT", to_translation( "Default" )},
+            {"MONO", to_translation( "Convert to mono" )},
+            {"OFF", to_translation( "Disabled" )},
+        }
+    };
+
+    add( "SOUND_PITCH_MODE", "general", translate_marker( "Sound pitch-shift mode" ),
+         translate_marker( "Choose sound pitch-shift mode." ),
+         soundpitch_opts, "DEFAULT", COPT_NO_SOUND_HIDE
+       );
+
+    get_option( "SOUND_PITCH_MODE" ).setPrerequisite( "SOUND_ENABLED" );
 }
 
 void options_manager::add_options_interface()
