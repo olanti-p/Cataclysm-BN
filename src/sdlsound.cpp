@@ -657,7 +657,7 @@ void sfx::play_variant_sound( const std::string &id, const std::string &variant,
         if( pos_mode == "ANGLE" || pos_mode == "ALT" ) {
             float deg = ( ( angle % 360 ) + 360 ) % 360; // [0..360)
             float rad = deg * M_PI / 180.0f;
-            int right = 155 + std::roundf( 100 * std::sinf( rad ) );
+            int right = 155 + std::round( 100 * std::sin( rad ) );
 
             if( Mix_SetPanning( channel, 255 - right, right ) == 0 ) {
                 // Not critical
