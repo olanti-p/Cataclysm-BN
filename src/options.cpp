@@ -1435,15 +1435,15 @@ void options_manager::add_options_general()
 #if defined(SDL_SOUND)
     std::vector<options_manager::id_and_option> sdriver_list = build_sound_driver_list();
 
-    add( "SOUND_DRIVER", "general", translate_marker( "Sound driver" ),
-         translate_marker( "Set which sound driver to use.  Requires restart." ), sdriver_list,
+    add( "SOUND_DRIVER", "general", translate_marker( "Audio driver" ),
+         translate_marker( "List of audio drivers." ), sdriver_list,
          "AUTO", COPT_NO_SOUND_HIDE
        );
 
     std::vector<options_manager::id_and_option> sdevice_list = build_sound_device_list();
 
     add( "SOUND_DEVICE", "general", translate_marker( "Sound device" ),
-         translate_marker( "Set which sound device to use.  Requires restart." ), sdevice_list,
+         translate_marker( "List of audio devices." ), sdevice_list,
          "AUTO", COPT_NO_SOUND_HIDE
        );
 #endif
@@ -3167,7 +3167,6 @@ std::string options_manager::show( bool ingame, const bool world_options_only,
     bool used_tiles_changed = false;
     bool pixel_minimap_changed = false;
     bool terminal_size_changed = false;
-    bool sound_changed = false;
 
     for( auto &iter : OPTIONS_OLD ) {
         if( iter.second != OPTIONS[iter.first] ) {
@@ -3191,11 +3190,6 @@ std::string options_manager::show( bool ingame, const bool world_options_only,
 
             } else if( iter.first == "TERMINAL_X" || iter.first == "TERMINAL_Y" ) {
                 terminal_size_changed = true;
-
-            } else if( iter.first == "SOUND_DEVICE"
-                       || iter.first == "SOUND_DRIVER"
-                       || iter.first == "SOUND_DEV_MODE" ) {
-                sound_changed = true;
             }
         }
     }

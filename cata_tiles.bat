@@ -12,4 +12,8 @@
 
 set SDL_AUDIODRIVER=wasapi
 
-Cataclysm-vcpkg-static-Release-x64.exe
+:: Release build
+cataclysm-tiles.exe
+
+:: Visual Studio build
+:: Cataclysm-vcpkg-static-Release-x64.exe
