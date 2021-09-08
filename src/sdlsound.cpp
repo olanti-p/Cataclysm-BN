@@ -146,7 +146,7 @@ std::vector<options_manager::id_and_option> build_sound_device_list()
 bool init_sound()
 {
     if( sound_init_success ) {
-        // We should only need to init once
+        // We should only need to init once!
         return true;
     }
 
