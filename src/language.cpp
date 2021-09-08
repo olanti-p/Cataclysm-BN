@@ -188,7 +188,7 @@ static std::string getSystemUILang()
 }
 #endif // _WIN32 / !MACOSX
 
-static bool cata_setenv( const std::string &name, const std::string &value )
+bool cata_setenv( const std::string &name, const std::string &value )
 {
 #if defined(_WIN32)
     std::string s = name + "=" + value;

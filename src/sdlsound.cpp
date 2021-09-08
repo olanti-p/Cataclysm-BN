@@ -89,97 +89,163 @@ static inline bool check_sound( const int volume = 1 )
 
 static int opened_with_channels = 2;
 
+std::vector<options_manager::id_and_option> build_sound_driver_list()
+{
+    std::vector<options_manager::id_and_option> ret;
+    ret.emplace_back( "AUTO", no_translation( "AUTO" ) );
+
+    int numdri = SDL_GetNumAudioDrivers();
+    if( numdri < 0 ) {
+        DebugLog( DL::Warn, DC::SDL )
+                << "SDL_GetNumAudioDrivers returned " << numdri << ".  Last error: " << Mix_GetError();
+    } else {
+        DebugLog( DL::Info, DC::SDL )
+                << "Number of audio drivers on your system: " << numdri;
+
+        for( int i = 0; i < numdri; i++ ) {
+            const char *name = SDL_GetAudioDriver( i );
+            DebugLog( DL::Info, DC::SDL )
+                    << "Audio driver: " << i << "/" << name;
+            ret.emplace_back( name, no_translation( name ) );
+        }
+    }
+
+    return ret;
+}
+
+std::vector<options_manager::id_and_option> build_sound_device_list()
+{
+    std::vector<options_manager::id_and_option> ret;
+    ret.emplace_back( "AUTO", no_translation( "AUTO" ) );
+
+    int numdev = SDL_GetNumAudioDevices( 0 );
+    if( numdev < 0 ) {
+        DebugLog( DL::Warn, DC::SDL )
+                << "SDL_GetNumAudioDevices returned " << numdev << ".  Last error: " <<
+                Mix_GetError();
+    } else {
+        DebugLog( DL::Info, DC::SDL )
+                << "Number of audio devices on your system: " << numdev;
+
+        for( int i = 0; i < numdev; i++ ) {
+            const char *name = SDL_GetAudioDeviceName( i, 0 );
+            DebugLog( DL::Info, DC::SDL )
+                    << "Audio device: " << i << "/" << name;
+            ret.emplace_back( name, no_translation( name ) );
+        }
+    }
+
+    return ret;
+}
+
+#include "language.h"
+
 /**
  * Attempt to initialize an audio device.  Returns false if initialization fails.
  */
 bool init_sound()
 {
-    // We should only need to init once
-    if( !sound_init_success ) {
-        int numdri = SDL_GetNumAudioDrivers();
-        if( numdri < 0 ) {
-            dbg( DL::Warn ) << "SDL_GetNumAudioDrivers returned " << numdri << ".  Last error: " <<
-                            Mix_GetError();
-        } else {
-            dbg( DL::Info ) << "Number of audio drivers on your system: " << numdri;
+    if( sound_init_success ) {
+        // We should only need to init once
+        return true;
+    }
 
-            for( int i = 0; i < numdri; i++ ) {
-                const char *name = SDL_GetAudioDriver( i );
-                dbg( DL::Info ) << "Audio driver: " << i << "/" << name;
-            }
+    std::string dri_name = get_option<std::string>( "SOUND_DRIVER" );
+    if( dri_name != "AUTO" ) {
+        //cata_setenv( "SDL_AUDIODRIVER", dri_name );
+        if( SDL_setenv( "SDL_AUDIODRIVER", dri_name.c_str(), SDL_FALSE ) != 0 ) {
+            DebugLog( DL::Error, DC::SDL )
+                    << "SDL_setenv failed with " <<  Mix_GetError();
+            return false;
         }
-
-        int numdev = SDL_GetNumAudioDevices( 0 );
-        if( numdev < 0 ) {
-            dbg( DL::Warn ) << "SDL_GetNumAudioDevices returned " << numdev << ".  Last error: " <<
-                            Mix_GetError();
-        } else {
-            dbg( DL::Info ) << "Number of audio devices on your system: " << numdev;
-
-            for( int i = 0; i < numdev; i++ ) {
-                const char *name = SDL_GetAudioDeviceName( i, 0 );
-                dbg( DL::Info ) << "Audio device: " << i << "/" << name;
-            }
-        }
-
-        std::string dev_mode = get_option<std::string>( "SOUND_DEV_MODE" );
-        bool single_channel = dev_mode == "MONO";
-
-        int audio_rate = 44100;
-        Uint16 audio_format = AUDIO_S16;
-        int audio_channels = single_channel ? 1 : 2;
-        int audio_buffers = 2048;
-
-        dbg( DL::Info ) <<
-                        string_format( "Initializing audio mixer with: %d Hz, %d ch, format %#x, %d buffers",
-                                       audio_rate,
-                                       audio_channels,
-                                       audio_format,
-                                       audio_buffers
-                                     );
-        // Mix_OpenAudio returns non-zero if something went wrong trying to open the device
-        if( !Mix_OpenAudio( audio_rate, audio_format, audio_channels, audio_buffers ) ) {
-
-            int dev_rate = 0;
-            Uint16 dev_format = 0;
-            int dev_channels = 0;
-            if( Mix_QuerySpec( &dev_rate, &dev_format, &dev_channels ) ) {
-                dbg( DL::Info ) <<
-                                string_format( "Audio device specs: %d Hz, %d ch, format %#x",
-                                               audio_rate,
-                                               audio_channels,
-                                               audio_format
-                                             );
-
-            } else {
-                dbg( DL::Warn ) << "Mix_QuerySpec failed: " << Mix_GetError();
-            }
-
-            Mix_AllocateChannels( 128 );
-            Mix_ReserveChannels( static_cast<int>( sfx::channel::MAX_CHANNEL ) );
-
-            // For the sound effects system.
-            Mix_GroupChannels( static_cast<int>( sfx::channel::daytime_outdoors_env ),
-                               static_cast<int>( sfx::channel::nighttime_outdoors_env ),
-                               static_cast<int>( sfx::group::time_of_day ) );
-            Mix_GroupChannels( static_cast<int>( sfx::channel::underground_env ),
-                               static_cast<int>( sfx::channel::outdoor_blizzard ),
-                               static_cast<int>( sfx::group::weather ) );
-            Mix_GroupChannels( static_cast<int>( sfx::channel::danger_extreme_theme ),
-                               static_cast<int>( sfx::channel::danger_low_theme ),
-                               static_cast<int>( sfx::group::context_themes ) );
-            Mix_GroupChannels( static_cast<int>( sfx::channel::stamina_75 ),
-                               static_cast<int>( sfx::channel::stamina_35 ),
-                               static_cast<int>( sfx::group::fatigue ) );
-
-            sound_init_success = true;
-            opened_with_channels = audio_channels;
-        } else {
-            dbg( DL::Error ) << "Failed to open audio mixer, sound won't work: " << Mix_GetError();
+        const char *res = SDL_getenv( "SDL_AUDIODRIVER" );
+        DebugLog( DL::Info, DC::SDL )
+                << "SDL_setenv SDL_AUDIODRIVER to \"" << res << "\"";
+        if( SDL_InitSubSystem( SDL_INIT_AUDIO ) != 0 ) {
+            DebugLog( DL::Error, DC::SDL )
+                    << "Failed to select audio driver " << dri_name << ": " << Mix_GetError();
+            return false;
         }
     }
 
-    return sound_init_success;
+    const char *name = SDL_GetCurrentAudioDriver();
+    DebugLog( DL::Info, DC::SDL )
+            << string_format( "Active audio driver: %s (%s)", name, dri_name );
+
+    DebugLog( DL::Info, DC::SDL )
+            << "Repeating sound device list : ";
+    build_sound_device_list();
+
+    std::string dev_mode = get_option<std::string>( "SOUND_DEV_MODE" );
+    bool single_channel = dev_mode == "MONO";
+
+    int audio_rate = 44100;
+    Uint16 audio_format = AUDIO_S16;
+    int audio_channels = single_channel ? 1 : 2;
+    int audio_buffers = 2048;
+
+    std::string dev_name = get_option<std::string>( "SOUND_DEVICE" );
+    DebugLog( DL::Info, DC::SDL )
+            << string_format( "Initializing mixer with: (%s), %d Hz, %d ch, format %#x, %d buffers",
+                              dev_name,
+                              audio_rate,
+                              audio_channels,
+                              audio_format,
+                              audio_buffers
+                            );
+
+
+    bool success = false;
+
+    if( dev_name == "AUTO" ) {
+        success = Mix_OpenAudio( audio_rate, audio_format, audio_channels, audio_buffers ) == 0;
+    } else {
+        success = Mix_OpenAudioDevice( audio_rate, audio_format, audio_channels, audio_buffers,
+                                       dev_name.c_str(), 1 );
+    }
+
+    if( !success ) {
+        DebugLog( DL::Error, DC::SDL )
+                << "Failed to open audio mixer, sound won't work: " << Mix_GetError();
+        return false;
+    }
+
+    int dev_rate = 0;
+    Uint16 dev_format = 0;
+    int dev_channels = 0;
+    if( Mix_QuerySpec( &dev_rate, &dev_format, &dev_channels ) ) {
+        DebugLog( DL::Info, DC::SDL )
+                << string_format( "Audio device specs: %d Hz, %d ch, format %#x",
+                                  audio_rate,
+                                  audio_channels,
+                                  audio_format
+                                );
+
+    } else {
+        DebugLog( DL::Warn, DC::SDL )
+                << "Mix_QuerySpec failed: " << Mix_GetError();
+    }
+
+    Mix_AllocateChannels( 128 );
+    Mix_ReserveChannels( static_cast<int>( sfx::channel::MAX_CHANNEL ) );
+
+    // For the sound effects system.
+    Mix_GroupChannels( static_cast<int>( sfx::channel::daytime_outdoors_env ),
+                       static_cast<int>( sfx::channel::nighttime_outdoors_env ),
+                       static_cast<int>( sfx::group::time_of_day ) );
+    Mix_GroupChannels( static_cast<int>( sfx::channel::underground_env ),
+                       static_cast<int>( sfx::channel::outdoor_blizzard ),
+                       static_cast<int>( sfx::group::weather ) );
+    Mix_GroupChannels( static_cast<int>( sfx::channel::danger_extreme_theme ),
+                       static_cast<int>( sfx::channel::danger_low_theme ),
+                       static_cast<int>( sfx::group::context_themes ) );
+    Mix_GroupChannels( static_cast<int>( sfx::channel::stamina_75 ),
+                       static_cast<int>( sfx::channel::stamina_35 ),
+                       static_cast<int>( sfx::group::fatigue ) );
+
+    sound_init_success = true;
+
+    return true;
 }
 void shutdown_sound()
 {
@@ -189,6 +255,7 @@ void shutdown_sound()
 
     playlists.clear();
     Mix_CloseAudio();
+    sound_init_success = false;
 }
 
 void musicFinished();

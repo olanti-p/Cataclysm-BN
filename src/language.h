@@ -124,6 +124,8 @@ std::vector<std::string> get_lang_path_substring( const std::string &lang_id );
  */
 bool translations_exists_for_lang( const std::string &lang_id );
 
+bool cata_setenv( const std::string &name, const std::string &value );
+
 #if defined(LOCALIZE)
 namespace cata_libintl
 {
