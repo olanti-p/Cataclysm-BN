@@ -87,8 +87,6 @@ static inline bool check_sound( const int volume = 1 )
     return( sound_init_success && sounds::sound_enabled && volume > 0 );
 }
 
-static int opened_with_channels = 2;
-
 std::vector<options_manager::id_and_option> build_sound_driver_list()
 {
     std::vector<options_manager::id_and_option> ret;
