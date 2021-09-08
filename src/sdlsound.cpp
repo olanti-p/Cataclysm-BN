@@ -94,12 +94,26 @@ bool init_sound()
     int audio_rate = 44100;
     Uint16 audio_format = AUDIO_S16;
     int audio_channels = 2;
-    int audio_buffers = 2048;
+    int chunksize = 2048;
+    // We only care about sample format and number of channels.
+    // SDL will be allowed to choose a more fitting frequency or chunk size.
+    int flags = SDL_AUDIO_ALLOW_FREQUENCY_CHANGE | SDL_AUDIO_ALLOW_SAMPLES_CHANGE;
 
     // We should only need to init once
     if( !sound_init_success ) {
         // Mix_OpenAudio returns non-zero if something went wrong trying to open the device
-        if( !Mix_OpenAudio( audio_rate, audio_format, audio_channels, audio_buffers ) ) {
+        if( !Mix_OpenAudioDevice( audio_rate, audio_format, audio_channels, chunksize, nullptr, flags ) ) {
+            int dev_rate = 0;
+            Uint16 dev_format = 0;
+            int dev_channels = 0;
+            if( Mix_QuerySpec( &dev_rate, &dev_format, &dev_channels ) ) {
+                DebugLog( DL::Info, DC::Main )
+                        << string_format( "Opened audio device: %d Hz, %d ch, format %#x",
+                                          dev_rate, dev_channels, dev_format );
+            } else {
+                DebugLog( DL::Warn, DC::SDL ) << "Mix_QuerySpec failed: " << Mix_GetError();
+            }
+
             Mix_AllocateChannels( 128 );
             Mix_ReserveChannels( static_cast<int>( sfx::channel::MAX_CHANNEL ) );
 
