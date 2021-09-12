@@ -882,6 +882,18 @@
     "info": "This bionic provides power."
   },
   {
+    "id": "BIONIC_SLEEP_FRIENDLY",
+    "type": "json_flag",
+    "context": [ "BIONIC" ],
+    "//": "This bionic won't provide a warning if the player tries to sleep while it's active."
+  },
+  {
+    "id": "BIONIC_SHOCKPROOF",
+    "type": "json_flag",
+    "context": [ "BIONIC" ],
+    "//": "This bionic can't be incapacitated by electrical attacks."
+  },
+  {
     "id": "BIONIC_TOGGLED",
     "type": "json_flag",
     "context": [ "BIONIC" ],
@@ -1978,5 +1990,11 @@
     "id": "auto_wield",
     "type": "json_flag",
     "context": [  ]
+  },
+  {
+    "id": "UNSAFE_CONSUME",
+    "type": "json_flag",
+    "context": [ "COMESTIBLE" ],
+    "info": "This is unsafe to consume, so it won't be consumed when included in auto drink or eat zones."
   }
 ]

@@ -42,6 +42,7 @@
 #include "iuse_actor.h"
 #include "lightmap.h"
 #include "line.h"
+#include "make_static.h"
 #include "magic_enchantment.h"
 #include "map.h"
 #include "map_iterator.h"
@@ -94,9 +95,7 @@
 
 struct dealt_projectile_attack;
 
-static const activity_id ACT_DROP( "ACT_DROP" );
 static const activity_id ACT_MOVE_ITEMS( "ACT_MOVE_ITEMS" );
-static const activity_id ACT_STASH( "ACT_STASH" );
 static const activity_id ACT_TRAVELLING( "ACT_TRAVELLING" );
 static const activity_id ACT_TREE_COMMUNION( "ACT_TREE_COMMUNION" );
 static const activity_id ACT_TRY_SLEEP( "ACT_TRY_SLEEP" );
@@ -2420,14 +2419,12 @@ std::list<item *> Character::get_dependent_worn_items( const item &it )
 
 void Character::drop( item_location loc, const tripoint &where )
 {
-    drop( { std::make_pair( loc, loc->count() ) }, where );
+    drop( { drop_location( loc, loc->count() ) }, where );
 }
 
 void Character::drop( const drop_locations &what, const tripoint &target,
                       bool stash )
 {
-    const activity_id type =  stash ? ACT_STASH : ACT_DROP;
-
     if( what.empty() ) {
         return;
     }
@@ -2438,14 +2435,10 @@ void Character::drop( const drop_locations &what, const tripoint &target,
         return;
     }
 
-    assign_activity( type );
-    activity.placement = target - pos();
-
-    for( drop_location item_pair : what ) {
-        if( can_unwield( *item_pair.first ).success() ) {
-            activity.targets.push_back( item_pair.first );
-            activity.values.push_back( item_pair.second );
-        }
+    if( stash ) {
+        assign_activity( stash_activity_actor( *this, what, target - pos() ) );
+    } else {
+        assign_activity( drop_activity_actor( *this, what, false, target - pos() ) );
     }
 }
 
@@ -2623,7 +2616,7 @@ std::vector<item_location> Character::find_reloadables()
 
 units::mass Character::weight_carried() const
 {
-    return weight_carried_with_tweaks( {} );
+    return weight_carried_reduced_by( {} );
 }
 
 units::volume Character::volume_carried() const
@@ -2652,11 +2645,9 @@ int Character::best_nearby_lifting_assist( const tripoint &world_pos ) const
                      } );
 }
 
-units::mass Character::weight_carried_with_tweaks( const item_tweaks &tweaks ) const
+units::mass Character::weight_carried_reduced_by( const excluded_stacks &without ) const
 {
     const std::map<const item *, int> empty;
-    const std::map<const item *, int> &without = tweaks.without_items ? tweaks.without_items->get() :
-            empty;
 
     // Worn items
     units::mass ret = 0_gram;
@@ -2667,8 +2658,7 @@ units::mass Character::weight_carried_with_tweaks( const item_tweaks &tweaks ) c
     }
 
     // Items in inventory
-    const inventory &i = tweaks.replace_inv ? tweaks.replace_inv->get() : inv;
-    ret += i.weight_without( without );
+    ret += inv.weight_without( without );
 
     // Wielded item
     units::mass weaponweight = 0_gram;
@@ -2703,10 +2693,13 @@ units::mass Character::weight_carried_with_tweaks( const item_tweaks &tweaks ) c
     return ret;
 }
 
-units::volume Character::volume_carried_with_tweaks( const item_tweaks &tweaks ) const
+units::volume Character::volume_carried_reduced_by( const excluded_stacks &without ) const
 {
-    const auto &i = tweaks.replace_inv ? tweaks.replace_inv->get() : inv;
-    return tweaks.without_items ? i.volume_without( *tweaks.without_items ) : i.volume();
+    if( without.empty() ) {
+        return inv.volume();
+    } else {
+        return inv.volume_without( without );
+    }
 }
 
 units::mass Character::weight_capacity() const
@@ -2759,7 +2752,7 @@ units::volume Character::volume_capacity() const
 }
 
 units::volume Character::volume_capacity_reduced_by(
-    const units::volume &mod, const std::map<const item *, int> &without_items ) const
+    const units::volume &mod, const excluded_stacks &without ) const
 {
     if( has_trait( trait_DEBUG_STORAGE ) ) {
         return units::volume_max;
@@ -2767,7 +2760,7 @@ units::volume Character::volume_capacity_reduced_by(
 
     units::volume ret = -mod;
     for( const auto &i : worn ) {
-        if( !without_items.count( &i ) ) {
+        if( !without.count( &i ) ) {
             ret += i.get_storage();
         }
     }
@@ -3841,8 +3834,8 @@ void Character::mut_cbm_encumb( std::array<encumbrance_data, num_bp> &vals ) con
 {
 
     for( const bionic_id &bid : get_bionics() ) {
-        for( const std::pair<const body_part, int> &element : bid->encumbrance ) {
-            vals[element.first].encumbrance += element.second;
+        for( const std::pair<const bodypart_str_id, int> &element : bid->encumbrance ) {
+            vals[element.first->token].encumbrance += element.second;
         }
     }
 
@@ -4326,10 +4319,11 @@ void Character::on_damage_of_type( int adjusted_damage, damage_type type, const 
                 continue;
             }
             const auto &info = i.info();
-            if( info.shockproof || info.faulty ) {
+            if( info.has_flag( STATIC( flag_str_id( "BIONIC_SHOCKPROOF" ) ) )
+                || info.has_flag( STATIC( flag_str_id( "BIONIC_FAULTY" ) ) ) ) {
                 continue;
             }
-            const std::map<bodypart_str_id, size_t> &bodyparts = info.occupied_bodyparts;
+            const std::map<bodypart_str_id, int> &bodyparts = info.occupied_bodyparts;
             if( bodyparts.find( bp.id() ) != bodyparts.end() ) {
                 const int bp_hp = get_part_hp_cur( bp );
                 // The chance to incapacitate is as high as 50% if the attack deals damage equal to one third of the body part's current health.
@@ -6354,7 +6348,7 @@ std::string Character::extended_description() const
         // <bad>This is me, <player_name>.</bad>
         ss += string_format( _( "This is you - %s." ), name );
     } else {
-        ss += string_format( _( "This is %s." ), name );
+        ss += string_format( _( "This is %s, %s" ), name, male ? _( "male" ) : _( "female" ) );
     }
 
     ss += "\n--\n";
@@ -7644,7 +7638,8 @@ void Character::recalculate_enchantment_cache()
 
         for( const enchantment_id &ench_id : bid->enchantments ) {
             const enchantment &ench = ench_id.obj();
-            if( ench.is_active( *this, bio.powered && bid->toggled ) ) {
+            if( ench.is_active( *this, bio.powered &&
+                                bid->has_flag( STATIC( flag_str_id( "BIONIC_TOGGLED" ) ) ) ) ) {
                 enchantment_cache->force_add( ench );
             }
         }
@@ -9863,6 +9858,8 @@ std::vector<std::string> Character::short_description_parts() const
 {
     std::vector<std::string> result;
 
+    std::string gender = male ? _( "male" ) : _( "female" );
+    result.push_back( name +  ", "  + gender );
     if( is_armed() ) {
         result.push_back( _( "Wielding: " ) + weapon.tname() );
     }

@@ -11,9 +11,6 @@
 class JsonIn;
 class JsonOut;
 
-using drop_location = std::pair<item_location, int>;
-using drop_locations = std::list<drop_location>;
-
 namespace pickup
 {
 
@@ -22,14 +19,18 @@ struct act_item {
     /// inventory item
     item_location loc;
     /// How many items need to be processed
-    int count;
+    int count = 0;
     /// Amount of moves that processing will consume
-    int consumed_moves;
+    int consumed_moves = 0;
 
+    act_item() = default;
     act_item( const item_location &loc, int count, int consumed_moves )
         : loc( loc ),
           count( count ),
           consumed_moves( consumed_moves ) {}
+
+    void serialize( JsonOut &jsout ) const;
+    void deserialize( JsonIn &jsin );
 };
 
 struct pick_drop_selection {
@@ -50,10 +51,8 @@ struct stacked_items {
 /** Finds possible parent-child relations in picked up items to save moves */
 std::vector<pick_drop_selection> optimize_pickup( const std::vector<item_location> &targets,
         const std::vector<int> &quantities );
-std::list<act_item> reorder_for_dropping( Character &p, const drop_locations &drop );
+std::list<act_item> reorder_for_dropping( Character &p, const std::list<act_item> &drop );
 std::list<item> obtain_and_tokenize_items( player &p, std::list<act_item> &items );
-std::vector<item_location> extract_children( std::vector<item_location> &targets,
-        item_location &stack_top );
 std::vector<stacked_items> stack_for_pickup_ui( const
         std::vector<item_stack::iterator> &unstacked );
 // TODO: This probably shouldn't return raw iterators

@@ -72,8 +72,8 @@ TEST_CASE( "full backpack drop", "[activity][drop_token]" )
         REQUIRE( dummy.inv.size() >= 1 );
 
         WHEN( "he considers dropping the backpack" ) {
-            drop_locations drop;
-            drop.push_back( drop_location( item_location( dummy, &dummy.worn.front() ), 1 ) );
+            std::list<pickup::act_item> drop;
+            drop.push_back( pickup::act_item( item_location( dummy, &dummy.worn.front() ), 1, 0 ) );
             std::list<pickup::act_item> drop_list = pickup::reorder_for_dropping( dummy, drop );
             THEN( "he will try to drop all carried items" ) {
                 // TODO: Check that all items will be dropped. inv.size() doesn't work because stacks
@@ -122,7 +122,7 @@ TEST_CASE( "full backpack drop", "[activity][drop_token]" )
         REQUIRE( dummy.inv.size() >= 1 );
 
         WHEN( "he considers dropping one duffel bag and one backpack" ) {
-            drop_locations drop;
+            std::list<pickup::act_item> drop;
             auto first_duffel_iter = std::find_if( dummy.worn.begin(), dummy.worn.end(),
             [&]( const item & it ) {
                 return it.typeId() == duffel_bag.typeId();
@@ -133,8 +133,8 @@ TEST_CASE( "full backpack drop", "[activity][drop_token]" )
             } );
             REQUIRE( first_duffel_iter != dummy.worn.end() );
             REQUIRE( first_backpack_iter != dummy.worn.end() );
-            drop.push_back( drop_location( item_location( dummy, &*first_duffel_iter ), 1 ) );
-            drop.push_back( drop_location( item_location( dummy, &*first_backpack_iter ), 1 ) );
+            drop.push_back( pickup::act_item( item_location( dummy, &*first_duffel_iter ), 1, 0 ) );
+            drop.push_back( pickup::act_item( item_location( dummy, &*first_backpack_iter ), 1, 0 ) );
             std::list<pickup::act_item> drop_list = pickup::reorder_for_dropping( dummy, drop );
             THEN( "he will try to drop some, but not all of the carried items" ) {
                 REQUIRE( drop_list.size() > 4 );
@@ -239,12 +239,12 @@ TEST_CASE( "full backpack drop", "[activity][drop_token]" )
         }
 
         WHEN( "he considers dropping only one of the bags, but all of the items" ) {
-            drop_locations drop;
-            drop.push_back( drop_location( item_location( dummy, &dummy.worn.front() ), 1 ) );
+            std::list<pickup::act_item> drop;
+            drop.push_back( pickup::act_item( item_location( dummy, &dummy.worn.front() ), 1, 0 ) );
             std::vector<item *> dump;
             dummy.inv.dump( dump );
             for( item *it : dump ) {
-                drop.push_back( drop_location( item_location( dummy, it ), 1 ) );
+                drop.push_back( pickup::act_item( item_location( dummy, it ), 1, 0 ) );
             }
 
             std::list<pickup::act_item> drop_list = pickup::reorder_for_dropping( dummy, drop );
