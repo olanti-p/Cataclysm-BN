@@ -68,7 +68,7 @@ static const double min_ratio_to_center = 0.85;
 /** These categories should keep their original order and can't be re-sorted by inventory presets */
 static const std::set<std::string> ordered_categories = {{ "ITEMS_WORN" }};
 
-constexpr std::size_t max_chosen_count = std::numeric_limits<std::size_t>::max();
+constexpr int max_chosen_count = std::numeric_limits<int>::max();
 
 struct navigation_mode_data {
     navigation_mode next_mode;
