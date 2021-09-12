@@ -306,9 +306,9 @@ class drop_activity_actor : public activity_actor
             return activity_id( "ACT_DROP" );
         }
 
-        void start( player_activity &act, Character &who ) override {};
+        void start( player_activity &, Character & ) override {};
         void do_turn( player_activity &, Character &who ) override;
-        void finish( player_activity &act, Character &who ) override {};
+        void finish( player_activity &, Character & ) override {};
 
         std::unique_ptr<activity_actor> clone() const override {
             return std::make_unique<drop_activity_actor>( *this );
@@ -480,9 +480,9 @@ class stash_activity_actor : public activity_actor
             return activity_id( "ACT_STASH" );
         }
 
-        void start( player_activity &act, Character &who ) override {};
+        void start( player_activity &, Character & ) override {};
         void do_turn( player_activity &, Character &who ) override;
-        void finish( player_activity &act, Character &who ) override {};
+        void finish( player_activity &, Character & ) override {};
 
         std::unique_ptr<activity_actor> clone() const override {
             return std::make_unique<stash_activity_actor>( *this );
