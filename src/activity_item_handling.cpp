@@ -631,24 +631,11 @@ static void debug_tokens( const std::list<item> &items )
 
 static std::list<item> obtain_activity_items( Character &who, std::list<pickup::act_item> &targets )
 {
-    std::list<pickup::act_item> items = pickup::reorder_for_dropping( who, targets );
+    debug_drop_list( targets );
 
-    debug_drop_list( items );
-
-    std::list<item> res = pickup::obtain_and_tokenize_items( *who.as_player(), items );
+    std::list<item> res = pickup::obtain_and_tokenize_items( *who.as_player(), targets );
 
     debug_tokens( res );
-
-    // Load anything that remains (if any) into the activity
-    targets.clear();
-    targets = std::move( items );
-
-    // And cancel if its empty. If its not, we modified in place and we will continue
-    // to resolve the drop next turn. This is different from the pickup logic which
-    // creates a brand new activity every turn and cancels the old activity
-    if( targets.empty() ) {
-        who.cancel_activity();
-    }
 
     return res;
 }
@@ -660,6 +647,10 @@ void drop_activity_actor::do_turn( player_activity &, Character &who )
     put_into_vehicle_or_drop( who, item_drop_reason::deliberate,
                               obtain_activity_items( who, items ),
                               pos, force_ground );
+
+    if( items.empty() ) {
+        who.cancel_activity();
+    }
 }
 
 void activity_on_turn_wear( player_activity &act, player &p )
@@ -780,6 +771,9 @@ void stash_activity_actor::do_turn( player_activity &, Character &who )
     monster *pet = g->critter_at<monster>( pos );
     if( pet != nullptr && pet->has_effect( effect_pet ) ) {
         stash_on_pet( obtain_activity_items( who, items ), *pet, who );
+        if( items.empty() ) {
+            who.cancel_activity();
+        }
     } else {
         who.add_msg_if_player( _( "The pet has moved somewhere else." ) );
         who.cancel_activity();
