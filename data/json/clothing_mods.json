@@ -1,7 +1,6 @@
 [
   {
-    "type": "clothing_mod",
-    "id": "leather_padded",
+    "type": "clothing_mod",    "id": "leather_padded",
     "flag": "leather_padded",
     "item": "leather",
     "implement_prompt": "Pad with leather",
