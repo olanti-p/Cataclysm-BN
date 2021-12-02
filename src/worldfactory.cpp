@@ -1,3 +1,4 @@
+#pragma optimize("", off)
 #include "worldfactory.h"
 
 #include <algorithm>

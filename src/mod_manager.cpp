@@ -1,3 +1,4 @@
+#pragma optimize("", off)
 #include "mod_manager.h"
 
 #include <algorithm>
