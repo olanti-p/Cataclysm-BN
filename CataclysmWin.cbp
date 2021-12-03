@@ -28,7 +28,6 @@
 					<Add directory="WinDepend/include" />
 				</Compiler>
 				<Linker>
-					<Add library="libintl.dll.a" />
 					<Add library="libiconv.dll.a" />
 					<Add directory="WinDepend/lib" />
 				</Linker>
@@ -92,7 +91,6 @@
 					<Add directory="WinDepend/include/SDL2" />
 				</Compiler>
 				<Linker>
-					<Add library="libintl.dll.a" />
 					<Add library="libiconv.dll.a" />
 					<Add library="libSDL2.dll.a" />
 					<Add library="libSDL2main.a" />
@@ -117,7 +115,6 @@
 					<Add directory="WinDepend/include/SDL2" />
 				</Compiler>
 				<Linker>
-					<Add library="libintl.dll.a" />
 					<Add library="libiconv.dll.a" />
 					<Add library="libSDL2.dll.a" />
 					<Add library="libSDL2main.a" />
@@ -151,7 +148,6 @@
 				</Compiler>
 				<Linker>
 					<Add option="-pg -lgmon" />
-					<Add library="libintl.dll.a" />
 					<Add library="libiconv.dll.a" />
 					<Add directory="WinDepend/lib" />
 				</Linker>
@@ -218,7 +214,6 @@
 				</Compiler>
 				<Linker>
 					<Add option="-pg -lgmon" />
-					<Add library="libintl.dll.a" />
 					<Add library="libiconv.dll.a" />
 					<Add library="libSDL2.dll.a" />
 					<Add library="libSDL2main.a" />
@@ -244,7 +239,6 @@
 				</Compiler>
 				<Linker>
 					<Add option="-pg -lgmon" />
-					<Add library="libintl.dll.a" />
 					<Add library="libiconv.dll.a" />
 					<Add library="libSDL2.dll.a" />
 					<Add library="libSDL2main.a" />

@@ -47,10 +47,6 @@
 #  (for example: make LANGUAGES="zh_CN zh_TW" for Chinese)
 #  make localization LANGUAGES=all
 #  (for every .po file in lang/po)
-#  Special note for MinGW: due to a libintl bug (https://savannah.gnu.org/bugs/index.php?58006),
-#  using English without a `.mo` file would cause significant slow down on MinGW
-#  targets. In such case you can compile a `.mo` file for English using `make LANGUAGES="en"`.
-#  `make LANGUAGE="all"` also compiles a `.mo` file for English in addition to other languages.
 # Enable sanitizer (address, undefined, etc.)
 #  make SANITIZE=address
 # Change mapsize (reality bubble size)
@@ -450,21 +446,6 @@ ifeq ($(NATIVE), osx)
     endif
   endif
   ifeq ($(LOCALIZE), 1)
-    LDFLAGS += -lintl
-    ifdef OSXCROSS
-      LDFLAGS += -L$(LIBSDIR)/gettext/lib
-      CXXFLAGS += -I$(LIBSDIR)/gettext/include
-    endif
-    ifeq ($(BREWGETTEXT), 1)
-      # recent versions of brew will not allow you to link
-      LDFLAGS += -L/usr/local/opt/gettext/lib
-      CXXFLAGS += -I/usr/local/opt/gettext/include
-      ifneq ($(TILES), 1)
-        # Same for curses
-        LDFLAGS += -L/usr/local/opt/ncurses/lib
-        CPPFLAGS += -I/usr/local/opt/ncurses/include
-      endif
-    endif
     ifeq ($(MACPORTS), 1)
       ifneq ($(TILES), 1)
         CXXFLAGS += -I$(shell ncursesw6-config --includedir)
@@ -525,7 +506,7 @@ ifeq ($(TARGETSYSTEM),WINDOWS)
     LDFLAGS += -static
   endif
   ifeq ($(LOCALIZE), 1)
-    LDFLAGS += -lintl -liconv
+    LDFLAGS += -liconv
   endif
   W32FLAGS += -Wl,-stack,12000000,-subsystem,windows
   RFLAGS = -J rc -O coff
@@ -638,7 +619,7 @@ ifeq ($(TILES), 1)
         LDFLAGS += $(shell $(PKG_CONFIG) SDL2_ttf --libs)
       else
         ifeq ($(MSYS2),1)
-          LDFLAGS += -Wl,--start-group -lharfbuzz -lfreetype -Wl,--end-group -lgraphite2 -lpng -lz -ltiff -lbz2 -lglib-2.0 -llzma -lws2_32 -lintl -liconv -lwebp -ljpeg -luuid
+          LDFLAGS += -Wl,--start-group -lharfbuzz -lfreetype -Wl,--end-group -lgraphite2 -lpng -lz -ltiff -lbz2 -lglib-2.0 -llzma -lws2_32 -liconv -lwebp -ljpeg -luuid
         else
           LDFLAGS += -lfreetype -lpng -lz -ljpeg -lbz2
         endif
@@ -700,7 +681,7 @@ endif # TILES
 ifeq ($(TARGETSYSTEM),CYGWIN)
   ifeq ($(LOCALIZE),1)
     # Work around Cygwin not including gettext support in glibc
-    LDFLAGS += -lintl -liconv
+    LDFLAGS += -liconv
   endif
 endif
 
@@ -714,7 +695,7 @@ ifeq ($(BSD), 1)
 
   # And similarly, their libcs don't have gettext built in
   ifeq ($(LOCALIZE),1)
-    LDFLAGS += -lintl -liconv
+    LDFLAGS += -liconv
   endif
 endif
 
@@ -1015,10 +996,6 @@ ifdef LANGUAGES
 	lang/compile_mo.sh $(LANGUAGES)
 	mkdir -p $(APPRESOURCESDIR)/lang/mo/
 	cp -pR lang/mo/* $(APPRESOURCESDIR)/lang/mo/
-endif
-ifeq ($(LOCALIZE), 1)
-	LIBINTL=$$($(CROSS)otool -L $(APPTARGET) | grep libintl | sed -n 's/\(.*\.dylib\).*/\1/p') && if [ -f $$LIBINTL ]; then cp $$LIBINTL $(APPRESOURCESDIR)/; fi; \
-		if [ ! -z "$$OSXCROSS" ]; then LIBINTL=$$(basename $$LIBINTL) && if [ ! -z "$$LIBINTL" ]; then cp $(LIBSDIR)/gettext/lib/$$LIBINTL $(APPRESOURCESDIR)/; fi; fi
 endif
 ifeq ($(TILES), 1)
 ifeq ($(SOUND), 1)

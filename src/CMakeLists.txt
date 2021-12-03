@@ -221,10 +221,8 @@ IF(MINGW AND NOT RELEASE)
     )
     IF (LOCALIZE)
       find_library(RuntimeLib_iconv  "libiconv-2")
-      find_library(RuntimeLib_intl  "libintl-8")
       SET(RuntimeLib_LOCALIZE
         ${RuntimeLib_iconv}
-        ${RuntimeLib_intl}
       )
     ENDIF (LOCALIZE)
     IF (TILES)
