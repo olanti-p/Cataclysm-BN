@@ -17,7 +17,6 @@
 #  endif
 #
 #  include <cstdlib>
-#  include <libintl.h>
 #endif // LOCALIZE
 
 #include "cached_options.h"
@@ -214,68 +213,19 @@ void set_language()
         current_language = get_lang_info( lang_opt );
     }
 
-    // Step 1.2 Decide which translation system we're using
-    if( get_option<bool>( "MODULAR_TRANSLATIONS" ) ) {
-        dbg( DL::Info ) << "Using experimental system, language set to '" << lang_opt << "'";
+    dbg( DL::Info ) << "Language is set to '" << lang_opt << "'";
 
-        gettext_use_modular = true;
+    gettext_use_modular = true;
 
-        // Step 2. Setup locale
-        update_global_locale();
-
-        // Step 3. Load translations for game and, possibly, mods
-        l10n_data::reload_catalogues();
-
-        // Step 4. Finalize
-        reload_names();
-        return;
-    }
-
-    gettext_use_modular = false;
-    l10n_data::unload_catalogues();
-
-    // Step 2. Setup locale & environment variables.
-    // By default, gettext uses current locale to determine which language to use.
-    // Since locale for desired language may be missing from user system,
-    // we need to explicitly specify it.
-    if( !cata_setenv( "LANGUAGE", lang_opt ) ) {
-        dbg( DL::Warn ) << "Can't set 'LANGUAGE' environment variable";
-    } else {
-        const auto env = getenv( "LANGUAGE" );
-        if( env != nullptr ) {
-            dbg( DL::Info ) << "Language is set to: '" << lang_opt << "'/'" << env << "'";
-        } else {
-            dbg( DL::Warn ) << "Can't get 'LANGUAGE' environment variable";
-        }
-    }
+    // Step 2. Setup locale
     update_global_locale();
 
-    // Step 3. Bind to gettext domain.
-    std::string locale_dir;
-#if defined(__ANDROID__)
-    // HACK: Since we're using libintl-lite instead of libintl on Android, we hack the locale_dir to point directly to the .mo file.
-    // This is because of our hacky libintl-lite bindtextdomain() implementation.
-    auto env = getenv( "LANGUAGE" );
-    locale_dir = std::string( PATH_INFO::base_path() + "lang/mo/" + ( env ? env : "none" ) +
-                              "/LC_MESSAGES/cataclysm-bn.mo" );
-#elif (defined(__linux__) || (defined(MACOSX) && !defined(TILES)))
-    if( !PATH_INFO::base_path().empty() ) {
-        locale_dir = PATH_INFO::base_path() + "share/locale";
-    } else {
-        locale_dir = "lang/mo";
-    }
-#else
-    locale_dir = "lang/mo";
-#endif
-
-    const char *locale_dir_char = locale_dir.c_str();
-    bindtextdomain( "cataclysm-bn", locale_dir_char );
-    bind_textdomain_codeset( "cataclysm-bn", "UTF-8" );
-    textdomain( "cataclysm-bn" );
+    // Step 3. Load translations for game and, possibly, mods
+    l10n_data::reload_catalogues();
 
     // Step 4. Finalize
-    invalidate_translations();
     reload_names();
+    return;
 }
 
 static std::vector<language_info> load_languages( const std::string &filepath )
