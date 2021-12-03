@@ -6,11 +6,8 @@
 
 using t_mod_id = const char*;
 using t_mod_list = std::vector<t_mod_id>;
-struct t_map_entry {
-    t_mod_id id;
-    t_mod_list list;
-};
-using t_key_dep_map = std::vector<t_map_entry>;
+using t_key_dep_map = std::map<t_mod_id, t_mod_list>;
+using t_map_entry = std::pair<t_mod_id, t_mod_list>;
 
 static std::map<mod_id, std::vector<mod_id>> build_map( const t_key_dep_map &m )
 {
@@ -18,10 +15,10 @@ static std::map<mod_id, std::vector<mod_id>> build_map( const t_key_dep_map &m )
 
     for( const t_map_entry &entry : m ) {
         std::vector<mod_id> ids;
-        for( t_mod_id elem : entry.list ) {
+        for( t_mod_id elem : entry.second ) {
             ids.emplace_back( elem );
         }
-        ret.emplace( entry.id, ids );
+        ret.emplace( entry.first, ids );
     }
 
     return ret;
