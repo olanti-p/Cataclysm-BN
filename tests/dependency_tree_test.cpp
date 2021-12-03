@@ -57,6 +57,9 @@ TEST_CASE( "deptree_get_node", "[dependency_tree]" )
     };
 
     dependency_tree tree = make_tree( dep_map, conf_map );
+    CAPTURE( tree );
+
+    FAIL_CHECK();
 
     REQUIRE( tree.get_node( mod_id( "a" ) ) );
     REQUIRE( tree.get_node( mod_id( "b" ) ) );
@@ -98,6 +101,7 @@ TEST_CASE( "deptree_basic", "[dependency_tree]" )
     };
 
     dependency_tree tree = make_tree( dep_map, conf_map );
+    CAPTURE( tree );
 
     dependency_node *node = tree.get_node( mod_id( "d" ) );
     REQUIRE( node );
@@ -136,6 +140,7 @@ TEST_CASE( "deptree_missing_dependency", "[dependency_tree]" )
     t_key_dep_map conf_map = {};
 
     dependency_tree tree = make_tree( dep_map, conf_map );
+    CAPTURE( tree );
 
     dependency_node *node = tree.get_node( mod_id( "d" ) );
     REQUIRE( node );
@@ -170,6 +175,7 @@ TEST_CASE( "deptree_circular_dependency", "[dependency_tree]" )
     t_key_dep_map conf_map = {};
 
     dependency_tree tree = make_tree( dep_map, conf_map );
+    CAPTURE( tree );
 
     dependency_node *node = tree.get_node( mod_id( "d" ) );
     REQUIRE( node );
@@ -209,6 +215,7 @@ TEST_CASE( "deptree_multiple_dep_cycles", "[dependency_tree]" )
     t_key_dep_map conf_map = {};
 
     dependency_tree tree = make_tree( dep_map, conf_map );
+    CAPTURE( tree );
 
     dependency_node *node = tree.get_node( mod_id( "g" ) );
     REQUIRE( node );
@@ -250,6 +257,7 @@ TEST_CASE( "deptree_conflicting_dependency", "[dependency_tree]" )
     };
 
     dependency_tree tree = make_tree( dep_map, conf_map );
+    CAPTURE( tree );
 
     dependency_node *node = tree.get_node( mod_id( "d" ) );
     REQUIRE( node );
@@ -291,6 +299,7 @@ TEST_CASE( "deptree_complex_conflict", "[dependency_tree]" )
     };
 
     dependency_tree tree = make_tree( dep_map, conf_map );
+    CAPTURE( tree );
 
     dependency_node *node = tree.get_node( mod_id( "e" ) );
     REQUIRE( node );
