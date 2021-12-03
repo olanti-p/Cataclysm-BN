@@ -59,8 +59,6 @@ TEST_CASE( "deptree_get_node", "[dependency_tree]" )
     dependency_tree tree = make_tree( dep_map, conf_map );
     CAPTURE( tree );
 
-    FAIL_CHECK();
-
     REQUIRE( tree.get_node( mod_id( "a" ) ) );
     REQUIRE( tree.get_node( mod_id( "b" ) ) );
     REQUIRE_FALSE( tree.get_node( mod_id( "c" ) ) );
