@@ -77,13 +77,6 @@ jobs:
             os: ubuntu-latest
             ext: zip
             content: application/zip
-          - name: Windows Tiles x32
-            mxe: i686
-            mxe_apt: i686
-            artifact: windows-tiles-x32
-            os: ubuntu-latest
-            ext: zip
-            content: application/zip
           - name: Linux Tiles x64
             os: ubuntu-18.04
             mxe: none
@@ -100,20 +93,6 @@ jobs:
             artifact: linux-curses-x64
             ext: tar.gz
             content: application/gzip
-          - name: osx-curses-x64
-            os: macos-10.15
-            mxe: none
-            tiles: 0
-            artifact: osx-curses-x64
-            ext: dmg
-            content: application/x-apple-diskimage
-          - name: osx-tiles-x64
-            os: macos-10.15
-            mxe: none
-            tiles: 1
-            artifact: osx-tiles-x64
-            ext: dmg
-            content: application/x-apple-diskimage
           - name: Android x64
             os: ubuntu-latest
             mxe: none
@@ -121,20 +100,6 @@ jobs:
             artifact: android-x64
             ext: apk
             content: application/apk
-          - name: Android x32
-            os: ubuntu-latest
-            mxe: none
-            android: arm32
-            artifact: android-x32
-            ext: apk
-            content: application/apk
-          - name: Android Bundle
-            os: ubuntu-latest
-            mxe: none
-            android: bundle
-            artifact: android-bundle
-            ext: aab
-            content: application/aap
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     steps:
@@ -165,11 +130,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install libncursesw5-dev libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev \
             libsdl2-mixer-dev libpulse-dev ccache gettext parallel
-      - name: Install dependencies (mac)
-        if: runner.os == 'macOS'
-        run: |
-          HOMEBREW_NO_AUTO_UPDATE=yes HOMEBREW_NO_INSTALL_CLEANUP=yes brew install sdl2 sdl2_image sdl2_ttf sdl2_mixer gettext ccache parallel
-          pip3 install dmgbuild==1.4.2 biplist
       - name: Build CBN (linux)
         if: runner.os == 'Linux' && matrix.mxe == 'none' && matrix.android == 'none'
         run: |
@@ -194,19 +154,6 @@ jobs:
           EOL
           make -j$((`nproc`+0)) CROSS="${PLATFORM}" TILES=1 SOUND=1 RELEASE=1 LOCALIZE=1 LANGUAGES=all PCH=0 bindist
           mv cataclysmbn-unstable.zip cbn-${{ matrix.artifact }}-${{ needs.release.outputs.timestamp }}.zip
-      - name: Build CBN (osx)
-        if: runner.os == 'macOS'
-        env:
-          USE_HOME_DIR: 1
-        run: |
-          cat >VERSION.txt <<EOL
-          build type: ${{ matrix.artifact }}
-          build number: ${{ needs.release.outputs.timestamp }}
-          commit sha: ${{ github.sha }}
-          commit url: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
-          EOL
-          make -j3 TILES=${{ matrix.tiles }} SOUND=${{ matrix.tiles }} RELEASE=1 LOCALIZE=1 LANGUAGES=all PCH=0 dmgdist
-          mv CataclysmBN-unstable.dmg cbn-${{ matrix.artifact }}-${{ needs.release.outputs.timestamp }}.dmg
       - name: Set up JDK 8 (android)
         if: runner.os == 'Linux' && matrix.android != 'none' && matrix.mxe == 'none'
         uses: actions/setup-java@v2
@@ -228,10 +175,6 @@ jobs:
         if: runner.os == 'Linux' && matrix.android != 'none' && matrix.mxe == 'none'
         working-directory: ./android
         run: |
-          echo "${{ secrets.KEYSTORE }}" > release.keystore.asc
-          gpg -d --passphrase "${{ secrets.KEYSTORE_PASSWORD }}" --batch release.keystore.asc > app/release.keystore
-          echo "${{ secrets.KEYSTORE_PROPERTIES }}" > keystore.properties.asc
-          gpg -d --passphrase "${{ secrets.KEYSTORE_PASSWORD }}" --batch keystore.properties.asc > keystore.properties
           export UPSTREAM_BUILD_NUMBER="$((2037 + ${{ github.run_number }}))"
           chmod +x gradlew
           if [ ${{ matrix.android }} = arm64 ]
