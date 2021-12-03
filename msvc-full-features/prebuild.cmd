@@ -10,4 +10,4 @@ if "%VERSION%"=="" (
 set VERSION=Please install `git` to generate VERSION
 )
 echo VERSION defined as "%VERSION%"
-
+>..\src\version.h echo #define VERSION "%VERSION%"
