@@ -2,9 +2,10 @@
 #ifndef CATA_SRC_UNITS_DEF_H
 #define CATA_SRC_UNITS_DEF_H
 
+#include <cmath>
+
 class JsonIn;
 class JsonOut;
-
 
 namespace units
 {
