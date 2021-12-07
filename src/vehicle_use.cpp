@@ -778,7 +778,8 @@ void vehicle::use_controls( const tripoint &pos )
         actions.push_back( [&] { turrets_aim_and_fire_all_manual( true ); refresh(); } );
 
         // This lets us manually override and set the target for the automatic turrets instead.
-        options.emplace_back( _( "Aim automatic turrets" ), keybind( "TURRET_MANUAL_OVERRIDE" ) );
+        options.emplace_back( _( "Override target for automatic turrets" ),
+                              keybind( "TURRET_MANUAL_OVERRIDE" ) );
         actions.push_back( [&] { turrets_override_automatic_aim(); refresh(); } );
 
         options.emplace_back( _( "Aim individual turret" ), keybind( "TURRET_SINGLE_FIRE" ) );

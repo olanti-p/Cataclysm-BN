@@ -340,6 +340,7 @@ bool vehicle::turrets_aim_and_fire_all_manual( bool show_msg )
     if( turrets.empty() ) {
         if( show_msg ) {
             add_msg( m_warning,
+                     //~ 'are offline' means 'not ready' here
                      _( "Can't aim turrets: all turrets are offline or set to automatic targeting mode." ) );
         }
         return false;
@@ -355,7 +356,8 @@ void vehicle::turrets_override_automatic_aim()
 
     if( turrets.empty() ) {
         add_msg( m_warning,
-                 _( "Can't aim turrets: all turrets are offline or set to manual targeting mode." ) );
+                 //~ 'are offline' means 'not ready' here
+                 _( "Can't override automatic targeting: all turrets are offline or set to manual targeting mode." ) );
         return;
     }
 
