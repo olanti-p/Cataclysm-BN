@@ -603,6 +603,27 @@ static tripoint_abs_omt show_notes_manager( const tripoint_abs_omt &origin )
 
     const tripoint_abs_omt p_player = g->u.global_omt_location();
 
+    //~ "Dangerous" indicator for overmap note in note manager.
+    //~ Must occupy at most 2 columns, and not resemble a number or a digit.
+    //~ English uses D for Danger, but it's acceptable to leave it untranslated
+    //~ or use some special symbol instead (e.g. exclamation mark)
+    //~ if you're having trouble making it look nice in your language.
+    const char *danger_abbr_raw = pgettext( "danger indicator", "D" );
+    std::string danger_abbr;
+    switch( utf8_width( danger_abbr_raw ) ) {
+        case 1:
+            danger_abbr = " ";
+            danger_abbr += danger_abbr_raw;
+            break;
+        case 2:
+            danger_abbr = danger_abbr_raw;
+            break;
+        default:
+            danger_abbr = " D";
+            debugmsg( "Invalid translation for note manager danger indicator!" );
+            break;
+    }
+
     bool quit = false;
     while( !quit ) {
         nmenu.init();
@@ -676,12 +697,6 @@ static tripoint_abs_omt show_notes_manager( const tripoint_abs_omt &origin )
             const std::string location_desc = overmap_buffer.get_description_at(
                                                   project_to<coords::sm>( note.p ) );
 
-            //~ "Dangerous" indicator for overmap note in note manager.
-            //~ Must occupy exactly 2 columns, and not resemble a number or a digit.
-            //~ English uses D for Danger, but it's acceptable to leave it untranslated
-            //~ or use some special symbol instead (e.g. exclamation mark)
-            //~ if you're having trouble making it look nice in your language.
-            const char *danger_abbr = pgettext( "danger indicator", " D" );
             const bool is_dangerous = overmap_buffer.is_marked_dangerous( note.p );
             cata::optional<int> this_dr = overmap_buffer.has_note_with_danger_radius( note.p );
             std::string dr_short;
