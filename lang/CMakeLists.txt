@@ -23,8 +23,6 @@ IF (LANGUAGES STREQUAL all)
       get_filename_component(LANG ${PO_FILE} NAME_WE)
       list(APPEND LANGUAGES ${LANG})
     endforeach ()
-    # Special case for English. See explanation below.
-    list(APPEND LANGUAGES en)
     list(REMOVE_DUPLICATES LANGUAGES)
     # End of special case
 ENDIF()
