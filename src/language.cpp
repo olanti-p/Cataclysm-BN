@@ -178,16 +178,6 @@ static std::string getSystemUILang()
 }
 #endif // _WIN32 / !MACOSX
 
-static bool cata_setenv( const std::string &name, const std::string &value )
-{
-#if defined(_WIN32)
-    std::string s = name + "=" + value;
-    return _putenv( s.c_str() ) == 0;
-#else
-    return setenv( name.c_str(), value.c_str(), true ) == 0;
-#endif
-}
-
 void set_language()
 {
     // Step 1. Choose language id
