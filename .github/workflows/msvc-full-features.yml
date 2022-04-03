@@ -74,6 +74,8 @@ jobs:
         # field in vcpkg.json. Caching happens as a post-action which runs at the end of
         # the whole workflow, after vcpkg install happens during msbuild run.
         vcpkgGitCommitId: '9d9a6f486cc7da7664117a75d01440db0088634a'
+        # Screw caching, just let me have a build.
+        doNotCache: true
 
     - name: Integrate vcpkg
       run: |
