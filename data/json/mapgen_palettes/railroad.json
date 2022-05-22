@@ -14,6 +14,7 @@
       "|": "t_railroad_tie_v",
       "/": "t_railroad_tie_d",
       "X": "t_railroad_track",
+      "Y": "t_railroad_track_paved",
       "H": "t_railroad_track_h",
       "V": "t_railroad_track_v",
       "D": "t_railroad_track_d",
