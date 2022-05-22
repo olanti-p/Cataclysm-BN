@@ -4165,10 +4165,9 @@
     ],
     "connections": [ { "point": [ 2, 0, 0 ], "terrain": "road" }, { "point": [ 2, 5, 0 ], "terrain": "road" } ],
     "locations": [ "land", "forest" ],
-    "city_distance": [ -1, 20 ],
-    "city_sizes": [ 3, 12 ],
-    "occurrences": [ 50, 100 ],
-    "flags": [ "CLASSIC", "UNIQUE", "URBAN", "ELECTRIC_GRID" ]
+    "city_distance": [ 8, 40 ],
+    "occurrences": [ 0, 2 ],
+    "flags": [ "CLASSIC", "URBAN", "ELECTRIC_GRID" ]
   },
   {
     "type": "overmap_special",
