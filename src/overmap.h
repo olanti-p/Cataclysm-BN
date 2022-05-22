@@ -450,8 +450,12 @@ class overmap
         void place_forest_trails();
         void place_forest_trailheads();
 
-        void place_roads( const overmap *north, const overmap *east, const overmap *south,
-                          const overmap *west );
+        void populate_road_connections( const overmap *north, const overmap *east, const overmap *south,
+                                        const overmap *west );
+        void populate_railroad_connections( const overmap *north, const overmap *east, const overmap *south,
+                                            const overmap *west );
+        void place_roads();
+        void place_railroads();
 
         void populate_connections_out_from_neighbors( const overmap *north, const overmap *east,
                 const overmap *south, const overmap *west );

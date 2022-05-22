@@ -1600,8 +1600,11 @@ void overmap::generate( const overmap *north, const overmap *east,
     place_swamps();
     place_cities();
     place_forest_trails();
-    place_roads( north, east, south, west );
+    populate_road_connections( north, east, south, west );
+    populate_railroad_connections( north, east, south, west );
+    place_roads();
     place_specials( enabled_specials );
+    place_railroads();
     place_forest_trailheads();
 
     polish_river();
@@ -2887,72 +2890,95 @@ void overmap::place_swamps()
     }
 }
 
-void overmap::place_roads( const overmap *north, const overmap *east, const overmap *south,
-                           const overmap *west )
+static void populate_connections( const overmap &om, const overmap *north, const overmap *east,
+                                  const overmap *south, const overmap *west,
+                                  size_t desired_max, std::vector<tripoint_om_omt> &res )
+{
+    if( res.size() >= desired_max ) {
+        return;
+    }
+
+    std::vector<tripoint_om_omt> viable_roads;
+    tripoint_om_omt tmp;
+    // Populate viable_roads with one point for each neighborless side.
+    // Make sure these points don't conflict with rivers.
+
+    std::array < int, OMAPX - 20 > omap_num;
+    for( int i = 0; i < ( OMAPX - 20 ); i++ ) {
+        omap_num[i] = i + 10;
+    }
+
+    if( north == nullptr ) {
+        std::shuffle( omap_num.begin(), omap_num.end(), rng_get_engine() );
+        for( const auto &i : omap_num ) {
+            tmp = tripoint_om_omt( i, 0, 0 );
+            if( !( is_river( om.ter( tmp ) ) || is_river( om.ter( tmp + point_east ) ) ||
+                   is_river( om.ter( tmp + point_west ) ) ) ) {
+                viable_roads.push_back( tmp );
+                break;
+            }
+        }
+    }
+    if( east == nullptr ) {
+        std::shuffle( omap_num.begin(), omap_num.end(), rng_get_engine() );
+        for( const auto &i : omap_num ) {
+            tmp = tripoint_om_omt( OMAPX - 1, i, 0 );
+            if( !( is_river( om.ter( tmp ) ) || is_river( om.ter( tmp + point_north ) ) ||
+                   is_river( om.ter( tmp + point_south ) ) ) ) {
+                viable_roads.push_back( tmp );
+                break;
+            }
+        }
+    }
+    if( south == nullptr ) {
+        std::shuffle( omap_num.begin(), omap_num.end(), rng_get_engine() );
+        for( const auto &i : omap_num ) {
+            tmp = tripoint_om_omt( i, OMAPY - 1, 0 );
+            if( !( is_river( om.ter( tmp ) ) || is_river( om.ter( tmp + point_east ) ) ||
+                   is_river( om.ter( tmp + point_west ) ) ) ) {
+                viable_roads.push_back( tmp );
+                break;
+            }
+        }
+    }
+    if( west == nullptr ) {
+        std::shuffle( omap_num.begin(), omap_num.end(), rng_get_engine() );
+        for( const auto &i : omap_num ) {
+            tmp = tripoint_om_omt( 0, i, 0 );
+            if( !( is_river( om.ter( tmp ) ) || is_river( om.ter( tmp + point_north ) ) ||
+                   is_river( om.ter( tmp + point_south ) ) ) ) {
+                viable_roads.push_back( tmp );
+                break;
+            }
+        }
+    }
+    while( res.size() < desired_max && !viable_roads.empty() ) {
+        res.push_back( random_entry_removed( viable_roads ) );
+    }
+}
+
+void overmap::populate_road_connections( const overmap *north, const overmap *east,
+        const overmap *south, const overmap *west )
 {
     const string_id<overmap_connection> local_road( "local_road" );
     std::vector<tripoint_om_omt> &roads_out = connections_out[local_road];
 
-    // Ideally we should have at least two exit points for roads, on different sides
-    if( roads_out.size() < 2 ) {
-        std::vector<tripoint_om_omt> viable_roads;
-        tripoint_om_omt tmp;
-        // Populate viable_roads with one point for each neighborless side.
-        // Make sure these points don't conflict with rivers.
+    populate_connections( *this, north, east, south, west, 2, roads_out );
+}
 
-        std::array < int, OMAPX - 20 > omap_num;
-        for( int i = 0; i < 160; i++ ) {
-            omap_num[i] = i + 10;
-        }
+void overmap::populate_railroad_connections( const overmap *north, const overmap *east,
+        const overmap *south, const overmap *west )
+{
+    const string_id<overmap_connection> local_road( "local_railroad" );
+    std::vector<tripoint_om_omt> &railroads_out = connections_out[local_road];
 
-        if( north == nullptr ) {
-            std::shuffle( omap_num.begin(), omap_num.end(), rng_get_engine() );
-            for( const auto &i : omap_num ) {
-                tmp = tripoint_om_omt( i, 0, 0 );
-                if( !( is_river( ter( tmp ) ) || is_river( ter( tmp + point_east ) ) ||
-                       is_river( ter( tmp + point_west ) ) ) ) {
-                    viable_roads.push_back( tmp );
-                    break;
-                }
-            }
-        }
-        if( east == nullptr ) {
-            std::shuffle( omap_num.begin(), omap_num.end(), rng_get_engine() );
-            for( const auto &i : omap_num ) {
-                tmp = tripoint_om_omt( OMAPX - 1, i, 0 );
-                if( !( is_river( ter( tmp ) ) || is_river( ter( tmp + point_north ) ) ||
-                       is_river( ter( tmp + point_south ) ) ) ) {
-                    viable_roads.push_back( tmp );
-                    break;
-                }
-            }
-        }
-        if( south == nullptr ) {
-            std::shuffle( omap_num.begin(), omap_num.end(), rng_get_engine() );
-            for( const auto &i : omap_num ) {
-                tmp = tripoint_om_omt( i, OMAPY - 1, 0 );
-                if( !( is_river( ter( tmp ) ) || is_river( ter( tmp + point_east ) ) ||
-                       is_river( ter( tmp + point_west ) ) ) ) {
-                    viable_roads.push_back( tmp );
-                    break;
-                }
-            }
-        }
-        if( west == nullptr ) {
-            std::shuffle( omap_num.begin(), omap_num.end(), rng_get_engine() );
-            for( const auto &i : omap_num ) {
-                tmp = tripoint_om_omt( 0, i, 0 );
-                if( !( is_river( ter( tmp ) ) || is_river( ter( tmp + point_north ) ) ||
-                       is_river( ter( tmp + point_south ) ) ) ) {
-                    viable_roads.push_back( tmp );
-                    break;
-                }
-            }
-        }
-        while( roads_out.size() < 2 && !viable_roads.empty() ) {
-            roads_out.push_back( random_entry_removed( viable_roads ) );
-        }
-    }
+    populate_connections( *this, north, east, south, west, 4, railroads_out );
+}
+
+void overmap::place_roads()
+{
+    const string_id<overmap_connection> local_road( "local_road" );
+    std::vector<tripoint_om_omt> &roads_out = connections_out[local_road];
 
     std::vector<point_om_omt> road_points; // cities and roads_out together
     // Compile our master list of roads; it's less messy if roads_out is first
@@ -2966,6 +2992,21 @@ void overmap::place_roads( const overmap *north, const overmap *east, const over
 
     // And finally connect them via roads.
     connect_closest_points( road_points, 0, *local_road );
+}
+
+void overmap::place_railroads()
+{
+    const string_id<overmap_connection> local_road( "local_railroad" );
+    std::vector<tripoint_om_omt> &roads_out = connections_out[local_road];
+
+    std::vector<point_om_omt> railroad_points;
+    // Compile our master list of railroads
+    for( const auto &elem : roads_out ) {
+        railroad_points.emplace_back( elem.xy() );
+    }
+
+    // And finally connect them via railroads.
+    connect_closest_points( railroad_points, 0, *local_road );
 }
 
 void overmap::place_river( point_om_omt pa, point_om_omt pb )
@@ -3626,14 +3667,35 @@ pf::directed_path<point_om_omt> overmap::lay_out_connection(
     const overmap_connection &connection, const point_om_omt &source, const point_om_omt &dest,
     int z, const bool must_be_unexplored ) const
 {
+    bool is_railroad = connection.id.str() == "local_railroad";
+
+    half_open_rectangle<point_om_omt> soft_bound( { 5, 5 }, { OMAPX - 5, OMAPY - 5 } );
+    half_open_rectangle<point_om_omt> hard_bound( { 2, 2 }, { OMAPX - 2, OMAPY - 2 } );
+
     const pf::two_node_scoring_fn<point_om_omt> estimate =
     [&]( pf::directed_node<point_om_omt> cur, cata::optional<pf::directed_node<point_om_omt>> prev ) {
         const auto &id( ter( tripoint_om_omt( cur.pos, z ) ) );
-
         const overmap_connection::subtype *subtype = connection.pick_subtype_for( id );
 
         if( !subtype ) {
             return pf::node_score::rejected;  // No option for this terrain.
+        }
+
+        if( prev && is_railroad ) {
+            const auto &id_prev( ter( tripoint_om_omt( prev->pos, z ) ) );
+            const overmap_connection::subtype *prev_subtype = connection.pick_subtype_for( id_prev );
+
+            if( !prev_subtype ) {
+                return pf::node_score::rejected;
+            }
+
+            if( subtype->terrain.str() == "railroad_level_crossing" ) {
+                //dbg( DL::Info, "test" );
+                if( prev_subtype->terrain.str() == "railroad_level_crossing" ) {
+                    // Can't have 2 crossings in a row
+                    return pf::node_score::rejected;
+                }
+            }
         }
 
         const bool existing_connection = connection.has( id );
@@ -3665,12 +3727,30 @@ pf::directed_path<point_om_omt> overmap::lay_out_connection(
             }
         }
 
-        const int dist = subtype->is_orthogonal() ?
+        const bool is_orthogonal = subtype->is_orthogonal();
+        const int dist = is_orthogonal ?
                          manhattan_dist( dest, cur.pos ) :
                          trig_dist( dest, cur.pos );
         const int existency_mult = existing_connection ? 1 : 5; // Prefer existing connections.
 
-        return pf::node_score( subtype->basic_cost, existency_mult * dist );
+        int border_penalty = 0;
+        if( is_orthogonal ) {
+            // Prefer to stay away from overmap borders
+            if( !soft_bound.contains( cur.pos ) ) {
+                constexpr int DESIRED_PADDING = 7;
+                int x = std::abs( cur.pos.x() - OMAPX / 2 ) - ( OMAPX / 2 - DESIRED_PADDING );
+                int y = std::abs( cur.pos.y() - OMAPY / 2 ) - ( OMAPY / 2 - DESIRED_PADDING );
+                if( x > 0 ) {
+                    border_penalty += x * 2;
+                }
+                if( y > 0 ) {
+                    border_penalty += y * 2;
+                }
+            }
+        }
+
+        return pf::node_score( subtype->basic_cost,
+                               existency_mult * ( dist + border_penalty ) );
     };
 
     return pf::greedy_path( source, dest, point_om_omt( OMAPX, OMAPY ), estimate );
@@ -3846,9 +3926,9 @@ void overmap::build_connection( const point_om_omt &source, const point_om_omt &
                                 const overmap_connection &connection, const bool must_be_unexplored,
                                 const om_direction::type &initial_dir )
 {
-    build_connection(
-        connection, lay_out_connection( connection, source, dest, z, must_be_unexplored ),
-        z, initial_dir );
+    pf::directed_path<point_om_omt> conn = lay_out_connection( connection, source, dest, z,
+                                           must_be_unexplored );
+    build_connection( connection, conn, z, initial_dir );
 }
 
 void overmap::connect_closest_points( const std::vector<point_om_omt> &points, int z,
@@ -4296,7 +4376,24 @@ void overmap::place_special(
     // Make connections.
     if( cit ) {
         for( const auto &elem : special.connections ) {
-            if( elem.connection ) {
+            if( !elem.connection ) {
+                continue;
+            }
+            cata::optional<point_om_omt> src;
+            static auto conn_id_railroad = string_id<overmap_connection>( "local_railroad" );
+            if( elem.connection != conn_id_railroad ) {
+                src = cit.pos;
+            } else {
+                std::vector<tripoint_om_omt> opts = connections_out[elem.connection];
+                std::remove_if( opts.begin(), opts.end(), [&]( const tripoint_om_omt & x ) {
+                    return x.z() != p.z();
+                } );
+                if( !opts.empty() ) {
+                    std::shuffle( opts.begin(), opts.end(), rng_get_engine() );
+                    src = opts[0].xy();
+                }
+            }
+            if( src ) {
                 const tripoint_om_omt rp = p + om_direction::rotate( elem.p, dir );
                 om_direction::type initial_dir = elem.initial_dir;
 
@@ -4304,8 +4401,7 @@ void overmap::place_special(
                     initial_dir = om_direction::add( initial_dir, dir );
                 }
 
-                build_connection( cit.pos, rp.xy(), elem.p.z, *elem.connection, must_be_unexplored,
-                                  initial_dir );
+                build_connection( *src, rp.xy(), elem.p.z, *elem.connection, must_be_unexplored, initial_dir );
             }
         }
     }
