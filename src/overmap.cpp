@@ -2071,10 +2071,6 @@ void overmap::clear_labs()
 {
     labs.clear();
 }
-void overmap::clear_connections_out()
-{
-    connections_out.clear();
-}
 
 void overmap::place_special_forced( const overmap_special_id &special_id, const tripoint_om_omt &p,
                                     om_direction::type dir )
