@@ -35,6 +35,19 @@ const overmap_connection &string_id<overmap_connection>::obj() const
     return connections.obj( *this );
 }
 
+template<>
+int_id<overmap_connection> string_id<overmap_connection>::id() const
+{
+    int_id<overmap_connection> null_id( -1 );
+    return connections.convert( *this, null_id );
+}
+
+template<>
+const overmap_connection &int_id<overmap_connection>::obj() const
+{
+    return connections.obj( *this );
+}
+
 bool overmap_connection::subtype::allows_terrain( const int_id<oter_t> &oter ) const
 {
     if( oter->type_is( terrain ) ) {
@@ -148,6 +161,11 @@ void overmap_connections::check_consistency()
 void overmap_connections::reset()
 {
     connections.reset();
+}
+
+const std::vector<overmap_connection> &overmap_connections::get_all()
+{
+    return connections.get_all();
 }
 
 string_id<overmap_connection> overmap_connections::guess_for( const int_id<oter_t> &oter_id )

@@ -79,6 +79,7 @@ void load( const JsonObject &jo, const std::string &src );
 void finalize();
 void check_consistency();
 void reset();
+const std::vector<overmap_connection> &get_all();
 
 string_id<overmap_connection> guess_for( const int_id<oter_type_t> &oter_id );
 string_id<overmap_connection> guess_for( const int_id<oter_t> &oter_id );

@@ -515,6 +515,9 @@ class overmapbuffer
         bool place_special( const overmap_special_id &special_id, const tripoint_abs_omt &center,
                             int radius );
 
+        bool place_connection( const overmap_connection &connection, const tripoint_abs_omt &source,
+                               const tripoint_abs_omt &dest, bool must_be_unexplored, bool force );
+
     private:
         /**
          * Common function used by the find_closest/all/random to determine if the location is
