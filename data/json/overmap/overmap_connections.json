@@ -124,6 +124,13 @@
                     "upgrades": [ "railroad_tee_1", "railroad_tee_2", "railroad_cross" ]
                 },
                 {
+                    "terrain": "railroad_curve",
+                    "n": [ "straight" ],
+                    "w": [ "straight" ],
+                    "conns": [ "nw" ],
+                    "rotates": 4
+                },
+                {
                     "terrain": "railroad_level_crossing",
                     "n": [ "straight" ],
                     "s": [ "straight" ],
@@ -145,7 +152,7 @@
                     "s": [ "straight" ],
                     "w": [ "straight" ],
                     "complexity_cost": 5,
-                    "conns": [ "ns", "ne", "nw", "se", "sw", "ew" ]
+                    "//conns": [ "nesw" ]
                 },
                 {
                     "terrain": "railroad_cross",
@@ -153,6 +160,7 @@
                     "e": [ "straight" ],
                     "s": [ "straight" ],
                     "w": [ "straight" ],
+                    "rotates": 2,
                     "complexity_cost": 1,
                     "conns": [ "ns", "ew" ]
                 },
@@ -162,7 +170,9 @@
                     "w": [ "straight" ],
                     "s": [ "straight" ],
                     "complexity_cost": 1,
-                    "conns": [ "ns", "nw", "sw" ]
+                    "rotates": 2,
+                    "//conns": [ "ns", "nw", "sw" ],
+                    "conns": [ "nw", "sw" ]
                 },
                 {
                     "terrain": "railroad_tee_2",
@@ -170,7 +180,9 @@
                     "e": [ "straight" ],
                     "s": [ "straight" ],
                     "complexity_cost": 1,
-                    "conns": [ "ns", "ne", "es" ]
+                    "rotates": 2,
+                    "//conns": [ "ns", "ne", "es" ],
+                    "conns": [ "ne", "es" ]
                 }
             ],
             "placement": [
@@ -185,7 +197,8 @@
                         "basic_cost": 1
                     }
                 ],
-                "segments": [ "railroad_straight", "railroad_omni" ]
+                "segments": [ "railroad_straight", "railroad_omni", "railroad_curve" ],
+                "//segments": [ "railroad_straight", "railroad_omni" ]
             }, {
                 "locations": [
                     {

@@ -173,6 +173,14 @@
   {
     "type": "overmap_terrain",
     "copy-from": "railroad_base",
+    "id": "railroad_curve",
+    "name": "railroad (curve)",
+    "sym": "┘",
+    "color": "yellow"
+  },
+  {
+    "type": "overmap_terrain",
+    "copy-from": "railroad_base",
     "id": "railroad_tee_1",
     "name": "railroad (tee_1)",
     "sym": "┤",
@@ -208,7 +216,7 @@
     "copy-from": "railroad_base",
     "id": "railroad_cross",
     "name": "railroad (cross)",
-    "sym": "+",
+    "sym": "┼",
     "color": "white"
   },
   {

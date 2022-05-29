@@ -133,7 +133,7 @@ void om_conn_segment::load( const JsonObject &jo )
     optional( jo, false, "complexity_cost", complexity_cost );
     optional( jo, false, "rotates", rotates, 1 );
     optional( jo, false, "upgrades", upgrades_str );
-    optional( jo, false, "conns", connections );
+    optional( jo, false, "conns", connections_str );
 }
 
 void om_conn_segment::deserialize( JsonIn &jsin )
@@ -142,16 +142,17 @@ void om_conn_segment::deserialize( JsonIn &jsin )
     load( jo );
 }
 
-const std::vector<std::string> &
+const std::vector<int> &
 om_conn_segment::get_edge_of_rotated(
     om_direction::type side,
-    om_direction::type rot
+    om_direction::type rot,
+    int conn_id
 ) const
 {
     om_direction::type fin = static_cast<om_direction::type>(
                                  om_direction::size - static_cast<size_t>( rot )
                              );
-    return get_edge( om_direction::add( side, fin ) );
+    return connections[conn_id][static_cast<int>( om_direction::add( side, fin ) )];
 }
 
 void om_conn_location::load( const JsonObject &jo )
@@ -183,6 +184,7 @@ void om_connection_new::load( const JsonObject &jo )
     mandatory( jo, false, "segments", segments );
     mandatory( jo, false, "placement", placements );
     mandatory( jo, false, "default_segment", default_segment_str );
+    optional( jo, false, "follow_cost", follow_cost );
 }
 
 void om_connection_new::deserialize( JsonIn &jsin )
@@ -240,6 +242,50 @@ void om_connection_new::finalize()
         for( const auto &it : it_seg.upgrades_str ) {
             it_seg.upgrades.push_back( find_segment_by_terr( it ) );
         }
+        it_seg.connections.reserve( it_seg.connections_str.size() );
+        for( const std::string &conn_str : it_seg.connections_str ) {
+            it_seg.connections.emplace_back();
+            std::array<std::vector<int>, 4> &sides = it_seg.connections.back();
+            for( char c : conn_str ) {
+                om_direction::type dir = om_direction::type::invalid;
+                switch( c ) {
+                    case 'n': {
+                        dir = om_direction::type::north;
+                        break;
+                    }
+                    case 'e': {
+                        dir = om_direction::type::east;
+                        break;
+                    }
+                    case 's': {
+                        dir = om_direction::type::south;
+                        break;
+                    }
+                    case 'w': {
+                        dir = om_direction::type::west;
+                        break;
+                    }
+                    default: {
+                        debugmsg( R"(In overmap connection "%s", connection side '%c' is invalid.)", id, c );
+                        continue;
+                    }
+                }
+                std::vector<int> &side_conn = sides[static_cast<int>( dir )];
+                const std::vector<std::string> &side = it_seg.edges[static_cast<int>( dir )];
+                side_conn.reserve( side.size() );
+                for( const std::string &edge_s : side ) {
+                    int edge_idx = -1;
+                    auto it = edge_string_hash.find( edge_s );
+                    if( it == edge_string_hash.end() ) {
+                        edge_idx = static_cast<int>( edge_string_hash.size() );
+                        edge_string_hash[edge_s] = edge_idx;
+                    } else {
+                        edge_idx = it->second;
+                    }
+                    side_conn.push_back( edge_idx );
+                }
+            }
+        }
     }
 }
 
@@ -267,7 +313,7 @@ om_connection_new::find_candidate_segments( const oter_id &t ) const
     return no_segments;
 }
 
-int om_connection_new::get_terrain_cost( const oter_id &t ) const
+float om_connection_new::get_terrain_cost( const oter_id &t ) const
 {
     for( const om_conn_placement &it_pl : placements ) {
         for( const om_conn_location &it_loc : it_pl.locations ) {
@@ -280,8 +326,8 @@ int om_connection_new::get_terrain_cost( const oter_id &t ) const
 }
 
 bool test_segment_connectivity(
-    const std::vector<std::string> &edge_src,
-    const std::vector<std::string> &edge_dest
+    const std::vector<int> &edge_src,
+    const std::vector<int> &edge_dest
 )
 {
     return std::find_first_of(

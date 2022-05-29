@@ -3697,7 +3697,7 @@ pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_alt(
             }
 
             const auto &cur_seg_side = connection.segments[cur_seg_idx].get_edge_of_rotated(
-                                           scan_dir, cur_seg_rot
+                                           scan_dir, cur_seg_rot, cur_seg_conn
                                        );
             if( cur_seg_side.empty() ) {
                 // Can't advance here from current segment
@@ -3705,43 +3705,36 @@ pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_alt(
             }
 
             const oter_id &scan_ter = ter( tripoint_om_omt( scan_pos, z ) );
-            int existing_idx = connection.find_segment_by_terr( scan_ter->get_type_id() );
+            int existing_seg_idx = connection.find_segment_by_terr( scan_ter->get_type_id() );
 
             log << string_format(
                     "\n  scan_dir = %s  scan_ter = %s", om_direction::id( scan_dir ), scan_ter.id()
                 );
 
-            if( existing_idx != -1 ) {
+            if( existing_seg_idx != -1 ) {
                 // Scan pos contains existing segment
-                //int terr_cost = 1;
+                om_direction::type existing_rot = scan_ter->get_dir();
                 log << string_format(
                         "  existing (%s rot: %s)",
-                        connection.segments[existing_idx].terrain,
-                        om_direction::id( scan_ter->get_dir() )
+                        connection.segments[existing_seg_idx].terrain,
+                        om_direction::id( existing_rot )
                     );
-            } else {
-                // Scan pos contains some other terrain
-                const auto &candidates = connection.find_candidate_segments( scan_ter );
-                if( candidates.empty() ) {
-                    // Terrain does not support this connection
-                    log << "  no_terrain_support";
-                    continue;
-                }
-                int terr_cost = connection.get_terrain_cost( scan_ter );
 
-                for( int candidate_seg_idx : candidates ) {
+                om_direction::type candidate_rot = existing_rot;
+
+                const auto process_candidate = [&]( int candidate_seg_idx, float upgrade_cost ) {
                     const om_conn_segment &candidate_seg = connection.segments[candidate_seg_idx];
-
-                    int max_candidate_rot = candidate_seg.rotates;
-                    for( int candidate_rot_idx = 0; candidate_rot_idx < max_candidate_rot; candidate_rot_idx++ ) {
-                        om_direction::type candidate_rot = om_direction::all[candidate_rot_idx];
+                    int max_candidate_conn = static_cast<int>( candidate_seg.connections.size() );
+                    for( int candidate_conn_idx = 0; candidate_conn_idx < max_candidate_conn; candidate_conn_idx++ ) {
                         const auto &candidate_seg_side = candidate_seg.get_edge_of_rotated(
                                                              om_direction::opposite( scan_dir ),
-                                                             candidate_rot
+                                                             candidate_rot,
+                                                             candidate_conn_idx
                                                          );
-                        log << string_format( "\n    candidate: %s  cand_rot: %s",
+                        log << string_format( "\n    candidate: %s  cand_rot: %s  cand_conn: %d",
                                               candidate_seg.terrain,
-                                              om_direction::id( candidate_rot )
+                                              om_direction::id( candidate_rot ),
+                                              candidate_conn_idx
                                             );
                         if( candidate_seg_side.empty() ) {
                             // Candidate segment doesn't have connections at desired side
@@ -3754,12 +3747,68 @@ pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_alt(
                             continue;
                         }
 
-                        float tile_cost = terr_cost + candidate_seg.complexity_cost;
+                        float tile_cost = connection.follow_cost + candidate_seg.complexity_cost + upgrade_cost;
                         pf::directed_node_alt<point_om_omt> node(
-                            scan_pos, candidate_seg_idx, candidate_rot, 0
+                            scan_pos, candidate_seg_idx, candidate_rot, candidate_conn_idx
                         );
                         cb( node, tile_cost );
                         log << "  emitted";
+                    }
+                };
+
+                // Try following existing path
+                process_candidate( existing_seg_idx, 0.0f );
+                // Try joining/leaving/intersecting existing path
+                const om_conn_segment &existing_seg = connection.segments[existing_seg_idx];
+                for( int upgrade_seg_idx : existing_seg.upgrades ) {
+                    process_candidate( upgrade_seg_idx, 1.0f );
+                }
+            } else {
+                // Scan pos contains some other terrain
+                const auto &candidates = connection.find_candidate_segments( scan_ter );
+                if( candidates.empty() ) {
+                    // Terrain does not support this connection
+                    log << "  no_terrain_support";
+                    continue;
+                }
+                float terr_cost = connection.get_terrain_cost( scan_ter );
+
+                for( int candidate_seg_idx : candidates ) {
+                    const om_conn_segment &candidate_seg = connection.segments[candidate_seg_idx];
+
+                    int max_candidate_rot = candidate_seg.rotates;
+                    int max_candidate_conn = static_cast<int>( candidate_seg.connections.size() );
+                    for( int candidate_rot_idx = 0; candidate_rot_idx < max_candidate_rot; candidate_rot_idx++ ) {
+                        for( int candidate_conn_idx = 0; candidate_conn_idx < max_candidate_conn; candidate_conn_idx++ ) {
+                            om_direction::type candidate_rot = om_direction::all[candidate_rot_idx];
+                            const auto &candidate_seg_side = candidate_seg.get_edge_of_rotated(
+                                                                 om_direction::opposite( scan_dir ),
+                                                                 candidate_rot,
+                                                                 candidate_conn_idx
+                                                             );
+                            log << string_format( "\n    candidate: %s  cand_rot: %s  cand_conn: %d",
+                                                  candidate_seg.terrain,
+                                                  om_direction::id( candidate_rot ),
+                                                  candidate_conn_idx
+                                                );
+                            if( candidate_seg_side.empty() ) {
+                                // Candidate segment doesn't have connections at desired side
+                                log << "  does_not_connect";
+                                continue;
+                            }
+                            if( !test_segment_connectivity( cur_seg_side, candidate_seg_side ) ) {
+                                // Candidate segment has different connections at desired side
+                                log << "  connection_mismatch";
+                                continue;
+                            }
+
+                            float tile_cost = terr_cost + candidate_seg.complexity_cost;
+                            pf::directed_node_alt<point_om_omt> node(
+                                scan_pos, candidate_seg_idx, candidate_rot, candidate_conn_idx
+                            );
+                            cb( node, tile_cost );
+                            log << "  emitted";
+                        }
                     }
                 }
             }

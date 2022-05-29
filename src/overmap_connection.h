@@ -21,10 +21,11 @@ using overmap_location_str_id = string_id<overmap_location>;
 struct om_conn_segment {
     oter_type_str_id terrain;
     std::array<std::vector<std::string>, 4> edges;
-    int complexity_cost = 0;
-    std::vector<std::string> connections;
+    float complexity_cost = 0.0f;
+    std::vector<std::string> connections_str;
     std::vector<oter_type_str_id> upgrades_str;
     std::vector<int> upgrades;
+    std::vector<std::array<std::vector<int>, 4>> connections;
     int rotates = 1;
 
     void load( const JsonObject &jo );
@@ -33,18 +34,16 @@ struct om_conn_segment {
     inline std::vector<std::string> &get_edge_mut( om_direction::type side ) {
         return edges[static_cast<int>( side )];
     }
-    inline const std::vector<std::string> &get_edge( om_direction::type side ) const {
-        return edges[static_cast<int>( side )];
-    }
-    const std::vector<std::string> &get_edge_of_rotated(
+    const std::vector<int> &get_edge_of_rotated(
         om_direction::type side,
-        om_direction::type rot
+        om_direction::type rot,
+        int conn_id
     ) const;
 };
 
 struct om_conn_location {
     overmap_location_str_id id;
-    int basic_cost = 0;
+    float basic_cost = 0.0f;
 
     void load( const JsonObject &jo );
     void deserialize( JsonIn &jsin );
@@ -61,27 +60,33 @@ struct om_conn_placement {
 };
 
 struct om_connection_new {
-    string_id<overmap_connection> id;
+    public:
+        string_id<overmap_connection> id;
 
-    int default_segment = -1;
-    oter_type_str_id default_segment_str;
+        int default_segment = -1;
+        oter_type_str_id default_segment_str;
 
-    std::vector<om_conn_segment> segments;
-    std::vector<om_conn_placement> placements;
+        float follow_cost = 0.0f;
 
-    void load( const JsonObject &jo );
-    void deserialize( JsonIn &jsin );
-    void check() const;
-    void finalize();
+        std::vector<om_conn_segment> segments;
+        std::vector<om_conn_placement> placements;
 
-    int find_segment_by_terr( const oter_type_str_id &seg ) const;
-    const std::vector<int> &find_candidate_segments( const oter_id &t ) const;
-    int get_terrain_cost( const oter_id &t ) const;
+        void load( const JsonObject &jo );
+        void deserialize( JsonIn &jsin );
+        void check() const;
+        void finalize();
+
+        int find_segment_by_terr( const oter_type_str_id &seg ) const;
+        const std::vector<int> &find_candidate_segments( const oter_id &t ) const;
+        float get_terrain_cost( const oter_id &t ) const;
+
+    private:
+        std::unordered_map<std::string, int> edge_string_hash;
 };
 
 bool test_segment_connectivity(
-    const std::vector<std::string> &edge_src,
-    const std::vector<std::string> &edge_dest
+    const std::vector<int> &edge_src,
+    const std::vector<int> &edge_dest
 );
 
 class overmap_connection
