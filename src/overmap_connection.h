@@ -58,6 +58,7 @@ class overmap_connection
     public:
         string_id<overmap_connection> id;
         bool was_loaded = false;
+        bool use_new_method = false;
 
     private:
         struct cache {

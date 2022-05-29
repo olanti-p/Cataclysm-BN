@@ -6,7 +6,9 @@
 #include <unordered_map>
 #include <vector>
 #include <unordered_set>
+#include <type_traits>
 
+#include "hash_utils.h"
 #include "coordinates.h"
 #include "enums.h"
 #include "hash_utils.h"
@@ -30,12 +32,20 @@ struct point_node {
     om_direction::type dir;
     int priority;
 
-    point_node( point pos, om_direction::type dir, int priority = 0 ): pos( pos ), dir( dir ),
+    point_node( point pos, om_direction::type dir, int priority = 0 ) : pos( pos ), dir( dir ),
         priority( priority ) {}
     // Operator overload required by priority queue interface.
     bool operator< ( const point_node &n ) const {
         return priority > n.priority;
     }
+};
+
+struct point_node_alt {
+    point pos;
+    std::string var;
+
+    point_node_alt( point pos, om_direction::type dir, std::string var ) :
+        pos( pos ), var( var ) {}
 };
 
 } // namespace
@@ -44,10 +54,10 @@ directed_path<point> greedy_path( const point &source, const point &dest, const 
                                   two_node_scoring_fn<point> scorer )
 {
     using Node = point_node;
-    const auto inbounds = [ max ]( const point & p ) {
+    const auto inbounds = [max]( const point & p ) {
         return p.x >= 0 && p.x < max.x && p.y >= 0 && p.y < max.y;
     };
-    const auto map_index = [ max ]( const point & p ) {
+    const auto map_index = [max]( const point & p ) {
         return p.y * max.x + p.x;
     };
 
@@ -126,6 +136,179 @@ directed_path<point> greedy_path( const point &source, const point &dest, const 
             }
         }
     }
+    return res;
+}
+
+} // namespace pf
+
+namespace std
+{
+template <>
+struct hash<pf::directed_node_alt<point>> {
+    std::size_t operator()( const pf::directed_node_alt<point> &k ) const noexcept {
+        size_t seed = 0x9e3779b9;
+        cata::hash_combine( seed, k.pos );
+        cata::hash_combine( seed, k.var );
+        cata::hash_combine( seed, static_cast<int>( k.rot ) );
+        return seed;
+    }
+};
+} // namespace std
+
+namespace pf
+{
+
+template<typename Node>
+class PathFinder
+{
+    private:
+
+        Node start;
+        Node goal;
+        Node current;
+        std::unordered_map<Node, Node> came_from;
+        std::unordered_map<Node, float> g_scores;
+        std::unordered_map<Node, float> f_scores;
+        std::vector<Node> open_set;
+
+        size_t find_node_with_lowest_f() {
+            size_t min_i = 0;
+            float min_f = std::numeric_limits<float>::infinity();
+            for( size_t i = 0; i < open_set.size(); i++ ) {
+                auto it = f_scores.find( open_set[i] );
+                if( it != f_scores.end() ) {
+                    float f_score = it->second;
+                    if( f_score < min_f ) {
+                        min_i = i;
+                        min_f = f_score;
+                    }
+                }
+            }
+            return min_i;
+        }
+
+        std::vector<Node> reconstruct_path() {
+            std::vector<Node> total_path;
+            Node curr = current;
+            for( ;; ) {
+                total_path.insert( total_path.begin(), curr );
+                auto it = came_from.find( curr );
+                if( it == came_from.end() ) {
+                    break;
+                }
+                curr = it->second;
+            } // for(;;)
+            return total_path;
+        }
+
+        bool search_pos_in_recent( const Node &current, const point &target, int steps ) {
+            const Node *cur = &current;
+            for( int step = 0; step < steps; step++ ) {
+                auto it = came_from.find( *cur );
+                if( it == came_from.end() ) {
+                    break;
+                }
+                cur = &it->second;
+                if( cur->pos == target ) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+    public:
+        PathFinder() = default;
+        ~PathFinder() = default;
+
+        template<typename FuncH, typename FuncNeighbors>
+        std::vector<Node> find_path( Node p_start, Node p_goal, FuncH h_func,
+                                     FuncNeighbors neighbor_provider ) {
+            start = p_start;
+            goal = p_goal;
+
+            open_set.reserve( 32 );
+            open_set.push_back( start );
+
+            g_scores[start] = 0;
+            f_scores[start] = h_func( start );
+
+            while( !open_set.empty() ) {
+                size_t current_i = find_node_with_lowest_f();
+                current = open_set[current_i];
+
+                if( current.is_same_pos( goal ) ) {
+                    return reconstruct_path();
+                }
+
+                if( g_scores.size() >= 100000 ) {
+                    break;
+                }
+
+                open_set.erase( open_set.begin() + current_i );
+
+                float current_g_score;
+                {
+                    auto it = g_scores.find( current );
+                    if( it == g_scores.end() ) {
+                        current_g_score = std::numeric_limits<float>::infinity();
+                    } else {
+                        current_g_score = it->second;
+                    }
+                }
+
+                neighbor_provider( current, [&]( const Node & neighbor, float d_score ) {
+                    if( search_pos_in_recent( current, neighbor.pos, 20 ) ) {
+                        // Intersects path
+                        return;
+                    }
+                    float neighbor_g_score;
+                    {
+                        auto it = g_scores.find( neighbor );
+                        if( it == g_scores.end() ) {
+                            neighbor_g_score = std::numeric_limits<float>::infinity();
+                        } else {
+                            neighbor_g_score = it->second;
+                        }
+                    }
+                    float tentative_g_score = current_g_score + d_score;
+                    if( tentative_g_score < neighbor_g_score ) {
+                        float h_score = h_func( neighbor );
+                        came_from[neighbor] = current;
+                        g_scores[neighbor] = tentative_g_score;
+                        f_scores[neighbor] = tentative_g_score + h_score;
+                        {
+                            auto it = std::find( open_set.begin(), open_set.end(), neighbor );
+                            if( it == open_set.end() ) {
+                                open_set.push_back( neighbor );
+                            }
+                        }
+                    }
+                } );
+            }
+
+            return {};
+        }
+};
+
+directed_path_alt<point> greedy_path_alt( const point &source, const point &dest,
+        neighbor_provider<point> nei_provider )
+{
+    directed_path_alt<point> res;
+
+    if( source == dest ) {
+        return res;
+    }
+
+    const auto h_func = [&]( const directed_node_alt<point> &p ) -> float {
+        return trig_dist( p.pos, dest );
+    };
+
+    directed_node_alt<point> src_node( source, -1, om_direction::type::none );
+    directed_node_alt<point> dst_node( dest, -1, om_direction::type::none );
+
+    res.nodes = PathFinder<directed_node_alt<point>>().find_path(
+                    src_node, dst_node, h_func, nei_provider );
+
     return res;
 }
 

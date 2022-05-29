@@ -26,6 +26,29 @@ struct directed_node {
                             om_direction::type dir = om_direction::type::invalid ) : pos( pos ), dir( dir ) {}
 };
 
+template<typename Point>
+struct directed_node_alt {
+    Point pos;
+    int var = -1;
+    om_direction::type rot = om_direction::type::invalid;
+
+    directed_node_alt() = default;
+    ~directed_node_alt() = default;
+    explicit directed_node_alt( Point pos, int var, om_direction::type rot ) :
+        pos( pos ), var( var ), rot( rot ) {}
+
+    template<typename P>
+    explicit directed_node_alt( Point pos, const directed_node_alt<P> &rhs ) :
+        pos( pos ), var( rhs.var ), rot( rhs.rot ) {}
+
+    constexpr inline bool is_same_pos( const directed_node_alt &rhs ) const {
+        return pos == rhs.pos;
+    }
+    constexpr inline bool operator==( const directed_node_alt &rhs ) const {
+        return pos == rhs.pos && var == rhs.var && rot == rhs.rot;
+    }
+};
+
 /*
  * Data structure representing a path from a source to a destination.
  * The nodes are given in reverse order (from destination to source) in order to allow
@@ -34,6 +57,11 @@ struct directed_node {
 template<typename Point>
 struct directed_path {
     std::vector<directed_node<Point>> nodes;
+};
+
+template<typename Point>
+struct directed_path_alt {
+    std::vector<directed_node_alt<Point>> nodes;
 };
 
 /*
@@ -70,6 +98,18 @@ using two_node_scoring_fn =
 directed_path<point> greedy_path( const point &source, const point &dest, const point &max,
                                   two_node_scoring_fn<point> scorer );
 
+template<typename Point>
+using neighbor_provider_cb = std::function<void( const directed_node_alt<Point>&, float )>;
+template<typename Point>
+using neighbor_provider =
+    std::function<void( const directed_node_alt<Point>& cur, neighbor_provider_cb<Point> cb )>;
+
+directed_path_alt<point> greedy_path_alt(
+    const point &source,
+    const point &dest,
+    neighbor_provider<point> nei_provider
+);
+
 /**
  * Uses Greedy Best-First-Search to find a short path from source to destination [2D only].
  * The search area is a rectangle with corners at (0,0) and max.
@@ -96,6 +136,36 @@ directed_path<Point> greedy_path( const Point &source, const Point &dest, const 
     res.nodes.reserve( path.nodes.size() );
     for( const auto &node : path.nodes ) {
         res.nodes.emplace_back( Point( node.pos ), node.dir );
+    }
+    return res;
+}
+
+template <
+    typename Point,
+    typename FuncNeiProvider,
+    typename = std::enable_if_t<Point::dimension == 2>
+    >
+directed_path_alt<Point> greedy_path_alt( const Point &source, const Point &dest,
+        FuncNeiProvider nei_provider )
+{
+    directed_path_alt<Point> res;
+
+    neighbor_provider<point> nei_provider_wrapped =
+    [&]( const directed_node_alt<point> &cur, neighbor_provider_cb<point> cb ) -> void {
+        directed_node_alt<Point> cur_wr( Point( cur.pos ), cur );
+
+        const auto cb_wr = [&]( const directed_node_alt<Point> &nei, float nei_score ) -> void {
+            directed_node_alt<point> nei_wr( nei.pos.raw(), nei );
+            cb( nei_wr, nei_score );
+        };
+
+        nei_provider( cur_wr, cb_wr );
+    };
+
+    directed_path_alt<point> path = greedy_path_alt( source.raw(), dest.raw(), nei_provider_wrapped );
+    res.nodes.reserve( path.nodes.size() );
+    for( const auto &node : path.nodes ) {
+        res.nodes.emplace_back( Point( node.pos ), node );
     }
     return res;
 }

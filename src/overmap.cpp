@@ -3663,6 +3663,20 @@ void overmap::build_mine( const tripoint_om_omt &origin, int s )
     ter_set( p, mine_finale_or_down );
 }
 
+pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_alt(
+    const overmap_connection &connection, const point_om_omt &source, const point_om_omt &dest,
+    int z, const bool must_be_unexplored ) const
+{
+    const auto nei_provider =
+    [&]( pf::directed_node_alt<point_om_omt> cur, pf::neighbor_provider_cb<point_om_omt> cb ) -> void {
+        // TODO
+    };
+
+    auto path = pf::greedy_path_alt<point_om_omt>( source, dest, nei_provider );
+
+    return path;
+}
+
 pf::directed_path<point_om_omt> overmap::lay_out_connection(
     const overmap_connection &connection, const point_om_omt &source, const point_om_omt &dest,
     int z, const bool must_be_unexplored ) const
@@ -3922,13 +3936,29 @@ void overmap::build_connection(
     }
 }
 
+void overmap::build_connection_alt(
+    const overmap_connection &connection, const pf::directed_path_alt<point_om_omt> &path, int z,
+    const om_direction::type &initial_dir )
+{
+    if( path.nodes.empty() ) {
+        return;
+    }
+
+    // TODO
+}
+
 void overmap::build_connection( const point_om_omt &source, const point_om_omt &dest, int z,
                                 const overmap_connection &connection, const bool must_be_unexplored,
                                 const om_direction::type &initial_dir )
 {
-    pf::directed_path<point_om_omt> conn = lay_out_connection( connection, source, dest, z,
-                                           must_be_unexplored );
-    build_connection( connection, conn, z, initial_dir );
+    if( connection.use_new_method ) {
+        auto conn = lay_out_connection_alt( connection, source, dest, z, must_be_unexplored );
+        build_connection_alt( connection, conn, z, initial_dir );
+    } else {
+        pf::directed_path<point_om_omt> conn = lay_out_connection( connection, source, dest, z,
+                                               must_be_unexplored );
+        build_connection( connection, conn, z, initial_dir );
+    }
 }
 
 void overmap::connect_closest_points( const std::vector<point_om_omt> &points, int z,
