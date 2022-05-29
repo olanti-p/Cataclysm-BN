@@ -2,6 +2,7 @@
 #ifndef CATA_SRC_OVERMAP_CONNECTION_H
 #define CATA_SRC_OVERMAP_CONNECTION_H
 
+#include <array>
 #include <list>
 #include <vector>
 #include <set>
@@ -14,6 +15,74 @@
 class JsonObject;
 class JsonIn;
 struct overmap_location;
+
+using overmap_location_str_id = string_id<overmap_location>;
+
+struct om_conn_segment {
+    oter_type_str_id terrain;
+    std::array<std::vector<std::string>, 4> edges;
+    int complexity_cost = 0;
+    std::vector<std::string> connections;
+    std::vector<oter_type_str_id> upgrades_str;
+    std::vector<int> upgrades;
+    int rotates = 1;
+
+    void load( const JsonObject &jo );
+    void deserialize( JsonIn &jsin );
+
+    inline std::vector<std::string> &get_edge_mut( om_direction::type side ) {
+        return edges[static_cast<int>( side )];
+    }
+    inline const std::vector<std::string> &get_edge( om_direction::type side ) const {
+        return edges[static_cast<int>( side )];
+    }
+    const std::vector<std::string> &get_edge_of_rotated(
+        om_direction::type side,
+        om_direction::type rot
+    ) const;
+};
+
+struct om_conn_location {
+    overmap_location_str_id id;
+    int basic_cost = 0;
+
+    void load( const JsonObject &jo );
+    void deserialize( JsonIn &jsin );
+};
+
+struct om_conn_placement {
+
+    std::vector<om_conn_location> locations;
+    std::vector<oter_type_str_id> segments_str;
+    std::vector<int> segments;
+
+    void load( const JsonObject &jo );
+    void deserialize( JsonIn &jsin );
+};
+
+struct om_connection_new {
+    string_id<overmap_connection> id;
+
+    int default_segment = -1;
+    oter_type_str_id default_segment_str;
+
+    std::vector<om_conn_segment> segments;
+    std::vector<om_conn_placement> placements;
+
+    void load( const JsonObject &jo );
+    void deserialize( JsonIn &jsin );
+    void check() const;
+    void finalize();
+
+    int find_segment_by_terr( const oter_type_str_id &seg ) const;
+    const std::vector<int> &find_candidate_segments( const oter_id &t ) const;
+    int get_terrain_cost( const oter_id &t ) const;
+};
+
+bool test_segment_connectivity(
+    const std::vector<std::string> &edge_src,
+    const std::vector<std::string> &edge_dest
+);
 
 class overmap_connection
 {
@@ -59,6 +128,7 @@ class overmap_connection
         string_id<overmap_connection> id;
         bool was_loaded = false;
         bool use_new_method = false;
+        om_connection_new data_new;
 
     private:
         struct cache {

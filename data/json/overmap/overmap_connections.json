@@ -111,6 +111,107 @@
     {
         "type": "overmap_connection",
         "id": "local_railroad",
+        "use_new_method": true,
+        "data_new": {
+            "default_segment": "railroad_straight",
+            "segments": [
+                {
+                    "terrain": "railroad_straight",
+                    "n": [ "straight" ],
+                    "s": [ "straight" ],
+                    "conns": [ "ns" ],
+                    "rotates": 2,
+                    "upgrades": [ "railroad_tee_1", "railroad_tee_2", "railroad_cross" ]
+                },
+                {
+                    "terrain": "railroad_level_crossing",
+                    "n": [ "straight" ],
+                    "s": [ "straight" ],
+                    "rotates": 2,
+                    "complexity_cost": 4,
+                    "conns": [ "ns" ]
+                },
+                {
+                    "terrain": "railroad_bridge",
+                    "n": [ "straight" ],
+                    "s": [ "straight" ],
+                    "rotates": 2,
+                    "conns": [ "ns" ]
+                },
+                {
+                    "terrain": "railroad_omni",
+                    "n": [ "straight" ],
+                    "e": [ "straight" ],
+                    "s": [ "straight" ],
+                    "w": [ "straight" ],
+                    "complexity_cost": 5,
+                    "conns": [ "ns", "ne", "nw", "se", "sw", "ew" ]
+                },
+                {
+                    "terrain": "railroad_cross",
+                    "n": [ "straight" ],
+                    "e": [ "straight" ],
+                    "s": [ "straight" ],
+                    "w": [ "straight" ],
+                    "complexity_cost": 1,
+                    "conns": [ "ns", "ew" ]
+                },
+                {
+                    "terrain": "railroad_tee_1",
+                    "n": [ "straight" ],
+                    "w": [ "straight" ],
+                    "s": [ "straight" ],
+                    "complexity_cost": 1,
+                    "conns": [ "ns", "nw", "sw" ]
+                },
+                {
+                    "terrain": "railroad_tee_2",
+                    "n": [ "straight" ],
+                    "e": [ "straight" ],
+                    "s": [ "straight" ],
+                    "complexity_cost": 1,
+                    "conns": [ "ns", "ne", "es" ]
+                }
+            ],
+            "placement": [
+            {
+                "locations": [
+                    {
+                        "id": "wilderness",
+                        "basic_cost": 1
+                    },
+                    {
+                        "id": "swamp",
+                        "basic_cost": 1
+                    }
+                ],
+                "segments": [ "railroad_straight", "railroad_omni" ]
+            }, {
+                "locations": [
+                    {
+                        "id": "railroad_level_crossing_allowed",
+                        "basic_cost": 1
+                    }
+                ],
+                "segments": [ "railroad_level_crossing" ]
+            }, {
+                "locations": [
+                    {
+                        "id": "water",
+                        "basic_cost": 3
+                    },
+                    {
+                        "id": "lake_surface",
+                        "basic_cost": 3
+                    },
+                    {
+                        "id": "lake_shore",
+                        "basic_cost": 3
+                    }
+                ],
+                "segments": [ "railroad_bridge" ]
+            }]
+        },
         "subtypes": [
             {
                 "terrain": "railroad",

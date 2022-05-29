@@ -30,22 +30,23 @@ template<typename Point>
 struct directed_node_alt {
     Point pos;
     int var = -1;
+    int conn = -1;
     om_direction::type rot = om_direction::type::invalid;
 
     directed_node_alt() = default;
     ~directed_node_alt() = default;
-    explicit directed_node_alt( Point pos, int var, om_direction::type rot ) :
-        pos( pos ), var( var ), rot( rot ) {}
+    explicit directed_node_alt( Point pos, int var, om_direction::type rot, int conn ) :
+        pos( pos ), var( var ), rot( rot ), conn( conn ) {}
 
     template<typename P>
     explicit directed_node_alt( Point pos, const directed_node_alt<P> &rhs ) :
-        pos( pos ), var( rhs.var ), rot( rhs.rot ) {}
+        pos( pos ), var( rhs.var ), rot( rhs.rot ), conn( rhs.conn ) {}
 
     constexpr inline bool is_same_pos( const directed_node_alt &rhs ) const {
         return pos == rhs.pos;
     }
     constexpr inline bool operator==( const directed_node_alt &rhs ) const {
-        return pos == rhs.pos && var == rhs.var && rot == rhs.rot;
+        return pos == rhs.pos && var == rhs.var && rot == rhs.rot && conn == rhs.conn;
     }
 };
 

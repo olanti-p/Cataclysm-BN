@@ -3667,15 +3667,114 @@ void overmap::build_mine( const tripoint_om_omt &origin, int s )
 }
 
 pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_alt(
-    const overmap_connection &connection, const point_om_omt &source, const point_om_omt &dest,
+    const overmap_connection &connection_arg, const point_om_omt &source, const point_om_omt &dest,
     int z, const bool must_be_unexplored ) const
 {
+    const om_connection_new &connection = connection_arg.data_new;
+
+    half_open_rectangle<point_om_omt> om_bounds( { 0, 0 }, { OMAPX, OMAPY } );
+
+    std::stringstream log;
+
     const auto nei_provider =
     [&]( pf::directed_node_alt<point_om_omt> cur, pf::neighbor_provider_cb<point_om_omt> cb ) -> void {
-        // TODO
+        int cur_seg_idx = cur.var == -1 ? connection.default_segment : cur.var;
+        int cur_seg_conn = cur.conn == -1 ? 0 : cur.conn;
+        om_direction::type cur_seg_rot = cur.rot == om_direction::type::invalid ? om_direction::type::none : cur.rot;
+
+        log << string_format(
+                "\ncur_seg = %s cur_dir = %s",
+                connection.segments[cur_seg_idx].terrain,
+                om_direction::id( cur_seg_rot )
+            );
+
+        for( om_direction::type scan_dir : om_direction::all )
+        {
+            point_om_omt scan_pos = cur.pos + om_direction::rotate( point_north, scan_dir );
+            if( !om_bounds.contains( scan_pos ) ) {
+                // Can't advance outside om boundaries
+                continue;
+            }
+
+            const auto &cur_seg_side = connection.segments[cur_seg_idx].get_edge_of_rotated(
+                                           scan_dir, cur_seg_rot
+                                       );
+            if( cur_seg_side.empty() ) {
+                // Can't advance here from current segment
+                continue;
+            }
+
+            const oter_id &scan_ter = ter( tripoint_om_omt( scan_pos, z ) );
+            int existing_idx = connection.find_segment_by_terr( scan_ter->get_type_id() );
+
+            log << string_format(
+                    "\n  scan_dir = %s  scan_ter = %s", om_direction::id( scan_dir ), scan_ter.id()
+                );
+
+            if( existing_idx != -1 ) {
+                // Scan pos contains existing segment
+                //int terr_cost = 1;
+                log << string_format(
+                        "  existing (%s rot: %s)",
+                        connection.segments[existing_idx].terrain,
+                        om_direction::id( scan_ter->get_dir() )
+                    );
+            } else {
+                // Scan pos contains some other terrain
+                const auto &candidates = connection.find_candidate_segments( scan_ter );
+                if( candidates.empty() ) {
+                    // Terrain does not support this connection
+                    log << "  no_terrain_support";
+                    continue;
+                }
+                int terr_cost = connection.get_terrain_cost( scan_ter );
+
+                for( int candidate_seg_idx : candidates ) {
+                    const om_conn_segment &candidate_seg = connection.segments[candidate_seg_idx];
+
+                    int max_candidate_rot = candidate_seg.rotates;
+                    for( int candidate_rot_idx = 0; candidate_rot_idx < max_candidate_rot; candidate_rot_idx++ ) {
+                        om_direction::type candidate_rot = om_direction::all[candidate_rot_idx];
+                        const auto &candidate_seg_side = candidate_seg.get_edge_of_rotated(
+                                                             om_direction::opposite( scan_dir ),
+                                                             candidate_rot
+                                                         );
+                        log << string_format( "\n    candidate: %s  cand_rot: %s",
+                                              candidate_seg.terrain,
+                                              om_direction::id( candidate_rot )
+                                            );
+                        if( candidate_seg_side.empty() ) {
+                            // Candidate segment doesn't have connections at desired side
+                            log << "  does_not_connect";
+                            continue;
+                        }
+                        if( !test_segment_connectivity( cur_seg_side, candidate_seg_side ) ) {
+                            // Candidate segment has different connections at desired side
+                            log << "  connection_mismatch";
+                            continue;
+                        }
+
+                        float tile_cost = terr_cost + candidate_seg.complexity_cost;
+                        pf::directed_node_alt<point_om_omt> node(
+                            scan_pos, candidate_seg_idx, candidate_rot, 0
+                        );
+                        cb( node, tile_cost );
+                        log << "  emitted";
+                    }
+                }
+            }
+        }
     };
 
     auto path = pf::greedy_path_alt<point_om_omt>( source, dest, nei_provider );
+
+    if( path.nodes.size() > 0 && path.nodes[0].var == -1 ) {
+        path.nodes[0].var = connection.default_segment;
+        path.nodes[0].rot = om_direction::type::none;
+    }
+
+    std::string log_res = log.str();
+    DebugLog( DL::Info, DC::Main ) << "PF Log for " << source << " -> " << dest << "\n" << log_res;
 
     return path;
 }
@@ -3940,14 +4039,25 @@ void overmap::build_connection(
 }
 
 void overmap::build_connection_alt(
-    const overmap_connection &connection, const pf::directed_path_alt<point_om_omt> &path, int z,
+    const overmap_connection &connection_arg, const pf::directed_path_alt<point_om_omt> &path, int z,
     const om_direction::type &initial_dir )
 {
+    const om_connection_new &connection = connection_arg.data_new;
+
     if( path.nodes.empty() ) {
         return;
     }
 
-    // TODO
+    const pf::directed_node_alt<point_om_omt> start = path.nodes.front();
+    const pf::directed_node_alt<point_om_omt> end = path.nodes.back();
+
+    for( const auto &node : path.nodes ) {
+        const tripoint_om_omt pos( node.pos, z );
+        const oter_id &ter_id = ter( pos );
+        const oter_type_str_id &var = connection.segments[node.var].terrain;
+
+        ter_set( pos, var->get_rotated( node.rot ) );
+    }
 }
 
 void overmap::build_connection( const point_om_omt &source, const point_om_omt &dest, int z,

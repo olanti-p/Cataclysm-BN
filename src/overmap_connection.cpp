@@ -113,7 +113,181 @@ bool overmap_connection::has( const int_id<oter_t> &oter ) const
 
 void overmap_connection::load( const JsonObject &jo, const std::string & )
 {
+    data_new.id = id;
     mandatory( jo, false, "subtypes", subtypes );
+    optional( jo, false, "use_new_method", use_new_method );
+    if( use_new_method ) {
+        mandatory( jo, false, "data_new", data_new );
+    } else {
+        optional( jo, false, "data_new", data_new );
+    }
+}
+
+void om_conn_segment::load( const JsonObject &jo )
+{
+    mandatory( jo, false, "terrain", terrain );
+    optional( jo, false, "n", get_edge_mut( om_direction::type::north ) );
+    optional( jo, false, "e", get_edge_mut( om_direction::type::east ) );
+    optional( jo, false, "s", get_edge_mut( om_direction::type::south ) );
+    optional( jo, false, "w", get_edge_mut( om_direction::type::west ) );
+    optional( jo, false, "complexity_cost", complexity_cost );
+    optional( jo, false, "rotates", rotates, 1 );
+    optional( jo, false, "upgrades", upgrades_str );
+    optional( jo, false, "conns", connections );
+}
+
+void om_conn_segment::deserialize( JsonIn &jsin )
+{
+    JsonObject jo = jsin.get_object();
+    load( jo );
+}
+
+const std::vector<std::string> &
+om_conn_segment::get_edge_of_rotated(
+    om_direction::type side,
+    om_direction::type rot
+) const
+{
+    om_direction::type fin = static_cast<om_direction::type>(
+                                 om_direction::size - static_cast<size_t>( rot )
+                             );
+    return get_edge( om_direction::add( side, fin ) );
+}
+
+void om_conn_location::load( const JsonObject &jo )
+{
+    mandatory( jo, false, "id", id );
+    mandatory( jo, false, "basic_cost", basic_cost );
+}
+
+void om_conn_location::deserialize( JsonIn &jsin )
+{
+    JsonObject jo = jsin.get_object();
+    load( jo );
+}
+
+void om_conn_placement::load( const JsonObject &jo )
+{
+    mandatory( jo, false, "locations", locations );
+    mandatory( jo, false, "segments", segments_str );
+}
+
+void om_conn_placement::deserialize( JsonIn &jsin )
+{
+    JsonObject jo = jsin.get_object();
+    load( jo );
+}
+
+void om_connection_new::load( const JsonObject &jo )
+{
+    mandatory( jo, false, "segments", segments );
+    mandatory( jo, false, "placement", placements );
+    mandatory( jo, false, "default_segment", default_segment_str );
+}
+
+void om_connection_new::deserialize( JsonIn &jsin )
+{
+    JsonObject jo = jsin.get_object();
+    load( jo );
+}
+
+void om_connection_new::check() const
+{
+    if( !default_segment_str.is_valid() ) {
+        debugmsg( R"(In overmap connection "%s", default segment "%s" is invalid.)",
+                  id, default_segment_str );
+    }
+    for( const om_conn_segment &it : segments ) {
+        if( it.rotates != 1 &&
+            it.rotates != 2 &&
+            it.rotates != 4 ) {
+            debugmsg( R"(In overmap connection "%s", rotates value "%d" is invalid.)", id, it.rotates );
+        }
+        if( !it.terrain.is_valid() ) {
+            debugmsg( R"(In overmap connection "%s", segment terrain "%s" is invalid.)", id, it.terrain );
+        }
+        for( const auto &up : it.upgrades_str ) {
+            if( !up.is_valid() ) {
+                debugmsg( R"(In overmap connection "%s", segment upgrade "%s" is invalid.)", id, up );
+            }
+        }
+    }
+    for( const om_conn_placement &it : placements ) {
+        for( const auto &loc : it.locations ) {
+            if( !loc.id.is_valid() ) {
+                debugmsg( R"(In overmap connection "%s", placement location "%s" is invalid.)", id, loc.id );
+            }
+        }
+        for( const auto &seg : it.segments_str ) {
+            if( !seg.is_valid() ) {
+                debugmsg( R"(In overmap connection "%s", placement segment "%s" is invalid.)", id, seg );
+            }
+        }
+    }
+}
+
+void om_connection_new::finalize()
+{
+    default_segment = find_segment_by_terr( default_segment_str );
+    for( om_conn_placement &it_pl : placements ) {
+        it_pl.segments.reserve( it_pl.segments_str.size() );
+        for( const auto &it : it_pl.segments_str ) {
+            it_pl.segments.push_back( find_segment_by_terr( it ) );
+        }
+    }
+    for( om_conn_segment &it_seg : segments ) {
+        it_seg.upgrades.reserve( it_seg.upgrades_str.size() );
+        for( const auto &it : it_seg.upgrades_str ) {
+            it_seg.upgrades.push_back( find_segment_by_terr( it ) );
+        }
+    }
+}
+
+int om_connection_new::find_segment_by_terr( const oter_type_str_id &seg ) const
+{
+    for( size_t i = 0; i < segments.size(); i++ ) {
+        if( segments[i].terrain == seg ) {
+            return static_cast<int>( i );
+        }
+    }
+    return -1;
+}
+
+const std::vector<int> &
+om_connection_new::find_candidate_segments( const oter_id &t ) const
+{
+    for( const om_conn_placement &it_pl : placements ) {
+        for( const om_conn_location &it_loc : it_pl.locations ) {
+            if( it_loc.id->test( t ) ) {
+                return it_pl.segments;
+            }
+        }
+    }
+    static const std::vector<int> no_segments;
+    return no_segments;
+}
+
+int om_connection_new::get_terrain_cost( const oter_id &t ) const
+{
+    for( const om_conn_placement &it_pl : placements ) {
+        for( const om_conn_location &it_loc : it_pl.locations ) {
+            if( it_loc.id->test( t ) ) {
+                return it_loc.basic_cost;
+            }
+        }
+    }
+    return 0;
+}
+
+bool test_segment_connectivity(
+    const std::vector<std::string> &edge_src,
+    const std::vector<std::string> &edge_dest
+)
+{
+    return std::find_first_of(
+               edge_src.cbegin(), edge_src.cend(),
+               edge_dest.cbegin(), edge_dest.cend()
+           ) != edge_src.cend();
 }
 
 void overmap_connection::check() const
@@ -133,11 +307,17 @@ void overmap_connection::check() const
             }
         }
     }
+    if( use_new_method ) {
+        data_new.check();
+    }
 }
 
 void overmap_connection::finalize()
 {
     cached_subtypes.resize( overmap_terrains::get_all().size() );
+    if( use_new_method ) {
+        data_new.finalize();
+    }
 }
 
 void overmap_connections::load( const JsonObject &jo, const std::string &src )

@@ -303,8 +303,8 @@ directed_path_alt<point> greedy_path_alt( const point &source, const point &dest
         return trig_dist( p.pos, dest );
     };
 
-    directed_node_alt<point> src_node( source, -1, om_direction::type::none );
-    directed_node_alt<point> dst_node( dest, -1, om_direction::type::none );
+    directed_node_alt<point> src_node( source, directed_node_alt<point>() );
+    directed_node_alt<point> dst_node( dest, directed_node_alt<point>() );
 
     res.nodes = PathFinder<directed_node_alt<point>>().find_path(
                     src_node, dst_node, h_func, nei_provider );
