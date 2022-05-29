@@ -114,6 +114,7 @@
         "use_new_method": true,
         "data_new": {
             "default_segment": "railroad_straight",
+            "follow_cost": 0.2,
             "segments": [
                 {
                     "terrain": "railroad_straight",
@@ -121,12 +122,52 @@
                     "s": [ "straight" ],
                     "conns": [ "ns" ],
                     "rotates": 2,
-                    "upgrades": [ "railroad_tee_1", "railroad_tee_2", "railroad_cross" ]
+                    "upgrades": [
+                        "railroad_straight_end_1",
+                        "railroad_straight_end_2",
+                        "railroad_cross",
+                        "railroad_tee_1",
+                        "railroad_tee_2",
+                        "railroad_tee_3",
+                        "railroad_tee_4"
+                    ]
                 },
                 {
-                    "terrain": "railroad_curve",
+                    "terrain": "railroad_straight_end_1",
                     "n": [ "straight" ],
-                    "w": [ "straight" ],
+                    "s": [ "diag_end_a", "diag_end_b" ],
+                    "conns": [ "ns" ],
+                    "rotates": 2
+                },
+                {
+                    "terrain": "railroad_straight_end_2",
+                    "n": [ "diag_end_a", "diag_end_b" ],
+                    "s": [ "straight" ],
+                    "conns": [ "ns" ],
+                    "rotates": 2
+                },
+                {
+                    "terrain": "railroad_diag",
+                    "n": [ "diag_a" ],
+                    "w": [ "diag_b" ],
+                    "conns": [ "nw" ],
+                    "rotates": 4,
+                    "upgrades": [
+                        "railroad_diag_end_1",
+                        "railroad_diag_end_2"
+                    ]
+                },
+                {
+                    "terrain": "railroad_diag_end_1",
+                    "n": [ "diag_a" ],
+                    "w": [ "diag_end_a" ],
+                    "conns": [ "nw" ],
+                    "rotates": 4
+                },
+                {
+                    "terrain": "railroad_diag_end_2",
+                    "n": [ "diag_end_b" ],
+                    "w": [ "diag_b" ],
                     "conns": [ "nw" ],
                     "rotates": 4
                 },
@@ -160,29 +201,36 @@
                     "e": [ "straight" ],
                     "s": [ "straight" ],
                     "w": [ "straight" ],
-                    "rotates": 2,
-                    "complexity_cost": 1,
+                    "complexity_cost": 10,
                     "conns": [ "ns", "ew" ]
                 },
                 {
                     "terrain": "railroad_tee_1",
-                    "n": [ "straight" ],
-                    "w": [ "straight" ],
+                    "n": [ "diag_end_b" ],
+                    "w": [ "diag_b" ],
                     "s": [ "straight" ],
-                    "complexity_cost": 1,
-                    "rotates": 2,
-                    "//conns": [ "ns", "nw", "sw" ],
-                    "conns": [ "nw", "sw" ]
+                    "conns": [ "ns", "nw" ]
                 },
                 {
                     "terrain": "railroad_tee_2",
                     "n": [ "straight" ],
-                    "e": [ "straight" ],
+                    "w": [ "diag_a" ],
+                    "s": [ "diag_end_a" ],
+                    "conns": [ "ns", "sw" ]
+                },
+                {
+                    "terrain": "railroad_tee_3",
+                    "n": [ "diag_end_a" ],
+                    "e": [ "diag_a" ],
                     "s": [ "straight" ],
-                    "complexity_cost": 1,
-                    "rotates": 2,
-                    "//conns": [ "ns", "ne", "es" ],
-                    "conns": [ "ne", "es" ]
+                    "conns": [ "ns", "ne" ]
+                },
+                {
+                    "terrain": "railroad_tee_4",
+                    "n": [ "straight" ],
+                    "e": [ "diag_b" ],
+                    "s": [ "diag_end_b" ],
+                    "conns": [ "ns", "se" ]
                 }
             ],
             "placement": [
@@ -197,8 +245,14 @@
                         "basic_cost": 1
                     }
                 ],
-                "segments": [ "railroad_straight", "railroad_omni", "railroad_curve" ],
-                "//segments": [ "railroad_straight", "railroad_omni" ]
+                "segments": [
+                    "railroad_straight",
+                    "railroad_straight_end_1",
+                    "railroad_straight_end_2",
+                    "railroad_diag",
+                    "railroad_diag_end_1",
+                    "railroad_diag_end_2"
+                ]
             }, {
                 "locations": [
                     {

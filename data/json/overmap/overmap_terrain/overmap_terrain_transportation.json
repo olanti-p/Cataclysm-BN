@@ -173,8 +173,48 @@
   {
     "type": "overmap_terrain",
     "copy-from": "railroad_base",
-    "id": "railroad_curve",
-    "name": "railroad (curve)",
+    "id": "railroad_straight_end_1",
+    "name": "railroad (straight_end_1)",
+    "sym": "│",
+    "color": "yellow"
+  },
+  {
+    "type": "overmap_terrain",
+    "copy-from": "railroad_base",
+    "id": "railroad_straight_end_2",
+    "name": "railroad (straight_end_2)",
+    "sym": "│",
+    "color": "yellow"
+  },
+  {
+    "type": "overmap_terrain",
+    "copy-from": "railroad_base",
+    "id": "railroad_diag",
+    "name": "railroad (diag)",
+    "sym": "┘",
+    "color": "light_green"
+  },
+  {
+    "type": "overmap_terrain",
+    "copy-from": "railroad_base",
+    "id": "railroad_diag_end_1",
+    "name": "railroad (diag_end_1)",
+    "sym": "┘",
+    "color": "yellow"
+  },
+  {
+    "type": "overmap_terrain",
+    "copy-from": "railroad_base",
+    "id": "railroad_diag_end_2",
+    "name": "railroad (diag_end_2)",
+    "sym": "┘",
+    "color": "yellow"
+  },
+  {
+    "type": "overmap_terrain",
+    "copy-from": "railroad_base",
+    "id": "railroad_diag_fork",
+    "name": "railroad (diag_fork)",
     "sym": "┘",
     "color": "yellow"
   },
@@ -191,6 +231,22 @@
     "copy-from": "railroad_base",
     "id": "railroad_tee_2",
     "name": "railroad (tee_2)",
+    "sym": "┤",
+    "color": "white"
+  },
+  {
+    "type": "overmap_terrain",
+    "copy-from": "railroad_base",
+    "id": "railroad_tee_3",
+    "name": "railroad (tee_3)",
+    "sym": "├",
+    "color": "white"
+  },
+  {
+    "type": "overmap_terrain",
+    "copy-from": "railroad_base",
+    "id": "railroad_tee_4",
+    "name": "railroad (tee_4)",
     "sym": "├",
     "color": "white"
   },

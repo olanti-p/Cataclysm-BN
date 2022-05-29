@@ -3679,12 +3679,13 @@ pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_alt(
     const auto nei_provider =
     [&]( pf::directed_node_alt<point_om_omt> cur, pf::neighbor_provider_cb<point_om_omt> cb ) -> void {
         int cur_seg_idx = cur.var == -1 ? connection.default_segment : cur.var;
+        const om_conn_segment &cur_seg = connection.segments[cur_seg_idx];
         int cur_seg_conn = cur.conn == -1 ? 0 : cur.conn;
         om_direction::type cur_seg_rot = cur.rot == om_direction::type::invalid ? om_direction::type::none : cur.rot;
 
         log << string_format(
                 "\ncur_seg = %s cur_dir = %s",
-                connection.segments[cur_seg_idx].terrain,
+                cur_seg.terrain,
                 om_direction::id( cur_seg_rot )
             );
 
@@ -3696,7 +3697,7 @@ pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_alt(
                 continue;
             }
 
-            const auto &cur_seg_side = connection.segments[cur_seg_idx].get_edge_of_rotated(
+            const auto &cur_seg_side = cur_seg.get_edge_of_rotated(
                                            scan_dir, cur_seg_rot, cur_seg_conn
                                        );
             if( cur_seg_side.empty() ) {
@@ -3713,16 +3714,19 @@ pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_alt(
 
             if( existing_seg_idx != -1 ) {
                 // Scan pos contains existing segment
+                const om_conn_segment &existing_seg = connection.segments[existing_seg_idx];
                 om_direction::type existing_rot = scan_ter->get_dir();
                 log << string_format(
                         "  existing (%s rot: %s)",
-                        connection.segments[existing_seg_idx].terrain,
+                        existing_seg.terrain,
                         om_direction::id( existing_rot )
                     );
 
-                om_direction::type candidate_rot = existing_rot;
-
-                const auto process_candidate = [&]( int candidate_seg_idx, float upgrade_cost ) {
+                const auto process_candidate = [&](
+                                                   int candidate_seg_idx,
+                                                   float upgrade_cost,
+                                                   om_direction::type candidate_rot
+                ) {
                     const om_conn_segment &candidate_seg = connection.segments[candidate_seg_idx];
                     int max_candidate_conn = static_cast<int>( candidate_seg.connections.size() );
                     for( int candidate_conn_idx = 0; candidate_conn_idx < max_candidate_conn; candidate_conn_idx++ ) {
@@ -3747,7 +3751,7 @@ pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_alt(
                             continue;
                         }
 
-                        float tile_cost = connection.follow_cost + candidate_seg.complexity_cost + upgrade_cost;
+                        float tile_cost = candidate_seg.complexity_cost * upgrade_cost + connection.follow_cost;
                         pf::directed_node_alt<point_om_omt> node(
                             scan_pos, candidate_seg_idx, candidate_rot, candidate_conn_idx
                         );
@@ -3757,11 +3761,24 @@ pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_alt(
                 };
 
                 // Try following existing path
-                process_candidate( existing_seg_idx, 0.0f );
+                process_candidate( existing_seg_idx, 0.0f, existing_rot );
                 // Try joining/leaving/intersecting existing path
-                const om_conn_segment &existing_seg = connection.segments[existing_seg_idx];
                 for( int upgrade_seg_idx : existing_seg.upgrades ) {
-                    process_candidate( upgrade_seg_idx, 1.0f );
+                    process_candidate( upgrade_seg_idx, 1.0f, existing_rot );
+                    /*
+                    const om_conn_segment &upgrade_seg = connection.segments[upgrade_seg_idx];
+                    if( upgrade_seg.rotates == existing_seg.rotates ) {
+                        // Rotations match => try same rotation
+                        process_candidate( upgrade_seg_idx, 1.0f, existing_rot );
+                    } else {
+                        // Rotations don't match => try all supported rotations
+                        int max_upgrade_rot = upgrade_seg.rotates;
+                        for( int upgrade_rot_idx = 0; upgrade_rot_idx < max_upgrade_rot; upgrade_rot_idx++ ) {
+                            om_direction::type upgrade_rot = om_direction::all[upgrade_rot_idx];
+                            process_candidate( upgrade_seg_idx, 1.0f, upgrade_rot );
+                        }
+                    }
+                    */
                 }
             } else {
                 // Scan pos contains some other terrain
