@@ -1290,14 +1290,9 @@ void vehicle::precalculate_vehicle_turning( units::angle new_turn_dir, bool chec
             if( check_rail_direction ) {
                 ter_id terrain_at_wheel = here.ter( wheel_tripoint );
                 // check is it correct tile to turn into
-                if( !is_diagonal_movement &&
-                    ( terrain_at_wheel == t_railroad_track_d || terrain_at_wheel == t_railroad_track_d1 ||
-                      terrain_at_wheel == t_railroad_track_d2 || terrain_at_wheel == t_railroad_track_d_on_tie ) ) {
+                if( !is_diagonal_movement && terrain_at_wheel->has_flag( "RAIL_DIAG" ) ) {
                     incorrect_tiles_not_diagonal++;
-                } else if( is_diagonal_movement &&
-                           ( terrain_at_wheel == t_railroad_track || terrain_at_wheel == t_railroad_track_on_tie ||
-                             terrain_at_wheel == t_railroad_track_h || terrain_at_wheel == t_railroad_track_v ||
-                             terrain_at_wheel == t_railroad_track_h_on_tie || terrain_at_wheel == t_railroad_track_v_on_tie ) ) {
+                } else if( is_diagonal_movement && terrain_at_wheel->has_flag( "RAIL_STRAIGHT" ) ) {
                     incorrect_tiles_diagonal++;
                 }
                 if( incorrect_tiles_diagonal > allowed_incorrect_tiles_diagonal ||

@@ -46,7 +46,7 @@
       ]
     },
     "connects_to": "RAIL",
-    "flags": [ "BASHABLE", "RAIL", "TRANSPARENT" ]
+    "flags": [ "BASHABLE", "RAIL", "RAIL_STRAIGHT", "TRANSPARENT" ]
   },
   {
     "id": "t_railroad_track_paved",
@@ -56,7 +56,7 @@
     "symbol": "X",
     "color": "dark_gray",
     "copy-from": "t_railroad_track",
-    "flags": [ "BASHABLE", "FLAT", "ROAD", "RAIL", "TRANSPARENT", "MINEABLE" ]
+    "flags": [ "BASHABLE", "FLAT", "ROAD", "RAIL", "RAIL_STRAIGHT", "TRANSPARENT", "MINEABLE" ]
   },
   {
     "id": "t_railroad_track_h",
@@ -66,7 +66,7 @@
     "symbol": "X",
     "color": "cyan",
     "copy-from": "t_railroad_track",
-    "flags": [ "BASHABLE", "RAIL", "TRANSPARENT" ]
+    "flags": [ "BASHABLE", "RAIL", "RAIL_STRAIGHT", "TRANSPARENT" ]
   },
   {
     "id": "t_railroad_track_v",
@@ -76,7 +76,7 @@
     "symbol": "X",
     "color": "cyan",
     "copy-from": "t_railroad_track",
-    "flags": [ "BASHABLE", "RAIL", "TRANSPARENT" ]
+    "flags": [ "BASHABLE", "RAIL", "RAIL_STRAIGHT", "TRANSPARENT" ]
   },
   {
     "id": "t_railroad_track_d",
@@ -86,7 +86,7 @@
     "symbol": "X",
     "color": "cyan",
     "copy-from": "t_railroad_track",
-    "flags": [ "BASHABLE", "RAIL", "TRANSPARENT" ]
+    "flags": [ "BASHABLE", "RAIL", "RAIL_DIAG", "TRANSPARENT" ]
   },
   {
     "id": "t_railroad_track_d1",
@@ -96,7 +96,7 @@
     "symbol": "X",
     "color": "cyan",
     "copy-from": "t_railroad_track",
-    "flags": [ "BASHABLE", "RAIL", "TRANSPARENT" ]
+    "flags": [ "BASHABLE", "RAIL", "RAIL_DIAG", "TRANSPARENT" ]
   },
   {
     "id": "t_railroad_track_d2",
@@ -106,7 +106,7 @@
     "symbol": "X",
     "color": "cyan",
     "copy-from": "t_railroad_track",
-    "flags": [ "BASHABLE", "RAIL", "TRANSPARENT" ]
+    "flags": [ "BASHABLE", "RAIL", "RAIL_DIAG", "TRANSPARENT" ]
   },
   {
     "id": "t_railroad_tie",
@@ -193,7 +193,7 @@
       ]
     },
     "connects_to": "RAIL",
-    "flags": [ "BASHABLE", "RAIL", "TRANSPARENT" ]
+    "flags": [ "BASHABLE", "RAIL", "RAIL_STRAIGHT", "TRANSPARENT" ]
   },
   {
     "id": "t_railroad_track_h_on_tie",
@@ -203,7 +203,7 @@
     "symbol": "X",
     "color": "cyan",
     "copy-from": "t_railroad_track_on_tie",
-    "flags": [ "BASHABLE", "RAIL", "TRANSPARENT" ]
+    "flags": [ "BASHABLE", "RAIL", "RAIL_STRAIGHT", "TRANSPARENT" ]
   },
   {
     "id": "t_railroad_track_v_on_tie",
@@ -213,7 +213,7 @@
     "symbol": "X",
     "color": "cyan",
     "copy-from": "t_railroad_track_on_tie",
-    "flags": [ "BASHABLE", "RAIL", "TRANSPARENT" ]
+    "flags": [ "BASHABLE", "RAIL", "RAIL_STRAIGHT", "TRANSPARENT" ]
   },
   {
     "id": "t_railroad_track_d_on_tie",
@@ -223,7 +223,7 @@
     "symbol": "X",
     "color": "cyan",
     "copy-from": "t_railroad_track_on_tie",
-    "flags": [ "BASHABLE", "RAIL", "TRANSPARENT" ]
+    "flags": [ "BASHABLE", "RAIL", "RAIL_DIAG", "TRANSPARENT" ]
   },
   {
     "id": "t_buffer_stop",
