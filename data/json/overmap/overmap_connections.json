@@ -156,7 +156,15 @@
                     "rotates": 4,
                     "upgrades": [
                         "railroad_diag_end_1",
-                        "railroad_diag_end_2"
+                        "railroad_diag_end_2",
+                        {
+                            "id": "railroad_tee_1",
+                            "rot": "n"
+                        },
+                        {
+                            "id": "railroad_tee_2",
+                            "rot": "w"
+                        }
                     ]
                 },
                 {
@@ -164,14 +172,26 @@
                     "n": [ "diag_a" ],
                     "w": [ "diag_end_a" ],
                     "conns": [ "nw" ],
-                    "rotates": 4
+                    "rotates": 4,
+                    "upgrades": [
+                        {
+                            "id": "railroad_tee_2",
+                            "rot": "w"
+                        }
+                    ]
                 },
                 {
                     "terrain": "railroad_diag_end_2",
                     "n": [ "diag_end_b" ],
                     "w": [ "diag_b" ],
                     "conns": [ "nw" ],
-                    "rotates": 4
+                    "rotates": 4,
+                    "upgrades": [
+                        {
+                            "id": "railroad_tee_1",
+                            "rot": "n"
+                        }
+                    ]
                 },
                 {
                     "terrain": "railroad_level_crossing",
