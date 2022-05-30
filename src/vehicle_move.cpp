@@ -1321,27 +1321,8 @@ void vehicle::precalculate_vehicle_turning( units::angle new_turn_dir, bool chec
 // rounds turn_dir to 45*X degree, respecting face_dir
 static units::angle get_corrected_turn_dir( units::angle turn_dir, units::angle face_dir )
 {
-    int face_dir_angles = units::to_degrees( face_dir );
-    int face_dir_snapped = ( face_dir_angles / 45 ) * 45;
-    if( face_dir_angles != face_dir_snapped ) {
-        // If not aligned to 45 degrees, align
-        return normalize( units::from_degrees( face_dir_snapped ) );
-    }
-
-    units::angle turn_delta = turn_dir - face_dir;
-    int turn_delta_angles = units::to_degrees( turn_delta );
-    units::angle ret;
-    if( turn_delta == 0_degrees ) {
-        ret = face_dir;
-    } else if( turn_delta < 180_degrees ) {
-        ret = face_dir + 45_degrees;
-    } else {
-        ret = face_dir - 45_degrees;
-    }
-    return normalize( ret );
-
-    /*
     units::angle corrected_turn_dir = 0_degrees;
+
     // Driver turned vehicle, round angle to 45 deg
     if( turn_dir > face_dir && turn_dir < face_dir + 180_degrees ) {
         corrected_turn_dir = face_dir + 45_degrees;
@@ -1349,7 +1330,6 @@ static units::angle get_corrected_turn_dir( units::angle turn_dir, units::angle 
         corrected_turn_dir = face_dir - 45_degrees;
     }
     return normalize( corrected_turn_dir );
-    */
 }
 
 bool vehicle::allow_manual_turn_on_rails( units::angle &corrected_turn_dir ) const
@@ -1365,7 +1345,6 @@ bool vehicle::allow_manual_turn_on_rails( units::angle &corrected_turn_dir ) con
         if( is_wheel_state_correct_to_turn_on_rails( wheels_on_rail, rail_wheelcache.size(),
                 turning_wheels_that_are_one_axis ) ) {
             allow_turn_on_rail = true;
-            DebugLogFL( DL::Info, DC::Main ) << "manual turn: " << face.dir() << " -> " << corrected_turn_dir;
         }
     }
     return allow_turn_on_rail;
@@ -1377,10 +1356,8 @@ bool vehicle::allow_auto_turn_on_rails( units::angle &corrected_turn_dir ) const
     // check if autoturn is possible
     if( turn_dir == face.dir() ) {
         // precalculate wheels for every direction
-        units::angle straight_dir =
-            get_corrected_turn_dir( face.dir(), face.dir() );
         int straight_wheels_on_rail, straight_turning_wheels_that_are_one_axis;
-        precalculate_vehicle_turning( straight_dir, true, TFLAG_RAIL, straight_wheels_on_rail,
+        precalculate_vehicle_turning( face.dir(), true, TFLAG_RAIL, straight_wheels_on_rail,
                                       straight_turning_wheels_that_are_one_axis );
 
         units::angle left_turn_dir =
@@ -1401,16 +1378,11 @@ bool vehicle::allow_auto_turn_on_rails( units::angle &corrected_turn_dir ) const
                     leftturn_turning_wheels_that_are_one_axis ) ) {
             allow_turn_on_rail = true;
             corrected_turn_dir = left_turn_dir;
-            DebugLogFL( DL::Info, DC::Main ) << "auto left turn: " << face.dir() << " -> " << left_turn_dir;
         } else if( straight_wheels_on_rail <= rightturn_wheels_on_rail &&
                    is_wheel_state_correct_to_turn_on_rails( rightturn_wheels_on_rail, rail_wheelcache.size(),
                            rightturn_turning_wheels_that_are_one_axis ) ) {
             allow_turn_on_rail = true;
             corrected_turn_dir = right_turn_dir;
-            DebugLogFL( DL::Info, DC::Main ) << "auto right turn: " << face.dir() << " -> " << right_turn_dir;
-        } else if( straight_dir != face.dir() ) {
-            corrected_turn_dir = straight_dir;
-            DebugLogFL( DL::Info, DC::Main ) << "auto straight turn: " << face.dir() << " -> " << straight_dir;
         }
     }
     return allow_turn_on_rail;
