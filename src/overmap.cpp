@@ -2975,7 +2975,7 @@ void overmap::populate_railroad_connections( const overmap *north, const overmap
     std::vector<tripoint_om_omt> &railroads_out = connections_out[local_road];
 
     populate_connections( *this, north, east, south, west, 4, railroads_out );
-    */
+    //*/
 }
 
 void overmap::place_roads()
@@ -3728,7 +3728,7 @@ pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_alt(
                                                    om_direction::type candidate_rot
                 ) {
                     const om_conn_segment &candidate_seg = connection.segments[candidate_seg_idx];
-                    int max_candidate_conn = static_cast<int>( candidate_seg.connections.size() );
+                    int max_candidate_conn = candidate_seg.get_num_connections();
                     for( int candidate_conn_idx = 0; candidate_conn_idx < max_candidate_conn; candidate_conn_idx++ ) {
                         const auto &candidate_seg_side = candidate_seg.get_edge_of_rotated(
                                                              om_direction::opposite( scan_dir ),
@@ -3794,7 +3794,7 @@ pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_alt(
                     const om_conn_segment &candidate_seg = connection.segments[candidate_seg_idx];
 
                     int max_candidate_rot = candidate_seg.rotates;
-                    int max_candidate_conn = static_cast<int>( candidate_seg.connections.size() );
+                    int max_candidate_conn = candidate_seg.get_num_connections();
                     for( int candidate_rot_idx = 0; candidate_rot_idx < max_candidate_rot; candidate_rot_idx++ ) {
                         for( int candidate_conn_idx = 0; candidate_conn_idx < max_candidate_conn; candidate_conn_idx++ ) {
                             om_direction::type candidate_rot = om_direction::all[candidate_rot_idx];

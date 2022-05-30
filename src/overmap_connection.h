@@ -19,44 +19,58 @@ struct overmap_location;
 using overmap_location_str_id = string_id<overmap_location>;
 
 struct om_conn_segment {
-    oter_type_str_id terrain;
-    std::array<std::vector<std::string>, 4> edges;
-    float complexity_cost = 0.0f;
-    std::vector<std::string> connections_str;
-    std::vector<oter_type_str_id> upgrades_str;
-    std::vector<int> upgrades;
-    std::vector<std::array<std::vector<int>, 4>> connections;
-    int rotates = 1;
+        friend struct om_connection_new;
+    public:
+        oter_type_str_id terrain;
+        float complexity_cost = 0.0f;
+        std::vector<int> upgrades;
+        int rotates = 1;
 
-    void load( const JsonObject &jo );
-    void deserialize( JsonIn &jsin );
+        void load( const JsonObject &jo );
+        void deserialize( JsonIn &jsin );
 
-    inline std::vector<std::string> &get_edge_mut( om_direction::type side ) {
-        return edges[static_cast<int>( side )];
-    }
-    const std::vector<int> &get_edge_of_rotated(
-        om_direction::type side,
-        om_direction::type rot,
-        int conn_id
-    ) const;
+        const std::vector<int> &get_edge_of_rotated(
+            om_direction::type side,
+            om_direction::type rot,
+            int conn_id
+        ) const;
+
+        inline int get_num_connections() const {
+            return static_cast<int>( connections.size() );
+        }
+
+    private:
+        inline std::vector<std::string> &get_edge_mut( om_direction::type side ) {
+            return edges[static_cast<int>( side )];
+        }
+
+        std::array<std::vector<std::string>, 4> edges;
+        std::vector<std::string> connections_str;
+        std::vector<oter_type_str_id> upgrades_str;
+        std::vector<std::array<std::vector<int>, 4>> connections;
 };
 
 struct om_conn_location {
-    overmap_location_str_id id;
-    float basic_cost = 0.0f;
+        friend struct om_connection_new;
+    public:
+        overmap_location_str_id id;
+        float basic_cost = 0.0f;
 
-    void load( const JsonObject &jo );
-    void deserialize( JsonIn &jsin );
+        void load( const JsonObject &jo );
+        void deserialize( JsonIn &jsin );
 };
 
 struct om_conn_placement {
+        friend struct om_connection_new;
+    public:
+        std::vector<om_conn_location> locations;
+        std::vector<int> segments;
 
-    std::vector<om_conn_location> locations;
-    std::vector<oter_type_str_id> segments_str;
-    std::vector<int> segments;
+        void load( const JsonObject &jo );
+        void deserialize( JsonIn &jsin );
 
-    void load( const JsonObject &jo );
-    void deserialize( JsonIn &jsin );
+    private:
+        std::vector<oter_type_str_id> segments_str;
 };
 
 struct om_connection_new {
@@ -64,8 +78,6 @@ struct om_connection_new {
         string_id<overmap_connection> id;
 
         int default_segment = -1;
-        oter_type_str_id default_segment_str;
-
         float follow_cost = 0.0f;
 
         std::vector<om_conn_segment> segments;
@@ -81,6 +93,7 @@ struct om_connection_new {
         float get_terrain_cost( const oter_id &t ) const;
 
     private:
+        oter_type_str_id default_segment_str;
         std::unordered_map<std::string, int> edge_string_hash;
 };
 
