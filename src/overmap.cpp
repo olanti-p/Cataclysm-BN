@@ -859,7 +859,7 @@ void overmap_terrains::check_consistency()
                           mid.c_str() );
             }
         } else if( !exists_hardcoded ) {
-            //debugmsg( "No mapgen terrain exists for \"%s\".", mid.c_str() );
+            debugmsg( "No mapgen terrain exists for \"%s\".", mid.c_str() );
         }
     }
 }
