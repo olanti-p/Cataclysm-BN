@@ -4594,9 +4594,11 @@ void overmap::place_special(
                 src = cit.pos;
             } else {
                 std::vector<tripoint_om_omt> opts = connections_out[elem.connection];
-                std::remove_if( opts.begin(), opts.end(), [&]( const tripoint_om_omt & x ) {
+                // We don't need returned value, but msvc complains due to nodiscard attribute
+                auto it_discard = std::remove_if( opts.begin(), opts.end(), [&]( const tripoint_om_omt & x ) {
                     return x.z() != p.z();
                 } );
+                ( void )it_discard;
                 if( !opts.empty() ) {
                     std::shuffle( opts.begin(), opts.end(), rng_get_engine() );
                     src = opts[0].xy();
