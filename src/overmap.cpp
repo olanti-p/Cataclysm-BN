@@ -3675,6 +3675,7 @@ pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_alt(
     half_open_rectangle<point_om_omt> om_bounds( { 0, 0 }, { OMAPX, OMAPY } );
 
     std::stringstream log;
+    constexpr bool verbose = false;
 
     const auto nei_provider =
     [&]( pf::directed_node_alt<point_om_omt> cur, pf::neighbor_provider_cb<point_om_omt> cb ) -> void {
@@ -3683,11 +3684,14 @@ pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_alt(
         int cur_seg_conn = cur.conn == -1 ? 0 : cur.conn;
         om_direction::type cur_seg_rot = cur.rot == om_direction::type::invalid ? om_direction::type::none : cur.rot;
 
-        log << string_format(
-                "\ncur_seg = %s cur_dir = %s",
-                cur_seg.terrain,
-                om_direction::id( cur_seg_rot )
-            );
+        if( verbose )
+        {
+            log << string_format(
+                    "\ncur_seg = %s cur_dir = %s",
+                    cur_seg.terrain,
+                    om_direction::id( cur_seg_rot )
+                );
+        }
 
         for( om_direction::type scan_dir : om_direction::all )
         {
@@ -3708,19 +3712,23 @@ pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_alt(
             const oter_id &scan_ter = ter( tripoint_om_omt( scan_pos, z ) );
             int existing_seg_idx = connection.find_segment_by_terr( scan_ter->get_type_id() );
 
-            log << string_format(
-                    "\n  scan_dir = %s  scan_ter = %s", om_direction::id( scan_dir ), scan_ter.id()
-                );
+            if( verbose ) {
+                log << string_format(
+                        "\n  scan_dir = %s  scan_ter = %s", om_direction::id( scan_dir ), scan_ter.id()
+                    );
+            }
 
             if( existing_seg_idx != -1 ) {
                 // Scan pos contains existing segment
                 const om_conn_segment &existing_seg = connection.segments[existing_seg_idx];
                 om_direction::type existing_rot = scan_ter->get_dir();
-                log << string_format(
-                        "  existing (%s rot: %s)",
-                        existing_seg.terrain,
-                        om_direction::id( existing_rot )
-                    );
+                if( verbose ) {
+                    log << string_format(
+                            "  existing (%s rot: %s)",
+                            existing_seg.terrain,
+                            om_direction::id( existing_rot )
+                        );
+                }
 
                 const auto process_candidate = [&](
                                                    int candidate_seg_idx,
@@ -3735,19 +3743,25 @@ pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_alt(
                                                              candidate_rot,
                                                              candidate_conn_idx
                                                          );
-                        log << string_format( "\n    candidate: %s  cand_rot: %s  cand_conn: %d",
-                                              candidate_seg.terrain,
-                                              om_direction::id( candidate_rot ),
-                                              candidate_conn_idx
-                                            );
+                        if( verbose ) {
+                            log << string_format( "\n    candidate: %s  cand_rot: %s  cand_conn: %d",
+                                                  candidate_seg.terrain,
+                                                  om_direction::id( candidate_rot ),
+                                                  candidate_conn_idx
+                                                );
+                        }
                         if( candidate_seg_side.empty() ) {
                             // Candidate segment doesn't have connections at desired side
-                            log << "  does_not_connect";
+                            if( verbose ) {
+                                log << "  does_not_connect";
+                            }
                             continue;
                         }
                         if( !test_segment_connectivity( cur_seg_side, candidate_seg_side ) ) {
                             // Candidate segment has different connections at desired side
-                            log << "  connection_mismatch";
+                            if( verbose ) {
+                                log << "  connection_mismatch";
+                            }
                             continue;
                         }
 
@@ -3756,7 +3770,9 @@ pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_alt(
                             scan_pos, candidate_seg_idx, candidate_rot, candidate_conn_idx
                         );
                         cb( node, tile_cost );
-                        log << "  emitted";
+                        if( verbose ) {
+                            log << "  emitted";
+                        }
                     }
                 };
 
@@ -3785,7 +3801,9 @@ pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_alt(
                 const auto &candidates = connection.find_candidate_segments( scan_ter );
                 if( candidates.empty() ) {
                     // Terrain does not support this connection
-                    log << "  no_terrain_support";
+                    if( verbose ) {
+                        log << "  no_terrain_support";
+                    }
                     continue;
                 }
                 float terr_cost = connection.get_terrain_cost( scan_ter );
@@ -3803,19 +3821,25 @@ pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_alt(
                                                                  candidate_rot,
                                                                  candidate_conn_idx
                                                              );
-                            log << string_format( "\n    candidate: %s  cand_rot: %s  cand_conn: %d",
-                                                  candidate_seg.terrain,
-                                                  om_direction::id( candidate_rot ),
-                                                  candidate_conn_idx
-                                                );
+                            if( verbose ) {
+                                log << string_format( "\n    candidate: %s  cand_rot: %s  cand_conn: %d",
+                                                      candidate_seg.terrain,
+                                                      om_direction::id( candidate_rot ),
+                                                      candidate_conn_idx
+                                                    );
+                            }
                             if( candidate_seg_side.empty() ) {
                                 // Candidate segment doesn't have connections at desired side
-                                log << "  does_not_connect";
+                                if( verbose ) {
+                                    log << "  does_not_connect";
+                                }
                                 continue;
                             }
                             if( !test_segment_connectivity( cur_seg_side, candidate_seg_side ) ) {
                                 // Candidate segment has different connections at desired side
-                                log << "  connection_mismatch";
+                                if( verbose ) {
+                                    log << "  connection_mismatch";
+                                }
                                 continue;
                             }
 
@@ -3824,7 +3848,9 @@ pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_alt(
                                 scan_pos, candidate_seg_idx, candidate_rot, candidate_conn_idx
                             );
                             cb( node, tile_cost );
-                            log << "  emitted";
+                            if( verbose ) {
+                                log << "  emitted";
+                            }
                         }
                     }
                 }
@@ -3839,8 +3865,10 @@ pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_alt(
         path.nodes[0].rot = om_direction::type::none;
     }
 
-    std::string log_res = log.str();
-    DebugLog( DL::Info, DC::Main ) << "PF Log for " << source << " -> " << dest << "\n" << log_res;
+    if( verbose ) {
+        std::string log_res = log.str();
+        DebugLog( DL::Info, DC::Main ) << "PF Log for " << source << " -> " << dest << "\n" << log_res;
+    }
 
     return path;
 }
