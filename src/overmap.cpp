@@ -4417,6 +4417,28 @@ bool om_direction::are_parallel( type dir1, type dir2 )
     return dir1 == dir2 || dir1 == opposite( dir2 );
 }
 
+namespace io
+{
+template<>
+std::string enum_to_string<om_direction::type>( om_direction::type data )
+{
+    switch( data ) {
+        case om_direction::type::north:
+            return "n";
+        case om_direction::type::east:
+            return "e";
+        case om_direction::type::south:
+            return "s";
+        case om_direction::type::west:
+            return "w";
+        case om_direction::type::num_directions:
+            break;
+    }
+    debugmsg( "Invalid om_direction::type" );
+    abort();
+}
+} // namespace io
+
 om_direction::type overmap::random_special_rotation( const overmap_special &special,
         const tripoint_om_omt &p, const bool must_be_unexplored ) const
 {
