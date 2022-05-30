@@ -1,3 +1,4 @@
+#pragma optimize("", off)
 #include "vehicle.h" // IWYU pragma: associated
 
 #include <cassert>
