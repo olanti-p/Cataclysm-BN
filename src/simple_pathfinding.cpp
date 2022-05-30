@@ -232,6 +232,8 @@ class PathFinder
             g_scores[start] = 0;
             f_scores[start] = h_func( start );
 
+            int num_iterations = 300000;
+
             while( !open_set.empty() ) {
                 size_t current_i = find_node_with_lowest_f();
                 current = open_set[current_i];
@@ -240,7 +242,8 @@ class PathFinder
                     return reconstruct_path();
                 }
 
-                if( g_scores.size() >= 100000 ) {
+                num_iterations -= 1;
+                if( num_iterations == 0 ) {
                     break;
                 }
 
