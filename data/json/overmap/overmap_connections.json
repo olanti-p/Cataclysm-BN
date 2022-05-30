@@ -110,7 +110,7 @@
     },
     {
         "type": "overmap_connection",
-        "id": "local_railroad",
+        "id": "railroad_new",
         "disable_city_hubs": true,
         "use_new_method": true,
         "data_new": {
@@ -287,6 +287,63 @@
                 "segments": [ "railroad_bridge" ]
             }]
         },
+        "subtypes": [
+            {
+                "terrain": "railroad",
+                "locations": [
+                    "railroad"
+                ],
+                "basic_cost": 1,
+                "flags": [
+                    "ORTHOGONAL"
+                ]
+            },
+            {
+                "terrain": "railroad",
+                "locations": [
+                    "wilderness"
+                ],
+                "basic_cost": 1,
+                "flags": [
+                    "ORTHOGONAL"
+                ]
+            },
+            {
+                "terrain": "railroad",
+                "locations": [
+                    "swamp"
+                ],
+                "basic_cost": 1,
+                "flags": [
+                    "ORTHOGONAL"
+                ]
+            },
+            {
+                "terrain": "railroad_level_crossing",
+                "locations": [
+                    "railroad_level_crossing_allowed"
+                ],
+                "basic_cost": 2,
+                "flags": [
+                    "ORTHOGONAL"
+                ]
+            },
+            {
+                "terrain": "railroad_bridge",
+                "locations": [
+                    "water"
+                ],
+                "basic_cost": 3,
+                "flags": [
+                    "ORTHOGONAL"
+                ]
+            }
+        ]
+    },
+    {
+        "type": "overmap_connection",
+        "disable_city_hubs": true,
+        "id": "local_railroad",
         "subtypes": [
             {
                 "terrain": "railroad",
