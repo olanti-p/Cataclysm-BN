@@ -3763,8 +3763,8 @@ pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_alt(
                 // Try following existing path
                 process_candidate( existing_seg_idx, 0.0f, existing_rot );
                 // Try joining/leaving/intersecting existing path
-                for( int upgrade_seg_idx : existing_seg.upgrades ) {
-                    process_candidate( upgrade_seg_idx, 1.0f, existing_rot );
+                for( const om_conn_upgrade &upgrade : existing_seg.upgrades ) {
+                    process_candidate( upgrade.segment, 1.0f, om_direction::add( existing_rot, upgrade.rot ) );
                     /*
                     const om_conn_segment &upgrade_seg = connection.segments[upgrade_seg_idx];
                     if( upgrade_seg.rotates == existing_seg.rotates ) {

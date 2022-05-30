@@ -18,12 +18,25 @@ struct overmap_location;
 
 using overmap_location_str_id = string_id<overmap_location>;
 
+struct om_conn_upgrade {
+        friend struct om_connection_new;
+    public:
+        int segment = -1;
+        om_direction::type rot = om_direction::type::invalid;
+
+        void load( const JsonObject &jo );
+        void deserialize( JsonIn &jsin );
+
+    private:
+        oter_type_str_id segment_str;
+};
+
 struct om_conn_segment {
         friend struct om_connection_new;
     public:
         oter_type_str_id terrain;
         float complexity_cost = 0.0f;
-        std::vector<int> upgrades;
+        std::vector<om_conn_upgrade> upgrades;
         int rotates = 1;
 
         void load( const JsonObject &jo );
@@ -46,7 +59,6 @@ struct om_conn_segment {
 
         std::array<std::vector<std::string>, 4> edges;
         std::vector<std::string> connections_str;
-        std::vector<oter_type_str_id> upgrades_str;
         std::vector<std::array<std::vector<int>, 4>> connections;
 };
 

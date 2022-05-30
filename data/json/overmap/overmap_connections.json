@@ -123,28 +123,30 @@
                     "conns": [ "ns" ],
                     "rotates": 2,
                     "upgrades": [
-                        "railroad_straight_end_1",
-                        "railroad_straight_end_2",
+                        "railroad_straight_end",
+                        {
+                            "id": "railroad_straight_end",
+                            "rot": "s"
+                        },
                         "railroad_cross",
                         "railroad_tee_1",
+                        {
+                            "id": "railroad_tee_1",
+                            "rot": "s"
+                        },
                         "railroad_tee_2",
-                        "railroad_tee_3",
-                        "railroad_tee_4"
+                        {
+                            "id": "railroad_tee_2",
+                            "rot": "s"
+                        }
                     ]
                 },
                 {
-                    "terrain": "railroad_straight_end_1",
+                    "terrain": "railroad_straight_end",
                     "n": [ "straight" ],
                     "s": [ "diag_end_a", "diag_end_b" ],
                     "conns": [ "ns" ],
-                    "rotates": 2
-                },
-                {
-                    "terrain": "railroad_straight_end_2",
-                    "n": [ "diag_end_a", "diag_end_b" ],
-                    "s": [ "straight" ],
-                    "conns": [ "ns" ],
-                    "rotates": 2
+                    "rotates": 4
                 },
                 {
                     "terrain": "railroad_diag",
@@ -193,7 +195,7 @@
                     "s": [ "straight" ],
                     "w": [ "straight" ],
                     "complexity_cost": 5,
-                    "//conns": [ "nesw" ]
+                    "conns": [ "nesw" ]
                 },
                 {
                     "terrain": "railroad_cross",
@@ -213,24 +215,10 @@
                 },
                 {
                     "terrain": "railroad_tee_2",
-                    "n": [ "straight" ],
-                    "w": [ "diag_a" ],
-                    "s": [ "diag_end_a" ],
-                    "conns": [ "ns", "sw" ]
-                },
-                {
-                    "terrain": "railroad_tee_3",
                     "n": [ "diag_end_a" ],
                     "e": [ "diag_a" ],
                     "s": [ "straight" ],
                     "conns": [ "ns", "ne" ]
-                },
-                {
-                    "terrain": "railroad_tee_4",
-                    "n": [ "straight" ],
-                    "e": [ "diag_b" ],
-                    "s": [ "diag_end_b" ],
-                    "conns": [ "ns", "se" ]
                 }
             ],
             "placement": [
@@ -247,8 +235,7 @@
                 ],
                 "segments": [
                     "railroad_straight",
-                    "railroad_straight_end_1",
-                    "railroad_straight_end_2",
+                    "railroad_straight_end",
                     "railroad_diag",
                     "railroad_diag_end_1",
                     "railroad_diag_end_2"

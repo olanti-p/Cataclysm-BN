@@ -123,6 +123,23 @@ void overmap_connection::load( const JsonObject &jo, const std::string & )
     }
 }
 
+void om_conn_upgrade::load( const JsonObject &jo )
+{
+    mandatory( jo, false, "id", segment_str );
+    optional( jo, false, "rot", rot );
+}
+
+void om_conn_upgrade::deserialize( JsonIn &jsin )
+{
+    if( jsin.test_string() ) {
+        segment_str = oter_type_str_id( jsin.get_string() );
+        rot = om_direction::type::none;
+    } else {
+        JsonObject jo = jsin.get_object();
+        load( jo );
+    }
+}
+
 void om_conn_segment::load( const JsonObject &jo )
 {
     mandatory( jo, false, "terrain", terrain );
@@ -132,7 +149,7 @@ void om_conn_segment::load( const JsonObject &jo )
     optional( jo, false, "w", get_edge_mut( om_direction::type::west ) );
     optional( jo, false, "complexity_cost", complexity_cost );
     optional( jo, false, "rotates", rotates, 1 );
-    optional( jo, false, "upgrades", upgrades_str );
+    optional( jo, false, "upgrades", upgrades );
     optional( jo, false, "conns", connections_str );
 }
 
@@ -208,9 +225,9 @@ void om_connection_new::check() const
         if( !it.terrain.is_valid() ) {
             debugmsg( R"(In overmap connection "%s", segment terrain "%s" is invalid.)", id, it.terrain );
         }
-        for( const auto &up : it.upgrades_str ) {
-            if( !up.is_valid() ) {
-                debugmsg( R"(In overmap connection "%s", segment upgrade "%s" is invalid.)", id, up );
+        for( const om_conn_upgrade &up : it.upgrades ) {
+            if( !up.segment_str.is_valid() ) {
+                debugmsg( R"(In overmap connection "%s", segment upgrade "%s" is invalid.)", id, up.segment );
             }
         }
     }
@@ -238,9 +255,8 @@ void om_connection_new::finalize()
         }
     }
     for( om_conn_segment &it_seg : segments ) {
-        it_seg.upgrades.reserve( it_seg.upgrades_str.size() );
-        for( const auto &it : it_seg.upgrades_str ) {
-            it_seg.upgrades.push_back( find_segment_by_terr( it ) );
+        for( auto &up : it_seg.upgrades ) {
+            up.segment = find_segment_by_terr( up.segment_str );
         }
         it_seg.connections.reserve( it_seg.connections_str.size() );
         for( const std::string &conn_str : it_seg.connections_str ) {
