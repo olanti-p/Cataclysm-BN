@@ -115,6 +115,7 @@ void overmap_connection::load( const JsonObject &jo, const std::string & )
 {
     data_new.id = id;
     mandatory( jo, false, "subtypes", subtypes );
+    optional( jo, false, "disable_city_hubs", disable_city_hubs );
     optional( jo, false, "use_new_method", use_new_method );
     if( use_new_method ) {
         mandatory( jo, false, "data_new", data_new );

@@ -158,6 +158,7 @@ class overmap_connection
         string_id<overmap_connection> id;
         bool was_loaded = false;
         bool use_new_method = false;
+        bool disable_city_hubs = false;
         om_connection_new data_new;
 
     private:

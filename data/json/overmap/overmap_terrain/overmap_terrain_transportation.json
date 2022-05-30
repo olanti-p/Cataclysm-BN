@@ -143,7 +143,7 @@
   {
     "type": "overmap_terrain",
     "id": "railroad",
-    "name": "railroad",
+    "name": "railroad (legacy)",
     "color": "light_green",
     "see_cost": 2,
     "mapgen_straight": [ { "method": "builtin", "name": "railroad_straight" } ],

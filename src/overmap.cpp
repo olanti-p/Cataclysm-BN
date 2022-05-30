@@ -3877,8 +3877,6 @@ pf::directed_path<point_om_omt> overmap::lay_out_connection(
     const overmap_connection &connection, const point_om_omt &source, const point_om_omt &dest,
     int z, const bool must_be_unexplored ) const
 {
-    bool is_railroad = connection.id.str() == "local_railroad";
-
     half_open_rectangle<point_om_omt> soft_bound( { 5, 5 }, { OMAPX - 5, OMAPY - 5 } );
     half_open_rectangle<point_om_omt> hard_bound( { 2, 2 }, { OMAPX - 2, OMAPY - 2 } );
 
@@ -3889,23 +3887,6 @@ pf::directed_path<point_om_omt> overmap::lay_out_connection(
 
         if( !subtype ) {
             return pf::node_score::rejected;  // No option for this terrain.
-        }
-
-        if( prev && is_railroad ) {
-            const auto &id_prev( ter( tripoint_om_omt( prev->pos, z ) ) );
-            const overmap_connection::subtype *prev_subtype = connection.pick_subtype_for( id_prev );
-
-            if( !prev_subtype ) {
-                return pf::node_score::rejected;
-            }
-
-            if( subtype->terrain.str() == "railroad_level_crossing" ) {
-                //dbg( DL::Info, "test" );
-                if( prev_subtype->terrain.str() == "railroad_level_crossing" ) {
-                    // Can't have 2 crossings in a row
-                    return pf::node_score::rejected;
-                }
-            }
         }
 
         const bool existing_connection = connection.has( id );
@@ -4639,8 +4620,7 @@ void overmap::place_special(
                 continue;
             }
             cata::optional<point_om_omt> src;
-            static auto conn_id_railroad = string_id<overmap_connection>( "local_railroad" );
-            if( elem.connection != conn_id_railroad ) {
+            if( !elem.connection->disable_city_hubs ) {
                 src = cit.pos;
             } else {
                 std::vector<tripoint_om_omt> opts = connections_out[elem.connection];

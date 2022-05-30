@@ -111,6 +111,7 @@
     {
         "type": "overmap_connection",
         "id": "local_railroad",
+        "disable_city_hubs": true,
         "use_new_method": true,
         "data_new": {
             "default_segment": "railroad_straight",
