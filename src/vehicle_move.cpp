@@ -1345,6 +1345,10 @@ bool vehicle::allow_manual_turn_on_rails( units::angle &corrected_turn_dir ) con
         if( is_wheel_state_correct_to_turn_on_rails( wheels_on_rail, rail_wheelcache.size(),
                 turning_wheels_that_are_one_axis ) ) {
             allow_turn_on_rail = true;
+            DebugLogFL( DL::Info, DC::Main ) << "manual turn: "
+                                             << units::to_degrees( face.dir() )
+                                             << " -> "
+                                             << units::to_degrees( corrected_turn_dir );
         }
     }
     return allow_turn_on_rail;
@@ -1365,6 +1369,10 @@ bool vehicle::allow_auto_turn_on_rails( units::angle &corrected_turn_dir ) const
                                       straight_turning_wheels_that_are_one_axis );
         if( straight_wheels_on_rail > 0 ) {
             corrected_turn_dir = desired_snap_dir;
+            DebugLogFL( DL::Info, DC::Main ) << "getting back on track: "
+                                             << units::to_degrees( face.dir() )
+                                             << " -> "
+                                             << units::to_degrees( desired_snap_dir );
             return true;
         }
     } else {
@@ -1392,6 +1400,10 @@ bool vehicle::allow_auto_turn_on_rails( units::angle &corrected_turn_dir ) const
                     leftturn_turning_wheels_that_are_one_axis )
           ) {
             corrected_turn_dir = left_turn_dir;
+            DebugLogFL( DL::Info, DC::Main ) << "auto left turn: "
+                                             << units::to_degrees( face.dir() )
+                                             << " -> "
+                                             << units::to_degrees( left_turn_dir );
             return true;
         } else if(
             straight_wheels_on_rail <= rightturn_wheels_on_rail &&
@@ -1399,6 +1411,10 @@ bool vehicle::allow_auto_turn_on_rails( units::angle &corrected_turn_dir ) const
                     rightturn_turning_wheels_that_are_one_axis )
         ) {
             corrected_turn_dir = right_turn_dir;
+            DebugLogFL( DL::Info, DC::Main ) << "auto right turn: "
+                                             << units::to_degrees( face.dir() )
+                                             << " -> "
+                                             << units::to_degrees( right_turn_dir );
             return true;
         }
     }
