@@ -1378,38 +1378,67 @@ bool vehicle::allow_auto_turn_on_rails( units::angle &corrected_turn_dir ) const
     } else {
         // Turn if terrain on left (or right) will support more rail wheels
         // than terrain in front of us.
-        units::angle center_dir = face.dir();
+        units::angle straight_dir = normalize( face.dir() );
         int straight_wheels_on_rail, straight_turning_wheels_that_are_one_axis;
-        precalculate_vehicle_turning( center_dir, true, TFLAG_RAIL, straight_wheels_on_rail,
+        precalculate_vehicle_turning( straight_dir, true, TFLAG_RAIL, straight_wheels_on_rail,
                                       straight_turning_wheels_that_are_one_axis );
 
         units::angle left_turn_dir =
-            get_corrected_turn_dir( face.dir() - 45_degrees, face.dir() );
+            get_corrected_turn_dir( normalize( straight_dir - 45_degrees ), straight_dir );
         int leftturn_wheels_on_rail, leftturn_turning_wheels_that_are_one_axis;
         precalculate_vehicle_turning( left_turn_dir, true, TFLAG_RAIL, leftturn_wheels_on_rail,
                                       leftturn_turning_wheels_that_are_one_axis );
 
         units::angle right_turn_dir =
-            get_corrected_turn_dir( face.dir() + 45_degrees, face.dir() );
+            get_corrected_turn_dir( normalize( straight_dir + 45_degrees ), straight_dir );
         int rightturn_wheels_on_rail, rightturn_turning_wheels_that_are_one_axis;
         precalculate_vehicle_turning( right_turn_dir, true, TFLAG_RAIL, rightturn_wheels_on_rail,
                                       rightturn_turning_wheels_that_are_one_axis );
 
-        if( straight_wheels_on_rail <= leftturn_wheels_on_rail &&
-            is_wheel_state_correct_to_turn_on_rails( leftturn_wheels_on_rail, rail_wheelcache.size(),
-                    leftturn_turning_wheels_that_are_one_axis )
-          ) {
+        bool wsc_straight =
+            is_wheel_state_correct_to_turn_on_rails(
+                straight_wheels_on_rail,
+                rail_wheelcache.size(),
+                straight_turning_wheels_that_are_one_axis
+            );
+        bool wsc_left =
+            is_wheel_state_correct_to_turn_on_rails(
+                leftturn_wheels_on_rail,
+                rail_wheelcache.size(),
+                leftturn_turning_wheels_that_are_one_axis
+            );
+        bool wsc_right =
+            is_wheel_state_correct_to_turn_on_rails(
+                rightturn_wheels_on_rail,
+                rail_wheelcache.size(),
+                rightturn_turning_wheels_that_are_one_axis
+            );
+
+        DebugLogFL( DL::Info, DC::Main )
+                << string_format(
+                    "check     S: %d wr=%d twa=%d wsc=%d   L: %d wr=%d twa=%d wsc=%d   R: %d wr=%d twa=%d wsc=%d",
+                    static_cast<int>( units::to_degrees( straight_dir ) ),
+                    straight_wheels_on_rail,
+                    straight_turning_wheels_that_are_one_axis,
+                    wsc_straight ? 1 : 0,
+                    static_cast<int>( units::to_degrees( left_turn_dir ) ),
+                    leftturn_wheels_on_rail,
+                    leftturn_turning_wheels_that_are_one_axis,
+                    wsc_left ? 1 : 0,
+                    static_cast<int>( units::to_degrees( right_turn_dir ) ),
+                    rightturn_wheels_on_rail,
+                    rightturn_turning_wheels_that_are_one_axis,
+                    wsc_right ? 1 : 0
+                );
+
+        if( straight_wheels_on_rail <= leftturn_wheels_on_rail && wsc_left ) {
             corrected_turn_dir = left_turn_dir;
             DebugLogFL( DL::Info, DC::Main ) << "auto left turn: "
                                              << units::to_degrees( face.dir() )
                                              << " -> "
                                              << units::to_degrees( left_turn_dir );
             return true;
-        } else if(
-            straight_wheels_on_rail <= rightturn_wheels_on_rail &&
-            is_wheel_state_correct_to_turn_on_rails( rightturn_wheels_on_rail, rail_wheelcache.size(),
-                    rightturn_turning_wheels_that_are_one_axis )
-        ) {
+        } else if( straight_wheels_on_rail <= rightturn_wheels_on_rail && wsc_right ) {
             corrected_turn_dir = right_turn_dir;
             DebugLogFL( DL::Info, DC::Main ) << "auto right turn: "
                                              << units::to_degrees( face.dir() )
