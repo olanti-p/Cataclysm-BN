@@ -5622,23 +5622,29 @@ vehicle *map::add_vehicle( const vproto_id &type, const tripoint &p, const units
         debugmsg( "Nonexistent vehicle type: \"%s\"", type.c_str() );
         return nullptr;
     }
-    if( !inbounds( p ) ) {
-        dbg( DL::Warn ) << string_format( "Out of bounds add_vehicle t=%s d=%d p=%s",
-                                          type, to_degrees( dir ), p.to_string() );
-        return nullptr;
-    }
 
     // debugmsg("n=%d x=%d y=%d MAPSIZE=%d ^2=%d", nonant, x, y, MAPSIZE, MAPSIZE*MAPSIZE);
     auto veh = std::make_unique<vehicle>( type, veh_fuel, veh_status );
-    tripoint p_ms = p;
-    veh->sm_pos = ms_to_sm_remain( p_ms );
-    veh->pos = p_ms.xy();
     veh->place_spawn_items();
     veh->face.init( dir );
     veh->turn_dir = dir;
-    // for backwards compatibility, we always spawn with a pivot point of (0,0) so
-    // that the mount at (0,0) is located at the spawn position.
-    veh->precalc_mounts( 0, dir, point() );
+
+    veh->precalc_mounts( 0, dir, veh->pivot_point() );
+
+    // Ensure (0,0) mount point will be located at the spawn position
+    point center_shift = veh->coord_translate( point() );
+    tripoint p_ms = p - center_shift;
+
+    if( !inbounds( p_ms ) ) {
+        dbg( DL::Warn )
+                << string_format( "Out of bounds add_vehicle t=%s d=%d p=%s p_ms=%s",
+                                  type, to_degrees( dir ), p.to_string(), p_ms.to_string() );
+        return nullptr;
+    }
+
+    veh->sm_pos = ms_to_sm_remain( p_ms );
+    veh->pos = p_ms.xy();
+
     //debugmsg("adding veh: %d, sm: %d,%d,%d, pos: %d, %d", veh, veh->smx, veh->smy, veh->smz, veh->posx, veh->posy);
     std::unique_ptr<vehicle> placed_vehicle_up =
         add_vehicle_to_map( std::move( veh ), merge_wrecks );
