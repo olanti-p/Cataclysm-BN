@@ -6003,6 +6003,10 @@ void game::print_all_tile_info( const tripoint &lp, const catacurses::window &w_
         visibility = m.get_visibility( m.apparent_light_at( lp, cache ), cache );
     }
     const Creature *creature = critter_at( lp, true );
+    if( debug_mode ) {
+        std::string msg = string_format( "%s %s", lp.to_string(), m.ter( lp )->id );
+        mvwprintw( w_look, point( 1, line++ ), msg );
+    }
     switch( visibility ) {
         case VIS_CLEAR: {
             const optional_vpart_position vp = m.veh_at( lp );
