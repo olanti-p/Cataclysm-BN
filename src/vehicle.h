@@ -1786,7 +1786,7 @@ class vehicle
          * type (e.g. if the definition of the prototype has been removed from json or if it has been
          * spawned with the default constructor).
          */
-        vproto_id type;
+        vproto_id type = vproto_id::NULL_ID();
         // parts_at_relative(dp) is used a lot (to put it mildly)
         std::map<point, std::vector<int>> relative_parts;
         std::set<label> labels;            // stores labels
@@ -1818,7 +1818,7 @@ class vehicle
 
     public:
         // Subtract from parts.size() to get the real part count.
-        int removed_part_count;
+        int removed_part_count = 0;
 
         /**
          * Submap coordinates of the currently loaded submap (see game::m)
@@ -1835,7 +1835,7 @@ class vehicle
         tripoint sm_pos;
 
         // alternator load as a percentage of engine power, in units of 0.1% so 1000 is 100.0%
-        int alternator_load;
+        int alternator_load = 0;
         /// Time occupied points were calculated.
         time_point occupied_cache_time = calendar::before_time_starts;
         // Turn the vehicle was last processed
@@ -1855,16 +1855,16 @@ class vehicle
         // Only used for collisions, vehicle falls instantly
         int vertical_velocity = 0;
         // id of the om_vehicle struct corresponding to this vehicle
-        int om_id;
+        int om_id = -1;
         // direction, to which vehicle is turning (player control). will rotate frame on next move
         // must be a multiple of 15 degrees
         units::angle turn_dir = 0_degrees;
         // amount of last turning (for calculate skidding due to handbrake)
         units::angle last_turn = 0_degrees;
         // goes from ~1 to ~0 while proceeding every turn
-        float of_turn;
+        float of_turn = 0.0f;
         // leftover from previous turn
-        float of_turn_carry;
+        float of_turn_carry = 0.0f;
         int extra_drag = 0;
         // last time point the fluid was inside tanks was checked for processing
         time_point last_fluid_check = calendar::turn_zero;
@@ -1888,7 +1888,7 @@ class vehicle
         bool no_refresh = false;
 
         // if true, pivot_cache needs to be recalculated
-        mutable bool pivot_dirty;
+        mutable bool pivot_dirty = true;
         mutable bool mass_dirty = true;
         mutable bool mass_center_precalc_dirty = true;
         mutable bool mass_center_no_precalc_dirty = true;
@@ -1915,7 +1915,7 @@ class vehicle
         bool is_autodriving = false;
         bool is_following = false;
         bool is_patrolling = false;
-        bool all_wheels_on_one_axis;
+        bool all_wheels_on_one_axis = false;
         // TODO: change these to a bitset + enum?
         // cruise control on/off
         bool cruise_on = true;
