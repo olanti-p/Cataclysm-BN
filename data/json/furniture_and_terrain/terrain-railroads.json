@@ -63,7 +63,7 @@
     "type": "terrain",
     "name": "railroad track",
     "description": "Trains used to chug along on these.  These rail tracks stand unused in the face of the Cataclysm.",
-    "symbol": "X",
+    "symbol": "h",
     "color": "cyan",
     "copy-from": "t_railroad_track",
     "flags": [ "BASHABLE", "RAIL", "RAIL_STRAIGHT", "TRANSPARENT" ]
@@ -73,7 +73,7 @@
     "type": "terrain",
     "name": "railroad track",
     "description": "Trains used to chug along on these.  These rail tracks stand unused in the face of the Cataclysm.",
-    "symbol": "X",
+    "symbol": "v",
     "color": "cyan",
     "copy-from": "t_railroad_track",
     "flags": [ "BASHABLE", "RAIL", "RAIL_STRAIGHT", "TRANSPARENT" ]
@@ -83,7 +83,7 @@
     "type": "terrain",
     "name": "railroad track",
     "description": "Trains used to chug along on these.  These rail tracks stand unused in the face of the Cataclysm.",
-    "symbol": "X",
+    "symbol": "d",
     "color": "cyan",
     "copy-from": "t_railroad_track",
     "flags": [ "BASHABLE", "RAIL", "RAIL_DIAG", "TRANSPARENT" ]
@@ -93,7 +93,7 @@
     "type": "terrain",
     "name": "railroad track",
     "description": "Trains used to chug along on these.  These rail tracks stand unused in the face of the Cataclysm.",
-    "symbol": "X",
+    "symbol": "1",
     "color": "cyan",
     "copy-from": "t_railroad_track",
     "flags": [ "BASHABLE", "RAIL", "RAIL_DIAG", "TRANSPARENT" ]
@@ -103,7 +103,7 @@
     "type": "terrain",
     "name": "railroad track",
     "description": "Trains used to chug along on these.  These rail tracks stand unused in the face of the Cataclysm.",
-    "symbol": "X",
+    "symbol": "2",
     "color": "cyan",
     "copy-from": "t_railroad_track",
     "flags": [ "BASHABLE", "RAIL", "RAIL_DIAG", "TRANSPARENT" ]
@@ -200,7 +200,7 @@
     "type": "terrain",
     "name": "railroad track",
     "description": "Trains used to chug along on these.  These rail tracks stand unused in the face of the Cataclysm.  A crosstie sits underneath, supporting the rails.",
-    "symbol": "X",
+    "symbol": "h",
     "color": "cyan",
     "copy-from": "t_railroad_track_on_tie",
     "flags": [ "BASHABLE", "RAIL", "RAIL_STRAIGHT", "TRANSPARENT" ]
@@ -210,7 +210,7 @@
     "type": "terrain",
     "name": "railroad track",
     "description": "Trains used to chug along on these.  These rail tracks stand unused in the face of the Cataclysm.  A crosstie sits underneath, supporting the rails.",
-    "symbol": "X",
+    "symbol": "v",
     "color": "cyan",
     "copy-from": "t_railroad_track_on_tie",
     "flags": [ "BASHABLE", "RAIL", "RAIL_STRAIGHT", "TRANSPARENT" ]
@@ -220,7 +220,7 @@
     "type": "terrain",
     "name": "railroad track",
     "description": "Trains used to chug along on these.  These rail tracks stand unused in the face of the Cataclysm.  A crosstie sits underneath, supporting the rails.",
-    "symbol": "X",
+    "symbol": "d",
     "color": "cyan",
     "copy-from": "t_railroad_track_on_tie",
     "flags": [ "BASHABLE", "RAIL", "RAIL_DIAG", "TRANSPARENT" ]
