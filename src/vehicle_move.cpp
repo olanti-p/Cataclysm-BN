@@ -1231,238 +1231,6 @@ float get_collision_factor( const float delta_v )
     }
 }
 
-void vehicle::precalculate_vehicle_turning( units::angle new_turn_dir, bool check_rail_direction,
-        const ter_bitflags ter_flag_to_check, int &wheels_on_rail,
-        int &turning_wheels_that_are_one_axis ) const
-{
-    // The direction we're moving
-    tileray mdir;
-    // calculate direction after turn
-    mdir.init( new_turn_dir );
-    tripoint dp;
-    bool is_diagonal_movement = std::lround( to_degrees( new_turn_dir ) ) % 90 == 45;
-
-    if( std::abs( velocity ) >= 20 ) {
-        mdir.advance( velocity < 0 ? -1 : 1 );
-        dp.x = mdir.dx();
-        dp.y = mdir.dy();
-    }
-
-    // number of wheels that will land on rail
-    wheels_on_rail = 0;
-
-    // used to count wheels that will land on different axis
-    int yVal = INT_MAX;
-    /*
-    number of wheels that are on one axis and will land on rail
-    (not sometimes correct, for vehicle with 4 wheels, wheels_on_rail==3
-    this can get 1 or 2 depending on position inaxis .wheelcache
-    */
-    turning_wheels_that_are_one_axis = 0;
-
-    map &here = get_map();
-    for( int part_index : wheelcache ) {
-        const auto &wheel = parts[ part_index ];
-        bool rails_ahead = true;
-        tripoint wheel_point;
-        coord_translate( mdir.dir(), this->pivot_point(), wheel.mount,
-                         wheel_point );
-
-        tripoint wheel_tripoint = global_pos3() + wheel_point;
-
-        // maximum number of incorrect tiles for this type of turn(diagonal or not)
-        const int allowed_incorrect_tiles_diagonal = 1;
-        const int allowed_incorrect_tiles_not_diagonal = 2;
-        int incorrect_tiles_diagonal = 0;
-        int incorrect_tiles_not_diagonal = 0;
-
-        // check if terrain under the wheel and in direction of moving is rails
-        for( int try_num = 0; try_num < 3; try_num++ ) {
-            // advance precalculated wheel position 1 time in direction of moving
-            wheel_tripoint += dp;
-
-            if( !here.has_flag_ter_or_furn( ter_flag_to_check, wheel_tripoint ) ) {
-                // this tile is not allowed, disallow turn
-                rails_ahead = false;
-                break;
-            }
-
-            // special case for rails
-            if( check_rail_direction ) {
-                ter_id terrain_at_wheel = here.ter( wheel_tripoint );
-                // check is it correct tile to turn into
-                if( !is_diagonal_movement && terrain_at_wheel->has_flag( "RAIL_DIAG" ) ) {
-                    incorrect_tiles_not_diagonal++;
-                } else if( is_diagonal_movement && terrain_at_wheel->has_flag( "RAIL_STRAIGHT" ) ) {
-                    incorrect_tiles_diagonal++;
-                }
-                if( incorrect_tiles_diagonal > allowed_incorrect_tiles_diagonal ||
-                    incorrect_tiles_not_diagonal > allowed_incorrect_tiles_not_diagonal ) {
-                    rails_ahead = false;
-                    break;
-                }
-            }
-        }
-        // found a wheel that turns correctly on rails
-        if( rails_ahead ) {
-            // if wheel that lands on rail still not found
-            if( yVal == INT_MAX ) {
-                // store mount point.y of wheel
-                yVal = wheel.mount.y;
-            }
-            if( yVal == wheel.mount.y ) {
-                turning_wheels_that_are_one_axis++;
-            }
-            wheels_on_rail++;
-        }
-    }
-}
-
-// rounds turn_dir to 45*X degree, respecting face_dir
-static units::angle get_corrected_turn_dir( units::angle turn_dir, units::angle face_dir )
-{
-    units::angle corrected_turn_dir = 0_degrees;
-
-    // Driver turned vehicle, round angle to 45 deg
-    if( turn_dir > face_dir && turn_dir < face_dir + 180_degrees ) {
-        corrected_turn_dir = face_dir + 45_degrees;
-    } else if( turn_dir < face_dir || turn_dir > 270_degrees ) {
-        corrected_turn_dir = face_dir - 45_degrees;
-    }
-    return normalize( corrected_turn_dir );
-}
-
-bool vehicle::allow_manual_turn_on_rails( units::angle &corrected_turn_dir ) const
-{
-    bool allow_turn_on_rail = false;
-    // driver tried to turn rails vehicle
-    if( turn_dir != face.dir() ) {
-        corrected_turn_dir = get_corrected_turn_dir( turn_dir, face.dir() );
-
-        int wheels_on_rail, turning_wheels_that_are_one_axis;
-        precalculate_vehicle_turning( corrected_turn_dir, true, TFLAG_RAIL, wheels_on_rail,
-                                      turning_wheels_that_are_one_axis );
-        if( is_wheel_state_correct_to_turn_on_rails( wheels_on_rail, rail_wheelcache.size(),
-                turning_wheels_that_are_one_axis ) ) {
-            allow_turn_on_rail = true;
-            DebugLogFL( DL::Info, DC::Main ) << "manual turn: "
-                                             << units::to_degrees( face.dir() )
-                                             << " -> "
-                                             << units::to_degrees( corrected_turn_dir );
-        }
-    }
-    return allow_turn_on_rail;
-}
-
-bool vehicle::allow_auto_turn_on_rails( units::angle &corrected_turn_dir ) const
-{
-    int face_dir_angles = units::to_degrees( face.dir() );
-    int face_dir_snapped = ( face_dir_angles / 45 ) * 45;
-    bool is_derailed = face_dir_angles != face_dir_snapped;
-    if( is_derailed ) {
-        // The vehicle is derailed, attempt to get back on tracks
-        units::angle desired_snap_dir = normalize( units::from_degrees(
-                                            std::roundf( face_dir_angles / 45.0f ) * 45 ) );
-
-        int straight_wheels_on_rail, straight_turning_wheels_that_are_one_axis;
-        precalculate_vehicle_turning( desired_snap_dir, true, TFLAG_RAIL, straight_wheels_on_rail,
-                                      straight_turning_wheels_that_are_one_axis );
-        if( straight_wheels_on_rail > 0 ) {
-            corrected_turn_dir = desired_snap_dir;
-            DebugLogFL( DL::Info, DC::Main ) << "getting back on track: "
-                                             << units::to_degrees( face.dir() )
-                                             << " -> "
-                                             << units::to_degrees( desired_snap_dir );
-            return true;
-        }
-    } else {
-        // Turn if terrain on left (or right) will support more rail wheels
-        // than terrain in front of us.
-        units::angle straight_dir = normalize( face.dir() );
-        int straight_wheels_on_rail, straight_turning_wheels_that_are_one_axis;
-        precalculate_vehicle_turning( straight_dir, true, TFLAG_RAIL, straight_wheels_on_rail,
-                                      straight_turning_wheels_that_are_one_axis );
-
-        units::angle left_turn_dir =
-            get_corrected_turn_dir( normalize( straight_dir - 45_degrees ), straight_dir );
-        int leftturn_wheels_on_rail, leftturn_turning_wheels_that_are_one_axis;
-        precalculate_vehicle_turning( left_turn_dir, true, TFLAG_RAIL, leftturn_wheels_on_rail,
-                                      leftturn_turning_wheels_that_are_one_axis );
-
-        units::angle right_turn_dir =
-            get_corrected_turn_dir( normalize( straight_dir + 45_degrees ), straight_dir );
-        int rightturn_wheels_on_rail, rightturn_turning_wheels_that_are_one_axis;
-        precalculate_vehicle_turning( right_turn_dir, true, TFLAG_RAIL, rightturn_wheels_on_rail,
-                                      rightturn_turning_wheels_that_are_one_axis );
-
-        bool wsc_straight =
-            is_wheel_state_correct_to_turn_on_rails(
-                straight_wheels_on_rail,
-                rail_wheelcache.size(),
-                straight_turning_wheels_that_are_one_axis
-            );
-        bool wsc_left =
-            is_wheel_state_correct_to_turn_on_rails(
-                leftturn_wheels_on_rail,
-                rail_wheelcache.size(),
-                leftturn_turning_wheels_that_are_one_axis
-            );
-        bool wsc_right =
-            is_wheel_state_correct_to_turn_on_rails(
-                rightturn_wheels_on_rail,
-                rail_wheelcache.size(),
-                rightturn_turning_wheels_that_are_one_axis
-            );
-
-        DebugLogFL( DL::Info, DC::Main )
-                << string_format(
-                    "check     S: %d wr=%d twa=%d wsc=%d   L: %d wr=%d twa=%d wsc=%d   R: %d wr=%d twa=%d wsc=%d",
-                    static_cast<int>( units::to_degrees( straight_dir ) ),
-                    straight_wheels_on_rail,
-                    straight_turning_wheels_that_are_one_axis,
-                    wsc_straight ? 1 : 0,
-                    static_cast<int>( units::to_degrees( left_turn_dir ) ),
-                    leftturn_wheels_on_rail,
-                    leftturn_turning_wheels_that_are_one_axis,
-                    wsc_left ? 1 : 0,
-                    static_cast<int>( units::to_degrees( right_turn_dir ) ),
-                    rightturn_wheels_on_rail,
-                    rightturn_turning_wheels_that_are_one_axis,
-                    wsc_right ? 1 : 0
-                );
-
-        if( straight_wheels_on_rail <= leftturn_wheels_on_rail && wsc_left ) {
-            corrected_turn_dir = left_turn_dir;
-            DebugLogFL( DL::Info, DC::Main ) << "auto left turn: "
-                                             << units::to_degrees( face.dir() )
-                                             << " -> "
-                                             << units::to_degrees( left_turn_dir );
-            return true;
-        } else if( straight_wheels_on_rail <= rightturn_wheels_on_rail && wsc_right ) {
-            corrected_turn_dir = right_turn_dir;
-            DebugLogFL( DL::Info, DC::Main ) << "auto right turn: "
-                                             << units::to_degrees( face.dir() )
-                                             << " -> "
-                                             << units::to_degrees( right_turn_dir );
-            return true;
-        }
-    }
-    return false;
-}
-
-bool vehicle::is_wheel_state_correct_to_turn_on_rails( int wheels_on_rail, int wheel_count,
-        int turning_wheels_that_are_one_axis ) const
-{
-    return ( wheels_on_rail >= 2 || // minimum wheels to be able to turn (excluding one axis vehicles)
-             ( wheels_on_rail == 1 && ( wheel_count == 1 ||
-                                        all_wheels_on_one_axis ) ) ) // for bikes or 1 wheel vehicle
-           && ( wheels_on_rail !=
-                turning_wheels_that_are_one_axis // wheels that want to turn is not on same axis
-                || all_wheels_on_one_axis ||
-                ( std::abs( rail_wheel_bounding_box.p2.x - rail_wheel_bounding_box.p1.x ) < 4 && velocity < 0 ) );
-    // allow turn for vehicles with wheel distance < 4 when moving backwards
-}
-
 vehicle *vehicle::act_on_map()
 {
     const tripoint pt = global_pos3();
@@ -1592,13 +1360,10 @@ vehicle *vehicle::act_on_map()
 
     bool allow_turn_on_rail = false;
     if( can_use_rails && !falling_only ) {
-        units::angle corrected_turn_dir;
-        allow_turn_on_rail = allow_manual_turn_on_rails( corrected_turn_dir );
-        if( !allow_turn_on_rail ) {
-            allow_turn_on_rail = allow_auto_turn_on_rails( corrected_turn_dir );
-        }
+        units::angle fin_turn_dir;
+        allow_turn_on_rail = process_turning_on_rails( fin_turn_dir );
         if( allow_turn_on_rail ) {
-            turn_dir = corrected_turn_dir;
+            turn_dir = fin_turn_dir;
         }
     }
 
@@ -1880,4 +1645,318 @@ units::angle map::shake_vehicle( vehicle &veh, const int velocity_before,
     }
 
     return coll_turn;
+}
+
+struct rail_axle_wheel {
+    int rail_id = 0;
+    int part_idx = 0;
+};
+
+struct rail_axle {
+    int x_pos = 0;
+    std::vector<rail_axle_wheel> wheels;
+};
+
+struct expected_rail {
+    int y_pos = 0;
+};
+
+struct rail_veh_profile {
+    std::vector<expected_rail> rails;
+    std::vector<rail_axle> axles;
+
+    void add_wheel( int part_idx, const point &mount ) {
+        int wheel_axle = mount.x;
+        int wheel_rail = mount.y;
+
+        int this_rail_id = -1;
+        for( size_t i = 0; i < rails.size(); i++ ) {
+            if( rails[i].y_pos == wheel_rail ) {
+                this_rail_id = static_cast<int>( i );
+                break;
+            }
+        }
+        if( this_rail_id == -1 ) {
+            this_rail_id = static_cast<int>( rails.size() );
+            expected_rail r;
+            r.y_pos = wheel_rail;
+            rails.push_back( r );
+        }
+
+        int this_axle_id = -1;
+        for( size_t i = 0; i < axles.size(); i++ ) {
+            if( axles[i].x_pos == wheel_axle ) {
+                this_axle_id = static_cast<int>( i );
+                break;
+            }
+        }
+        if( this_axle_id == -1 ) {
+            this_axle_id = static_cast<int>( axles.size() );
+            rail_axle a;
+            a.x_pos = wheel_axle;
+            axles.push_back( a );
+        }
+
+        rail_axle_wheel w;
+        w.part_idx = part_idx;
+        w.rail_id = this_rail_id;
+        axles[this_axle_id].wheels.push_back( w );
+    }
+};
+
+bool vehicle::process_turning_on_rails( units::angle &fin_turn_dir ) const
+{
+    map &here = get_map();
+
+    rail_veh_profile profile;
+    for( int railwheel_idx : rail_wheelcache ) {
+        const vehicle_part &wheel = parts[railwheel_idx];
+        profile.add_wheel( railwheel_idx, wheel.mount );
+    }
+
+    int face_dir_degrees = units::to_degrees( face.dir() );
+    int face_dir_snapped = ( face_dir_degrees / 45 ) * 45;
+
+    units::angle dir_straight = normalize( units::from_degrees( face_dir_snapped ) );
+    units::angle dir_left = normalize( dir_straight - 45_degrees );
+    units::angle dir_right = normalize( dir_straight + 45_degrees );
+
+    tripoint vec_straight;
+    tripoint vec_left;
+    tripoint vec_right;
+
+    {
+        tileray ray_straight( dir_straight );
+        ray_straight.advance();
+        vec_straight.x = ray_straight.dx();
+        vec_straight.y = ray_straight.dy();
+
+        tileray ray_left( dir_left );
+        ray_left.advance();
+        vec_left.x = ray_left.dx();
+        vec_left.y = ray_left.dy();
+
+        tileray ray_right( dir_right );
+        ray_right.advance();
+        vec_right.x = ray_right.dx();
+        vec_right.y = ray_right.dy();
+    }
+
+    const auto detect_rails = [&]( units::angle new_turn_dir, std::map<tripoint, size_t> &rails ) {
+        tileray move_vec( new_turn_dir );
+        move_vec.advance( 1 );
+        tripoint scan_vec;
+        scan_vec.x = move_vec.dx();
+        scan_vec.y = move_vec.dy();
+
+        int scan_min_x = rail_wheel_bounding_box.p1.x - 5;
+        int scan_max_x = rail_wheel_bounding_box.p2.x + 5;
+
+        for( size_t rail_id = 0; rail_id < profile.rails.size(); rail_id++ ) {
+            int wheel_y = profile.rails[rail_id].y_pos;
+
+            tripoint scan_pos;
+            coord_translate( new_turn_dir, pivot_point(), point( scan_min_x, wheel_y ), scan_pos );
+            scan_pos += global_pos3();
+            for( int scan_step = scan_min_x; scan_step <= scan_max_x; scan_step++ ) {
+                bool rail_here = here.has_flag_ter_or_furn( TFLAG_RAIL, scan_pos );
+                if( rail_here ) {
+                    rails[scan_pos] = rail_id;
+                }
+                scan_pos += scan_vec;
+            }
+        }
+    };
+
+    // TODO: this does not actually keep track of rail forks, only pretends to.
+    // TODO: do we even need to keep track of rail forks?
+    std::map<tripoint, size_t> rails_straight;
+    std::map<tripoint, size_t> rails_left;
+    std::map<tripoint, size_t> rails_right;
+
+    detect_rails( dir_straight, rails_straight );
+    detect_rails( dir_left, rails_left );
+    detect_rails( dir_right, rails_right );
+
+    const auto check_can_support_internal = [&](
+            int velocity_sign,
+            point scan_delta,
+            point scan_skew,
+            const std::map<tripoint, size_t> &rail_map
+    ) -> bool {
+        point veh_plus_y_vec = scan_delta.rotate( 1 );
+        int x_min = 0;
+        int x_max = 0;
+        if( velocity_sign > 0 )
+        {
+            x_max = rail_wheel_bounding_box.p2.x;
+            x_min = pivot_point().x;
+        } else
+        {
+            x_max = pivot_point().x;
+            x_min = rail_wheel_bounding_box.p1.x;
+        }
+        int num_scan_steps = x_max - x_min + 1;
+
+        tripoint pivot_map_pos = global_pos3();
+        for( size_t rail_id = 0; rail_id < profile.rails.size(); rail_id++ )
+        {
+            int rail_y_rel_to_pivot = profile.rails[rail_id].y_pos - pivot_point().y;
+            tripoint scan_pos = pivot_map_pos + rail_y_rel_to_pivot * veh_plus_y_vec;
+            for( int step = 0; step < num_scan_steps; step++ ) {
+                scan_pos = scan_pos + ( scan_delta + scan_skew ) * velocity_sign;
+                auto it = rail_map.find( scan_pos );
+                if( it == rail_map.end() || it->second != rail_id ) {
+                    // Wrong rail, or terrain is not a rail
+                    return false;
+                }
+            }
+        }
+        return true;
+    };
+
+    const auto check_can_support = [&]( int velocity_sign, units::angle dir,
+    const std::map<tripoint, size_t> &rail_map ) -> bool {
+        point ray_delta;
+        {
+            tileray ray( dir );
+            ray.advance( 1 );
+            ray_delta.x = ray.dx();
+            ray_delta.y = ray.dy();
+        }
+        if( ray_delta.x != 0 && ray_delta.y != 0 )
+        {
+            // We can't cleanly map diagonally oriented vehicles to rail turns.
+            // As such, treat the vehicle as if it can have either skew at the same time.
+            point rd1 = point( ray_delta.x, 0 );
+            point rd2 = point( 0, ray_delta.y );
+            return check_can_support_internal( velocity_sign, rd1, rd2, rail_map )
+            || check_can_support_internal( velocity_sign, rd2, rd1, rail_map );
+        } else
+        {
+            return check_can_support_internal( velocity_sign, ray_delta, point_zero, rail_map );
+        }
+    };
+
+    bool can_support_straight_f = check_can_support( 1, dir_straight, rails_straight );
+    bool can_support_straight_b = check_can_support( -1, dir_straight, rails_straight );
+    bool can_support_left_f = check_can_support( 1, dir_left, rails_left );
+    bool can_support_left_b = check_can_support( -1, dir_left, rails_left );
+    bool can_support_right_f = check_can_support( 1, dir_right, rails_right );
+    bool can_support_right_b = check_can_support( -1, dir_right, rails_right );
+
+    // Appraise possible vehicle orientations
+    bool is_derailed = face_dir_degrees != face_dir_snapped;
+    if( is_derailed ) {
+        // The vehicle is derailed, attempt to get back on rails
+        // TODO: allow only near exact facing
+        if( ( velocity >= 0 && can_support_straight_f ) ||
+            ( velocity < 0 && can_support_straight_b ) ) {
+            /*
+            DebugLogFL( DL::Info, DC::Main )
+                    << string_format(
+                        "getting back on rails %d %d->%d",
+                        velocity,
+                        static_cast<int>( face_dir_degrees ),
+                        static_cast<int>( units::to_degrees( dir_straight ) )
+                    );
+            */
+            fin_turn_dir = dir_straight;
+            return true;
+        } else {
+            DebugLogFL( DL::Info, DC::Main ) << "check skipped (derailed)";
+        }
+    } else {
+        bool can_go_straight = false;
+        bool can_turn_left = false;
+        bool can_turn_right = false;
+
+        if( velocity >= 0 ) {
+            if( can_support_straight_f ) {
+                can_go_straight = true;
+            }
+            if( can_support_left_f ) {
+                can_turn_left = true;
+            }
+            if( can_support_right_f ) {
+                can_turn_right = true;
+            }
+        } else {
+            if( can_support_straight_b ) {
+                can_go_straight = true;
+            }
+            if( can_support_left_b ) {
+                can_turn_left = true;
+            }
+            if( can_support_right_b ) {
+                can_turn_right = true;
+            }
+        }
+
+        /*
+        DebugLogFL( DL::Info, DC::Main )
+                << string_format(
+                    "check     vel=%d  S: %d %d %d:%d  L: %d %d %d:%d   R: %d %d %d:%d",
+                    velocity,
+                    static_cast<int>( units::to_degrees( dir_straight ) ),
+                    can_go_straight ? 1 : 0,
+                    can_support_straight_f ? 1 : 0,
+                    can_support_straight_b ? 1 : 0,
+                    static_cast<int>( units::to_degrees( dir_left ) ),
+                    can_turn_left ? 1 : 0,
+                    can_support_left_f ? 1 : 0,
+                    can_support_left_b ? 1 : 0,
+                    static_cast<int>( units::to_degrees( dir_right ) ),
+                    can_turn_right ? 1 : 0,
+                    can_support_right_f ? 1 : 0,
+                    can_support_right_b ? 1 : 0
+                );
+        */
+
+        if( face.dir() == turn_dir ) {
+            // Automatic movement - prefer going straight.
+            if( can_go_straight ) {
+                //DebugLogFL( DL::Info, DC::Main ) << "auto go straight";
+            } else if( can_turn_left ) {
+                //DebugLogFL( DL::Info, DC::Main ) << "auto turn left";
+                fin_turn_dir = dir_left;
+                return true;
+            } else if( can_turn_right ) {
+                //DebugLogFL( DL::Info, DC::Main ) << "auto turn right";
+                fin_turn_dir = dir_right;
+                return true;
+            }
+        } else {
+            // Manual movement - prefer going in turn direction.
+            units::angle dir_delta = normalize( turn_dir - face.dir() );
+            if( dir_delta < 180_degrees ) {
+                // Trying to turn right
+                if( can_turn_right ) {
+                    //DebugLogFL( DL::Info, DC::Main ) << "manual turn right";
+                    fin_turn_dir = dir_right;
+                    return true;
+                } else if( can_go_straight ) {
+                    //DebugLogFL( DL::Info, DC::Main ) << "manual go straight";
+                } else if( can_turn_left ) {
+                    //DebugLogFL( DL::Info, DC::Main ) << "manual turn left";
+                    fin_turn_dir = dir_left;
+                    return true;
+                }
+            } else {
+                // Trying to turn left
+                if( can_turn_left ) {
+                    //DebugLogFL( DL::Info, DC::Main ) << "manual turn left";
+                    fin_turn_dir = dir_left;
+                    return true;
+                } else if( can_go_straight ) {
+                    //DebugLogFL( DL::Info, DC::Main ) << "manual go straight";
+                } else if( can_turn_right ) {
+                    //DebugLogFL( DL::Info, DC::Main ) << "manual turn right";
+                    fin_turn_dir = dir_right;
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
 }
