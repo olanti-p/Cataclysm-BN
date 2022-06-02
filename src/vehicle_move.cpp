@@ -1864,7 +1864,7 @@ bool vehicle::process_turning_on_rails( units::angle &fin_turn_dir ) const
             fin_turn_dir = dir_straight;
             return true;
         } else {
-            DebugLogFL( DL::Info, DC::Main ) << "check skipped (derailed)";
+            //DebugLogFL( DL::Info, DC::Main ) << "check skipped (derailed)";
         }
     } else {
         bool can_go_straight = false;
