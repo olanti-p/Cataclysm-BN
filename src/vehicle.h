@@ -1786,7 +1786,7 @@ class vehicle
          * type (e.g. if the definition of the prototype has been removed from json or if it has been
          * spawned with the default constructor).
          */
-        vproto_id type = vproto_id::NULL_ID();
+        vproto_id type;
         // parts_at_relative(dp) is used a lot (to put it mildly)
         std::map<point, std::vector<int>> relative_parts;
         std::set<label> labels;            // stores labels
