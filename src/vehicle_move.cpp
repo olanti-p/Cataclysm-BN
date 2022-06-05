@@ -1796,7 +1796,7 @@ bool vehicle::process_turning_on_rails( units::angle &fin_turn_dir ) const
             x_max = pivot_point().x;
             x_min = rail_wheel_bounding_box.p1.x;
         }
-        int num_scan_steps = x_max - x_min + 1;
+        int num_scan_steps = std::max( 3, x_max - x_min + 1 );
 
         tripoint pivot_map_pos = global_pos3();
         for( size_t rail_id = 0; rail_id < profile.rails.size(); rail_id++ )
