@@ -516,7 +516,9 @@ class overmapbuffer
                             int radius );
 
         bool place_connection( const overmap_connection &connection, const tripoint_abs_omt &source,
-                               const tripoint_abs_omt &dest, bool must_be_unexplored, bool force );
+                               const tripoint_abs_omt &dest, bool must_be_unexplored,
+                               om_direction::type initial_dir, om_direction::type final_dir
+                             );
 
     private:
         /**
