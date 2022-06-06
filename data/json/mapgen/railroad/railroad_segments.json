@@ -9,8 +9,7 @@
       "railroad_omni",
       "railroad_four_way",
       "railroad_curved",
-      "railroad_tee",
-      "railroad_end"
+      "railroad_tee"
     ],
     "weight": 100,
     "object": {
@@ -40,6 +39,45 @@
         "  ^^X^^^X^^  ^^X^^^X^^  ",
         "  ^-x---x-^  ^-x---x-^  ",
         "  ^^X^^^X^^  ^^X^^^X^^  "
+      ],
+      "palettes": [ "railroad" ]
+    }
+  },
+  {
+    "type": "mapgen",
+    "method": "json",
+    "om_terrain": [
+      "railroad_end",
+      "railroad_end_2"
+    ],
+    "weight": 100,
+    "object": {
+      "fill_ter": "t_dirt",
+      "rows": [
+        "  ^^X^^^X^^  ^^X^^^X^^  ",
+        "  ^-x---x-^  ^-x---x-^  ",
+        "  ^^X^^^X^^  ^^X^^^X^^  ",
+        "  ^^X^^^X^^  ^^X^^^X^^  ",
+        "  ^-x---x-^  ^-x---x-^  ",
+        "  ^^X^^^X^^  ^^X^^^X^^  ",
+        "  ^^X^^^X^^  ^^X^^^X^^  ",
+        "  ^-x---x-^  ^-x---x-^  ",
+        "  ^^X^^^X^^  ^^X^^^X^^  ",
+        "  ^^X^^^X^^  ^^X^^^X^^  ",
+        "  ^-x---x-^  ^-x---x-^  ",
+        "  ^^X^^^X^^  ^^X^^^X^^  ",
+        "  ^^X^^^X^^  ^^X^^^X^^  ",
+        "  ^-x---x-^  ^-x---x-^  ",
+        "  ^^X^^^X^^  ^^X^^^X^^  ",
+        "  ^^S^^^S^^  ^^S^^^S^^  ",
+        "  ^^X^^^X^^  ^^X^^^X^^  ",
+        "                        ",
+        "                        ",
+        "                        ",
+        "                        ",
+        "                        ",
+        "                        ",
+        "                        "
       ],
       "palettes": [ "railroad" ]
     }

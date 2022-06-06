@@ -168,6 +168,13 @@
   {
     "type": "overmap_terrain",
     "copy-from": "railroad_base",
+    "id": "railroad_end_2",
+    "name": "railroad (end_2)",
+    "sym": "╵"
+  },
+  {
+    "type": "overmap_terrain",
+    "copy-from": "railroad_base",
     "id": "railroad_straight_end",
     "name": "railroad (straight_end)",
     "sym": "│",
