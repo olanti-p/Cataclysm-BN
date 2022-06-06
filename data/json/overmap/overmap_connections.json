@@ -132,7 +132,8 @@
                 "rotates": 4,
                 "complexity_cost": 0,
                 "upgrades": [
-                    "railroad_straight"
+                    "railroad_straight",
+                    "railroad_straight_end"
                 ]
             },
             {
