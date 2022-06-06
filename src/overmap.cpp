@@ -1,4 +1,3 @@
-#pragma optimize("", off)
 #include "omdata.h" // IWYU pragma: associated
 #include "overmap.h" // IWYU pragma: associated
 
@@ -3666,7 +3665,7 @@ pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_modular(
     using Node = pf::directed_node_alt<point_om_omt>;
 
     std::stringstream log;
-    constexpr bool verbose = true;
+    constexpr bool verbose = false;
 
     std::vector<int> initial_side_list = { initial_edge_id };
     std::vector<int> final_side_list = { final_edge_id };
