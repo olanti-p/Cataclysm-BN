@@ -715,11 +715,11 @@ bool query_yn( const std::string &text )
            .action == "YES";
 }
 
-bool query_int( int &result, int default, const std::string &text )
+bool query_int( int &result, int default_val, const std::string &text )
 {
     string_input_popup popup;
     popup.title( text );
-    popup.text( std::to_string( default ) );
+    popup.text( std::to_string( default_val ) );
     popup.only_digits( true );
     popup.query();
     if( popup.canceled() ) {
