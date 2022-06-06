@@ -4775,9 +4775,9 @@ void overmap::place_special(
             if( !elem.connection ) {
                 continue;
             }
-            cata::optional<point_om_omt> src;
+            cata::optional<point_om_omt> dst;
             if( !elem.connection->disable_city_hubs ) {
-                src = cit.pos;
+                dst = cit.pos;
             } else {
                 std::vector<tripoint_om_omt> opts = connections_out[elem.connection];
                 // We don't need returned value, but msvc complains due to nodiscard attribute
@@ -4787,10 +4787,10 @@ void overmap::place_special(
                 ( void )it_discard;
                 if( !opts.empty() ) {
                     std::shuffle( opts.begin(), opts.end(), rng_get_engine() );
-                    src = opts[0].xy();
+                    dst = opts[0].xy();
                 }
             }
-            if( src ) {
+            if( dst ) {
                 const tripoint_om_omt rp = p + om_direction::rotate( elem.p, dir );
                 om_direction::type initial_dir = elem.initial_dir;
 
@@ -4798,7 +4798,7 @@ void overmap::place_special(
                     initial_dir = om_direction::add( initial_dir, dir );
                 }
 
-                build_connection( *src, rp.xy(), elem.p.z, *elem.connection, must_be_unexplored, initial_dir );
+                build_connection( rp.xy(), *dst, elem.p.z, *elem.connection, must_be_unexplored, initial_dir );
             }
         }
     }
