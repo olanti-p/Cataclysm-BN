@@ -3664,6 +3664,17 @@ void overmap::build_mine( const tripoint_om_omt &origin, int s )
     ter_set( p, mine_finale_or_down );
 }
 
+static inline bool test_segment_connectivity(
+    const std::vector<int> &edge_src,
+    const std::vector<int> &edge_dest
+)
+{
+    return std::find_first_of(
+               edge_src.cbegin(), edge_src.cend(),
+               edge_dest.cbegin(), edge_dest.cend()
+           ) != edge_src.cend();
+}
+
 pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_alt(
     const overmap_connection &connection_arg, const point_om_omt &source, const point_om_omt &dest,
     int z, const bool must_be_unexplored ) const

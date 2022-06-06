@@ -109,11 +109,6 @@ struct om_connection_new {
         std::unordered_map<std::string, int> edge_string_hash;
 };
 
-bool test_segment_connectivity(
-    const std::vector<int> &edge_src,
-    const std::vector<int> &edge_dest
-);
-
 class overmap_connection
 {
     public:

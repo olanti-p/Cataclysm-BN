@@ -342,17 +342,6 @@ float om_connection_new::get_terrain_cost( const oter_id &t ) const
     return 0;
 }
 
-bool test_segment_connectivity(
-    const std::vector<int> &edge_src,
-    const std::vector<int> &edge_dest
-)
-{
-    return std::find_first_of(
-               edge_src.cbegin(), edge_src.cend(),
-               edge_dest.cbegin(), edge_dest.cend()
-           ) != edge_src.cend();
-}
-
 void overmap_connection::check() const
 {
     if( subtypes.empty() ) {
