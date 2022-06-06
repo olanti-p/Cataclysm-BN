@@ -2949,7 +2949,7 @@ void overmap::populate_road_connections( const overmap *north, const overmap *ea
 void overmap::populate_railroad_connections( const overmap *north, const overmap *east,
         const overmap *south, const overmap *west )
 {
-    const string_id<overmap_connection> local_road( "local_railroad" );
+    const string_id<overmap_connection> local_road( "railroad_new" );
     std::vector<tripoint_om_omt> &railroads_out = connections_out[local_road];
 
     populate_connections( *this, north, east, south, west, 4, railroads_out );
@@ -2976,7 +2976,7 @@ void overmap::place_roads()
 
 void overmap::place_railroads()
 {
-    const string_id<overmap_connection> local_road( "local_railroad" );
+    const string_id<overmap_connection> local_road( "railroad_new" );
     std::vector<tripoint_om_omt> &roads_out = connections_out[local_road];
 
     std::vector<point_om_omt> railroad_points;
