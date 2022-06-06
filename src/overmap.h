@@ -486,7 +486,10 @@ class overmap
             const point_om_omt &dest, int z, bool must_be_unexplored ) const;
         pf::directed_path_alt<point_om_omt> lay_out_connection_modular(
             const om_connection_modular &connection, const point_om_omt &source,
-            const point_om_omt &dest, int z, bool must_be_unexplored ) const;
+            const point_om_omt &dest, int z, bool must_be_unexplored,
+            const om_direction::type &initial_dir, int initial_edge_id,
+            const om_direction::type final_dir, int final_edge_id
+        ) const;
         pf::directed_path<point_om_omt> lay_out_street(
             const om_connection_linear &connection, const point_om_omt &source,
             om_direction::type dir, size_t len ) const;
@@ -495,13 +498,15 @@ class overmap
             const om_connection_linear &connection, const pf::directed_path<point_om_omt> &path, int z,
             const om_direction::type &initial_dir = om_direction::type::invalid );
         void build_connection_from_layout(
-            const om_connection_modular &connection, const pf::directed_path_alt<point_om_omt> &path, int z,
-            const om_direction::type &initial_dir = om_direction::type::invalid );
+            const om_connection_modular &connection, const pf::directed_path_alt<point_om_omt> &path, int z );
         void build_connection( const point_om_omt &source, const point_om_omt &dest, int z,
                                const overmap_connection &connection, bool must_be_unexplored,
-                               const om_direction::type &initial_dir = om_direction::type::invalid );
+                               const om_direction::type &initial_dir = om_direction::type::invalid,
+                               const om_direction::type &final_dir = om_direction::type::invalid
+                             );
         void connect_closest_points( const std::vector<point_om_omt> &points, int z,
-                                     const overmap_connection &connection );
+                                     const overmap_connection &connection
+                                   );
         // Polishing
         bool check_ot( const std::string &otype, ot_match_type match_type,
                        const tripoint_om_omt &p ) const;
