@@ -387,6 +387,7 @@ class overmap
 
     private:
         friend class overmapbuffer;
+        friend class railroad_gen_tester;
 
         std::vector<shared_ptr_fast<npc>> npcs;
 
