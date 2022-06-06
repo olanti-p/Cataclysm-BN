@@ -38,11 +38,11 @@ struct directed_node_alt {
     directed_node_alt() = default;
     ~directed_node_alt() = default;
     explicit directed_node_alt( Point pos, int var, om_direction::type rot, int conn ) :
-        pos( pos ), var( var ), rot( rot ), conn( conn ) {}
+        pos( pos ), var( var ), conn( conn ), rot( rot ) {}
 
     template<typename P>
     explicit directed_node_alt( Point pos, const directed_node_alt<P> &rhs ) :
-        pos( pos ), var( rhs.var ), rot( rhs.rot ), conn( rhs.conn ) {}
+        pos( pos ), var( rhs.var ), conn( rhs.conn ), rot( rhs.rot ) {}
 
     constexpr inline bool operator==( const directed_node_alt &rhs ) const {
         return pos == rhs.pos && var == rhs.var && rot == rhs.rot && conn == rhs.conn;

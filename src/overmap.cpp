@@ -175,6 +175,7 @@ static size_t from_dir( om_direction::type dir )
         case om_direction::type::west:
             return 10; // ew
         case om_direction::type::invalid:
+        case om_direction::type::num_directions:
             debugmsg( "Can't retrieve a line from the invalid direction." );
     }
 
@@ -3657,7 +3658,7 @@ static inline bool test_segment_connectivity(
 
 pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_modular(
     const om_connection_modular &connection, const point_om_omt &source, const point_om_omt &dest,
-    int z, const bool must_be_unexplored, const om_direction::type &initial_dir,
+    int z, const bool /*must_be_unexplored*/, const om_direction::type &initial_dir,
     int initial_edge_id, const om_direction::type final_dir, int final_edge_id ) const
 {
     half_open_rectangle<point_om_omt> om_bounds( { 0, 0 }, { OMAPX, OMAPY } );
@@ -3884,7 +3885,6 @@ pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_modular(
         {
             if( initial_dir != om_direction::type::invalid ) {
                 // Starting from specific connection + direction
-                int cur_seg_conn = initial_edge_id;
                 om_direction::type scan_dir = initial_dir;
                 point_om_omt scan_pos = source;
                 if( verbose ) {
@@ -3998,7 +3998,6 @@ pf::directed_path<point_om_omt> overmap::lay_out_connection_linear(
     int z, const bool must_be_unexplored ) const
 {
     half_open_rectangle<point_om_omt> soft_bound( { 5, 5 }, { OMAPX - 5, OMAPY - 5 } );
-    half_open_rectangle<point_om_omt> hard_bound( { 2, 2 }, { OMAPX - 2, OMAPY - 2 } );
 
     const pf::two_node_scoring_fn<point_om_omt> estimate =
     [&]( pf::directed_node<point_om_omt> cur, cata::optional<pf::directed_node<point_om_omt>> prev ) {
@@ -4240,12 +4239,8 @@ void overmap::build_connection_from_layout(
         return;
     }
 
-    const pf::directed_node_alt<point_om_omt> start = path.nodes.front();
-    const pf::directed_node_alt<point_om_omt> end = path.nodes.back();
-
     for( const auto &node : path.nodes ) {
         const tripoint_om_omt pos( node.pos, z );
-        const oter_id &ter_id = ter( pos );
         const oter_type_str_id &var = connection.segments[node.var].terrain;
 
         ter_set( pos, var->get_rotated( node.rot ) );
@@ -4503,6 +4498,7 @@ point om_direction::rotate( const point &p, type dir )
 {
     switch( dir ) {
         case om_direction::type::invalid:
+        case om_direction::type::num_directions:
             debugmsg( "Invalid overmap rotation (%d).", static_cast<int>( dir ) );
         // Intentional fallthrough.
         case om_direction::type::north:
@@ -4591,6 +4587,7 @@ std::string enum_to_string<om_direction::type>( om_direction::type data )
             return "s";
         case om_direction::type::west:
             return "w";
+        case om_direction::type::invalid:
         case om_direction::type::num_directions:
             break;
     }

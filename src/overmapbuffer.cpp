@@ -863,13 +863,8 @@ bool overmapbuffer::reveal_route( const tripoint_abs_omt &source, const tripoint
         return ter( base + p );
     };
 
-    const oter_id oter = get_ter_at( start );
     // TODO: support more variants of connections
     const string_id<overmap_connection> connection( "local_road" );
-
-    if( !connection ) {
-        return false;
-    }
 
     const pf::two_node_scoring_fn<point_rel_omt> estimate =
     [&]( pf::directed_node<point_rel_omt> cur, cata::optional<pf::directed_node<point_rel_omt>> ) {
