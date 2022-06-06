@@ -3207,13 +3207,14 @@ void overmap::build_city_street(
         return;
     }
 
-    const pf::directed_path<point_om_omt> street_path = lay_out_street( connection, p, dir, cs + 1 );
+    const pf::directed_path<point_om_omt> street_path = lay_out_street(
+                connection.data_linear, p, dir, cs + 1 );
 
     if( street_path.nodes.size() <= 1 ) {
         return; // Don't bother.
     }
     // Build the actual street.
-    build_connection( connection, street_path, 0 );
+    build_connection_from_layout( connection.data_linear, street_path, 0 );
     // Grow in the stated direction, sprouting off sub-roads and placing buildings as we go.
     const auto from = std::next( street_path.nodes.begin() );
     const auto to = street_path.nodes.end();
@@ -3655,12 +3656,10 @@ static inline bool test_segment_connectivity(
            ) != edge_src.cend();
 }
 
-pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_alt(
-    const overmap_connection &connection_arg, const point_om_omt &source, const point_om_omt &dest,
+pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_modular(
+    const om_connection_modular &connection, const point_om_omt &source, const point_om_omt &dest,
     int z, const bool must_be_unexplored ) const
 {
-    const om_connection_modular &connection = connection_arg.data_modular;
-
     half_open_rectangle<point_om_omt> om_bounds( { 0, 0 }, { OMAPX, OMAPY } );
 
     std::stringstream log;
@@ -3862,14 +3861,12 @@ pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_alt(
     return path;
 }
 
-pf::directed_path<point_om_omt> overmap::lay_out_connection(
-    const overmap_connection &connection_arg, const point_om_omt &source, const point_om_omt &dest,
+pf::directed_path<point_om_omt> overmap::lay_out_connection_linear(
+    const om_connection_linear &connection, const point_om_omt &source, const point_om_omt &dest,
     int z, const bool must_be_unexplored ) const
 {
     half_open_rectangle<point_om_omt> soft_bound( { 5, 5 }, { OMAPX - 5, OMAPY - 5 } );
     half_open_rectangle<point_om_omt> hard_bound( { 2, 2 }, { OMAPX - 2, OMAPY - 2 } );
-
-    const om_connection_linear &connection = connection_arg.data_linear;
 
     const pf::two_node_scoring_fn<point_om_omt> estimate =
     [&]( pf::directed_node<point_om_omt> cur, cata::optional<pf::directed_node<point_om_omt>> prev ) {
@@ -3955,11 +3952,9 @@ static pf::directed_path<point_om_omt> straight_path( const point_om_omt &source
     return res;
 }
 
-pf::directed_path<point_om_omt> overmap::lay_out_street( const overmap_connection &connection_arg,
+pf::directed_path<point_om_omt> overmap::lay_out_street( const om_connection_linear &connection,
         const point_om_omt &source, om_direction::type dir, size_t len ) const
 {
-    const om_connection_linear &connection = connection_arg.data_linear;
-
     const tripoint_om_omt from( source, 0 );
     // See if we need to make another one "step" further.
     const tripoint_om_omt en_pos = from + om_direction::displace( dir, len + 1 );
@@ -4020,15 +4015,14 @@ pf::directed_path<point_om_omt> overmap::lay_out_street( const overmap_connectio
     return straight_path( source, dir, actual_len );
 }
 
-void overmap::build_connection(
-    const overmap_connection &connection_arg, const pf::directed_path<point_om_omt> &path, int z,
+void overmap::build_connection_from_layout(
+    const om_connection_linear &connection, const pf::directed_path<point_om_omt> &path, int z,
     const om_direction::type &initial_dir )
 {
     if( path.nodes.empty() ) {
         return;
     }
 
-    const om_connection_linear &connection = connection_arg.data_linear;
     om_direction::type prev_dir = initial_dir;
 
     const pf::directed_node<point_om_omt> start = path.nodes.front();
@@ -4107,12 +4101,10 @@ void overmap::build_connection(
     }
 }
 
-void overmap::build_connection_alt(
-    const overmap_connection &connection_arg, const pf::directed_path_alt<point_om_omt> &path, int z,
+void overmap::build_connection_from_layout(
+    const om_connection_modular &connection, const pf::directed_path_alt<point_om_omt> &path, int z,
     const om_direction::type &initial_dir )
 {
-    const om_connection_modular &connection = connection_arg.data_modular;
-
     if( path.nodes.empty() ) {
         return;
     }
@@ -4134,12 +4126,13 @@ void overmap::build_connection( const point_om_omt &source, const point_om_omt &
                                 const om_direction::type &initial_dir )
 {
     if( connection.method == om_conn_method::modular ) {
-        auto conn = lay_out_connection_alt( connection, source, dest, z, must_be_unexplored );
-        build_connection_alt( connection, conn, z, initial_dir );
+        auto conn = lay_out_connection_modular( connection.data_modular, source, dest, z,
+                                                must_be_unexplored );
+        build_connection_from_layout( connection.data_modular, conn, z, initial_dir );
     } else {
-        pf::directed_path<point_om_omt> conn = lay_out_connection( connection, source, dest, z,
+        auto conn = lay_out_connection_linear( connection.data_linear, source, dest, z,
                                                must_be_unexplored );
-        build_connection( connection, conn, z, initial_dir );
+        build_connection_from_layout( connection.data_linear, conn, z, initial_dir );
     }
 }
 

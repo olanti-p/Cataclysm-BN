@@ -40,6 +40,8 @@ class map_extra;
 class monster;
 class npc;
 class overmap_connection;
+struct om_connection_linear;
+struct om_connection_modular;
 struct regional_settings;
 template <typename E> struct enum_traits;
 
@@ -479,28 +481,25 @@ class overmap
         void build_mine( const tripoint_om_omt &origin, int s );
 
         // Connection laying
-        pf::directed_path<point_om_omt> lay_out_connection(
-            const overmap_connection &connection, const point_om_omt &source,
+        pf::directed_path<point_om_omt> lay_out_connection_linear(
+            const om_connection_linear &connection, const point_om_omt &source,
             const point_om_omt &dest, int z, bool must_be_unexplored ) const;
-        pf::directed_path_alt<point_om_omt> lay_out_connection_alt(
-            const overmap_connection &connection, const point_om_omt &source,
+        pf::directed_path_alt<point_om_omt> lay_out_connection_modular(
+            const om_connection_modular &connection, const point_om_omt &source,
             const point_om_omt &dest, int z, bool must_be_unexplored ) const;
         pf::directed_path<point_om_omt> lay_out_street(
-            const overmap_connection &connection, const point_om_omt &source,
+            const om_connection_linear &connection, const point_om_omt &source,
             om_direction::type dir, size_t len ) const;
 
-        void build_connection(
-            const overmap_connection &connection, const pf::directed_path<point_om_omt> &path, int z,
+        void build_connection_from_layout(
+            const om_connection_linear &connection, const pf::directed_path<point_om_omt> &path, int z,
             const om_direction::type &initial_dir = om_direction::type::invalid );
-        void build_connection_alt(
-            const overmap_connection &connection, const pf::directed_path_alt<point_om_omt> &path, int z,
+        void build_connection_from_layout(
+            const om_connection_modular &connection, const pf::directed_path_alt<point_om_omt> &path, int z,
             const om_direction::type &initial_dir = om_direction::type::invalid );
         void build_connection( const point_om_omt &source, const point_om_omt &dest, int z,
                                const overmap_connection &connection, bool must_be_unexplored,
                                const om_direction::type &initial_dir = om_direction::type::invalid );
-        void build_connection_alt( const point_om_omt &source, const point_om_omt &dest, int z,
-                                   const overmap_connection &connection, bool must_be_unexplored,
-                                   const om_direction::type &initial_dir = om_direction::type::invalid );
         void connect_closest_points( const std::vector<point_om_omt> &points, int z,
                                      const overmap_connection &connection );
         // Polishing
