@@ -975,22 +975,9 @@ void overmap_special::finalize()
     }
 
     for( auto &elem : connections ) {
-        const auto &oter = get_terrain_at( elem.p );
-        if( !elem.terrain && oter.terrain ) {
-            elem.terrain = oter.terrain->get_type_id();    // Defaulted.
-        }
-
-        // If the connection type hasn't been specified, we'll guess for them.
-        // The guess isn't always right (hence guessing) in the case where
-        // multiple connections types can be made on a single location type,
-        // e.g. both roads and forest trails can be placed on "forest" locations.
-        if( elem.connection.is_null() ) {
-            elem.connection = overmap_connections::guess_for( elem.terrain );
-        }
-
         // If the connection has a "from" hint specified, then figure out what the
         // resulting direction from the hinted location to the connection point is,
-        // and use that as the intial direction to be passed off to the connection
+        // and use that as the initial direction to be passed off to the connection
         // building code.
         if( elem.from ) {
             const direction calculated_direction = direction_from( *elem.from, elem.p );
@@ -1059,18 +1046,11 @@ void overmap_special::check() const
     }
 
     for( const auto &elem : connections ) {
-        const auto &oter = get_terrain_at( elem.p );
-        if( !elem.terrain ) {
-            debugmsg( "In overmap special \"%s\", connection [%d,%d,%d] doesn't have a terrain.",
-                      id.c_str(), elem.p.x, elem.p.y, elem.p.z );
-        } else if( !elem.existing && !elem.terrain->has_flag( line_drawing ) ) {
-            debugmsg( "In overmap special \"%s\", connection [%d,%d,%d] \"%s\" isn't drawn with lines.",
-                      id.c_str(), elem.p.x, elem.p.y, elem.p.z, elem.terrain.c_str() );
-        } else if( oter.terrain && !oter.terrain->type_is( elem.terrain ) ) {
-            debugmsg( "In overmap special \"%s\", connection [%d,%d,%d] overwrites \"%s\".",
-                      id.c_str(), elem.p.x, elem.p.y, elem.p.z, oter.terrain.c_str() );
+        const overmap_special_terrain &ter = get_terrain_at( elem.p );
+        if( !ter.terrain.is_null() ) {
+            debugmsg( "In overmap special \"%s\", connection %s overwrites terrain.",
+                      id, elem.p.to_string() );
         }
-
         if( elem.from ) {
             // The only supported directions are north/east/south/west
             // as those are the four directions that overmap connections
@@ -1084,8 +1064,8 @@ void overmap_special::check() const
                 case direction::WEST:
                     continue;
                 default:
-                    debugmsg( "In overmap special \"%s\", connection [%d,%d,%d] is not directly north, east, south or west of the defined \"from\" [%d,%d,%d].",
-                              id.c_str(), elem.p.x, elem.p.y, elem.p.z, elem.from->x, elem.from->y, elem.from->z );
+                    debugmsg( "In overmap special \"%s\", connection %s is not directly north, east, south or west of the defined \"from\" %s.",
+                              id, elem.p.to_string(), elem.from->to_string() );
                     break;
             }
         }
@@ -3679,7 +3659,7 @@ pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_alt(
     const overmap_connection &connection_arg, const point_om_omt &source, const point_om_omt &dest,
     int z, const bool must_be_unexplored ) const
 {
-    const om_connection_new &connection = connection_arg.data_new;
+    const om_connection_modular &connection = connection_arg.data_modular;
 
     half_open_rectangle<point_om_omt> om_bounds( { 0, 0 }, { OMAPX, OMAPY } );
 
@@ -3883,16 +3863,18 @@ pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_alt(
 }
 
 pf::directed_path<point_om_omt> overmap::lay_out_connection(
-    const overmap_connection &connection, const point_om_omt &source, const point_om_omt &dest,
+    const overmap_connection &connection_arg, const point_om_omt &source, const point_om_omt &dest,
     int z, const bool must_be_unexplored ) const
 {
     half_open_rectangle<point_om_omt> soft_bound( { 5, 5 }, { OMAPX - 5, OMAPY - 5 } );
     half_open_rectangle<point_om_omt> hard_bound( { 2, 2 }, { OMAPX - 2, OMAPY - 2 } );
 
+    const om_connection_linear &connection = connection_arg.data_linear;
+
     const pf::two_node_scoring_fn<point_om_omt> estimate =
     [&]( pf::directed_node<point_om_omt> cur, cata::optional<pf::directed_node<point_om_omt>> prev ) {
         const auto &id( ter( tripoint_om_omt( cur.pos, z ) ) );
-        const overmap_connection::subtype *subtype = connection.pick_subtype_for( id );
+        const om_conn_subtype *subtype = connection.pick_subtype_for( id );
 
         if( !subtype ) {
             return pf::node_score::rejected;  // No option for this terrain.
@@ -3920,7 +3902,7 @@ pf::directed_path<point_om_omt> overmap::lay_out_connection(
         if( prev && prev->dir != om_direction::type::invalid && prev->dir != cur.dir ) {
             // Direction has changed.
             const oter_id &prev_id = ter( tripoint_om_omt( prev->pos, z ) );
-            const overmap_connection::subtype *prev_subtype = connection.pick_subtype_for( prev_id );
+            const om_conn_subtype *prev_subtype = connection.pick_subtype_for( prev_id );
 
             if( !prev_subtype || !prev_subtype->allows_turns() ) {
                 return pf::node_score::rejected;
@@ -3973,9 +3955,11 @@ static pf::directed_path<point_om_omt> straight_path( const point_om_omt &source
     return res;
 }
 
-pf::directed_path<point_om_omt> overmap::lay_out_street( const overmap_connection &connection,
+pf::directed_path<point_om_omt> overmap::lay_out_street( const overmap_connection &connection_arg,
         const point_om_omt &source, om_direction::type dir, size_t len ) const
 {
+    const om_connection_linear &connection = connection_arg.data_linear;
+
     const tripoint_om_omt from( source, 0 );
     // See if we need to make another one "step" further.
     const tripoint_om_omt en_pos = from + om_direction::displace( dir, len + 1 );
@@ -4037,13 +4021,14 @@ pf::directed_path<point_om_omt> overmap::lay_out_street( const overmap_connectio
 }
 
 void overmap::build_connection(
-    const overmap_connection &connection, const pf::directed_path<point_om_omt> &path, int z,
+    const overmap_connection &connection_arg, const pf::directed_path<point_om_omt> &path, int z,
     const om_direction::type &initial_dir )
 {
     if( path.nodes.empty() ) {
         return;
     }
 
+    const om_connection_linear &connection = connection_arg.data_linear;
     om_direction::type prev_dir = initial_dir;
 
     const pf::directed_node<point_om_omt> start = path.nodes.front();
@@ -4053,7 +4038,7 @@ void overmap::build_connection(
         const tripoint_om_omt pos( node.pos, z );
         const oter_id &ter_id = ter( pos );
         const om_direction::type new_dir = node.dir;
-        const overmap_connection::subtype *subtype = connection.pick_subtype_for( ter_id );
+        const om_conn_subtype *subtype = connection.pick_subtype_for( ter_id );
 
         if( !subtype ) {
             debugmsg( "No suitable subtype of connection \"%s\" found for \"%s\".", connection.id.c_str(),
@@ -4126,7 +4111,7 @@ void overmap::build_connection_alt(
     const overmap_connection &connection_arg, const pf::directed_path_alt<point_om_omt> &path, int z,
     const om_direction::type &initial_dir )
 {
-    const om_connection_new &connection = connection_arg.data_new;
+    const om_connection_modular &connection = connection_arg.data_modular;
 
     if( path.nodes.empty() ) {
         return;
@@ -4148,7 +4133,7 @@ void overmap::build_connection( const point_om_omt &source, const point_om_omt &
                                 const overmap_connection &connection, const bool must_be_unexplored,
                                 const om_direction::type &initial_dir )
 {
-    if( connection.use_new_method ) {
+    if( connection.method == om_conn_method::modular ) {
         auto conn = lay_out_connection_alt( connection, source, dest, z, must_be_unexplored );
         build_connection_alt( connection, conn, z, initial_dir );
     } else {
@@ -4478,11 +4463,15 @@ om_direction::type overmap::random_special_rotation( const overmap_special &spec
             }
             const oter_id &oter = ter( rp );
 
-            if( is_ot_match( con.terrain.str(), oter, ot_match_type::type ) ) {
-                ++score; // Found another one satisfied connection.
-            } else if( !oter || con.existing || !con.connection->pick_subtype_for( oter ) ) {
-                valid = false;
-                break;
+            if( con.connection->method == om_conn_method::linear ) {
+                if( is_ot_match( con.connection->data_linear.default_terrain.str(), oter, ot_match_type::type ) ) {
+                    ++score; // Found another one satisfied connection.
+                } else if( !oter || con.existing || !con.connection->data_linear.pick_subtype_for( oter ) ) {
+                    valid = false;
+                    break;
+                }
+            } else {
+                ++score; // HACK
             }
         }
 

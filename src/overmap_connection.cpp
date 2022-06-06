@@ -18,9 +18,15 @@ generic_factory<overmap_connection> connections( "overmap connection" );
 
 } // namespace
 
-static const std::map<std::string, overmap_connection::subtype::flag> connection_subtype_flag_map
+static const std::map<std::string, om_conn_flag> connection_subtype_flag_map
 = {
-    { "ORTHOGONAL", overmap_connection::subtype::flag::orthogonal },
+    { "ORTHOGONAL", om_conn_flag::orthogonal },
+};
+
+static const std::map<std::string, om_conn_method> om_conn_method_type_map
+= {
+    { "modular", om_conn_method::modular },
+    { "linear", om_conn_method::linear },
 };
 
 template<>
@@ -48,7 +54,7 @@ const overmap_connection &int_id<overmap_connection>::obj() const
     return connections.obj( *this );
 }
 
-bool overmap_connection::subtype::allows_terrain( const int_id<oter_t> &oter ) const
+bool om_conn_subtype::allows_terrain( const oter_id &oter ) const
 {
     if( oter->type_is( terrain ) ) {
         return true;    // Can be built on similar terrains.
@@ -60,7 +66,7 @@ bool overmap_connection::subtype::allows_terrain( const int_id<oter_t> &oter ) c
     } );
 }
 
-void overmap_connection::subtype::load( const JsonObject &jo )
+void om_conn_subtype::load( const JsonObject &jo )
 {
     const auto flag_reader = make_flag_reader( connection_subtype_flag_map, "connection subtype flag" );
 
@@ -71,14 +77,13 @@ void overmap_connection::subtype::load( const JsonObject &jo )
     optional( jo, false, "flags", flags, flag_reader );
 }
 
-void overmap_connection::subtype::deserialize( JsonIn &jsin )
+void om_conn_subtype::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
     load( jo );
 }
 
-const overmap_connection::subtype *overmap_connection::pick_subtype_for(
-    const int_id<oter_t> &ground ) const
+const om_conn_subtype *om_connection_linear::pick_subtype_for( const oter_id &ground ) const
 {
     if( !ground ) {
         return nullptr;
@@ -92,11 +97,11 @@ const overmap_connection::subtype *overmap_connection::pick_subtype_for(
     }
 
     const auto iter = std::find_if( subtypes.cbegin(),
-    subtypes.cend(), [&ground]( const subtype & elem ) {
+    subtypes.cend(), [&ground]( const om_conn_subtype & elem ) {
         return elem.allows_terrain( ground );
     } );
 
-    const overmap_connection::subtype *result = iter != subtypes.cend() ? &*iter : nullptr;
+    const om_conn_subtype *result = iter != subtypes.cend() ? &*iter : nullptr;
 
     cached_subtypes[cache_index].value = result;
     cached_subtypes[cache_index].assigned = true;
@@ -104,23 +109,31 @@ const overmap_connection::subtype *overmap_connection::pick_subtype_for(
     return result;
 }
 
-bool overmap_connection::has( const int_id<oter_t> &oter ) const
+bool om_connection_linear::has( const oter_id &oter ) const
 {
-    return std::find_if( subtypes.cbegin(), subtypes.cend(), [&oter]( const subtype & elem ) {
+    return std::find_if( subtypes.cbegin(), subtypes.cend(), [&oter]( const om_conn_subtype & elem ) {
         return oter->type_is( elem.terrain );
     } ) != subtypes.cend();
 }
 
+void om_connection_linear::load( const JsonObject &jo )
+{
+    mandatory( jo, false, "subtypes", subtypes );
+    mandatory( jo, false, "default_terrain", default_terrain );
+}
+
 void overmap_connection::load( const JsonObject &jo, const std::string & )
 {
-    data_new.id = id;
-    mandatory( jo, false, "subtypes", subtypes );
+    data_modular.id = id;
     optional( jo, false, "disable_city_hubs", disable_city_hubs );
-    optional( jo, false, "use_new_method", use_new_method );
-    if( use_new_method ) {
-        mandatory( jo, false, "data_new", data_new );
+
+    const auto method_reader = make_flag_reader( om_conn_method_type_map, "overmap connection method" );
+
+    mandatory( jo, false, "method", method, method_reader );
+    if( method == om_conn_method::modular ) {
+        data_modular.load( jo );
     } else {
-        optional( jo, false, "data_new", data_new );
+        data_linear.load( jo );
     }
 }
 
@@ -197,21 +210,22 @@ void om_conn_placement::deserialize( JsonIn &jsin )
     load( jo );
 }
 
-void om_connection_new::load( const JsonObject &jo )
+void om_connection_modular::load( const JsonObject &jo )
 {
     mandatory( jo, false, "segments", segments );
     mandatory( jo, false, "placement", placements );
     mandatory( jo, false, "default_segment", default_segment_str );
+    mandatory( jo, false, "default_conn", default_conn_str );
     optional( jo, false, "follow_cost", follow_cost );
 }
 
-void om_connection_new::deserialize( JsonIn &jsin )
+void om_connection_modular::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
     load( jo );
 }
 
-void om_connection_new::check() const
+void om_connection_modular::check() const
 {
     if( !default_segment_str.is_valid() ) {
         debugmsg( R"(In overmap connection "%s", default segment "%s" is invalid.)",
@@ -225,6 +239,9 @@ void om_connection_new::check() const
         }
         if( !it.terrain.is_valid() ) {
             debugmsg( R"(In overmap connection "%s", segment terrain "%s" is invalid.)", id, it.terrain );
+        }
+        if( it.connections.empty() ) {
+            debugmsg( R"(In overmap connection "%s", segment "%s" has no connections.)", id, it.terrain );
         }
         for( const om_conn_upgrade &up : it.upgrades ) {
             if( !up.segment_str.is_valid() ) {
@@ -246,7 +263,7 @@ void om_connection_new::check() const
     }
 }
 
-void om_connection_new::finalize()
+void om_connection_modular::finalize()
 {
     default_segment = find_segment_by_terr( default_segment_str );
     for( om_conn_placement &it_pl : placements ) {
@@ -304,9 +321,17 @@ void om_connection_new::finalize()
             }
         }
     }
+    auto it = edge_string_hash.find( default_conn_str );
+    if( it == edge_string_hash.end() ) {
+        debugmsg( R"(In overmap connection "%s", default_conn "%s" is never used by segments.)", id,
+                  default_conn_str );
+        default_conn = 0;
+    } else {
+        default_conn = it->second;
+    }
 }
 
-int om_connection_new::find_segment_by_terr( const oter_type_str_id &seg ) const
+int om_connection_modular::find_segment_by_terr( const oter_type_str_id &seg ) const
 {
     for( size_t i = 0; i < segments.size(); i++ ) {
         if( segments[i].terrain == seg ) {
@@ -317,7 +342,7 @@ int om_connection_new::find_segment_by_terr( const oter_type_str_id &seg ) const
 }
 
 const std::vector<int> &
-om_connection_new::find_candidate_segments( const oter_id &t ) const
+om_connection_modular::find_candidate_segments( const oter_id &t ) const
 {
     for( const om_conn_placement &it_pl : placements ) {
         for( const om_conn_location &it_loc : it_pl.locations ) {
@@ -330,7 +355,7 @@ om_connection_new::find_candidate_segments( const oter_id &t ) const
     return no_segments;
 }
 
-float om_connection_new::get_terrain_cost( const oter_id &t ) const
+float om_connection_modular::get_terrain_cost( const oter_id &t ) const
 {
     for( const om_conn_placement &it_pl : placements ) {
         for( const om_conn_location &it_loc : it_pl.locations ) {
@@ -342,33 +367,46 @@ float om_connection_new::get_terrain_cost( const oter_id &t ) const
     return 0;
 }
 
-void overmap_connection::check() const
+void om_connection_linear::check() const
 {
     if( subtypes.empty() ) {
-        debugmsg( "Overmap connection \"%s\" doesn't have subtypes.", id.c_str() );
+        debugmsg( "Overmap connection \"%s\" doesn't have subtypes.", id );
     }
     for( const auto &subtype : subtypes ) {
         if( !subtype.terrain.is_valid() ) {
-            debugmsg( "In overmap connection \"%s\", terrain \"%s\" is invalid.", id.c_str(),
-                      subtype.terrain.c_str() );
+            debugmsg( "In overmap connection \"%s\", terrain \"%s\" is invalid.", id, subtype.terrain );
         }
         for( const auto &location : subtype.locations ) {
             if( !location.is_valid() ) {
-                debugmsg( "In overmap connection \"%s\", location \"%s\" is invalid.", id.c_str(),
-                          location.c_str() );
+                debugmsg( "In overmap connection \"%s\", location \"%s\" is invalid.", id, location );
             }
         }
     }
-    if( use_new_method ) {
-        data_new.check();
+    if( !default_terrain.is_valid() ) {
+        debugmsg( "In overmap connection \"%s\", default terrain \"%s\" is invalid.", id, default_terrain );
     }
+}
+
+void overmap_connection::check() const
+{
+    if( method == om_conn_method::modular ) {
+        data_modular.check();
+    } else {
+        data_linear.check();
+    }
+}
+
+void om_connection_linear::finalize()
+{
+    cached_subtypes.resize( overmap_terrains::get_all().size() );
 }
 
 void overmap_connection::finalize()
 {
-    cached_subtypes.resize( overmap_terrains::get_all().size() );
-    if( use_new_method ) {
-        data_new.finalize();
+    if( method == om_conn_method::modular ) {
+        data_modular.finalize();
+    } else {
+        data_linear.finalize();
     }
 }
 
@@ -400,18 +438,17 @@ const std::vector<overmap_connection> &overmap_connections::get_all()
     return connections.get_all();
 }
 
-string_id<overmap_connection> overmap_connections::guess_for( const int_id<oter_t> &oter_id )
+string_id<overmap_connection> overmap_connections::guess_for( const oter_id &oter_id )
 {
     const auto &all = connections.get_all();
     const auto iter = std::find_if( all.cbegin(),
     all.cend(), [&oter_id]( const overmap_connection & elem ) {
-        return elem.pick_subtype_for( oter_id ) != nullptr;
+        if( elem.method == om_conn_method::linear ) {
+            return elem.data_linear.pick_subtype_for( oter_id ) != nullptr;
+        } else {
+            return false;
+        }
     } );
 
     return iter != all.cend() ? iter->id : string_id<overmap_connection>::NULL_ID();
-}
-
-string_id<overmap_connection> overmap_connections::guess_for( const int_id<oter_type_t> &oter_id )
-{
-    return guess_for( oter_id->get_first() );
 }

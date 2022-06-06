@@ -442,8 +442,6 @@ struct overmap_special_connection {
     tripoint p;
     cata::optional<tripoint> from;
     om_direction::type initial_dir = om_direction::type::invalid;
-    // TODO: Remove it.
-    string_id<oter_type_t> terrain;
     string_id<overmap_connection> connection;
     bool existing = false;
 
@@ -451,7 +449,6 @@ struct overmap_special_connection {
     void deserialize( JsonStream &jsin ) {
         auto jo = jsin.get_object();
         jo.read( "point", p );
-        jo.read( "terrain", terrain );
         jo.read( "existing", existing );
         jo.read( "connection", connection );
         assign( jo, "from", from );
