@@ -3890,7 +3890,7 @@ pf::directed_path_alt<point_om_omt> overmap::lay_out_connection_modular(
                 if( verbose ) {
                     log << string_format( "\nstart (conn+dir):" );
                 }
-                try_advance_from( scan_pos, initial_side_list, scan_dir );
+                try_advance_from( scan_pos, initial_side_list, om_direction::opposite( scan_dir ) );
             } else {
                 point_om_omt scan_pos = cur.pos;
                 const oter_id &scan_ter = ter( tripoint_om_omt( scan_pos, z ) );
