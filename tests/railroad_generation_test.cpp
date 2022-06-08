@@ -334,7 +334,45 @@ TEST_CASE( "railroad_gen_join", "[mapgen][connects][railroad]" ) {
             U"....^╚━<.."
         }
     } );
+}
 
+TEST_CASE( "railroad_gen_join_diag", "[mapgen][connects][railroad]" ) {
+    railroad_gen_tester( 4, {
+        {
+            U"...#......",
+            U"#.........",
+            U"..........",
+            U".........#",
+            U"..........",
+            U"..........",
+            U".........#",
+            U"..........",
+            U"..........",
+            U"........#."
+        }
+    } )
+    // Diagonal nw->se
+    .run_gen( point( 0, 0 ), om_direction::type::invalid, point( 9, 9 ), om_direction::type::invalid )
+    // Joined by w->se
+    .run_gen( point( 0, 2 ), om_direction::type::invalid, point(9, 9), om_direction::type::invalid)
+    // Joined by s->nw
+    .run_gen( point( 7, 9 ), om_direction::type::invalid, point(0, 0), om_direction::type::invalid)
+    // Joined by e->nw
+    .run_gen( point( 9, 4 ), om_direction::type::invalid, point(0, 0), om_direction::type::invalid)
+    .expect( {
+        {
+            U">┉╗#......",
+            U"#.└┐......",
+            U">──┺╗.....",
+            U"....└┐...#",
+            U".....╚┱──<",
+            U"......└┓..",
+            U".......┡┐#",
+            U".......│└┓",
+            U".......│.┋",
+            U".......^#^"
+        }
+    } );
 }
 
 TEST_CASE( "railroad_gen_no_self_crossing", "[mapgen][connects][railroad]" ) {
