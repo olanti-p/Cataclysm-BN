@@ -212,9 +212,7 @@ class railroad_gen_tester
         }
 };
 
-TEST_CASE( "railroad_gen", "[mapgen][connects]" )
-{
-    static canvas empty_10_10 = {{
+static canvas empty_10_10 = {{
             U"..........",
             U"..........",
             U"..........",
@@ -228,6 +226,8 @@ TEST_CASE( "railroad_gen", "[mapgen][connects]" )
         }
     };
 
+TEST_CASE( "railroad_gen_straight", "[mapgen][connects][railroad]" )
+{
     railroad_gen_tester( 1, empty_10_10 )
     // Horizontal w->e
     .run_gen( point( 1, 1 ), om_direction::type::invalid, point( 3, 1 ), om_direction::type::invalid )
@@ -254,7 +254,9 @@ TEST_CASE( "railroad_gen", "[mapgen][connects]" )
             U".........."
         }
     } );
+}
 
+TEST_CASE( "railroad_gen_curves_and_connections", "[mapgen][connects][railroad]" ) {
     railroad_gen_tester( 2, empty_10_10 )
     // Straight with connections towards n and s
     .run_gen( point( 9, 0 ), om_direction::type::north, point( 9, 9 ), om_direction::type::south )
@@ -280,7 +282,9 @@ TEST_CASE( "railroad_gen", "[mapgen][connects]" )
             U"*────────+"
         }
     } );
+}
 
+TEST_CASE( "railroad_gen_extend", "[mapgen][connects][railroad]" ) {
     railroad_gen_tester( 3, empty_10_10 )
     // Horizontal w->e extends existing w->e
     .run_gen( point( 3, 1 ), om_direction::type::invalid, point( 5, 1 ), om_direction::type::invalid )
@@ -304,7 +308,9 @@ TEST_CASE( "railroad_gen", "[mapgen][connects]" )
             U".........."
         }
     } );
+}
 
+TEST_CASE( "railroad_gen_join", "[mapgen][connects][railroad]" ) {
     railroad_gen_tester( 4, empty_10_10 )
     // Vertical s->n
     .run_gen( point( 4, 0 ), om_direction::type::invalid, point( 4, 9 ), om_direction::type::invalid )
@@ -329,6 +335,9 @@ TEST_CASE( "railroad_gen", "[mapgen][connects]" )
         }
     } );
 
+}
+
+TEST_CASE( "railroad_gen_no_self_crossing", "[mapgen][connects][railroad]" ) {
     static canvas empty_10_10_4_blocked = {{
             U"#.#.......",
             U"..........",
@@ -347,7 +356,9 @@ TEST_CASE( "railroad_gen", "[mapgen][connects]" )
     // Path can't cross itself
     .run_gen( point( 1, 0 ), om_direction::type::invalid, point( 0, 1 ), om_direction::type::invalid )
     .expect( empty_10_10_4_blocked );
+}
 
+TEST_CASE( "railroad_gen_no_hard_turns", "[mapgen][connects][railroad]" ) {
     static canvas hard_turn = {{
             U"#######",
             U"#.....#",
@@ -366,7 +377,9 @@ TEST_CASE( "railroad_gen", "[mapgen][connects]" )
     .run_gen( point( 5, 5 ), om_direction::type::invalid, point( 1, 1 ), om_direction::type::invalid )
     .run_gen( point( 1, 5 ), om_direction::type::invalid, point( 5, 1 ), om_direction::type::invalid )
     .expect( hard_turn );
+}
 
+TEST_CASE( "railroad_gen_s_bend", "[mapgen][connects][railroad]" ) {
     static canvas s_bend = {{
             U"#######",
             U"#...###",
@@ -385,7 +398,9 @@ TEST_CASE( "railroad_gen", "[mapgen][connects]" )
             U"#######"
         }
     } );
+}
 
+TEST_CASE( "railroad_gen_bridges", "[mapgen][connects][railroad]" ) {
     static canvas riverside = {{
             U"..........",
             U"..........",
@@ -420,7 +435,9 @@ TEST_CASE( "railroad_gen", "[mapgen][connects]" )
             U".....R║R║R"
         }
     } );
+}
 
+TEST_CASE( "railroad_gen_no_bridge_crossing", "[mapgen][connects][railroad]" ) {
     static canvas lake_4_sides = {{
             U".....#.....",
             U".....#.....",
