@@ -143,12 +143,12 @@ class railroad_gen_tester
 {
     private:
         int test_num = -1;
-        overmap om;
+        std::unique_ptr<overmap> om;
         point sz;
 
     public:
         railroad_gen_tester( int test_num, const canvas &initial ) :
-            test_num( test_num ), om( point_abs_om( 0, 0 ) ) {
+            test_num( test_num ), om( std::make_unique<overmap>( point_abs_om( 0, 0 ) ) ) {
             CAPTURE( test_num );
 
             sz = get_canvas_size( initial );
@@ -158,23 +158,23 @@ class railroad_gen_tester
             oter_id block = block_str.id();
 
             for( int x = 0; x < sz.x + 2; x++ ) {
-                om.ter_set( tripoint_om_omt( x, 0, 0 ), block );
-                om.ter_set( tripoint_om_omt( x, sz.y + 1, 0 ), block );
+                om->ter_set( tripoint_om_omt( x, 0, 0 ), block );
+                om->ter_set( tripoint_om_omt( x, sz.y + 1, 0 ), block );
             }
             for( int y = 0; y < sz.y + 2; y++ ) {
-                om.ter_set( tripoint_om_omt( 0, y, 0 ), block );
-                om.ter_set( tripoint_om_omt( sz.x + 1, y, 0 ), block );
+                om->ter_set( tripoint_om_omt( 0, y, 0 ), block );
+                om->ter_set( tripoint_om_omt( sz.x + 1, y, 0 ), block );
             }
 
             for( int y = 0; y < sz.y; y++ ) {
                 const auto &line = initial[y];
                 for( int x = 0; x < sz.x; x++ ) {
                     oter_str_id this_id( char_legend[line[x]] );
-                    om.ter_set( tripoint_om_omt( x + 1, y + 1, 0 ), this_id.id() );
+                    om->ter_set( tripoint_om_omt( x + 1, y + 1, 0 ), this_id.id() );
                 }
             }
 
-            check_equals( om, sz, initial, true );
+            check_equals( *om, sz, initial, true );
         }
 
         ~railroad_gen_tester() = default;
@@ -189,7 +189,7 @@ class railroad_gen_tester
 
             const overmap_connection &connection = string_id<overmap_connection>( "railroad_new" ).obj();
 
-            om.build_connection(
+            om->build_connection(
                 point_om_omt( start.x + 1, start.y + 1 ),
                 point_om_omt( dest.x + 1, dest.y + 1 ),
                 0,
@@ -206,7 +206,7 @@ class railroad_gen_tester
             CAPTURE( test_num );
 
             validate_size( expected, sz );
-            check_equals( om, sz, expected, false );
+            check_equals( *om, sz, expected, false );
 
             return *this;
         }
