@@ -60,6 +60,57 @@ std::string canvas::to_string() const
     return res;
 }
 
+std::vector<point> canvas::replace( char32_t what, char32_t with )
+{
+    std::vector<point> ret;
+    point p;
+    for( p.y = 0; p.y < size().y; p.y++ ) {
+        for( p.x = 0; p.x < size().x; p.x++ ) {
+            if( get( p ) == what ) {
+                set( p, with );
+                ret.push_back( p );
+            }
+        }
+    }
+    return ret;
+}
+
+point canvas::replace_unique( char32_t what, char32_t with )
+{
+    std::vector<point> candidates = replace( what, with );
+    assert( candidates.size() == 1 );
+    return candidates[0];
+}
+
+cata::optional<point> canvas::replace_opt( char32_t what, char32_t with )
+{
+    std::vector<point> candidates = replace( what, with );
+    assert( candidates.size() < 1 );
+    if( candidates.empty() ) {
+        return cata::nullopt;
+    } else {
+        return candidates[0];
+    }
+}
+
+canvas canvas::rotated( int turns ) const
+{
+    point new_size = size_cache.rotate( turns ).abs();
+    canvas ret( new_size );
+    point p;
+    for( p.y = 0; p.y < size().y; p.y++ ) {
+        for( p.x = 0; p.x < size().x; p.x++ ) {
+            point new_p = p.rotate( turns, size_cache );
+            /*
+            point new_p = p.rotate( turns );
+            new_p.x = ( new_p.x + new_size.x ) % new_size.x;
+            new_p.y = ( new_p.y + new_size.y ) % new_size.y;
+            */
+            ret.set( new_p, get( p ) );
+        }
+    }
+    return ret;
+}
 
 void canvas_adapter::set_all( const canvas &c )
 {

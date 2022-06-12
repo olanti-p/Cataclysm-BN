@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "point.h"
+#include "optional.h"
 
 namespace map_helpers
 {
@@ -41,6 +42,10 @@ struct canvas {
         }
         ~canvas() = default;
 
+        bool operator==( const canvas &rhs ) const {
+            return data == rhs.data;
+        }
+
         inline const point &size() const {
             return size_cache;
         }
@@ -58,6 +63,12 @@ struct canvas {
             assert( p.y < size().y );
             return data[p.y][p.x];
         }
+
+        std::vector<point> replace( char32_t what, char32_t with );
+        point replace_unique( char32_t what, char32_t with );
+        cata::optional<point> replace_opt( char32_t what, char32_t with );
+
+        canvas rotated( int turns ) const;
 };
 
 struct canvas_adapter {
