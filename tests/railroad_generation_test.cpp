@@ -3,8 +3,9 @@
 #include "overmap.h"
 #include "point.h"
 #include "string_formatter.h"
+#include "map_setup_helpers.h"
 
-static std::unordered_map<char32_t, std::string> char_legend = {{
+static map_helpers::canvas_legend legend = {{
         { U'.', "field" },
         { U'R', "river_center" },
         { U'#', "rock_border" },
@@ -49,110 +50,20 @@ static std::unordered_map<char32_t, std::string> char_legend = {{
     }
 };
 
-using canvas = std::vector<std::u32string>;
-
-static point get_canvas_size( const canvas &c )
-{
-    if( c.empty() ) {
-        return point_zero;
-    } else {
-        return point(
-                   static_cast<int>( c[0].size() ),
-                   static_cast<int>( c.size() )
-               );
-    }
-}
-
-static void validate_size( const canvas &c, const point &sz )
-{
-    REQUIRE( static_cast<int>( c.size() ) == sz.y );
-    for( const auto &line : c ) {
-        REQUIRE( static_cast<int>( line.size() ) == sz.x );
-    }
-}
-
-static std::string fmt_canvas( const canvas &c )
-{
-    std::string res;
-    res += "\n";
-    for( const auto &line : c ) {
-        res += utf32_to_utf8( line );
-        res += "\n";
-    }
-    return res;
-}
-
-static void check_equals( const overmap &om, const point &sz, const canvas &expected,
-                          bool require )
-{
-    struct entry {
-        int x;
-        int y;
-        std::string ter_id;
-        std::string expected_id;
-    };
-    std::vector<entry> fails;
-    for( int y = 0; y < sz.y; y++ ) {
-        const auto &line = expected[y];
-        for( int x = 0; x < sz.x; x++ ) {
-            oter_id ter = om.ter( tripoint_om_omt( x + 1, y + 1, 0 ) );
-            const std::string &ter_id = ter->id.str();
-            const std::string &expected_id = char_legend[line[x]];
-            if( ter_id != expected_id ) {
-                fails.push_back( { x, y, ter_id, expected_id} );
-            }
-        }
-    }
-
-    if( !fails.empty() ) {
-        canvas cr;
-
-        for( int y = 0; y < sz.y; y++ ) {
-            cr.emplace_back();
-            for( int x = 0; x < sz.x; x++ ) {
-                char32_t c = U'?';
-                const std::string &ter_id = om.ter( tripoint_om_omt( x + 1, y + 1, 0 ) )->id.str();
-                for( const auto &it : char_legend ) {
-                    if( it.second == ter_id ) {
-                        c = it.first;
-                        break;
-                    }
-                }
-                cr.back().push_back( c );
-            }
-        }
-
-        CAPTURE( fmt_canvas( expected ) );
-        CAPTURE( fmt_canvas( cr ) );
-        CAPTURE( fails.size() );
-
-        for( const entry &e : fails ) {
-            cata_print_stdout( string_format( "(%d,%d) exp:%s got:%s\n", e.x, e.y, e.expected_id, e.ter_id ) );
-        }
-        if( require ) {
-            FAIL();
-        } else {
-            FAIL_CHECK();
-        }
-    } else {
-        SUCCEED();
-    }
-}
-
 class railroad_gen_tester
 {
     private:
         int test_num = -1;
         std::unique_ptr<overmap> om;
+        map_helpers::canvas_adapter adapter;
         point sz;
 
     public:
-        railroad_gen_tester( int test_num, const canvas &initial ) :
+        railroad_gen_tester( int test_num, const map_helpers::canvas &initial ) :
             test_num( test_num ), om( std::make_unique<overmap>( point_abs_om( 0, 0 ) ) ) {
             CAPTURE( test_num );
 
-            sz = get_canvas_size( initial );
-            validate_size( initial, sz );
+            sz = initial.size();
 
             oter_str_id block_str( "rock_border" );
             oter_id block = block_str.id();
@@ -166,15 +77,18 @@ class railroad_gen_tester
                 om->ter_set( tripoint_om_omt( sz.x + 1, y, 0 ), block );
             }
 
-            for( int y = 0; y < sz.y; y++ ) {
-                const auto &line = initial[y];
-                for( int x = 0; x < sz.x; x++ ) {
-                    oter_str_id this_id( char_legend[line[x]] );
-                    om->ter_set( tripoint_om_omt( x + 1, y + 1, 0 ), this_id.id() );
-                }
-            }
+            adapter = map_helpers::canvas_adapter( legend )
+            .with_getter( [&]( const point & p ) {
+                return om->ter( tripoint_om_omt( p.x + 1, p.y + 1, 0 ) ).id().str();
+            } )
+            .with_setter( [&]( const point & p, const std::string & id ) {
+                om->ter_set( tripoint_om_omt( p.x + 1, p.y + 1, 0 ), oter_str_id( id ).id() );
+            } );
 
-            check_equals( *om, sz, initial, true );
+            adapter.set_all( initial );
+
+            // Sanity check
+            adapter.check_matches_expected( initial, true );
         }
 
         ~railroad_gen_tester() = default;
@@ -202,29 +116,28 @@ class railroad_gen_tester
             return *this;
         }
 
-        railroad_gen_tester &expect( const canvas &expected ) {
+        railroad_gen_tester &expect( const map_helpers::canvas &expected ) {
             CAPTURE( test_num );
 
-            validate_size( expected, sz );
-            check_equals( *om, sz, expected, false );
+            adapter.check_matches_expected( expected, false );
 
             return *this;
         }
 };
 
-static canvas empty_10_10 = {{
-            U"..........",
-            U"..........",
-            U"..........",
-            U"..........",
-            U"..........",
-            U"..........",
-            U"..........",
-            U"..........",
-            U"..........",
-            U".........."
-        }
-    };
+static map_helpers::canvas empty_10_10 = {{
+        U"..........",
+        U"..........",
+        U"..........",
+        U"..........",
+        U"..........",
+        U"..........",
+        U"..........",
+        U"..........",
+        U"..........",
+        U".........."
+    }
+};
 
 TEST_CASE( "railroad_gen_straight", "[mapgen][connects][railroad]" )
 {
@@ -256,7 +169,8 @@ TEST_CASE( "railroad_gen_straight", "[mapgen][connects][railroad]" )
     } );
 }
 
-TEST_CASE( "railroad_gen_curves_and_connections", "[mapgen][connects][railroad]" ) {
+TEST_CASE( "railroad_gen_curves_and_connections", "[mapgen][connects][railroad]" )
+{
     railroad_gen_tester( 2, empty_10_10 )
     // Straight with connections towards n and s
     .run_gen( point( 9, 0 ), om_direction::type::north, point( 9, 9 ), om_direction::type::south )
@@ -284,7 +198,8 @@ TEST_CASE( "railroad_gen_curves_and_connections", "[mapgen][connects][railroad]"
     } );
 }
 
-TEST_CASE( "railroad_gen_extend", "[mapgen][connects][railroad]" ) {
+TEST_CASE( "railroad_gen_extend", "[mapgen][connects][railroad]" )
+{
     railroad_gen_tester( 3, empty_10_10 )
     // Horizontal w->e extends existing w->e
     .run_gen( point( 3, 1 ), om_direction::type::invalid, point( 5, 1 ), om_direction::type::invalid )
@@ -310,7 +225,8 @@ TEST_CASE( "railroad_gen_extend", "[mapgen][connects][railroad]" ) {
     } );
 }
 
-TEST_CASE( "railroad_gen_join", "[mapgen][connects][railroad]" ) {
+TEST_CASE( "railroad_gen_join", "[mapgen][connects][railroad]" )
+{
     railroad_gen_tester( 4, empty_10_10 )
     // Vertical s->n
     .run_gen( point( 4, 0 ), om_direction::type::invalid, point( 4, 9 ), om_direction::type::invalid )
@@ -336,7 +252,8 @@ TEST_CASE( "railroad_gen_join", "[mapgen][connects][railroad]" ) {
     } );
 }
 
-TEST_CASE( "railroad_gen_join_diag", "[mapgen][connects][railroad]" ) {
+TEST_CASE( "railroad_gen_join_diag", "[mapgen][connects][railroad]" )
+{
     railroad_gen_tester( 4, {
         {
             U"...#......",
@@ -354,11 +271,11 @@ TEST_CASE( "railroad_gen_join_diag", "[mapgen][connects][railroad]" ) {
     // Diagonal nw->se
     .run_gen( point( 0, 0 ), om_direction::type::invalid, point( 9, 9 ), om_direction::type::invalid )
     // Joined by w->se
-    .run_gen( point( 0, 2 ), om_direction::type::invalid, point(9, 9), om_direction::type::invalid)
+    .run_gen( point( 0, 2 ), om_direction::type::invalid, point( 9, 9 ), om_direction::type::invalid )
     // Joined by s->nw
-    .run_gen( point( 7, 9 ), om_direction::type::invalid, point(0, 0), om_direction::type::invalid)
+    .run_gen( point( 7, 9 ), om_direction::type::invalid, point( 0, 0 ), om_direction::type::invalid )
     // Joined by e->nw
-    .run_gen( point( 9, 4 ), om_direction::type::invalid, point(0, 0), om_direction::type::invalid)
+    .run_gen( point( 9, 4 ), om_direction::type::invalid, point( 0, 0 ), om_direction::type::invalid )
     .expect( {
         {
             U">┉╗#......",
@@ -375,8 +292,9 @@ TEST_CASE( "railroad_gen_join_diag", "[mapgen][connects][railroad]" ) {
     } );
 }
 
-TEST_CASE( "railroad_gen_no_self_crossing", "[mapgen][connects][railroad]" ) {
-    static canvas empty_10_10_4_blocked = {{
+TEST_CASE( "railroad_gen_no_self_crossing", "[mapgen][connects][railroad]" )
+{
+    static map_helpers::canvas empty_10_10_4_blocked = {{
             U"#.#.......",
             U"..........",
             U"#.#.......",
@@ -396,8 +314,9 @@ TEST_CASE( "railroad_gen_no_self_crossing", "[mapgen][connects][railroad]" ) {
     .expect( empty_10_10_4_blocked );
 }
 
-TEST_CASE( "railroad_gen_no_hard_turns", "[mapgen][connects][railroad]" ) {
-    static canvas hard_turn = {{
+TEST_CASE( "railroad_gen_no_hard_turns", "[mapgen][connects][railroad]" )
+{
+    static map_helpers::canvas hard_turn = {{
             U"#######",
             U"#.....#",
             U"#.###.#",
@@ -417,8 +336,9 @@ TEST_CASE( "railroad_gen_no_hard_turns", "[mapgen][connects][railroad]" ) {
     .expect( hard_turn );
 }
 
-TEST_CASE( "railroad_gen_s_bend", "[mapgen][connects][railroad]" ) {
-    static canvas s_bend = {{
+TEST_CASE( "railroad_gen_s_bend", "[mapgen][connects][railroad]" )
+{
+    static map_helpers::canvas s_bend = {{
             U"#######",
             U"#...###",
             U"###...#",
@@ -438,8 +358,9 @@ TEST_CASE( "railroad_gen_s_bend", "[mapgen][connects][railroad]" ) {
     } );
 }
 
-TEST_CASE( "railroad_gen_bridges", "[mapgen][connects][railroad]" ) {
-    static canvas riverside = {{
+TEST_CASE( "railroad_gen_bridges", "[mapgen][connects][railroad]" )
+{
+    static map_helpers::canvas riverside = {{
             U"..........",
             U"..........",
             U"..........",
@@ -475,8 +396,9 @@ TEST_CASE( "railroad_gen_bridges", "[mapgen][connects][railroad]" ) {
     } );
 }
 
-TEST_CASE( "railroad_gen_no_bridge_crossing", "[mapgen][connects][railroad]" ) {
-    static canvas lake_4_sides = {{
+TEST_CASE( "railroad_gen_no_bridge_crossing", "[mapgen][connects][railroad]" )
+{
+    static map_helpers::canvas lake_4_sides = {{
             U".....#.....",
             U".....#.....",
             U".....#.....",
