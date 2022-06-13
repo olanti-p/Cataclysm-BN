@@ -5630,6 +5630,7 @@ vehicle *map::add_vehicle( const vproto_id &type, const tripoint &p, const units
     veh->turn_dir = dir;
 
     veh->precalc_mounts( 0, dir, veh->pivot_point() );
+    veh->precalc_mounts( 1, dir, veh->pivot_point() );
 
     // Ensure (0,0) mount point will be located at the spawn position
     point center_shift = veh->coord_translate( point() );
