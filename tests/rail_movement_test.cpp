@@ -14,6 +14,8 @@
 #include "vpart_range.h"
 #include "units_utility.h"
 
+#include <sstream>
+
 namespace Catch
 {
 template<>
@@ -552,7 +554,7 @@ TEST_CASE( "canvas_stuff", "[vehicle][railroad]" )
 
 TEST_CASE( "vehicle_rail_movement", "[vehicle][railroad]" )
 {
-    SECTION( "no rails" ) {
+    SECTION( "no_rails" ) {
         // On normal ground rail vehicle behaves like normal vehicle
         run_test_case( test_case{
             "motorcycle_rail",
@@ -572,8 +574,8 @@ TEST_CASE( "vehicle_rail_movement", "[vehicle][railroad]" )
             empty_terrain()
         } );
     }
-    SECTION( "straight rails" ) {
-        // Rail vehicle must follow straight rails
+    SECTION( "straight_rails" ) {
+        // Rail vehicle must follow straight rails regardless of desired turn dir
         run_test_case( test_case{
             "motorcycle_rail",
             -90_degrees,
@@ -590,6 +592,108 @@ TEST_CASE( "vehicle_rail_movement", "[vehicle][railroad]" )
             -90_degrees,
             -90_degrees,
             rails_straight()
+        } );
+    }
+    SECTION( "enter_diagonal" ) {
+        // Rail vehicle must follow tracks and turn regardless of desired turn dir
+        run_test_case( test_case{
+            "motorcycle_rail",
+            -90_degrees,
+            -45_degrees,
+            -45_degrees,
+            -45_degrees,
+            rails_diag_start()
+        } );
+
+        run_test_case( test_case{
+            "motorized_draisine_trirail",
+            -90_degrees,
+            -45_degrees,
+            -45_degrees,
+            -45_degrees,
+            rails_diag_start()
+        } );
+    }
+    SECTION( "leave_diagonal" ) {
+        // Rail vehicle must follow tracks and turn regardless of desired turn dir
+        run_test_case( test_case{
+            "motorcycle_rail",
+            -45_degrees,
+            0_degrees,
+            0_degrees,
+            0_degrees,
+            rails_diag_end()
+        } );
+
+        run_test_case( test_case{
+            "motorized_draisine_trirail",
+            -45_degrees,
+            0_degrees,
+            0_degrees,
+            0_degrees,
+            rails_diag_end()
+        } );
+    }
+    SECTION( "rail_crossing" ) {
+        // Rail vehicle must follow straight rails regardless of desired turn dir
+        run_test_case( test_case{
+            "motorcycle_rail",
+            -90_degrees,
+            -90_degrees,
+            -90_degrees,
+            -90_degrees,
+            rails_cross()
+        } );
+
+        run_test_case( test_case{
+            "motorized_draisine_trirail",
+            -90_degrees,
+            -90_degrees,
+            -90_degrees,
+            -90_degrees,
+            rails_cross()
+        } );
+    }
+    SECTION( "rails_tee_straight" ) {
+        // Rail vehicle must follow straight rails by default,
+        // but can switch tracks depending on desired turn dir
+        run_test_case( test_case{
+            "motorcycle_rail",
+            -90_degrees,
+            -90_degrees,
+            -90_degrees - 45_degrees,
+            -90_degrees + 45_degrees,
+            rails_tee_straight()
+        } );
+
+        run_test_case( test_case{
+            "motorized_draisine_trirail",
+            -90_degrees,
+            -90_degrees,
+            -90_degrees - 45_degrees,
+            -90_degrees + 45_degrees,
+            rails_tee_straight()
+        } );
+    }
+    SECTION( "rails_tee_diag" ) {
+        // Rail vehicle must follow straight rails by default,
+        // but can switch tracks depending on desired turn dir
+        run_test_case( test_case{
+            "motorcycle_rail",
+            -45_degrees,
+            -45_degrees,
+            -45_degrees - 45_degrees,
+            -45_degrees + 45_degrees,
+            rails_tee_straight()
+        } );
+
+        run_test_case( test_case{
+            "motorized_draisine_trirail",
+            -45_degrees,
+            -45_degrees,
+            -45_degrees - 45_degrees,
+            -45_degrees + 45_degrees,
+            rails_tee_straight()
         } );
     }
 }
