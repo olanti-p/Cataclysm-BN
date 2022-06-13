@@ -40,6 +40,8 @@ struct canvas {
             size_cache = calc_size();
             assert_size( size() );
         }
+        canvas( const canvas & ) = default;
+        canvas( canvas && ) = default;
         ~canvas() = default;
 
         bool operator==( const canvas &rhs ) const {

@@ -12,6 +12,17 @@
 #include "vehicle.h"
 #include "vpart_position.h"
 #include "vpart_range.h"
+#include "units_utility.h"
+
+namespace Catch
+{
+template<>
+struct StringMaker<map_helpers::canvas> {
+    static std::string convert( const map_helpers::canvas &c ) {
+        return c.to_string();
+    }
+};
+} // namespace Catch
 
 static map_helpers::canvas_legend legend = {{
         { U'.', "t_pavement" },
@@ -56,27 +67,39 @@ static void build_map_from_canvas( const map_helpers::canvas &canvas, const trip
     adapter.check_matches_expected( canvas, true );
 }
 
-static void test_rail_movement( const std::string &veh_id, int num_cycles,
-                                const tripoint &canvas_pos,
-                                map_helpers::canvas &canvas )
+static void run_test_case( const std::string &veh_id, int num_cycles,
+                           tripoint vehicle_pos,
+                           units::angle face_dir,
+                           units::angle turn_dir,
+                           tripoint expected_pos,
+                           units::angle expected_dir )
 {
-    tripoint vehicle_pos = canvas_pos + canvas.replace_unique( U'*', U'x' );
-    point pos_center = canvas.replace_unique( U'o', U'x' );
-    point pos_l = canvas.replace_opt( U'l', U'x' ).value_or( pos_center );
-    point pos_r = canvas.replace_opt( U'r', U'x' ).value_or( pos_center );
-
-    clear_game( t_floor );
-    build_map_from_canvas( canvas, canvas_pos );
-
     map &here = get_map();
-    vehicle *veh_ptr = here.add_vehicle( vproto_id( veh_id ), vehicle_pos, -90_degrees, 100, 0 );
+    vehicle *veh_ptr = here.add_vehicle( vproto_id( veh_id ), vehicle_pos, face_dir, 100, 0 );
 
     REQUIRE( veh_ptr != nullptr );
-    if( veh_ptr == nullptr ) {
-        return;
-    }
 
     vehicle &veh = *veh_ptr;
+
+    // Position passed to add_vehicle is the desired position of the vehicle's (0,0) part.
+    // However, for ease of testing we want to deal with positions of pivot.
+    // As such, shift the vehicle as necessary so vehicle_pos is the pivot pos.
+    //tripoint pivot_fix_delta = vehicle_pos - veh.global_pos3();
+    tripoint pivot_fix_delta;
+    bool displaced_ok = here.displace_vehicle( veh, pivot_fix_delta );
+    if( !displaced_ok ) {
+        CAPTURE( vehicle_pos );
+        CAPTURE( veh.global_pos3() );
+        CAPTURE( pivot_fix_delta );
+        REQUIRE( displaced_ok );
+    }
+
+    // Check that pivot pos is right where we want it
+    //REQUIRE( veh.global_pos3() == vehicle_pos );
+
+    CAPTURE( vehicle_pos );
+    CAPTURE( expected_pos );
+    CAPTURE( veh.global_pos3() );
 
     // Remove all items from cargo to normalize weight.
     for( const vpart_reference vp : veh.get_all_parts() ) {
@@ -89,7 +112,6 @@ static void test_rail_movement( const std::string &veh_id, int num_cycles,
 
     veh.refresh_insides();
 
-    const tripoint starting_point = veh.global_pos3();
     veh.tags.insert( "IN_CONTROL_OVERRIDE" );
     veh.engine_on = true;
 
@@ -99,10 +121,15 @@ static void test_rail_movement( const std::string &veh_id, int num_cycles,
     veh.cruise_velocity = tgt_velocity;
     veh.velocity = tgt_velocity;
     veh.vertical_velocity = 0;
+    veh.turn_dir = turn_dir;
+
+    CAPTURE( vehicle_pos );
+    CAPTURE( expected_pos );
+    CAPTURE( veh.global_pos3() );
 
     int cycles_left = num_cycles;
     while( cycles_left > 0 ) {
-        tripoint pos_before = veh.global_pos3();
+        //tripoint pos_before = veh.global_pos3();
         cycles_left -= 1;
         here.vehmove();
         veh.idle( true );
@@ -117,12 +144,72 @@ static void test_rail_movement( const std::string &veh_id, int num_cycles,
                      veh.velocity,
                      veh.vertical_velocity
                    );
-        tripoint pos_after = veh.global_pos3();
+        //tripoint pos_after = veh.global_pos3();
         veh.velocity = tgt_velocity;
-        here.displace_vehicle( veh, pos_before - pos_after );
+        //here.displace_vehicle( veh, pos_before - pos_after );
+
+        if( veh.global_pos3() == expected_pos ) {
+            break;
+        }
     }
 
-    FAIL();
+    CHECK( veh.global_pos3() == expected_pos );
+    CHECK( normalize( veh.face.dir() ) == expected_dir );
+}
+
+static void test_rail_movement( const std::string &veh_id, int num_cycles,
+                                const tripoint &canvas_pos,
+                                map_helpers::canvas &canvas )
+{
+    tripoint vehicle_pos = canvas_pos + canvas.replace_unique( U'*', U'x' );
+    point p_center = canvas.replace_unique( U'o', U'x' );
+    point p_l = canvas.replace_opt( U'l', U'x' ).value_or( p_center );
+    point p_r = canvas.replace_opt( U'r', U'x' ).value_or( p_center );
+
+    tripoint pos_center = canvas_pos + p_center;
+    tripoint pos_l = canvas_pos + p_l;
+    tripoint pos_r = canvas_pos + p_r;
+
+    ( void )pos_l;
+    ( void )pos_r;
+
+    clear_game( t_floor );
+    build_map_from_canvas( canvas, canvas_pos );
+
+    units::angle face_dir = normalize( -90_degrees );
+    units::angle turn_dir = normalize( face_dir );
+    units::angle expected_dir = normalize( face_dir );
+
+    run_test_case( veh_id, num_cycles, vehicle_pos, -90_degrees,
+                   turn_dir, pos_center, expected_dir );
+}
+
+map_helpers::canvas empty_terrain()
+{
+    return { {
+            U".........",
+            U".........",
+            U".........",
+            U".........",
+            U"....o....",
+            U".........",
+            U".........",
+            U".........",
+            U".........",
+            U".........",
+            U".........",
+            U".........",
+            U".........",
+            U".........",
+            U".........",
+            U".........",
+            U"....*....",
+            U".........",
+            U".........",
+            U".........",
+            U".........",
+        }
+    };
 }
 
 map_helpers::canvas rails_straight()
@@ -342,16 +429,6 @@ map_helpers::canvas rails_tee_diag()
 
 TEST_CASE( "canvas_stuff", "[vehicle][railroad]" )
 {
-    map_helpers::canvas ccc = { {
-            U"..",
-            U"ab",
-            U"cd",
-            U"..",
-        }
-    };
-
-    ccc.rotated( 1 );
-
     SECTION( "even_sides" ) {
         map_helpers::canvas canvas = { {
                 U"..",
@@ -361,26 +438,33 @@ TEST_CASE( "canvas_stuff", "[vehicle][railroad]" )
             }
         };
 
-        canvas.rotated( 1 );
-
         REQUIRE( canvas.rotated( 0 ) == canvas );
-        REQUIRE( canvas.rotated( 1 ) == map_helpers::canvas( { {
-                U".ca.",
-                U".db.",
-            }
-        } ) );
-        REQUIRE( canvas.rotated( 2 ) == map_helpers::canvas( { {
-                U"..",
-                U"dc",
-                U"ba",
-                U".."
-            }
-        } ) );
-        REQUIRE( canvas.rotated( 3 ) == map_helpers::canvas( { {
-                U".bd.",
-                U".ac.",
-            }
-        } ) );
+        {
+            map_helpers::canvas exp = { {
+                    U".ca.",
+                    U".db.",
+                }
+            };
+            REQUIRE( canvas.rotated( 1 ) == exp );
+        }
+        {
+            map_helpers::canvas exp = { {
+                    U"..",
+                    U"dc",
+                    U"ba",
+                    U".."
+                }
+            };
+            REQUIRE( canvas.rotated( 2 ) == exp );
+        }
+        {
+            map_helpers::canvas exp = { {
+                    U".bd.",
+                    U".ac.",
+                }
+            };
+            REQUIRE( canvas.rotated( 3 ) == exp );
+        }
         REQUIRE( canvas.rotated( 4 ) == canvas );
     }
     SECTION( "not_even_sides" ) {
@@ -394,36 +478,50 @@ TEST_CASE( "canvas_stuff", "[vehicle][railroad]" )
         };
 
         REQUIRE( canvas.rotated( 0 ) == canvas );
-        REQUIRE( canvas.rotated( 1 ) == map_helpers::canvas( { {
-                U".d.a.",
-                U".e.b.",
-                U".d.c.",
-            }
-        } ) );
-        REQUIRE( canvas.rotated( 2 ) == map_helpers::canvas( { {
-                U"...",
-                U"fed",
-                U"...",
-                U"cba",
-                U"..."
-            }
-        } ) );
-        REQUIRE( canvas.rotated( 3 ) == map_helpers::canvas( { {
-                U".c.f.",
-                U".b.e.",
-                U".a.d.",
-            }
-        } ) );
-
+        {
+            map_helpers::canvas exp = { {
+                    U".d.a.",
+                    U".e.b.",
+                    U".f.c.",
+                }
+            };
+            REQUIRE( canvas.rotated( 1 ) == exp );
+        }
+        {
+            map_helpers::canvas exp = { {
+                    U"...",
+                    U"fed",
+                    U"...",
+                    U"cba",
+                    U"..."
+                }
+            };
+            REQUIRE( canvas.rotated( 2 ) == exp );
+        }
+        {
+            map_helpers::canvas exp = { {
+                    U".c.f.",
+                    U".b.e.",
+                    U".a.d.",
+                }
+            };
+            REQUIRE( canvas.rotated( 3 ) == exp );
+        }
         REQUIRE( canvas.rotated( 4 ) == canvas );
     }
 }
 
 TEST_CASE( "vehicle_rail_movement", "[vehicle][railroad]" )
 {
-    //tripoint canvas_pos( 10, 10, 0 );
-    //test_rail_movement( "4x4_car", 20, canvas_pos, map_helpers::canvas() );
-    //
-    //test_rail_movement( "4x4_car", 20, canvas_pos, rails_straight() );
-
+    tripoint canvas_pos( 10, 10, 0 );
+    {
+        auto c = empty_terrain();
+        test_rail_movement( "4x4_car", 30, canvas_pos, c );
+    }
+    /*
+    {
+        auto c = rails_straight();
+        test_rail_movement( "4x4_car", 20, canvas_pos, c );
+    }
+    */
 }
