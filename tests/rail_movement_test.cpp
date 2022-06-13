@@ -30,6 +30,36 @@ static map_helpers::canvas_legend legend = {{
     }
 };
 
+struct test_case {
+    std::string veh_id;
+
+    point start_pos;
+    units::angle start_dir;
+
+    point end_pos_straight;
+    units::angle end_dir_straight;
+
+    point end_pos_left;
+    units::angle end_dir_left;
+
+    point end_pos_right;
+    units::angle end_dir_right;
+
+    map_helpers::canvas canvas;
+
+    test_case( const std::string &veh_id, units::angle start_dir,
+               units::angle end_dir_straight, units::angle end_dir_left,
+               units::angle end_dir_right, map_helpers::canvas &&canvas_arg ) :
+        veh_id( veh_id ), start_dir( start_dir ),
+        end_dir_straight( end_dir_straight ), end_dir_left( end_dir_left ),
+        end_dir_right( end_dir_right ), canvas( canvas_arg ) {
+        start_pos = canvas.replace_unique( U'*', U'x' );
+        end_pos_straight = canvas.replace_unique( U'o', U'x' );
+        end_pos_left = canvas.replace_opt( U'l', U'x' ).value_or( end_pos_straight );
+        end_pos_right = canvas.replace_opt( U'r', U'x' ).value_or( end_pos_straight );
+    }
+};
+
 const efftype_id effect_blind( "blind" );
 
 static void clear_game( const ter_id &terrain )
@@ -67,13 +97,16 @@ static void build_map_from_canvas( const map_helpers::canvas &canvas, const trip
     adapter.check_matches_expected( canvas, true );
 }
 
-static void run_test_case( const std::string &veh_id, int num_cycles,
-                           tripoint vehicle_pos,
-                           units::angle face_dir,
-                           units::angle turn_dir,
-                           tripoint expected_pos,
-                           units::angle expected_dir )
+static void test_rail_movement( const std::string &veh_id,
+                                tripoint vehicle_pos,
+                                units::angle face_dir,
+                                units::angle turn_delta,
+                                tripoint expected_pos,
+                                units::angle expected_dir )
 {
+    CAPTURE( vehicle_pos );
+    CAPTURE( expected_pos );
+
     map &here = get_map();
     vehicle *veh_ptr = here.add_vehicle( vproto_id( veh_id ), vehicle_pos, face_dir, 100, 0 );
 
@@ -84,9 +117,8 @@ static void run_test_case( const std::string &veh_id, int num_cycles,
     // Position passed to add_vehicle is the desired position of the vehicle's (0,0) part.
     // However, for ease of testing we want to deal with positions of pivot.
     // As such, shift the vehicle as necessary so vehicle_pos is the pivot pos.
-    //tripoint pivot_fix_delta = vehicle_pos - veh.global_pos3();
-    tripoint pivot_fix_delta;
-    bool displaced_ok = here.displace_vehicle( veh, pivot_fix_delta );
+    tripoint pivot_fix_delta = vehicle_pos - veh.global_pos3();
+    bool displaced_ok = here.displace_vehicle( veh, pivot_fix_delta, true );
     if( !displaced_ok ) {
         CAPTURE( vehicle_pos );
         CAPTURE( veh.global_pos3() );
@@ -95,16 +127,12 @@ static void run_test_case( const std::string &veh_id, int num_cycles,
     }
 
     // Check that pivot pos is right where we want it
-    //REQUIRE( veh.global_pos3() == vehicle_pos );
-
-    CAPTURE( vehicle_pos );
-    CAPTURE( expected_pos );
-    CAPTURE( veh.global_pos3() );
+    REQUIRE( veh.global_pos3() == vehicle_pos );
 
     // Remove all items from cargo to normalize weight.
+    // Keep fuel in tanks to allow cruise control.
     for( const vpart_reference vp : veh.get_all_parts() ) {
         veh_ptr->get_items( vp.part_index() ).clear();
-        vp.part().ammo_consume( vp.part().ammo_remaining(), vp.pos() );
     }
     for( const vpart_reference vp : veh.get_avail_parts( "OPENABLE" ) ) {
         veh.close( vp.part_index() );
@@ -115,21 +143,19 @@ static void run_test_case( const std::string &veh_id, int num_cycles,
     veh.tags.insert( "IN_CONTROL_OVERRIDE" );
     veh.engine_on = true;
 
-    int tgt_velocity = 5000;
+    int tgt_velocity = 200;
     REQUIRE( veh.safe_velocity( false ) >= tgt_velocity );
     veh.cruise_on = true;
     veh.cruise_velocity = tgt_velocity;
     veh.velocity = tgt_velocity;
     veh.vertical_velocity = 0;
-    veh.turn_dir = turn_dir;
+    veh.turn_dir = normalize( face_dir + turn_delta );
 
-    CAPTURE( vehicle_pos );
-    CAPTURE( expected_pos );
-    CAPTURE( veh.global_pos3() );
+    std::stringstream scan_log;
+    scan_log << "\n";
 
-    int cycles_left = num_cycles;
+    int cycles_left = 40;
     while( cycles_left > 0 ) {
-        //tripoint pos_before = veh.global_pos3();
         cycles_left -= 1;
         here.vehmove();
         veh.idle( true );
@@ -138,50 +164,63 @@ static void run_test_case( const std::string &veh_id, int num_cycles,
         for( const tripoint &pos : veh.get_points() ) {
             REQUIRE( here.ter( pos ) );
         }
-        cata_printf( "pos: %s dir: %d vel: %d/%d\n",
-                     veh.global_pos3().to_string(),
-                     static_cast<int>( units::to_degrees( veh.face.dir() ) ),
-                     veh.velocity,
-                     veh.vertical_velocity
-                   );
-        //tripoint pos_after = veh.global_pos3();
-        veh.velocity = tgt_velocity;
-        //here.displace_vehicle( veh, pos_before - pos_after );
+
+        scan_log << string_format( "pos: %s dir: %d vel: %d/%d\n",
+                                   veh.global_pos3().to_string(),
+                                   static_cast<int>( units::to_degrees( veh.face.dir() ) ),
+                                   veh.velocity,
+                                   veh.vertical_velocity
+                                 );
 
         if( veh.global_pos3() == expected_pos ) {
             break;
         }
     }
 
+    CAPTURE( scan_log.str() );
+
     CHECK( veh.global_pos3() == expected_pos );
     CHECK( normalize( veh.face.dir() ) == expected_dir );
 }
 
-static void test_rail_movement( const std::string &veh_id, int num_cycles,
-                                const tripoint &canvas_pos,
-                                map_helpers::canvas &canvas )
+constexpr units::angle turn_step = 15_degrees;
+
+static void run_test_case( const test_case &t )
 {
-    tripoint vehicle_pos = canvas_pos + canvas.replace_unique( U'*', U'x' );
-    point p_center = canvas.replace_unique( U'o', U'x' );
-    point p_l = canvas.replace_opt( U'l', U'x' ).value_or( p_center );
-    point p_r = canvas.replace_opt( U'r', U'x' ).value_or( p_center );
+    CAPTURE( t.veh_id );
+    for( int i_rot = 0; i_rot < 4; i_rot++ ) {
+        CAPTURE( i_rot );
+        map_helpers::canvas canvas = t.canvas.rotated( i_rot );
+        tripoint canvas_pos = tripoint( ( point( MAPSIZE_X, MAPSIZE_Y ) - canvas.size() ) / 2, 0 );
 
-    tripoint pos_center = canvas_pos + p_center;
-    tripoint pos_l = canvas_pos + p_l;
-    tripoint pos_r = canvas_pos + p_r;
+        point sz = t.canvas.size();
+        tripoint start_pos = canvas_pos + t.start_pos.rotate( i_rot, sz );
+        tripoint end_pos_s = canvas_pos + t.end_pos_straight.rotate( i_rot, sz );
+        tripoint end_pos_l = canvas_pos + t.end_pos_left.rotate( i_rot, sz );
+        tripoint end_pos_r = canvas_pos + t.end_pos_right.rotate( i_rot, sz );
 
-    ( void )pos_l;
-    ( void )pos_r;
+        units::angle rot = i_rot * 90_degrees;
+        units::angle start_dir = normalize( t.start_dir + rot );
+        units::angle end_dir_s = normalize( t.end_dir_straight + rot );
+        units::angle end_dir_l = normalize( t.end_dir_left + rot );
+        units::angle end_dir_r = normalize( t.end_dir_right + rot );
 
-    clear_game( t_floor );
-    build_map_from_canvas( canvas, canvas_pos );
+        clear_game( t_floor );
+        build_map_from_canvas( canvas, canvas_pos );
 
-    units::angle face_dir = normalize( -90_degrees );
-    units::angle turn_dir = normalize( face_dir );
-    units::angle expected_dir = normalize( face_dir );
-
-    run_test_case( veh_id, num_cycles, vehicle_pos, -90_degrees,
-                   turn_dir, pos_center, expected_dir );
+        SECTION( "go_straight" ) {
+            test_rail_movement( t.veh_id, start_pos, start_dir,
+                                0_degrees, end_pos_s, end_dir_s );
+        }
+        SECTION( "try_turn_right" ) {
+            test_rail_movement( t.veh_id, start_pos, start_dir,
+                                turn_step, end_pos_r, end_dir_r );
+        }
+        SECTION( "try_turn_left" ) {
+            test_rail_movement( t.veh_id, start_pos, start_dir,
+                                -turn_step, end_pos_l, end_dir_l );
+        }
+    }
 }
 
 map_helpers::canvas empty_terrain()
@@ -191,7 +230,7 @@ map_helpers::canvas empty_terrain()
             U".........",
             U".........",
             U".........",
-            U"....o....",
+            U"..l.o.r..",
             U".........",
             U".........",
             U".........",
@@ -513,15 +552,44 @@ TEST_CASE( "canvas_stuff", "[vehicle][railroad]" )
 
 TEST_CASE( "vehicle_rail_movement", "[vehicle][railroad]" )
 {
-    tripoint canvas_pos( 10, 10, 0 );
-    {
-        auto c = empty_terrain();
-        test_rail_movement( "4x4_car", 30, canvas_pos, c );
+    SECTION( "no rails" ) {
+        // On normal ground rail vehicle behaves like normal vehicle
+        run_test_case( test_case{
+            "motorcycle_rail",
+            -90_degrees,
+            -90_degrees,
+            -90_degrees - turn_step,
+            -90_degrees + turn_step,
+            empty_terrain()
+        } );
+
+        run_test_case( test_case{
+            "motorized_draisine_trirail",
+            -90_degrees,
+            -90_degrees,
+            -90_degrees - turn_step,
+            -90_degrees + turn_step,
+            empty_terrain()
+        } );
     }
-    /*
-    {
-        auto c = rails_straight();
-        test_rail_movement( "4x4_car", 20, canvas_pos, c );
+    SECTION( "straight rails" ) {
+        // Rail vehicle must follow straight rails
+        run_test_case( test_case{
+            "motorcycle_rail",
+            -90_degrees,
+            -90_degrees,
+            -90_degrees,
+            -90_degrees,
+            rails_straight()
+        } );
+
+        run_test_case( test_case{
+            "motorized_draisine_trirail",
+            -90_degrees,
+            -90_degrees,
+            -90_degrees,
+            -90_degrees,
+            rails_straight()
+        } );
     }
-    */
 }
