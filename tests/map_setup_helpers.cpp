@@ -101,11 +101,6 @@ canvas canvas::rotated( int turns ) const
     for( p.y = 0; p.y < size().y; p.y++ ) {
         for( p.x = 0; p.x < size().x; p.x++ ) {
             point new_p = p.rotate( turns, size_cache );
-            /*
-            point new_p = p.rotate( turns );
-            new_p.x = ( new_p.x + new_size.x ) % new_size.x;
-            new_p.y = ( new_p.y + new_size.y ) % new_size.y;
-            */
             ret.set( new_p, get( p ) );
         }
     }
