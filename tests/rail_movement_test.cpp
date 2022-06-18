@@ -204,7 +204,7 @@ static void test_rail_movement( const std::string &veh_id,
     if( units::to_degrees( got_dir ) != Approx( units::to_degrees( expected_dir ) ) ||
         got_pos != expected_pos ) {
         CAPTURE( scan_log.str() );
-        FAIL();
+        FAIL( "direction and/or position mismatch" );
     } else {
         SUCCEED();
     }
