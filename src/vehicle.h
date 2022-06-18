@@ -1712,8 +1712,6 @@ class vehicle
         // Process vehicle emitters
         void process_emitters();
 
-        bool process_turning_on_rails( units::angle &fin_turn_dir ) const;
-
         // The faction that owns this vehicle.
         faction_id owner = faction_id::NULL_ID();
         // The faction that previously owned this vehicle
@@ -1764,6 +1762,8 @@ class vehicle
         // List of parts that will not be on a vehicle very often, or which only one will be present
         std::vector<int> speciality;
         std::vector<int> floating;         // List of parts that provide buoyancy to boats
+
+        std::vector<int> rail_profile; // Rail profile of the vehicle
 
         // config values
         std::string name;   // vehicle name
@@ -1859,7 +1859,6 @@ class vehicle
         // rotation used for mount precalc values
         std::array<units::angle, 2> pivot_rotation = { { 0_degrees, 0_degrees } };
 
-        bounding_box rail_wheel_bounding_box;
         point front_left;
         point front_right;
         towing_data tow_data;
@@ -1901,7 +1900,6 @@ class vehicle
         bool is_autodriving = false;
         bool is_following = false;
         bool is_patrolling = false;
-        bool all_wheels_on_one_axis = false;
         // TODO: change these to a bitset + enum?
         // cruise control on/off
         bool cruise_on = true;
@@ -1933,5 +1931,12 @@ class vehicle
         // relative to vehicle pos, color and text}.
         std::vector<std::tuple<point, int, std::string>> get_debug_overlay_data() const;
 };
+
+namespace vehicle_movement
+{
+
+bool process_turning_on_rails( const vehicle &veh, units::angle &fin_turn_dir );
+
+} // namespace vehicle_movement
 
 #endif // CATA_SRC_VEHICLE_H

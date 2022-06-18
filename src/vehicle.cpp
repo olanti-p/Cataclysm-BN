@@ -5510,8 +5510,7 @@ void vehicle::refresh()
     floating.clear();
     alternator_load = 0;
     extra_drag = 0;
-    all_wheels_on_one_axis = true;
-    int first_wheel_y_mount = INT_MAX;
+    rail_profile.clear();
 
     // Used to sort part list so it displays properly when examining
     struct sort_veh_part_vector {
@@ -5525,11 +5524,6 @@ void vehicle::refresh()
     mount_min.y = 123;
     mount_max.x = -123;
     mount_max.y = -123;
-
-    int railwheel_xmin = INT_MAX;
-    int railwheel_ymin = INT_MAX;
-    int railwheel_xmax = INT_MIN;
-    int railwheel_ymax = INT_MIN;
 
     bool refresh_done = false;
 
@@ -5598,20 +5592,14 @@ void vehicle::refresh()
         if( vpi.has_flag( VPFLAG_WHEEL ) ) {
             wheelcache.push_back( p );
         }
-        if( vpi.has_flag( VPFLAG_WHEEL ) && vpi.has_flag( VPFLAG_RAIL ) ) {
+        if( vpi.has_flag( VPFLAG_RAIL ) ) {
             rail_wheelcache.push_back( p );
-            if( first_wheel_y_mount == INT_MAX ) {
-                first_wheel_y_mount = vp.part().mount.y;
-            }
-            if( first_wheel_y_mount != vp.part().mount.y ) {
-                // vehicle have wheels on different axis
-                all_wheels_on_one_axis = false;
-            }
 
-            railwheel_xmin = std::min( railwheel_xmin, pt.x );
-            railwheel_ymin = std::min( railwheel_ymin, pt.y );
-            railwheel_xmax = std::max( railwheel_xmax, pt.x );
-            railwheel_ymax = std::max( railwheel_ymax, pt.y );
+            int rail_pos = vp.mount().y;
+            auto it = std::find( rail_profile.begin(), rail_profile.end(), rail_pos );
+            if( it == rail_profile.end() ) {
+                rail_profile.push_back( rail_pos );
+            }
         }
         if( ( vpi.has_flag( "STEERABLE" ) && part_with_feature( pt, "STEERABLE", true ) != -1 ) ||
             vpi.has_flag( "TRACKED" ) ) {
@@ -5640,16 +5628,12 @@ void vehicle::refresh()
         }
     }
 
-    rail_wheel_bounding_box.p1 = point( railwheel_xmin, railwheel_ymin );
-    rail_wheel_bounding_box.p2 = point( railwheel_xmax, railwheel_ymax );
     front_left.x = mount_max.x;
     front_left.y = mount_min.y;
     front_right = mount_max;
 
     if( !refresh_done ) {
         mount_min = mount_max = point_zero;
-        rail_wheel_bounding_box.p1 = point_zero;
-        rail_wheel_bounding_box.p2 = point_zero;
     }
 
     // NB: using the _old_ pivot point, don't recalc here, we only do that when moving!
