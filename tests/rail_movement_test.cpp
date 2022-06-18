@@ -1,4 +1,5 @@
 #include "catch/catch.hpp"
+#include "stringmaker.h"
 
 #include "avatar.h"
 #include "map.h"
@@ -107,7 +108,10 @@ static void test_rail_movement( const std::string &veh_id,
                                 units::angle expected_dir )
 {
     CAPTURE( vehicle_pos );
+    CAPTURE( face_dir );
+    CAPTURE( turn_delta );
     CAPTURE( expected_pos );
+    CAPTURE( expected_dir );
 
     map &here = get_map();
     vehicle *veh_ptr = here.add_vehicle( vproto_id( veh_id ), vehicle_pos, face_dir, 100, 0 );
@@ -156,8 +160,12 @@ static void test_rail_movement( const std::string &veh_id,
     std::stringstream scan_log;
     scan_log << "\n";
 
-    int cycles_left = 40;
-    while( cycles_left > 0 ) {
+    int cycles_left = 80;
+    for( ;; ) {
+        if( cycles_left == 0 ) {
+            scan_log << "exceeded max scan cycles\n";
+            break;
+        }
         cycles_left -= 1;
         here.vehmove();
         veh.idle( true );
@@ -179,10 +187,15 @@ static void test_rail_movement( const std::string &veh_id,
         }
     }
 
-    CAPTURE( scan_log.str() );
+    std::pair<tripoint, units::angle> expected = { expected_pos, expected_dir };
+    std::pair<tripoint, units::angle> got = { veh.global_pos3(), normalize( veh.face.dir() ) };
 
-    CHECK( veh.global_pos3() == expected_pos );
-    CHECK( normalize( veh.face.dir() ) == expected_dir );
+    if( expected != got ) {
+        CAPTURE( expected );
+        CAPTURE( got );
+        CAPTURE( scan_log.str() );
+        FAIL();
+    }
 }
 
 constexpr units::angle turn_step = 15_degrees;
@@ -684,7 +697,7 @@ TEST_CASE( "vehicle_rail_movement", "[vehicle][railroad]" )
             -45_degrees,
             -45_degrees - 45_degrees,
             -45_degrees + 45_degrees,
-            rails_tee_straight()
+            rails_tee_diag()
         } );
 
         run_test_case( test_case{
@@ -693,7 +706,7 @@ TEST_CASE( "vehicle_rail_movement", "[vehicle][railroad]" )
             -45_degrees,
             -45_degrees - 45_degrees,
             -45_degrees + 45_degrees,
-            rails_tee_straight()
+            rails_tee_diag()
         } );
     }
 }
