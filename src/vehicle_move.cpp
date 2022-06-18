@@ -1,4 +1,5 @@
 #include "vehicle.h" // IWYU pragma: associated
+#include "vehicle_move.h" // IWYU pragma: associated
 
 #include <cassert>
 #include <algorithm>
@@ -1326,6 +1327,7 @@ vehicle *vehicle::act_on_map()
     }
 
     bool can_use_rails = this->can_use_rails();
+    bool is_on_rails = this->is_on_rails();
     if( one_in( 10 ) ) {
         bool controlled = false;
         // It can even be a NPC, but must be at the controls
@@ -1340,8 +1342,8 @@ vehicle *vehicle::act_on_map()
         }
 
         // Eventually send it skidding if no control
-        // But not if it's remotely controlled, is in water or can use rails
-        if( !controlled && !pl_ctrl && !is_floating && !can_use_rails && !is_flying &&
+        // But not if it's remotely controlled, is in water or is on rails
+        if( !controlled && !pl_ctrl && !is_floating && !is_on_rails && !is_flying &&
             requested_z_change == 0 ) {
             skidding = true;
         }
@@ -1357,13 +1359,12 @@ vehicle *vehicle::act_on_map()
         skidding = true;
     }
 
-    bool allow_turn_on_rail = false;
+    vehicle_movement::rail_processing_result rpres;
     if( can_use_rails && !falling_only ) {
-        units::angle fin_turn_dir;
-        allow_turn_on_rail = vehicle_movement::process_turning_on_rails( *this, fin_turn_dir );
-        if( allow_turn_on_rail ) {
-            turn_dir = fin_turn_dir;
-        }
+        rpres = vehicle_movement::process_movement_on_rails( *this );
+    }
+    if( rpres.do_turn ) {
+        turn_dir = rpres.turn_dir;
     }
 
     // The direction we're moving
@@ -1372,7 +1373,7 @@ vehicle *vehicle::act_on_map()
         // If skidding, it's the move vector
         // Same for falling - no air control
         mdir = move;
-    } else if( turn_dir != face.dir() && ( !can_use_rails || allow_turn_on_rail ) ) {
+    } else if( turn_dir != face.dir() && ( !is_on_rails || rpres.do_turn ) ) {
         // Driver turned vehicle, get turn_dir
         mdir.init( turn_dir );
     } else {
@@ -1383,8 +1384,13 @@ vehicle *vehicle::act_on_map()
     tripoint dp;
     if( std::abs( velocity ) >= 20 && !falling_only ) {
         mdir.advance( velocity < 0 ? -1 : 1 );
-        dp.x = mdir.dx();
-        dp.y = mdir.dy();
+        if( rpres.do_shift ) {
+            dp.x = rpres.shift_amount.x;
+            dp.y = rpres.shift_amount.y;
+        } else {
+            dp.x = mdir.dx();
+            dp.y = mdir.dy();
+        }
     }
 
     if( should_fall ) {
@@ -1673,7 +1679,8 @@ bool scan_rails_from_veh_internal(
     return true;
 }
 
-bool scan_rails_at_shift( const vehicle &veh, int velocity_sign, units::angle dir, int shift_sign )
+bool scan_rails_at_shift( const vehicle &veh, int velocity_sign, units::angle dir, int shift_sign,
+                          tripoint *shift_amt = nullptr )
 {
     point ray_delta;
     {
@@ -1689,19 +1696,55 @@ bool scan_rails_at_shift( const vehicle &veh, int velocity_sign, units::angle di
         point rd_2 = point( 0, ray_delta.y );
         point veh_plus_y_vec_1 = rd_1.rotate( 1 );
         point veh_plus_y_vec_2 = rd_2.rotate( 1 );
-        tripoint scan_start_1 = veh.global_pos3() + veh_plus_y_vec_2 * shift_sign;
-        tripoint scan_start_2 = veh.global_pos3() + veh_plus_y_vec_1 * shift_sign;
-        return scan_rails_from_veh_internal( veh, scan_start_1, velocity_sign, rd_1, rd_2 )
-               || scan_rails_from_veh_internal( veh, scan_start_2, velocity_sign, rd_2, rd_1 );
+        tripoint scan_start_1 = veh.global_pos3() + veh_plus_y_vec_1 * shift_sign;
+        tripoint scan_start_2 = veh.global_pos3() + veh_plus_y_vec_2 * shift_sign;
+        if( scan_rails_from_veh_internal( veh, scan_start_1, velocity_sign, rd_1, rd_2 ) ) {
+            if( shift_amt ) {
+                *shift_amt = tripoint( veh_plus_y_vec_2 * shift_sign, 0 );
+            }
+            return true;
+        }
+        if( scan_rails_from_veh_internal( veh, scan_start_2, velocity_sign, rd_2, rd_1 ) ) {
+            if( shift_amt ) {
+                *shift_amt = tripoint( veh_plus_y_vec_1 * shift_sign, 0 );
+            }
+            return true;
+        }
     } else {
         point veh_plus_y_vec = ray_delta.rotate( 1 );
-        return scan_rails_from_veh_internal( veh,
-                                             veh.global_pos3() + veh_plus_y_vec * shift_sign,
-                                             velocity_sign, ray_delta, point_zero );
+        tripoint scan_start = veh.global_pos3() + veh_plus_y_vec * shift_sign;
+        if( scan_rails_from_veh_internal( veh, scan_start, velocity_sign, ray_delta, point_zero ) ) {
+            if( shift_amt ) {
+                *shift_amt = tripoint( ( ray_delta + veh_plus_y_vec ) * shift_sign, 0 );
+            }
+            return true;
+        }
     }
+    return false;
 }
 
-bool process_turning_on_rails( const vehicle &veh, units::angle &fin_turn_dir )
+inline rail_processing_result make_none()
+{
+    return rail_processing_result();
+}
+
+inline rail_processing_result make_turn( units::angle a )
+{
+    rail_processing_result res;
+    res.do_turn = true;
+    res.turn_dir = a;
+    return res;
+}
+
+inline rail_processing_result make_shift( tripoint dp )
+{
+    rail_processing_result res;
+    res.do_shift = true;
+    res.shift_amount = dp;
+    return res;
+}
+
+rail_processing_result process_movement_on_rails( const vehicle &veh )
 {
     int face_dir_degrees = units::to_degrees( veh.face.dir() );
     int face_dir_snapped = ( face_dir_degrees / 45 ) * 45;
@@ -1710,17 +1753,19 @@ bool process_turning_on_rails( const vehicle &veh, units::angle &fin_turn_dir )
     units::angle dir_left = normalize( dir_straight - 45_degrees );
     units::angle dir_right = normalize( dir_straight + 45_degrees );
 
-    units::angle dir_shift_left = normalize( dir_straight - 15_degrees );
-    units::angle dir_shift_right = normalize( dir_straight + 15_degrees );
-
     int vel_sign = veh.velocity > 0 ? 1 : -1;
 
     bool can_go_straight = scan_rails_at_shift( veh, vel_sign, dir_straight, 0 );
     bool can_turn_left = scan_rails_at_shift( veh, vel_sign, dir_left, 0 );
     bool can_turn_right = scan_rails_at_shift( veh, vel_sign, dir_right, 0 );
 
-    bool can_shift_right = scan_rails_at_shift( veh, vel_sign, dir_straight, vel_sign );
-    bool can_shift_left = scan_rails_at_shift( veh, vel_sign, dir_straight, -vel_sign );
+    tripoint shift_amount_right;
+    tripoint shift_amount_left;
+
+    bool can_shift_right = scan_rails_at_shift( veh, vel_sign, dir_straight, vel_sign,
+                           &shift_amount_right );
+    bool can_shift_left = scan_rails_at_shift( veh, vel_sign, dir_straight, -vel_sign,
+                          &shift_amount_left );
 
     // Appraise possible vehicle orientations
     bool is_derailed = face_dir_degrees != face_dir_snapped;
@@ -1737,8 +1782,7 @@ bool process_turning_on_rails( const vehicle &veh, units::angle &fin_turn_dir )
                         static_cast<int>( units::to_degrees( dir_straight ) )
                     );
             */
-            fin_turn_dir = dir_straight;
-            return true;
+            return make_turn( dir_straight );
         } else {
             //DebugLogFL( DL::Info, DC::Main ) << "check skipped (derailed)";
         }
@@ -1769,18 +1813,14 @@ bool process_turning_on_rails( const vehicle &veh, units::angle &fin_turn_dir )
                 //DebugLogFL( DL::Info, DC::Main ) << "auto go straight";
             } else if( can_turn_left ) {
                 //DebugLogFL( DL::Info, DC::Main ) << "auto turn left";
-                fin_turn_dir = dir_left;
-                return true;
+                return make_turn( dir_left );
             } else if( can_shift_left ) {
-                fin_turn_dir = dir_shift_left;
-                return true;
+                return make_shift( shift_amount_left );
             } else if( can_turn_right ) {
                 //DebugLogFL( DL::Info, DC::Main ) << "auto turn right";
-                fin_turn_dir = dir_right;
-                return true;
+                return make_turn( dir_right );
             } else if( can_shift_right ) {
-                fin_turn_dir = dir_shift_right;
-                return true;
+                return make_shift( shift_amount_right );
             }
         } else {
             // Manual movement - prefer going in turn direction.
@@ -1789,43 +1829,35 @@ bool process_turning_on_rails( const vehicle &veh, units::angle &fin_turn_dir )
                 // Trying to turn right
                 if( can_turn_right ) {
                     //DebugLogFL( DL::Info, DC::Main ) << "manual turn right";
-                    fin_turn_dir = dir_right;
-                    return true;
+                    return make_turn( dir_right );
                 } else if( can_shift_right ) {
-                    fin_turn_dir = dir_shift_right;
-                    return true;
+                    return make_shift( shift_amount_right );
                 } else if( can_go_straight ) {
                     //DebugLogFL( DL::Info, DC::Main ) << "manual go straight";
                 } else if( can_turn_left ) {
                     //DebugLogFL( DL::Info, DC::Main ) << "manual turn left";
-                    fin_turn_dir = dir_left;
-                    return true;
+                    return make_turn( dir_left );
                 } else if( can_shift_left ) {
-                    fin_turn_dir = dir_shift_left;
-                    return true;
+                    return make_shift( shift_amount_left );
                 }
             } else {
                 // Trying to turn left
                 if( can_turn_left ) {
                     //DebugLogFL( DL::Info, DC::Main ) << "manual turn left";
-                    fin_turn_dir = dir_left;
-                    return true;
+                    return make_turn( dir_left );
                 } else if( can_shift_left ) {
-                    fin_turn_dir = dir_shift_left;
-                    return true;
+                    return make_shift( shift_amount_left );
                 } else if( can_go_straight ) {
                     //DebugLogFL( DL::Info, DC::Main ) << "manual go straight";
                 } else if( can_turn_right ) {
                     //DebugLogFL( DL::Info, DC::Main ) << "manual turn right";
-                    fin_turn_dir = dir_right;
-                    return true;
+                    return make_turn( dir_right );
                 } else if( can_shift_right ) {
-                    fin_turn_dir = dir_shift_right;
-                    return true;
+                    return make_shift( shift_amount_right );
                 }
             }
         }
     }
-    return false;
+    return make_none();
 }
 } // namespace vehicle_movement

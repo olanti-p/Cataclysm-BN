@@ -67,6 +67,7 @@
 #include "translations.h"
 #include "units_utility.h"
 #include "veh_type.h"
+#include "vehicle_move.h"
 #include "vehicle_selector.h"
 #include "weather.h"
 #include "weather_gen.h"
@@ -3367,20 +3368,22 @@ bool vehicle::is_moving() const
 
 bool vehicle::can_use_rails() const
 {
-    // do not allow vehicles without rail wheels or with mixed wheels
-    bool can_use = !rail_wheelcache.empty() && wheelcache.size() == rail_wheelcache.size();
-    if( !can_use ) {
-        return false;
-    }
-    bool is_wheel_on_rail = false;
-    for( int part_index : rail_wheelcache ) {
-        // at least one wheel should be on track
-        if( g->m.has_flag_ter_or_furn( TFLAG_RAIL, global_part_pos3( part_index ) ) ) {
-            is_wheel_on_rail = true;
-            break;
+    // Do not allow vehicles without rail wheels or with mixed wheels
+    return !rail_wheelcache.empty() && wheelcache.size() == rail_wheelcache.size();
+}
+
+bool vehicle::is_on_rails() const
+{
+    // At least one wheel should be on track
+    // TODO: proper rail detection
+    map &here = get_map();
+    //for( int part_index : rail_wheelcache ) {
+    for( int part_index = 0; part_index < part_count(); part_index++ ) {
+        if( here.has_flag_ter_or_furn( TFLAG_RAIL, global_part_pos3( part_index ) ) ) {
+            return true;
         }
     }
-    return is_wheel_on_rail;
+    return false;
 }
 
 int vehicle::ground_acceleration( const bool fueled, int at_vel_in_vmi ) const

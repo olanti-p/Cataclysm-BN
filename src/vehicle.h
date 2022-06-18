@@ -1247,8 +1247,10 @@ class vehicle
         // is the vehicle currently moving?
         bool is_moving() const;
 
-        // can the vehicle use rails?
+        // Can the vehicle use rails?
         bool can_use_rails() const;
+        // Is the vehicle currently on rails?
+        bool is_on_rails() const;
 
         // Get maximum ground velocity gained by combined power of all engines.
         // If fueled == true, then only the engines which the vehicle has fuel for are included
@@ -1931,12 +1933,5 @@ class vehicle
         // relative to vehicle pos, color and text}.
         std::vector<std::tuple<point, int, std::string>> get_debug_overlay_data() const;
 };
-
-namespace vehicle_movement
-{
-
-bool process_turning_on_rails( const vehicle &veh, units::angle &fin_turn_dir );
-
-} // namespace vehicle_movement
 
 #endif // CATA_SRC_VEHICLE_H
