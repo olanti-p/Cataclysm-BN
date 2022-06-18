@@ -33,8 +33,16 @@ static map_helpers::canvas_legend legend = {{
     }
 };
 
+enum class tcscope {
+    full,
+    no_back_turns,
+    no_back_move
+};
+
 struct test_case {
     std::string veh_id;
+
+    tcscope scope;
 
     point start_pos;
     units::angle start_dir;
@@ -50,10 +58,10 @@ struct test_case {
 
     map_helpers::canvas canvas;
 
-    test_case( const std::string &veh_id, units::angle start_dir,
+    test_case( const std::string &veh_id, tcscope scope, units::angle start_dir,
                units::angle end_dir_straight, units::angle end_dir_left,
                units::angle end_dir_right, map_helpers::canvas &&canvas_arg ) :
-        veh_id( veh_id ), start_dir( start_dir ),
+        veh_id( veh_id ), scope( scope ), start_dir( start_dir ),
         end_dir_straight( end_dir_straight ), end_dir_left( end_dir_left ),
         end_dir_right( end_dir_right ), canvas( canvas_arg ) {
         start_pos = canvas.replace_unique( U'*', U'x' );
@@ -101,6 +109,7 @@ static void build_map_from_canvas( const map_helpers::canvas &canvas, const trip
 }
 
 static void test_rail_movement( const std::string &veh_id,
+                                int move_dir,
                                 tripoint vehicle_pos,
                                 units::angle face_dir,
                                 units::angle turn_delta,
@@ -149,8 +158,8 @@ static void test_rail_movement( const std::string &veh_id,
     veh.tags.insert( "IN_CONTROL_OVERRIDE" );
     veh.engine_on = true;
 
-    int tgt_velocity = 200;
-    REQUIRE( veh.safe_velocity( false ) >= tgt_velocity );
+    int tgt_velocity = 200 * move_dir;
+    REQUIRE( veh.safe_velocity( true ) >= std::abs( tgt_velocity ) );
     veh.cruise_on = true;
     veh.cruise_velocity = tgt_velocity;
     veh.velocity = tgt_velocity;
@@ -187,54 +196,124 @@ static void test_rail_movement( const std::string &veh_id,
         }
     }
 
-    std::pair<tripoint, units::angle> expected = { expected_pos, expected_dir };
-    std::pair<tripoint, units::angle> got = { veh.global_pos3(), normalize( veh.face.dir() ) };
+    tripoint got_pos = veh.global_pos3();
+    units::angle got_dir = normalize( veh.face.dir() );
+    CAPTURE( got_pos );
+    CAPTURE( got_dir );
 
-    if( expected != got ) {
-        CAPTURE( expected );
-        CAPTURE( got );
+    if( units::to_degrees( got_dir ) != Approx( units::to_degrees( expected_dir ) ) ||
+        got_pos != expected_pos ) {
         CAPTURE( scan_log.str() );
         FAIL();
+    } else {
+        SUCCEED();
     }
 }
 
 constexpr units::angle turn_step = 15_degrees;
 
+static void run_test_case_at_rotation( const test_case &t, int i_rot )
+{
+    CAPTURE( i_rot );
+    map_helpers::canvas canvas = t.canvas.rotated( i_rot );
+    tripoint canvas_pos = tripoint( ( point( MAPSIZE_X, MAPSIZE_Y ) - canvas.size() ) / 2, 0 );
+
+    point sz = t.canvas.size();
+    tripoint start_pos = canvas_pos + t.start_pos.rotate( i_rot, sz );
+    tripoint end_pos_s = canvas_pos + t.end_pos_straight.rotate( i_rot, sz );
+    tripoint end_pos_l = canvas_pos + t.end_pos_left.rotate( i_rot, sz );
+    tripoint end_pos_r = canvas_pos + t.end_pos_right.rotate( i_rot, sz );
+
+    units::angle rot = i_rot * 90_degrees;
+    units::angle start_dir = normalize( t.start_dir + rot );
+    units::angle end_dir_s = normalize( t.end_dir_straight + rot );
+    units::angle end_dir_l = normalize( t.end_dir_left + rot );
+    units::angle end_dir_r = normalize( t.end_dir_right + rot );
+
+    clear_game( t_floor );
+    build_map_from_canvas( canvas, canvas_pos );
+
+    int i = 16 * i_rot;
+    const auto sn = [&]( const char *s ) {
+        // Catch breaks when same "leaf" sections are executed multiple times,
+        // so we have to generate unique name for each invocation.
+        return std::string( s ) + "   sid=" + std::to_string( i ) + t.veh_id;
+    };
+    WHEN( sn( "moving forward" ) ) {
+        AND_WHEN( sn( "not trying to turn " ) ) {
+            test_rail_movement( t.veh_id, 1, start_pos, start_dir,
+                                0_degrees, end_pos_s, end_dir_s );
+        }
+        AND_WHEN( sn( "trying to turn right " ) ) {
+            test_rail_movement( t.veh_id, 1, start_pos, start_dir,
+                                turn_step, end_pos_r, end_dir_r );
+        }
+        AND_WHEN( sn( "trying to turn left " ) ) {
+            test_rail_movement( t.veh_id, 1, start_pos, start_dir,
+                                -turn_step, end_pos_l, end_dir_l );
+        }
+    }
+    if( t.scope != tcscope::no_back_move ) {
+        WHEN( sn( "moving backwards from straight path" ) ) {
+            AND_WHEN( sn( "not trying to turn" ) ) {
+                test_rail_movement( t.veh_id, -1, end_pos_s, end_dir_s,
+                                    0_degrees, start_pos, start_dir );
+            }
+            if( t.scope != tcscope::no_back_turns ) {
+                AND_WHEN( sn( "trying to turn right" ) ) {
+                    test_rail_movement( t.veh_id, -1, end_pos_s, end_dir_s,
+                                        turn_step, start_pos, start_dir );
+                }
+                AND_WHEN( sn( "trying to turn left" ) ) {
+                    test_rail_movement( t.veh_id, -1, end_pos_s, end_dir_s,
+                                        -turn_step, start_pos, start_dir );
+                }
+            }
+        }
+        if( end_pos_r != end_pos_s ) {
+            WHEN( sn( "moving backwards from right path" ) ) {
+                AND_WHEN( sn( "not trying to turn" ) ) {
+                    test_rail_movement( t.veh_id, -1, end_pos_r, end_dir_r,
+                                        0_degrees, start_pos, start_dir );
+                }
+                if( t.scope != tcscope::no_back_turns ) {
+                    AND_WHEN( sn( "trying to turn right" ) ) {
+                        test_rail_movement( t.veh_id, -1, end_pos_r, end_dir_r,
+                                            turn_step, start_pos, start_dir );
+                    }
+                    AND_WHEN( sn( "trying to turn left" ) ) {
+                        test_rail_movement( t.veh_id, -1, end_pos_r, end_dir_r,
+                                            -turn_step, start_pos, start_dir );
+                    }
+                }
+            }
+        }
+        if( end_pos_l != end_pos_s ) {
+            WHEN( sn( "moving backwards from left path" ) ) {
+                AND_WHEN( sn( "not trying to turn" ) ) {
+                    test_rail_movement( t.veh_id, -1, end_pos_l, end_dir_l,
+                                        0_degrees, start_pos, start_dir );
+                }
+                if( t.scope != tcscope::no_back_turns ) {
+                    AND_WHEN( sn( "trying to turn right" ) ) {
+                        test_rail_movement( t.veh_id, -1, end_pos_l, end_dir_l,
+                                            turn_step, start_pos, start_dir );
+                    }
+                    AND_WHEN( sn( "trying to turn left" ) ) {
+                        test_rail_movement( t.veh_id, -1, end_pos_l, end_dir_l,
+                                            -turn_step, start_pos, start_dir );
+                    }
+                }
+            }
+        }
+    }
+}
+
 static void run_test_case( const test_case &t )
 {
     CAPTURE( t.veh_id );
     for( int i_rot = 0; i_rot < 4; i_rot++ ) {
-        CAPTURE( i_rot );
-        map_helpers::canvas canvas = t.canvas.rotated( i_rot );
-        tripoint canvas_pos = tripoint( ( point( MAPSIZE_X, MAPSIZE_Y ) - canvas.size() ) / 2, 0 );
-
-        point sz = t.canvas.size();
-        tripoint start_pos = canvas_pos + t.start_pos.rotate( i_rot, sz );
-        tripoint end_pos_s = canvas_pos + t.end_pos_straight.rotate( i_rot, sz );
-        tripoint end_pos_l = canvas_pos + t.end_pos_left.rotate( i_rot, sz );
-        tripoint end_pos_r = canvas_pos + t.end_pos_right.rotate( i_rot, sz );
-
-        units::angle rot = i_rot * 90_degrees;
-        units::angle start_dir = normalize( t.start_dir + rot );
-        units::angle end_dir_s = normalize( t.end_dir_straight + rot );
-        units::angle end_dir_l = normalize( t.end_dir_left + rot );
-        units::angle end_dir_r = normalize( t.end_dir_right + rot );
-
-        clear_game( t_floor );
-        build_map_from_canvas( canvas, canvas_pos );
-
-        SECTION( "go_straight" ) {
-            test_rail_movement( t.veh_id, start_pos, start_dir,
-                                0_degrees, end_pos_s, end_dir_s );
-        }
-        SECTION( "try_turn_right" ) {
-            test_rail_movement( t.veh_id, start_pos, start_dir,
-                                turn_step, end_pos_r, end_dir_r );
-        }
-        SECTION( "try_turn_left" ) {
-            test_rail_movement( t.veh_id, start_pos, start_dir,
-                                -turn_step, end_pos_l, end_dir_l );
-        }
+        run_test_case_at_rotation( t, i_rot );
     }
 }
 
@@ -246,7 +325,6 @@ map_helpers::canvas empty_terrain()
             U".........",
             U".........",
             U"..l.o.r..",
-            U".........",
             U".........",
             U".........",
             U".........",
@@ -402,25 +480,33 @@ map_helpers::canvas rails_cross()
 map_helpers::canvas rails_tee_straight()
 {
     return { {
-            U".x..x..x........x..x..x........x..x..x.",
-            U"..x..x..x.......x..x..x.......x..x..x..",
-            U"...x..x..x......x..x..x......x..x..x...",
-            U"....x..x..x.....x..x..x.....x..x..x....",
-            U".....x..l..x....x..o..x....x..r..x.....",
-            U"......x..x..x...x..x..x...x..x..x......",
-            U".......x..x..x..x..x..x..x..x..x.......",
-            U"........x..x..x.x..x..x.x..x..x........",
-            U".........x..x..xx..x..xx..x..x.........",
-            U"..........x..x..x..x..x..x..x..........",
-            U"...........x..x.xx.x.xx.x..x...........",
-            U"............x..xx.xxx.xx..x............",
-            U".............x..x..x..x..x.............",
-            U"..............x.xxxxxxx.x..............",
-            U"...............xxxxxxxxx...............",
-            U"................x..x..x................",
-            U"................x..x..x................",
-            U"................x..x..x................",
-            U"................x..x..x................",
+            U".x..x..x........x..x..x................",
+            U"..x..x..x.......x..x..x................",
+            U"...x..x..x......x..x..x................",
+            U"....x..x..x.....x..x..x................",
+            U".....x..l..x....x..o..x................",
+            U"......x..x..x...x..x..x................",
+            U".......x..x..x..x..x..x................",
+            U"........x..x..x.x..x..x................",
+            U".........x..x..xx..x..x................",
+            U"..........x..x..x..x..x................",
+            U"...........x..x.xx.x..x................",
+            U"............x..xx.xx..x................",
+            U".............x..x..x..x........x..x..x.",
+            U"..............x.xx.xx.x.......x..x..x..",
+            U"...............xx.xx.xx......x..x..x...",
+            U"................x..x..x.....x..x..x....",
+            U"................x..x..x....x..r..x.....",
+            U"................x..x..x...x..x..x......",
+            U"................x..x..x..x..x..x.......",
+            U"................x..x..x.x..x..x........",
+            U"................x..x..xx..x..x.........",
+            U"................x..x..x..x..x..........",
+            U"................x..x.xx.x..x...........",
+            U"................x..xx.xx..x............",
+            U"................x..x..x..x.............",
+            U"................x.xx.xx.x..............",
+            U"................xx.xx.xx...............",
             U"................x..x..x................",
             U"................x..x..x................",
             U"................x..*..x................",
@@ -448,21 +534,21 @@ map_helpers::canvas rails_tee_diag()
             U"..................x..x..x..x..x............",
             U"..................x..x.xx.x..x.............",
             U"..................x..xx.xx..x..............",
-            U"..................x..xxxxxxxxxxxxxxxxxxxxxx",
+            U"..................x..x..x..x...............",
             U"..................x.xx.xx.x................",
             U"..................xx.xx.xx.................",
-            U"..................x..xxxxxxxxxxxxxxxxxrxxxx",
+            U"..................x..x..x..................",
             U".................x..x..x...................",
             U"................x..x..x....................",
-            U"...............x..x..xxxxxxxxxxxxxxxxxxxxxx",
+            U"...............x..x..x.....................",
             U"..............x..x..x......................",
-            U".............x..x..x.......................",
+            U".............xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
             U"............x..x..x........................",
             U"...........x..x..x.........................",
-            U"..........x..x..x..........................",
+            U"..........x..xxxxxxxxxxxxxxxxxxxxxxxxrxxxxx",
             U".........x..x..x...........................",
             U"........x..x..x............................",
-            U".......x..x..x.............................",
+            U".......x..x..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
             U"......x..x..x..............................",
             U".....x..x..x...............................",
             U"....x..*..x................................",
@@ -571,6 +657,7 @@ TEST_CASE( "vehicle_rail_movement", "[vehicle][railroad]" )
         // On normal ground rail vehicle behaves like normal vehicle
         run_test_case( test_case{
             "motorcycle_rail",
+            tcscope::no_back_move,
             -90_degrees,
             -90_degrees,
             -90_degrees - turn_step,
@@ -580,6 +667,7 @@ TEST_CASE( "vehicle_rail_movement", "[vehicle][railroad]" )
 
         run_test_case( test_case{
             "motorized_draisine_trirail",
+            tcscope::no_back_move,
             -90_degrees,
             -90_degrees,
             -90_degrees - turn_step,
@@ -591,6 +679,7 @@ TEST_CASE( "vehicle_rail_movement", "[vehicle][railroad]" )
         // Rail vehicle must follow straight rails regardless of desired turn dir
         run_test_case( test_case{
             "motorcycle_rail",
+            tcscope::full,
             -90_degrees,
             -90_degrees,
             -90_degrees,
@@ -600,6 +689,7 @@ TEST_CASE( "vehicle_rail_movement", "[vehicle][railroad]" )
 
         run_test_case( test_case{
             "motorized_draisine_trirail",
+            tcscope::full,
             -90_degrees,
             -90_degrees,
             -90_degrees,
@@ -611,6 +701,7 @@ TEST_CASE( "vehicle_rail_movement", "[vehicle][railroad]" )
         // Rail vehicle must follow tracks and turn regardless of desired turn dir
         run_test_case( test_case{
             "motorcycle_rail",
+            tcscope::full,
             -90_degrees,
             -45_degrees,
             -45_degrees,
@@ -620,6 +711,7 @@ TEST_CASE( "vehicle_rail_movement", "[vehicle][railroad]" )
 
         run_test_case( test_case{
             "motorized_draisine_trirail",
+            tcscope::full,
             -90_degrees,
             -45_degrees,
             -45_degrees,
@@ -631,6 +723,7 @@ TEST_CASE( "vehicle_rail_movement", "[vehicle][railroad]" )
         // Rail vehicle must follow tracks and turn regardless of desired turn dir
         run_test_case( test_case{
             "motorcycle_rail",
+            tcscope::full,
             -45_degrees,
             0_degrees,
             0_degrees,
@@ -640,6 +733,7 @@ TEST_CASE( "vehicle_rail_movement", "[vehicle][railroad]" )
 
         run_test_case( test_case{
             "motorized_draisine_trirail",
+            tcscope::full,
             -45_degrees,
             0_degrees,
             0_degrees,
@@ -651,6 +745,7 @@ TEST_CASE( "vehicle_rail_movement", "[vehicle][railroad]" )
         // Rail vehicle must follow straight rails regardless of desired turn dir
         run_test_case( test_case{
             "motorcycle_rail",
+            tcscope::full,
             -90_degrees,
             -90_degrees,
             -90_degrees,
@@ -660,6 +755,7 @@ TEST_CASE( "vehicle_rail_movement", "[vehicle][railroad]" )
 
         run_test_case( test_case{
             "motorized_draisine_trirail",
+            tcscope::full,
             -90_degrees,
             -90_degrees,
             -90_degrees,
@@ -672,6 +768,7 @@ TEST_CASE( "vehicle_rail_movement", "[vehicle][railroad]" )
         // but can switch tracks depending on desired turn dir
         run_test_case( test_case{
             "motorcycle_rail",
+            tcscope::no_back_turns,
             -90_degrees,
             -90_degrees,
             -90_degrees - 45_degrees,
@@ -681,6 +778,7 @@ TEST_CASE( "vehicle_rail_movement", "[vehicle][railroad]" )
 
         run_test_case( test_case{
             "motorized_draisine_trirail",
+            tcscope::full,
             -90_degrees,
             -90_degrees,
             -90_degrees - 45_degrees,
@@ -693,6 +791,7 @@ TEST_CASE( "vehicle_rail_movement", "[vehicle][railroad]" )
         // but can switch tracks depending on desired turn dir
         run_test_case( test_case{
             "motorcycle_rail",
+            tcscope::no_back_turns,
             -45_degrees,
             -45_degrees,
             -45_degrees - 45_degrees,
@@ -702,6 +801,7 @@ TEST_CASE( "vehicle_rail_movement", "[vehicle][railroad]" )
 
         run_test_case( test_case{
             "motorized_draisine_trirail",
+            tcscope::full,
             -45_degrees,
             -45_degrees,
             -45_degrees - 45_degrees,
