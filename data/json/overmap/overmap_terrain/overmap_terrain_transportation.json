@@ -333,6 +333,16 @@
   },
   {
     "type": "overmap_terrain",
+    "id": [
+      "rail_dshift_0_0",
+      "rail_dshift_0_1",
+      "rail_dshift_1_0",
+      "rail_dshift_1_1"
+    ],
+    "copy-from": "generic_rail_shift"
+  },
+  {
+    "type": "overmap_terrain",
     "id": "forest_trail",
     "name": "forest trail",
     "color": "green",
