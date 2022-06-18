@@ -567,6 +567,77 @@ map_helpers::canvas rails_tee_diag()
     };
 }
 
+map_helpers::canvas rails_straight_shifting()
+{
+    return { {
+            U"...x..x..x.",
+            U"...x..x..x.",
+            U"...x..x..x.",
+            U"...x..x..x.",
+            U"...x..o..x.",
+            U"...x..x..x.",
+            U"...x..x..x.",
+            U"...x..x..x.",
+            U"...x..x..x.",
+            U"...x..x..x.",
+            U"...x..x..x.",
+            U"..x..x..x..",
+            U"..x..x..x..",
+            U"..x..x..x..",
+            U"..x..x..x..",
+            U"..x..x..x..",
+            U"..x..x..x..",
+            U".x..x..x...",
+            U".x..x..x...",
+            U".x..x..x...",
+            U".x..x..x...",
+            U".x..x..x...",
+            U".x..x..x...",
+            U".x..*..x...",
+            U".x..x..x...",
+            U".x..x..x...",
+            U".x..x..x...",
+            U".x..x..x...",
+        }
+    };
+}
+
+map_helpers::canvas rails_diag_shifting()
+{
+    return { {
+            U"....................x..x..x..",
+            U"...................x..x..x...",
+            U"..................x..x..x....",
+            U".................x..x..x.....",
+            U"................x..o..x......",
+            U"...............x..x..x.......",
+            U"..............x..x..x........",
+            U".............x..x..x.........",
+            U"............x..x..x..........",
+            U"...........x..x..x...........",
+            U"..........x..x..x............",
+            U".........x..x..x.............",
+            U".........x..x..x.............",
+            U"........x..x..x..............",
+            U".......x..x..x...............",
+            U".......x..x..x...............",
+            U"......x..x..x................",
+            U".....x..x..x.................",
+            U"....x..x..x..................",
+            U"...x..x..x...................",
+            U"..x..*..x....................",
+            U".x..x..x.....................",
+            U"x..x..x......................",
+            U"..x..x.......................",
+            U".x..x........................",
+            U"x..x.........................",
+            U"..x..........................",
+            U".x...........................",
+            U"x............................"
+        }
+    };
+}
+
 TEST_CASE( "canvas_stuff", "[vehicle][railroad]" )
 {
     SECTION( "even_sides" ) {
@@ -807,6 +878,52 @@ TEST_CASE( "vehicle_rail_movement", "[vehicle][railroad]" )
             -45_degrees - 45_degrees,
             -45_degrees + 45_degrees,
             rails_tee_diag()
+        } );
+    }
+
+    SECTION( "rails_straight_shifting" ) {
+        // Rail vehicle must shift by 1 tile left or right
+        // if the rails shift left or right
+        run_test_case( test_case{
+            "motorcycle_rail",
+            tcscope::full,
+            -90_degrees,
+            -90_degrees,
+            -90_degrees,
+            -90_degrees,
+            rails_straight_shifting()
+        } );
+
+        run_test_case( test_case{
+            "motorized_draisine_trirail",
+            tcscope::full,
+            -90_degrees,
+            -90_degrees,
+            -90_degrees,
+            -90_degrees,
+            rails_straight_shifting()
+        } );
+    }
+    SECTION( "rails_diag_shifting" ) {
+        // Same as above, but for diagonal case
+        run_test_case( test_case{
+            "motorcycle_rail",
+            tcscope::full,
+            -45_degrees,
+            -45_degrees,
+            -45_degrees,
+            -45_degrees,
+            rails_diag_shifting()
+        } );
+
+        run_test_case( test_case{
+            "motorized_draisine_trirail",
+            tcscope::full,
+            -45_degrees,
+            -45_degrees,
+            -45_degrees,
+            -45_degrees,
+            rails_diag_shifting()
         } );
     }
 }
