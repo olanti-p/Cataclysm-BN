@@ -312,6 +312,26 @@
     "copy-from": "generic_railroad_station_under"
   },
   {
+    "abstract": "generic_rail_shift",
+    "type": "overmap_terrain",
+    "name": "railroad shift test",
+    "copy-from": "generic_city_building_no_sidewalk",
+    "sym": "/",
+    "color": "light_green"
+  },
+  {
+    "type": "overmap_terrain",
+    "id": [
+      "rail_shift_0_0",
+      "rail_shift_0_1",
+      "rail_shift_0_2",
+      "rail_shift_1_0",
+      "rail_shift_1_1",
+      "rail_shift_1_2"
+    ],
+    "copy-from": "generic_rail_shift"
+  },
+  {
     "type": "overmap_terrain",
     "id": "forest_trail",
     "name": "forest trail",
