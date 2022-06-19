@@ -1,45 +1,368 @@
 [
-  {
-    "type": "overmap_connection",
-    "id": "local_road",
-    "subtypes": [
-      { "terrain": "road", "locations": [ "field", "road" ] },
-      { "terrain": "road", "locations": [ "forest_without_trail" ], "basic_cost": 20 },
-      { "terrain": "road", "locations": [ "forest_trail" ], "basic_cost": 25 },
-      { "terrain": "road", "locations": [ "swamp" ], "basic_cost": 40 },
-      { "terrain": "road_nesw_manhole", "locations": [  ] },
-      { "terrain": "bridge", "locations": [ "water" ], "basic_cost": 120 }
-    ]
-  },
-  {
-    "type": "overmap_connection",
-    "id": "sewer_tunnel",
-    "subtypes": [ { "terrain": "sewer", "locations": [ "subterranean" ], "flags": [ "ORTHOGONAL" ] } ]
-  },
-  {
-    "type": "overmap_connection",
-    "id": "subway_tunnel",
-    "subtypes": [ { "terrain": "subway", "locations": [ "subterranean_subway" ], "flags": [ "ORTHOGONAL" ] } ]
-  },
-  {
-    "type": "overmap_connection",
-    "id": "forest_trail",
-    "subtypes": [
-      { "terrain": "forest_trail", "locations": [ "forest_trail" ], "basic_cost": 0 },
-      { "terrain": "forest_trail", "locations": [ "forest_edge" ], "basic_cost": 100 },
-      { "terrain": "forest_trail", "locations": [ "forest_center" ], "basic_cost": 0 },
-      { "terrain": "forest_trail", "locations": [ "swamp" ], "basic_cost": 40 }
-    ]
-  },
-  {
-    "type": "overmap_connection",
-    "id": "local_railroad",
-    "subtypes": [
-      { "terrain": "railroad", "locations": [ "railroad" ], "basic_cost": 1, "flags": [ "ORTHOGONAL" ] },
-      { "terrain": "railroad", "locations": [ "wilderness" ], "basic_cost": 1, "flags": [ "ORTHOGONAL" ] },
-      { "terrain": "railroad", "locations": [ "swamp" ], "basic_cost": 1, "flags": [ "ORTHOGONAL" ] },
-      { "terrain": "railroad_level_crossing", "locations": [ "railroad_level_crossing_allowed" ], "basic_cost": 1 },
-      { "terrain": "railroad_bridge", "locations": [ "water" ], "basic_cost": 1, "flags": [ "ORTHOGONAL" ] }
-    ]
-  }
+    {
+        "type": "overmap_connection",
+        "id": "local_road",
+        "method": "linear",
+        "default_terrain": "road",
+        "subtypes": [
+            {
+                "terrain": "road",
+                "locations": [
+                    "field",
+                    "road"
+                ]
+            },
+            {
+                "terrain": "road",
+                "locations": [
+                    "forest_without_trail"
+                ],
+                "basic_cost": 20
+            },
+            {
+                "terrain": "road",
+                "locations": [
+                    "forest_trail"
+                ],
+                "basic_cost": 25
+            },
+            {
+                "terrain": "road",
+                "locations": [
+                    "swamp"
+                ],
+                "basic_cost": 40
+            },
+            {
+                "terrain": "road_nesw_manhole",
+                "locations": []
+            },
+            {
+                "terrain": "bridge",
+                "locations": [
+                    "water"
+                ],
+                "basic_cost": 120
+            }
+        ]
+    },
+    {
+        "type": "overmap_connection",
+        "id": "sewer_tunnel",
+        "method": "linear",
+        "default_terrain": "sewer",
+        "subtypes": [
+            {
+                "terrain": "sewer",
+                "locations": [
+                    "subterranean"
+                ],
+                "flags": [
+                    "ORTHOGONAL"
+                ]
+            }
+        ]
+    },
+    {
+        "type": "overmap_connection",
+        "id": "subway_tunnel",
+        "method": "linear",
+        "default_terrain": "subway",
+        "subtypes": [
+            {
+                "terrain": "subway",
+                "locations": [
+                    "subterranean_subway"
+                ],
+                "flags": [
+                    "ORTHOGONAL"
+                ]
+            }
+        ]
+    },
+    {
+        "type": "overmap_connection",
+        "id": "forest_trail",
+        "method": "linear",
+        "default_terrain": "forest_trail",
+        "subtypes": [
+            {
+                "terrain": "forest_trail",
+                "locations": [
+                    "forest_trail"
+                ],
+                "basic_cost": 0
+            },
+            {
+                "terrain": "forest_trail",
+                "locations": [
+                    "forest_edge"
+                ],
+                "basic_cost": 100
+            },
+            {
+                "terrain": "forest_trail",
+                "locations": [
+                    "forest_center"
+                ],
+                "basic_cost": 0
+            },
+            {
+                "terrain": "forest_trail",
+                "locations": [
+                    "swamp"
+                ],
+                "basic_cost": 40
+            }
+        ]
+    },
+    {
+        "type": "overmap_connection",
+        "id": "railroad_new",
+        "disable_city_hubs": true,
+        "method": "modular",
+        "default_segment": "railroad_end_2",
+        "default_conn": "straight",
+        "follow_cost": 0.2,
+        "segments": [
+            {
+                "terrain": "railroad_end_2",
+                "n": [ "straight" ],
+                "conns": [ "n" ],
+                "rotates": 4,
+                "complexity_cost": 0,
+                "upgrades": [
+                    "railroad_straight",
+                    "railroad_straight_end"
+                ]
+            },
+            {
+                "terrain": "railroad_straight",
+                "n": [ "straight" ],
+                "s": [ "straight" ],
+                "conns": [ "ns" ],
+                "rotates": 2,
+                "upgrades": [
+                    "railroad_straight_end",
+                    {
+                        "id": "railroad_straight_end",
+                        "rot": "s"
+                    },
+                    "railroad_cross",
+                    "railroad_tee_1",
+                    {
+                        "id": "railroad_tee_1",
+                        "rot": "s"
+                    },
+                    "railroad_tee_2",
+                    {
+                        "id": "railroad_tee_2",
+                        "rot": "s"
+                    }
+                ]
+            },
+            {
+                "terrain": "railroad_straight_end",
+                "n": [ "straight" ],
+                "s": [ "diag_end_a", "diag_end_b" ],
+                "conns": [ "ns" ],
+                "rotates": 4
+            },
+            {
+                "terrain": "railroad_diag",
+                "n": [ "diag_a" ],
+                "w": [ "diag_b" ],
+                "conns": [ "nw" ],
+                "rotates": 4,
+                "upgrades": [
+                    "railroad_diag_end_1",
+                    "railroad_diag_end_2",
+                    {
+                        "id": "railroad_tee_1",
+                        "rot": "n"
+                    },
+                    {
+                        "id": "railroad_tee_2",
+                        "rot": "w"
+                    }
+                ]
+            },
+            {
+                "terrain": "railroad_diag_end_1",
+                "n": [ "diag_a" ],
+                "w": [ "diag_end_a" ],
+                "conns": [ "nw" ],
+                "rotates": 4,
+                "upgrades": [
+                    {
+                        "id": "railroad_tee_2",
+                        "rot": "w"
+                    }
+                ]
+            },
+            {
+                "terrain": "railroad_diag_end_2",
+                "n": [ "diag_end_b" ],
+                "w": [ "diag_b" ],
+                "conns": [ "nw" ],
+                "rotates": 4,
+                "upgrades": [
+                    {
+                        "id": "railroad_tee_1",
+                        "rot": "n"
+                    }
+                ]
+            },
+            {
+                "terrain": "railroad_level_crossing",
+                "n": [ "straight" ],
+                "s": [ "straight" ],
+                "rotates": 2,
+                "complexity_cost": 4,
+                "conns": [ "ns" ]
+            },
+            {
+                "terrain": "railroad_bridge",
+                "n": [ "straight" ],
+                "s": [ "straight" ],
+                "rotates": 2,
+                "conns": [ "ns" ]
+            },
+            {
+                "terrain": "railroad_omni",
+                "n": [ "straight" ],
+                "e": [ "straight" ],
+                "s": [ "straight" ],
+                "w": [ "straight" ],
+                "complexity_cost": 5,
+                "conns": [ "nesw" ]
+            },
+            {
+                "terrain": "railroad_cross",
+                "n": [ "straight" ],
+                "e": [ "straight" ],
+                "s": [ "straight" ],
+                "w": [ "straight" ],
+                "complexity_cost": 10,
+                "conns": [ "ns", "ew" ]
+            },
+            {
+                "terrain": "railroad_tee_1",
+                "n": [ "diag_end_b" ],
+                "w": [ "diag_b" ],
+                "s": [ "straight" ],
+                "conns": [ "ns", "nw" ]
+            },
+            {
+                "terrain": "railroad_tee_2",
+                "n": [ "diag_end_a" ],
+                "e": [ "diag_a" ],
+                "s": [ "straight" ],
+                "conns": [ "ns", "ne" ]
+            }
+        ],
+        "placement": [
+        {
+            "locations": [
+                {
+                    "id": "wilderness",
+                    "basic_cost": 1
+                },
+                {
+                    "id": "swamp",
+                    "basic_cost": 1
+                }
+            ],
+            "segments": [
+                "railroad_straight",
+                "railroad_straight_end",
+                "railroad_diag",
+                "railroad_diag_end_1",
+                "railroad_diag_end_2"
+            ]
+        }, {
+            "locations": [
+                {
+                    "id": "railroad_level_crossing_allowed",
+                    "basic_cost": 1
+                }
+            ],
+            "segments": [ "railroad_level_crossing" ]
+        }, {
+            "locations": [
+                {
+                    "id": "water",
+                    "basic_cost": 3
+                },
+                {
+                    "id": "lake_surface",
+                    "basic_cost": 3
+                },
+                {
+                    "id": "lake_shore",
+                    "basic_cost": 3
+                }
+            ],
+            "segments": [ "railroad_bridge" ]
+        }]
+    },
+    {
+        "type": "overmap_connection",
+        "disable_city_hubs": true,
+        "id": "local_railroad",
+        "method": "linear",
+        "default_terrain": "railroad",
+        "subtypes": [
+            {
+                "terrain": "railroad",
+                "locations": [
+                    "railroad"
+                ],
+                "basic_cost": 1,
+                "flags": [
+                    "ORTHOGONAL"
+                ]
+            },
+            {
+                "terrain": "railroad",
+                "locations": [
+                    "wilderness"
+                ],
+                "basic_cost": 1,
+                "flags": [
+                    "ORTHOGONAL"
+                ]
+            },
+            {
+                "terrain": "railroad",
+                "locations": [
+                    "swamp"
+                ],
+                "basic_cost": 1,
+                "flags": [
+                    "ORTHOGONAL"
+                ]
+            },
+            {
+                "terrain": "railroad_level_crossing",
+                "locations": [
+                    "railroad_level_crossing_allowed"
+                ],
+                "basic_cost": 2,
+                "flags": [
+                    "ORTHOGONAL"
+                ]
+            },
+            {
+                "terrain": "railroad_bridge",
+                "locations": [
+                    "water"
+                ],
+                "basic_cost": 3,
+                "flags": [
+                    "ORTHOGONAL"
+                ]
+            }
+        ]
+    }
 ]
