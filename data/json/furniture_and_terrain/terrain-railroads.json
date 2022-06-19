@@ -65,8 +65,7 @@
     "description": "Trains used to chug along on these.  These rail tracks stand unused in the face of the Cataclysm.",
     "symbol": "X",
     "color": "cyan",
-    "copy-from": "t_railroad_track",
-    "flags": [ "BASHABLE", "RAIL", "TRANSPARENT" ]
+    "copy-from": "t_railroad_track"
   },
   {
     "id": "t_railroad_track_v",
@@ -75,8 +74,7 @@
     "description": "Trains used to chug along on these.  These rail tracks stand unused in the face of the Cataclysm.",
     "symbol": "X",
     "color": "cyan",
-    "copy-from": "t_railroad_track",
-    "flags": [ "BASHABLE", "RAIL", "TRANSPARENT" ]
+    "copy-from": "t_railroad_track"
   },
   {
     "id": "t_railroad_track_d",
@@ -85,8 +83,7 @@
     "description": "Trains used to chug along on these.  These rail tracks stand unused in the face of the Cataclysm.",
     "symbol": "X",
     "color": "cyan",
-    "copy-from": "t_railroad_track",
-    "flags": [ "BASHABLE", "RAIL", "TRANSPARENT" ]
+    "copy-from": "t_railroad_track"
   },
   {
     "id": "t_railroad_track_d1",
@@ -95,8 +92,7 @@
     "description": "Trains used to chug along on these.  These rail tracks stand unused in the face of the Cataclysm.",
     "symbol": "X",
     "color": "cyan",
-    "copy-from": "t_railroad_track",
-    "flags": [ "BASHABLE", "RAIL", "TRANSPARENT" ]
+    "copy-from": "t_railroad_track"
   },
   {
     "id": "t_railroad_track_d2",
@@ -105,8 +101,7 @@
     "description": "Trains used to chug along on these.  These rail tracks stand unused in the face of the Cataclysm.",
     "symbol": "X",
     "color": "cyan",
-    "copy-from": "t_railroad_track",
-    "flags": [ "BASHABLE", "RAIL", "TRANSPARENT" ]
+    "copy-from": "t_railroad_track"
   },
   {
     "id": "t_railroad_tie",
@@ -138,8 +133,7 @@
     "description": "This crosstie is used to support the rails.",
     "symbol": "#",
     "color": "dark_gray_yellow",
-    "copy-from": "t_railroad_tie",
-    "flags": [ "BASHABLE", "TRANSPARENT" ]
+    "copy-from": "t_railroad_tie"
   },
   {
     "id": "t_railroad_tie_v",
@@ -148,8 +142,7 @@
     "description": "This crosstie is used to support the rails.",
     "symbol": "#",
     "color": "dark_gray_yellow",
-    "copy-from": "t_railroad_tie",
-    "flags": [ "BASHABLE", "TRANSPARENT" ]
+    "copy-from": "t_railroad_tie"
   },
   {
     "id": "t_railroad_tie_d",
@@ -158,8 +151,7 @@
     "description": "This crosstie is used to support the rails.",
     "symbol": "#",
     "color": "dark_gray_yellow",
-    "copy-from": "t_railroad_tie",
-    "flags": [ "BASHABLE", "TRANSPARENT" ]
+    "copy-from": "t_railroad_tie"
   },
   {
     "id": "t_railroad_track_on_tie",
@@ -202,8 +194,7 @@
     "description": "Trains used to chug along on these.  These rail tracks stand unused in the face of the Cataclysm.  A crosstie sits underneath, supporting the rails.",
     "symbol": "X",
     "color": "cyan",
-    "copy-from": "t_railroad_track_on_tie",
-    "flags": [ "BASHABLE", "RAIL", "TRANSPARENT" ]
+    "copy-from": "t_railroad_track_on_tie"
   },
   {
     "id": "t_railroad_track_v_on_tie",
@@ -212,8 +203,7 @@
     "description": "Trains used to chug along on these.  These rail tracks stand unused in the face of the Cataclysm.  A crosstie sits underneath, supporting the rails.",
     "symbol": "X",
     "color": "cyan",
-    "copy-from": "t_railroad_track_on_tie",
-    "flags": [ "BASHABLE", "RAIL", "TRANSPARENT" ]
+    "copy-from": "t_railroad_track_on_tie"
   },
   {
     "id": "t_railroad_track_d_on_tie",
@@ -222,8 +212,7 @@
     "description": "Trains used to chug along on these.  These rail tracks stand unused in the face of the Cataclysm.  A crosstie sits underneath, supporting the rails.",
     "symbol": "X",
     "color": "cyan",
-    "copy-from": "t_railroad_track_on_tie",
-    "flags": [ "BASHABLE", "RAIL", "TRANSPARENT" ]
+    "copy-from": "t_railroad_track_on_tie"
   },
   {
     "id": "t_buffer_stop",
@@ -250,8 +239,7 @@
     "description": "This crosstie is used to support the rails.",
     "symbol": "/",
     "color": "dark_gray_yellow",
-    "copy-from": "t_railroad_tie",
-    "flags": [ "BASHABLE", "TRANSPARENT" ]
+    "copy-from": "t_railroad_tie"
   },
   {
     "id": "t_railroad_tie_d2",
@@ -260,8 +248,7 @@
     "description": "This crosstie is used to support the rails.",
     "symbol": "\\",
     "color": "dark_gray_yellow",
-    "copy-from": "t_railroad_tie",
-    "flags": [ "BASHABLE", "TRANSPARENT" ]
+    "copy-from": "t_railroad_tie"
   },
   {
     "id": "t_railroad_crossing_signal",
