@@ -3025,7 +3025,7 @@ void vehicle::precalc_mounts( int idir, units::angle dir, const point &pivot )
     if( idir < 0 || idir > 1 ) {
         idir = 0;
     }
-    tileray tdir( dir );
+    tileray tdir( normalize( dir ) );
     std::unordered_map<point, tripoint> mount_to_precalc;
     for( auto &p : parts ) {
         if( p.removed ) {
@@ -3040,7 +3040,7 @@ void vehicle::precalc_mounts( int idir, units::angle dir, const point &pivot )
         }
     }
     pivot_anchor[idir] = pivot;
-    pivot_rotation[idir] = dir;
+    pivot_rotation[idir] = normalize( dir );
 }
 
 std::vector<int> vehicle::boarded_parts() const
