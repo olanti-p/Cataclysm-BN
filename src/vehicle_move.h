@@ -19,6 +19,8 @@ struct rail_processing_result {
 
 rail_processing_result process_movement_on_rails( const vehicle &veh );
 
+bool is_on_rails( const vehicle &veh );
+
 } // namespace vehicle_movement
 
 #endif // CATA_SRC_VEHICLE_MOVE_H

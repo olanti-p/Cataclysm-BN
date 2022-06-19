@@ -1249,8 +1249,6 @@ class vehicle
 
         // Can the vehicle use rails?
         bool can_use_rails() const;
-        // Is the vehicle currently on rails?
-        bool is_on_rails() const;
 
         // Get maximum ground velocity gained by combined power of all engines.
         // If fueled == true, then only the engines which the vehicle has fuel for are included

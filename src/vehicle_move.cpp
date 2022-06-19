@@ -1327,7 +1327,7 @@ vehicle *vehicle::act_on_map()
     }
 
     bool can_use_rails = this->can_use_rails();
-    bool is_on_rails = this->is_on_rails();
+    bool is_on_rails = vehicle_movement::is_on_rails( *this );
     if( one_in( 10 ) ) {
         bool controlled = false;
         // It can even be a NPC, but must be at the controls
@@ -1717,10 +1717,10 @@ bool scan_rails_at_shift( const vehicle &veh, int velocity_sign, units::angle di
     } else {
         point veh_plus_y_vec = ray_delta.rotate( 1 );
         point scan_vec = ray_delta * velocity_sign;
-        tripoint scan_start = veh.global_pos3() + ray_delta * velocity_sign + veh_plus_y_vec * shift_sign;
+        tripoint scan_start = veh.global_pos3() + scan_vec + veh_plus_y_vec * shift_sign;
         if( scan_rails_from_veh_internal( veh, scan_start, veh_plus_y_vec, scan_vec ) ) {
             if( shift_amt ) {
-                *shift_amt = tripoint( ( ray_delta + veh_plus_y_vec ) * shift_sign, 0 );
+                *shift_amt = scan_start - veh.global_pos3();
             }
             return true;
         }
@@ -1828,4 +1828,26 @@ rail_processing_result process_movement_on_rails( const vehicle &veh )
     }
     return make_none();
 }
+
+bool is_on_rails( const vehicle &veh )
+{
+    if( !veh.can_use_rails() ) {
+        // Must be rail-worthy
+        return false;
+    }
+
+    int face_dir_degrees = units::to_degrees( veh.face.dir() );
+    int face_dir_snapped = ( face_dir_degrees / 45 ) * 45;
+
+    if( face_dir_degrees != face_dir_snapped ) {
+        // When moving on rails, can only rotate in 45-degree increment
+        return false;
+    }
+
+    // Must have valid rail segment in front of or behind us
+    units::angle dir_straight = normalize( units::from_degrees( face_dir_snapped ) );
+    return scan_rails_at_shift( veh, 1, dir_straight, 0 ) ||
+           scan_rails_at_shift( veh, -1, dir_straight, 0 );
+}
+
 } // namespace vehicle_movement

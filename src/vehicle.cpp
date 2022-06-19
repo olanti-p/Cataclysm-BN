@@ -3372,20 +3372,6 @@ bool vehicle::can_use_rails() const
     return !rail_wheelcache.empty() && wheelcache.size() == rail_wheelcache.size();
 }
 
-bool vehicle::is_on_rails() const
-{
-    // At least one wheel should be on track
-    // TODO: proper rail detection
-    map &here = get_map();
-    //for( int part_index : rail_wheelcache ) {
-    for( int part_index = 0; part_index < part_count(); part_index++ ) {
-        if( here.has_flag_ter_or_furn( TFLAG_RAIL, global_part_pos3( part_index ) ) ) {
-            return true;
-        }
-    }
-    return false;
-}
-
 int vehicle::ground_acceleration( const bool fueled, int at_vel_in_vmi ) const
 {
     if( !( engine_on || skidding ) ) {
