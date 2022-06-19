@@ -17,6 +17,7 @@
 #include "color.h"
 #include "numeric_interval.h"
 #include "coordinates.h"
+#include "enum_conversions.h"
 #include "int_id.h"
 #include "overmap_location.h"
 #include "point.h"
@@ -55,6 +56,8 @@ enum class type : int {
     east,
     south,
     west,
+
+    num_directions,
 };
 
 /** For the purposes of iteration. */
@@ -101,6 +104,17 @@ type random();
 bool are_parallel( type dir1, type dir2 );
 
 } // namespace om_direction
+
+template<>
+struct enum_traits<om_direction::type> {
+    static constexpr om_direction::type last = om_direction::type::num_directions;
+};
+
+namespace io
+{
+template<>
+std::string enum_to_string<om_direction::type>( om_direction::type data );
+} // namespace io
 
 class overmap_land_use_code
 {

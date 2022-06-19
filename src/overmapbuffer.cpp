@@ -863,18 +863,14 @@ bool overmapbuffer::reveal_route( const tripoint_abs_omt &source, const tripoint
         return ter( base + p );
     };
 
-    const oter_id oter = get_ter_at( start );
-    const auto connection = overmap_connections::guess_for( oter );
-
-    if( !connection ) {
-        return false;
-    }
+    // TODO: support more variants of connections
+    const string_id<overmap_connection> connection( "local_road" );
 
     const pf::two_node_scoring_fn<point_rel_omt> estimate =
     [&]( pf::directed_node<point_rel_omt> cur, cata::optional<pf::directed_node<point_rel_omt>> ) {
         int cost = 0;
         const oter_id oter = get_ter_at( cur.pos );
-        if( !connection->has( oter ) ) {
+        if( !connection->data_linear.has( oter ) ) {
             if( params.road_only ) {
                 return pf::node_score::rejected;
             }
