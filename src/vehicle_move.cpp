@@ -1374,6 +1374,11 @@ vehicle *vehicle::act_on_map()
         // Same for falling - no air control
         mdir = move;
     } else if( turn_dir != face.dir() && ( !is_on_rails || rpres.do_turn ) ) {
+        DebugLog( DL::Info, DC::Main ) << string_format(
+                                           "act_on_map: turn to %d (on_rails: %d)",
+                                           static_cast<int>( units::to_degrees( turn_dir ) ),
+                                           is_on_rails ? 1 : 0
+                                       );
         // Driver turned vehicle, get turn_dir
         mdir.init( turn_dir );
     } else {
@@ -1772,26 +1777,43 @@ rail_processing_result process_movement_on_rails( const vehicle &veh )
     bool can_shift_left = scan_rails_at_shift( veh, vel_sign, dir_straight, -vel_sign,
                           &shift_amount_left );
 
+    DebugLog( DL::Info, DC::Main ) << string_format(
+                                       "tl:%d shl:%d str:%d shr:%d tr:%d",
+                                       can_turn_left ? 1 : 0,
+                                       can_shift_left ? 1 : 0,
+                                       can_go_straight ? 1 : 0,
+                                       can_shift_right ? 1 : 0,
+                                       can_turn_right ? 1 : 0
+                                   );
+
     // Appraise possible vehicle orientations
     bool is_derailed = face_dir_degrees != face_dir_snapped;
     if( is_derailed ) {
         // The vehicle is derailed, attempt to get back on rails
         // TODO: allow only near exact facing
         if( can_go_straight ) {
+            DebugLog( DL::Info, DC::Main ) << "(get back on rails)";
             return make_turn( dir_straight );
+        } else {
+            DebugLog( DL::Info, DC::Main ) << "(derailed)";
         }
     } else {
         if( veh.face.dir() == veh.turn_dir ) {
             // Automatic movement - prefer going straight.
             if( can_go_straight ) {
+                DebugLog( DL::Info, DC::Main ) << "auto straight";
                 return make_none();
             } else if( can_turn_left ) {
+                DebugLog( DL::Info, DC::Main ) << "auto turn left";
                 return make_turn( dir_left );
             } else if( can_shift_left ) {
+                DebugLog( DL::Info, DC::Main ) << "auto shift left";
                 return make_shift( shift_amount_left );
             } else if( can_turn_right ) {
+                DebugLog( DL::Info, DC::Main ) << "auto turn right";
                 return make_turn( dir_right );
             } else if( can_shift_right ) {
+                DebugLog( DL::Info, DC::Main ) << "auto shift right";
                 return make_shift( shift_amount_right );
             }
         } else {
@@ -1800,32 +1822,43 @@ rail_processing_result process_movement_on_rails( const vehicle &veh )
             if( dir_delta < 180_degrees ) {
                 // Trying to turn right
                 if( can_turn_right ) {
+                    DebugLog( DL::Info, DC::Main ) << "manual turn right";
                     return make_turn( dir_right );
                 } else if( can_shift_right ) {
+                    DebugLog( DL::Info, DC::Main ) << "manual shift right";
                     return make_shift( shift_amount_right );
                 } else if( can_go_straight ) {
+                    DebugLog( DL::Info, DC::Main ) << "manual go straight";
                     return make_none();
                 } else if( can_turn_left ) {
+                    DebugLog( DL::Info, DC::Main ) << "manual turn left";
                     return make_turn( dir_left );
                 } else if( can_shift_left ) {
+                    DebugLog( DL::Info, DC::Main ) << "manual shift left";
                     return make_shift( shift_amount_left );
                 }
             } else {
                 // Trying to turn left
                 if( can_turn_left ) {
+                    DebugLog( DL::Info, DC::Main ) << "manual turn left";
                     return make_turn( dir_left );
                 } else if( can_shift_left ) {
+                    DebugLog( DL::Info, DC::Main ) << "manual shift left";
                     return make_shift( shift_amount_left );
                 } else if( can_go_straight ) {
+                    DebugLog( DL::Info, DC::Main ) << "manual go straight";
                     return make_none();
                 } else if( can_turn_right ) {
+                    DebugLog( DL::Info, DC::Main ) << "manual turn right";
                     return make_turn( dir_right );
                 } else if( can_shift_right ) {
+                    DebugLog( DL::Info, DC::Main ) << "manual shift right";
                     return make_shift( shift_amount_right );
                 }
             }
         }
     }
+    DebugLog( DL::Info, DC::Main ) << "(fallback)";
     return make_none();
 }
 
