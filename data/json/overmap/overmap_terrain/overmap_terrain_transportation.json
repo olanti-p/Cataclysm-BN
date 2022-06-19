@@ -143,25 +143,115 @@
   {
     "type": "overmap_terrain",
     "id": "railroad",
-    "name": "railroad",
+    "name": "railroad (legacy)",
     "color": "light_green",
     "see_cost": 2,
-    "mapgen_straight": [ { "method": "builtin", "name": "railroad_straight" } ],
-    "mapgen_curved": [ { "method": "builtin", "name": "railroad_curved" } ],
-    "mapgen_end": [ { "method": "builtin", "name": "railroad_end" } ],
-    "mapgen_tee": [ { "method": "builtin", "name": "railroad_tee" } ],
-    "mapgen_four_way": [ { "method": "builtin", "name": "railroad_four_way" } ],
     "flags": [ "LINEAR" ]
   },
   {
     "type": "overmap_terrain",
+    "abstract": "railroad_base",
+    "name": "railroad base",
+    "//": "│┼└┘┌┐┤├┬┴",
+    "sym": "*",
+    "color": "magenta",
+    "see_cost": 2
+  },
+  {
+    "type": "overmap_terrain",
+    "copy-from": "railroad_base",
+    "id": "railroad_straight",
+    "name": "railroad (straight)",
+    "sym": "│",
+    "color": "light_green"
+  },
+  {
+    "type": "overmap_terrain",
+    "copy-from": "railroad_base",
+    "id": "railroad_end_2",
+    "name": "railroad (end_2)",
+    "sym": "╵"
+  },
+  {
+    "type": "overmap_terrain",
+    "copy-from": "railroad_base",
+    "id": "railroad_straight_end",
+    "name": "railroad (straight_end)",
+    "sym": "│",
+    "color": "yellow"
+  },
+  {
+    "type": "overmap_terrain",
+    "copy-from": "railroad_base",
+    "id": "railroad_diag",
+    "name": "railroad (diag)",
+    "sym": "┘",
+    "color": "light_green"
+  },
+  {
+    "type": "overmap_terrain",
+    "copy-from": "railroad_base",
+    "id": "railroad_diag_end_1",
+    "name": "railroad (diag_end_1)",
+    "sym": "┘",
+    "color": "yellow"
+  },
+  {
+    "type": "overmap_terrain",
+    "copy-from": "railroad_base",
+    "id": "railroad_diag_end_2",
+    "name": "railroad (diag_end_2)",
+    "sym": "┘",
+    "color": "yellow"
+  },
+  {
+    "type": "overmap_terrain",
+    "copy-from": "railroad_base",
+    "id": "railroad_diag_fork",
+    "name": "railroad (diag_fork)",
+    "sym": "┘",
+    "color": "yellow"
+  },
+  {
+    "type": "overmap_terrain",
+    "copy-from": "railroad_base",
+    "id": "railroad_tee_1",
+    "name": "railroad (tee_1)",
+    "sym": "┤",
+    "color": "white"
+  },
+  {
+    "type": "overmap_terrain",
+    "copy-from": "railroad_base",
+    "id": "railroad_tee_2",
+    "name": "railroad (tee_2)",
+    "sym": "├",
+    "color": "white"
+  },
+  {
+    "type": "overmap_terrain",
+    "copy-from": "railroad_base",
     "id": "railroad_bridge",
-    "name": "railroad bridge",
+    "name": "railroad (bridge)",
     "sym": "│",
     "color": "light_cyan",
-    "see_cost": 2,
-    "mapgen": [ { "method": "builtin", "name": "railroad_bridge" } ],
     "flags": [ "RIVER" ]
+  },
+  {
+    "type": "overmap_terrain",
+    "copy-from": "railroad_base",
+    "id": "railroad_omni",
+    "name": "railroad (omni)",
+    "sym": "+",
+    "color": "light_green"
+  },
+  {
+    "type": "overmap_terrain",
+    "copy-from": "railroad_base",
+    "id": "railroad_cross",
+    "name": "railroad (cross)",
+    "sym": "┼",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
@@ -169,8 +259,7 @@
     "name": "railroad level crossing",
     "sym": "┼",
     "color": "red",
-    "see_cost": 2,
-    "extras": "road"
+    "see_cost": 2
   },
   {
     "abstract": "generic_railroad_station",
