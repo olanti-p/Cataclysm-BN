@@ -1722,7 +1722,10 @@ bool scan_rails_at_shift( const vehicle &veh, int velocity_sign, units::angle di
     } else {
         point veh_plus_y_vec = ray_delta.rotate( 1 );
         point scan_vec = ray_delta * velocity_sign;
-        tripoint scan_start = veh.global_pos3() + scan_vec + veh_plus_y_vec * shift_sign;
+        tripoint scan_start = veh.global_pos3();
+        if( shift_sign != 0 ) {
+            scan_start += scan_vec + veh_plus_y_vec * shift_sign;
+        }
         if( scan_rails_from_veh_internal( veh, scan_start, veh_plus_y_vec, scan_vec ) ) {
             if( shift_amt ) {
                 *shift_amt = scan_start - veh.global_pos3();
