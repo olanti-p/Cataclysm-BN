@@ -129,6 +129,7 @@ class uistatedata
         // overmap editor selections
         const oter_t *place_terrain = nullptr;
         const overmap_special *place_special = nullptr;
+        const overmap_connection *place_connection = nullptr;
         om_direction::type omedit_rotation = om_direction::type::none;
 
         std::set<recipe_id> hidden_recipes;
