@@ -85,7 +85,7 @@ point canvas::replace_unique( char32_t what, char32_t with )
 cata::optional<point> canvas::replace_opt( char32_t what, char32_t with )
 {
     std::vector<point> candidates = replace( what, with );
-    assert( candidates.size() < 1 );
+    assert( candidates.size() <= 1 );
     if( candidates.empty() ) {
         return cata::nullopt;
     } else {
