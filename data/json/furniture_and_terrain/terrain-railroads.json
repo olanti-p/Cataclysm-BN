@@ -49,6 +49,16 @@
     "flags": [ "BASHABLE", "RAIL", "TRANSPARENT" ]
   },
   {
+    "id": "t_railroad_track_paved",
+    "type": "terrain",
+    "name": "paved railroad track",
+    "description": "Trains used to chug along on these.  These rail tracks stand unused in the face of the Cataclysm.",
+    "symbol": "X",
+    "color": "dark_gray",
+    "copy-from": "t_railroad_track",
+    "flags": [ "BASHABLE", "FLAT", "ROAD", "RAIL", "TRANSPARENT", "MINEABLE" ]
+  },
+  {
     "id": "t_railroad_track_h",
     "type": "terrain",
     "name": "railroad track",
