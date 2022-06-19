@@ -180,3 +180,87 @@ void canvas_adapter::check_matches_expected( const canvas &expected, bool requir
 }
 
 } // namespace map_helpers
+
+TEST_CASE( "map_test_setup_canvas_rotation", "[utility]" )
+{
+    SECTION( "even_sides" ) {
+        map_helpers::canvas canvas = { {
+                U"..",
+                U"ab",
+                U"cd",
+                U"..",
+            }
+        };
+
+        REQUIRE( canvas.rotated( 0 ) == canvas );
+        {
+            map_helpers::canvas exp = { {
+                    U".ca.",
+                    U".db.",
+                }
+            };
+            REQUIRE( canvas.rotated( 1 ) == exp );
+        }
+        {
+            map_helpers::canvas exp = { {
+                    U"..",
+                    U"dc",
+                    U"ba",
+                    U".."
+                }
+            };
+            REQUIRE( canvas.rotated( 2 ) == exp );
+        }
+        {
+            map_helpers::canvas exp = { {
+                    U".bd.",
+                    U".ac.",
+                }
+            };
+            REQUIRE( canvas.rotated( 3 ) == exp );
+        }
+        REQUIRE( canvas.rotated( 4 ) == canvas );
+    }
+    SECTION( "not_even_sides" ) {
+        map_helpers::canvas canvas = { {
+                U"...",
+                U"abc",
+                U"...",
+                U"def",
+                U"...",
+            }
+        };
+
+        REQUIRE( canvas.rotated( 0 ) == canvas );
+        {
+            map_helpers::canvas exp = { {
+                    U".d.a.",
+                    U".e.b.",
+                    U".f.c.",
+                }
+            };
+            REQUIRE( canvas.rotated( 1 ) == exp );
+        }
+        {
+            map_helpers::canvas exp = { {
+                    U"...",
+                    U"fed",
+                    U"...",
+                    U"cba",
+                    U"..."
+                }
+            };
+            REQUIRE( canvas.rotated( 2 ) == exp );
+        }
+        {
+            map_helpers::canvas exp = { {
+                    U".c.f.",
+                    U".b.e.",
+                    U".a.d.",
+                }
+            };
+            REQUIRE( canvas.rotated( 3 ) == exp );
+        }
+        REQUIRE( canvas.rotated( 4 ) == canvas );
+    }
+}
