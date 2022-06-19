@@ -974,19 +974,6 @@ void overmap_special::finalize()
     }
 
     for( auto &elem : connections ) {
-        const auto &oter = get_terrain_at( elem.p );
-        if( !elem.terrain && oter.terrain ) {
-            elem.terrain = oter.terrain->get_type_id();    // Defaulted.
-        }
-
-        // If the connection type hasn't been specified, we'll guess for them.
-        // The guess isn't always right (hence guessing) in the case where
-        // multiple connections types can be made on a single location type,
-        // e.g. both roads and forest trails can be placed on "forest" locations.
-        if( elem.connection.is_null() ) {
-            elem.connection = overmap_connections::guess_for( elem.terrain );
-        }
-
         // If the connection has a "from" hint specified, then figure out what the
         // resulting direction from the hinted location to the connection point is,
         // and use that as the intial direction to be passed off to the connection
@@ -1058,16 +1045,10 @@ void overmap_special::check() const
     }
 
     for( const auto &elem : connections ) {
-        const auto &oter = get_terrain_at( elem.p );
-        if( !elem.terrain ) {
-            debugmsg( "In overmap special \"%s\", connection [%d,%d,%d] doesn't have a terrain.",
-                      id.c_str(), elem.p.x, elem.p.y, elem.p.z );
-        } else if( !elem.existing && !elem.terrain->has_flag( line_drawing ) ) {
-            debugmsg( "In overmap special \"%s\", connection [%d,%d,%d] \"%s\" isn't drawn with lines.",
-                      id.c_str(), elem.p.x, elem.p.y, elem.p.z, elem.terrain.c_str() );
-        } else if( oter.terrain && !oter.terrain->type_is( elem.terrain ) ) {
-            debugmsg( "In overmap special \"%s\", connection [%d,%d,%d] overwrites \"%s\".",
-                      id.c_str(), elem.p.x, elem.p.y, elem.p.z, oter.terrain.c_str() );
+        const overmap_special_terrain &ter = get_terrain_at( elem.p );
+        if( !ter.terrain.is_null() ) {
+            debugmsg( "In overmap special \"%s\", connection %s overwrites terrain.",
+                      id, elem.p.to_string() );
         }
 
         if( elem.from ) {
@@ -1083,8 +1064,8 @@ void overmap_special::check() const
                 case direction::WEST:
                     continue;
                 default:
-                    debugmsg( "In overmap special \"%s\", connection [%d,%d,%d] is not directly north, east, south or west of the defined \"from\" [%d,%d,%d].",
-                              id.c_str(), elem.p.x, elem.p.y, elem.p.z, elem.from->x, elem.from->y, elem.from->z );
+                    debugmsg( "In overmap special \"%s\", connection %s is not directly north, east, south or west of the defined \"from\" %s.",
+                              id, elem.p.to_string(), elem.from->to_string() );
                     break;
             }
         }
