@@ -4,9 +4,11 @@
 
 #include <functional>
 #include <vector>
+#include <utility>
 
 #include "coordinates.h"
 #include "enums.h"
+#include "hash_utils.h"
 #include "omdata.h"
 #include "optional.h"
 #include "point.h"
@@ -26,6 +28,27 @@ struct directed_node {
                             om_direction::type dir = om_direction::type::invalid ) : pos( pos ), dir( dir ) {}
 };
 
+template<typename Point>
+struct directed_node_alt {
+    Point pos;
+    int var = -1;
+    int conn = -1;
+    om_direction::type rot = om_direction::type::invalid;
+
+    directed_node_alt() = default;
+    ~directed_node_alt() = default;
+    explicit directed_node_alt( Point pos, int var, om_direction::type rot, int conn ) :
+        pos( pos ), var( var ), conn( conn ), rot( rot ) {}
+
+    template<typename P>
+    explicit directed_node_alt( Point pos, const directed_node_alt<P> &rhs ) :
+        pos( pos ), var( rhs.var ), conn( rhs.conn ), rot( rhs.rot ) {}
+
+    constexpr inline bool operator==( const directed_node_alt &rhs ) const {
+        return pos == rhs.pos && var == rhs.var && rot == rhs.rot && conn == rhs.conn;
+    }
+};
+
 /*
  * Data structure representing a path from a source to a destination.
  * The nodes are given in reverse order (from destination to source) in order to allow
@@ -34,6 +57,11 @@ struct directed_node {
 template<typename Point>
 struct directed_path {
     std::vector<directed_node<Point>> nodes;
+};
+
+template<typename Point>
+struct directed_path_alt {
+    std::vector<directed_node_alt<Point>> nodes;
 };
 
 /*
@@ -69,6 +97,151 @@ using two_node_scoring_fn =
 // non-templated implementation
 directed_path<point> greedy_path( const point &source, const point &dest, const point &max,
                                   two_node_scoring_fn<point> scorer );
+
+template<typename Point>
+using neighbor_provider_cb = std::function<void( const directed_node_alt<Point>&, float )>;
+
+template<typename Point>
+using neighbor_provider =
+    std::function<void( const directed_node_alt<Point>& cur, neighbor_provider_cb<Point> cb )>;
+
+template<typename Node>
+class PathFinder
+{
+    private:
+
+        Node start;
+        Node current;
+        std::unordered_map<Node, Node> came_from;
+        std::unordered_map<Node, float> g_scores;
+        std::unordered_map<Node, float> f_scores;
+        std::vector<Node> open_set;
+
+        size_t find_node_with_lowest_f() {
+            size_t min_i = 0;
+            float min_f = std::numeric_limits<float>::infinity();
+            for( size_t i = 0; i < open_set.size(); i++ ) {
+                auto it = f_scores.find( open_set[i] );
+                if( it != f_scores.end() ) {
+                    float f_score = it->second;
+                    if( f_score < min_f ) {
+                        min_i = i;
+                        min_f = f_score;
+                    }
+                }
+            }
+            return min_i;
+        }
+
+        std::vector<Node> reconstruct_path() {
+            std::vector<Node> total_path;
+            Node curr = current;
+            for( ;; ) {
+                total_path.insert( total_path.begin(), curr );
+                auto it = came_from.find( curr );
+                if( it == came_from.end() ) {
+                    break;
+                }
+                curr = it->second;
+            } // for(;;)
+            return total_path;
+        }
+
+        template<typename FuncConflicts>
+        bool check_conflict_with_recent( const Node &current, const Node &target, int steps,
+                                         FuncConflicts conflict_check_func ) {
+            const Node *cur = &current;
+            for( int step = 0; step < steps; step++ ) {
+                auto it = came_from.find( *cur );
+                if( it == came_from.end() ) {
+                    break;
+                }
+                cur = &it->second;
+                if( conflict_check_func( *cur, target ) ) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+    public:
+        PathFinder() = default;
+        ~PathFinder() = default;
+
+        template<typename FuncH, typename FuncNeighbors, typename FuncGoalCheck, typename FuncConflicts>
+        std::vector<Node> find_path( Node p_start,
+                                     FuncH h_func,
+                                     FuncNeighbors neighbor_provider,
+                                     FuncGoalCheck goal_check_func,
+                                     FuncConflicts conflict_check_func ) {
+            start = p_start;
+
+            open_set.reserve( 32 );
+            open_set.push_back( start );
+
+            g_scores[start] = 0;
+            f_scores[start] = h_func( start );
+
+            int num_iterations = 300000;
+
+            while( !open_set.empty() ) {
+                size_t current_i = find_node_with_lowest_f();
+                current = open_set[current_i];
+
+                if( goal_check_func( current ) ) {
+                    return reconstruct_path();
+                }
+
+                num_iterations -= 1;
+                if( num_iterations == 0 ) {
+                    break;
+                }
+
+                open_set.erase( open_set.begin() + current_i );
+
+                float current_g_score;
+                {
+                    auto it = g_scores.find( current );
+                    if( it == g_scores.end() ) {
+                        current_g_score = std::numeric_limits<float>::infinity();
+                    } else {
+                        current_g_score = it->second;
+                    }
+                }
+
+                neighbor_provider( current, [&]( const Node & neighbor, float d_score ) {
+                    if( check_conflict_with_recent( current, neighbor, 40, conflict_check_func ) ) {
+                        // Intersects path
+                        return;
+                    }
+                    float neighbor_g_score;
+                    {
+                        auto it = g_scores.find( neighbor );
+                        if( it == g_scores.end() ) {
+                            neighbor_g_score = std::numeric_limits<float>::infinity();
+                        } else {
+                            neighbor_g_score = it->second;
+                        }
+                    }
+                    float tentative_g_score = current_g_score + d_score;
+                    if( tentative_g_score < neighbor_g_score ) {
+                        float h_score = h_func( neighbor );
+                        came_from[neighbor] = current;
+                        g_scores[neighbor] = tentative_g_score;
+                        f_scores[neighbor] = tentative_g_score + h_score;
+                        {
+                            auto it = std::find( open_set.begin(), open_set.end(), neighbor );
+                            if( it == open_set.end() ) {
+                                open_set.push_back( neighbor );
+                            }
+                        }
+                    }
+                } );
+            }
+
+            return {};
+        }
+};
 
 /**
  * Uses Greedy Best-First-Search to find a short path from source to destination [2D only].
@@ -130,5 +303,19 @@ simple_path<tripoint_abs_omt> find_overmap_path( const tripoint_abs_omt &source,
         cata::optional<int> max_cost = cata::nullopt );
 
 } // namespace pf
+
+namespace std
+{
+template <typename Point>
+struct hash<pf::directed_node_alt<Point>> {
+    std::size_t operator()( const pf::directed_node_alt<Point> &k ) const noexcept {
+        size_t seed = 0x9e3779b9;
+        cata::hash_combine( seed, k.pos );
+        cata::hash_combine( seed, k.var );
+        cata::hash_combine( seed, static_cast<int>( k.rot ) );
+        return seed;
+    }
+};
+} // namespace std
 
 #endif // CATA_SRC_SIMPLE_PATHFINDING_H
