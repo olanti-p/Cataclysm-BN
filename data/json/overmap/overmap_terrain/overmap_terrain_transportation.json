@@ -196,7 +196,8 @@
   },
   {
     "type": "overmap_terrain",
-    "id": [ "railroad_station_0_1", "railroad_station_0_2", "railroad_station_0_3", "railroad_station_0_4" ],
+    "id": [ "railroad_station_0_1", "railroad_station_0_2", "railroad_station_0_3", "railroad_station_0_4", "railroad_station_rail_entry" ],
+    "//": "railroad_station_0_4 is a fallback for old saves",
     "copy-from": "generic_railroad_station",
     "sym": "│"
   },
