@@ -2,10 +2,11 @@
   {
     "type": "mapgen",
     "method": "json",
+    "//": "railroad_station_0_3 is here for legacy reasons",
     "om_terrain": [
       "railroad_straight",
       "railroad_straight_end",
-
+      "railroad_station_0_4",
       "railroad_omni",
       "railroad_four_way",
       "railroad_curved",
