@@ -1904,6 +1904,7 @@ bool overmap::generate_over( const int z )
 {
     bool requires_over = false;
     std::vector<point_om_omt> bridge_points;
+    std::vector<point_om_omt> rail_bridge_points;
 
     if( !get_option<bool>( "ELEVATED_BRIDGES" ) ) {
         return requires_over;
@@ -1932,6 +1933,10 @@ bool overmap::generate_over( const int z )
                     ter_set( p, oter_id( "bridge_road" + oter_get_rotation_string( oter_ground ) ) );
                     ter_set( p_below, oter_id( "bridge_under" + oter_get_rotation_string( oter_ground ) ) );
                     bridge_points.emplace_back( i, j );
+                }
+
+                if( is_ot_match( "railroad_bridge", oter_ground, ot_match_type::type ) ) {
+                    rail_bridge_points.emplace_back( i, j );
                 }
             }
         }
@@ -1969,6 +1974,12 @@ bool overmap::generate_over( const int z )
         ter_set( p, oter_id( "bridgehead_ground" + bhp.second ) );
         ter_set( p + tripoint_above, oter_id( "bridgehead_ramp" + bhp.second ) );
     }
+
+    elevate_bridges( *this, rail_bridge_points,
+                     "railroad_bridge_elevated",
+                     "bridge_under",
+                     "railroad_bridgehead_ground",
+                     "railroad_bridgehead_ramp" );
 
     return requires_over;
 }
