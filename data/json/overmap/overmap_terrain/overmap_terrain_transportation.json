@@ -230,12 +230,41 @@
   },
   {
     "type": "overmap_terrain",
-    "copy-from": "railroad_base",
-    "id": "railroad_bridge",
-    "name": "railroad (bridge)",
+    "abstract": "generic_railroad_bridge",
+    "copy-from": "generic_transportation",
+    "name": "bridge",
     "sym": "│",
     "color": "light_cyan",
+    "see_cost": 2
+  },
+  {
+    "type": "overmap_terrain",
+    "id": "railroad_bridge",
+    "copy-from": "generic_railroad_bridge",
+    "name": "railroad (bridge)",
+    "//": "Legacy bridge that blocks river",
     "flags": [ "RIVER" ]
+  },
+  {
+    "type": "overmap_terrain",
+    "id": "railroad_bridge_elevated",
+    "copy-from": "generic_railroad_bridge",
+    "name": "railroad (bridge)"
+  },
+  {
+    "type": "overmap_terrain",
+    "id": "railroad_bridgehead_ground",
+    "copy-from": "generic_railroad_bridge",
+    "name": "bridgehead (ground)",
+    "sym": "v",
+    "extras": "bridgehead_ground"
+  },
+  {
+    "type": "overmap_terrain",
+    "id": "railroad_bridgehead_ramp",
+    "copy-from": "generic_railroad_bridge",
+    "name": "bridgehead (ramp)",
+    "sym": "^"
   },
   {
     "type": "overmap_terrain",

@@ -289,5 +289,175 @@
                 "railroad"
             ]
         }
+    },
+    {
+        "type": "palette",
+        "id": "railroad_bridge_ground_palette",
+        "terrain": {
+            "s": "t_water_moving_sh",
+            "~": "t_water_moving_dp",
+            ".": "t_pavement_bg_dp",
+            "_": "t_sidewalk_bg_dp",
+            "-": "t_railroad_tie_h",
+            "X": "t_railroad_track",
+            "x": "t_railroad_track_on_tie",
+            "r": "t_guardrail_bg_dp",
+            "u": "t_ramp_up_low",
+            "U": "t_ramp_up_high",
+            "d": "t_ramp_down_high",
+            "D": "t_ramp_down_low",
+            "b": "t_railroad_track_ramp_up_low",
+            "B": "t_railroad_track_ramp_up_high",
+            "c": "t_railroad_track_ramp_down_high",
+            "C": "t_railroad_track_ramp_down_low",
+            "W": "t_sidewalk_ramp_down_high",
+            ">": "t_sidewalk_ramp_down_low",
+            "<": "t_sidewalk_ramp_up_high",
+            "w": "t_sidewalk_ramp_up_low",
+            "#": "t_concrete_wall"
+        }
+    },
+    {
+        "type": "palette",
+        "id": "railroad_bridge_road_palette",
+        "terrain": {
+            " ": "t_open_air",
+            ".": "t_pavement_hw_air",
+            "_": "t_sidewalk_hw_air",
+            "-": "t_railroad_tie_h",
+            "X": "t_railroad_track",
+            "x": "t_railroad_track_on_tie",
+            "r": "t_guardrail_hw_air",
+            "U": "t_ramp_up_high",
+            "d": "t_ramp_down_high",
+            "D": "t_ramp_down_low",
+            "b": "t_railroad_track_ramp_up_low",
+            "B": "t_railroad_track_ramp_up_high",
+            "c": "t_railroad_track_ramp_down_high",
+            "C": "t_railroad_track_ramp_down_low",
+            "W": "t_sidewalk_ramp_down_high",
+            ">": "t_sidewalk_ramp_down_low",
+            "<": "t_sidewalk_ramp_up_high",
+            "w": "t_sidewalk_ramp_up_low",
+            "#": "t_concrete_wall"
+        }
+    },
+    {
+        "type": "mapgen",
+        "method": "json",
+        "om_terrain": [
+            "railroad_bridgehead_ground"
+        ],
+        "object": {
+            "fill_ter": "t_water_moving_dp",
+            "rows": [
+                "r_..X...X......X...X.._r",
+                "r_.-x---x-....-x---x-._r",
+                "r_..X...X......X...X.._r",
+                "r_..X...X......X...X.._r",
+                "r_.-x---x-....-x---x-._r",
+                "rwuubuuubuuuuuubuuubuuwr",
+                "r<UUBUUUBUUUUUUBUUUBUU<r",
+                "########################",
+                "s######################s",
+                "sssssssss######sssssssss",
+                "~~ssssssss####ssssssss~~",
+                "~~~~~~~~~ss##ss~~~~~~~~~",
+                "~~~~~~~~~~ssss~~~~~~~~~~",
+                "~~~~~~~~~~~~~~~~~~~~~~~~",
+                "~~~~~~~~~~~~~~~~~~~~~~~~",
+                "~~~~~~~~~~~~~~~~~~~~~~~~",
+                "~~~~~~~~~~~~~~~~~~~~~~~~",
+                "~~~~~~~~~~~~~~~~~~~~~~~~",
+                "~~~~~~~~~~~~~~~~~~~~~~~~",
+                "~~~~~~~~~~~~~~~~~~~~~~~~",
+                "~~~~~~~~~~ssss~~~~~~~~~~",
+                "~~~~~~~~~ss##ss~~~~~~~~~",
+                "~~~~~~~~ss####ss~~~~~~~~",
+                "~~~~~~~~s######s~~~~~~~~"
+            ],
+            "palettes": [
+                "railroad_bridge_ground_palette"
+            ]
+        }
+    },
+    {
+        "type": "mapgen",
+        "method": "json",
+        "om_terrain": [
+            "railroad_bridgehead_ramp"
+        ],
+        "object": {
+            "fill_ter": "t_open_air",
+            "rows": [
+                "                        ",
+                "                        ",
+                "                        ",
+                "                        ",
+                "                        ",
+                "r>DDCDDDCDDDDDDCDDDCDD>r",
+                "rWddcdddcddddddcdddcddWr",
+                "r_.-x---x-....-x---x-._r",
+                "r_..X...X......X...X.._r",
+                "r_..X...X......X...X.._r",
+                "r_.-x---x-....-x---x-._r",
+                "r_..X...X......X...X.._r",
+                "r_..X...X......X...X.._r",
+                "r_.-x---x-....-x---x-._r",
+                "r_..X...X......X...X.._r",
+                "r_..X...X......X...X.._r",
+                "r_.-x---x-....-x---x-._r",
+                "r_..X...X......X...X.._r",
+                "r_..X...X......X...X.._r",
+                "r_.-x---x-....-x---x-._r",
+                "r_..X...X......X...X.._r",
+                "r_..X...X......X...X.._r",
+                "r_.-x---x-....-x---x-._r",
+                "r_..X...X......X...X.._r"
+            ],
+            "palettes": [
+                "railroad_bridge_road_palette"
+            ]
+        }
+    },
+    {
+        "type": "mapgen",
+        "method": "json",
+        "om_terrain": [
+            "railroad_bridge_elevated"
+        ],
+        "weight": 100,
+        "object": {
+            "fill_ter": "t_open_air",
+            "rows": [
+                "r_..X...X......X...X.._r",
+                "r_.-x---x-....-x---x-._r",
+                "r_..X...X......X...X.._r",
+                "r_..X...X......X...X.._r",
+                "r_.-x---x-....-x---x-._r",
+                "r_..X...X......X...X.._r",
+                "r_..X...X......X...X.._r",
+                "r_.-x---x-....-x---x-._r",
+                "r_..X...X......X...X.._r",
+                "r_..X...X......X...X.._r",
+                "r_.-x---x-....-x---x-._r",
+                "r_..X...X......X...X.._r",
+                "r_..X...X......X...X.._r",
+                "r_.-x---x-....-x---x-._r",
+                "r_..X...X......X...X.._r",
+                "r_..X...X......X...X.._r",
+                "r_.-x---x-....-x---x-._r",
+                "r_..X...X......X...X.._r",
+                "r_..X...X......X...X.._r",
+                "r_.-x---x-....-x---x-._r",
+                "r_..X...X......X...X.._r",
+                "r_..X...X......X...X.._r",
+                "r_.-x---x-....-x---x-._r",
+                "r_..X...X......X...X.._r"
+            ],
+            "palettes": [
+                "railroad_bridge_road_palette"
+            ]
+        }
     }
 ]
