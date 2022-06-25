@@ -36,7 +36,8 @@ struct canvas {
     public:
         canvas() = default;
         canvas( const tripoint &size );
-        canvas( std::vector<std::u32string> &&data ) : data( {{ data }} ) {
+        canvas( std::vector<std::u32string> &&level ) {
+            data.emplace_back( std::move( level ) );
             size_cache = calc_size();
             assert_size( size() );
         }

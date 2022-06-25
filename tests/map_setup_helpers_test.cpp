@@ -33,7 +33,7 @@ canvas::canvas( const tripoint &size )
 
 tripoint canvas::calc_size() const
 {
-    if( data.empty() ) {
+    if( data.empty() || data[0].empty() ) {
         return tripoint_zero;
     } else {
         return tripoint(
@@ -49,7 +49,7 @@ void canvas::assert_size( const tripoint &sz ) const
     assert( static_cast<int>( data.size() ) == sz.z );
     for( const auto &level : data ) {
         assert( static_cast<int>( level.size() ) == sz.y );
-        for( const auto &line : data ) {
+        for( const auto &line : level ) {
             assert( static_cast<int>( line.size() ) == sz.x );
         }
     }
