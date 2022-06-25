@@ -43,9 +43,7 @@ constexpr uint32_t check_back_move =    1 << 1;
 constexpr uint32_t check_on_rails =     1 << 2;
 
 constexpr uint32_t full = check_back_turns | check_back_move | check_on_rails;
-
 constexpr uint32_t no_back_turns = full & ~check_back_turns;
-constexpr uint32_t no_back_move = full & ~check_back_move;
 }
 
 struct test_case {
@@ -236,7 +234,7 @@ static void run_test_case_at_rotation( const test_case &t, int i_rot )
     map_helpers::canvas canvas = t.canvas.rotated( i_rot );
     tripoint canvas_pos = tripoint( ( point( MAPSIZE_X, MAPSIZE_Y ) - canvas.size().xy() ) / 2, 0 );
 
-    tripoint sz = t.canvas.size();
+    point sz = t.canvas.size().xy();
     tripoint start_pos = canvas_pos + t.start_pos.rotate_2d( i_rot, sz );
     tripoint end_pos_s = canvas_pos + t.end_pos_straight.rotate_2d( i_rot, sz );
     tripoint end_pos_l = canvas_pos + t.end_pos_left.rotate_2d( i_rot, sz );
