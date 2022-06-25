@@ -56,7 +56,7 @@ class railroad_gen_tester
         int test_num = -1;
         std::unique_ptr<overmap> om;
         map_helpers::canvas_adapter adapter;
-        point sz;
+        tripoint sz;
 
     public:
         railroad_gen_tester( int test_num, const map_helpers::canvas &initial ) :
@@ -78,11 +78,11 @@ class railroad_gen_tester
             }
 
             adapter = map_helpers::canvas_adapter( legend )
-            .with_getter( [&]( const point & p ) {
-                return om->ter( tripoint_om_omt( p.x + 1, p.y + 1, 0 ) ).id().str();
+            .with_getter( [&]( const tripoint & p ) {
+                return om->ter( tripoint_om_omt( p ) + point( 1, 1 ) ).id().str();
             } )
-            .with_setter( [&]( const point & p, const std::string & id ) {
-                om->ter_set( tripoint_om_omt( p.x + 1, p.y + 1, 0 ), oter_str_id( id ).id() );
+            .with_setter( [&]( const tripoint & p, const std::string & id ) {
+                om->ter_set( tripoint_om_omt( p ) + point( 1, 1 ), oter_str_id( id ).id() );
             } );
 
             adapter.set_all( initial );
