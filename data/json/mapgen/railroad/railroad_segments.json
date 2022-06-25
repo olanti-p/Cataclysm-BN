@@ -328,7 +328,6 @@
             "X": "t_railroad_track",
             "x": "t_railroad_track_on_tie",
             "r": "t_guardrail_hw_air",
-            "U": "t_ramp_up_high",
             "d": "t_ramp_down_high",
             "D": "t_ramp_down_low",
             "b": "t_railroad_track_ramp_up_low",
