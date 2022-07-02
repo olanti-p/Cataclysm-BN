@@ -561,6 +561,11 @@ bool is_ot_match( const std::string &name, const oter_id &oter,
                   ot_match_type match_type );
 
 /**
+ * Determine whether provided tile belongs to overmap connection.
+ */
+bool belongs_to_connection( const overmap_connection_id &id, const oter_id &oter );
+
+/**
 * Gets a collection of sectors and their width for usage in placing overmap specials.
 * @param sector_width used to divide the OMAPX by OMAPY map into sectors.
 */
