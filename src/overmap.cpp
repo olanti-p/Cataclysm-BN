@@ -3846,16 +3846,19 @@ pf::directed_path<point_om_omt> overmap::lay_out_street( const overmap_connectio
 
 void overmap::build_connection(
     const overmap_connection &connection, const pf::directed_path<point_om_omt> &path, int z,
-    const om_direction::type &initial_dir )
+    const om_direction::type &initial_dir, const om_direction::type &final_dir )
 {
     if( path.nodes.empty() ) {
         return;
     }
 
-    om_direction::type prev_dir = initial_dir;
+    om_direction::type prev_dir = om_direction::type::invalid;
+    if( final_dir != om_direction::type::invalid ) {
+        prev_dir = om_direction::opposite( final_dir );
+    }
 
-    const pf::directed_node<point_om_omt> start = path.nodes.front();
-    const pf::directed_node<point_om_omt> end = path.nodes.back();
+    //const pf::directed_node<point_om_omt> start = path.nodes.front();
+    const point_om_omt end_p = path.nodes.back().pos;
 
     for( const auto &node : path.nodes ) {
         const tripoint_om_omt pos( node.pos, z );
@@ -3900,20 +3903,11 @@ void overmap::build_connection(
                             new_line = om_lines::set_segment( new_line, dir );
                         }
                     }
-                } else if( pos.xy() == start.pos || pos.xy() == end.pos ) {
-                    // Only automatically connect to out of bounds locations if we're the start or end of this path.
-                    new_line = om_lines::set_segment( new_line, dir );
-
-                    // Add this connection point to our connections out.
-                    std::vector<tripoint_om_omt> &outs = connections_out[connection.id];
-                    const auto existing_out = std::find_if( outs.begin(),
-                    outs.end(), [pos]( const tripoint_om_omt & c ) {
-                        return c == pos;
-                    } );
-                    if( existing_out == outs.end() ) {
-                        outs.emplace_back( pos );
-                    }
                 }
+            }
+
+            if( initial_dir != om_direction::type::invalid && pos.xy() == end_p ) {
+                new_line = om_lines::set_segment( new_line, initial_dir );
             }
 
             if( new_line == om_lines::invalid ) {
@@ -3930,13 +3924,34 @@ void overmap::build_connection(
     }
 }
 
+static om_direction::type decide_connection_dir( const point_om_omt &p, om_direction::type d )
+{
+    if( d != om_direction::type::invalid ) {
+        return d;
+    }
+    if( p.x() == 0 ) {
+        return om_direction::type::west;
+    } else if( p.y() == 0 ) {
+        return om_direction::type::north;
+    } else if( p.x() == OMAPX - 1 ) {
+        return om_direction::type::east;
+    } else if( p.y() == OMAPY - 1 ) {
+        return om_direction::type::south;
+    } else {
+        return om_direction::type::invalid;
+    }
+}
+
 void overmap::build_connection( const point_om_omt &source, const point_om_omt &dest, int z,
                                 const overmap_connection &connection, const bool must_be_unexplored,
-                                const om_direction::type &initial_dir )
+                                const om_direction::type &initial_dir, const om_direction::type &final_dir )
 {
-    build_connection(
-        connection, lay_out_connection( connection, source, dest, z, must_be_unexplored ),
-        z, initial_dir );
+    pf::directed_path<point_om_omt> path = lay_out_connection( connection, source, dest, z,
+                                           must_be_unexplored );
+    build_connection( connection, path, z,
+                      decide_connection_dir( source, initial_dir ),
+                      decide_connection_dir( dest, final_dir )
+                    );
 }
 
 void overmap::connect_closest_points( const std::vector<point_om_omt> &points, int z,
@@ -4386,14 +4401,16 @@ void overmap::place_special(
         for( const auto &elem : special.connections ) {
             if( elem.connection ) {
                 const tripoint_om_omt rp = p + om_direction::rotate( elem.p, dir );
-                om_direction::type initial_dir = elem.initial_dir;
+                // We're building connection *from* nearby city *to* this special,
+                // so initial_dir actually becomes final direction
+                om_direction::type final_dir = elem.initial_dir;
 
-                if( initial_dir != om_direction::type::invalid ) {
-                    initial_dir = om_direction::add( initial_dir, dir );
+                if( final_dir != om_direction::type::invalid ) {
+                    final_dir = om_direction::opposite( om_direction::add( final_dir, dir ) );
                 }
 
                 build_connection( cit.pos, rp.xy(), elem.p.z, *elem.connection, must_be_unexplored,
-                                  initial_dir );
+                                  om_direction::type::invalid, final_dir );
             }
         }
     }
