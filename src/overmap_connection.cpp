@@ -37,6 +37,19 @@ const overmap_connection &string_id<overmap_connection>::obj() const
 }
 
 template<>
+int_id<overmap_connection> string_id<overmap_connection>::id() const
+{
+    int_id<overmap_connection> null_id( -1 );
+    return connections.convert( *this, null_id );
+}
+
+template<>
+const overmap_connection &int_id<overmap_connection>::obj() const
+{
+    return connections.obj( *this );
+}
+
+template<>
 bool string_id<om_connection_piece>::is_valid() const
 {
     return conn_pieces.is_valid( *this );
@@ -349,6 +362,11 @@ void reset()
 {
     conn_pieces.reset();
     connections.reset();
+}
+
+const std::vector<overmap_connection> &get_all()
+{
+    return connections.get_all();
 }
 
 overmap_connection_id guess_for( const oter_id &oter )

@@ -31,6 +31,7 @@
 #include "optional.h"
 #include "overmap.h"
 #include "overmap_connection.h"
+#include "overmap_generation.h"
 #include "overmap_special.h"
 #include "overmap_types.h"
 #include "popup.h"
@@ -1678,6 +1679,37 @@ bool overmapbuffer::place_special( const overmap_special_id &special_id,
 
     // If we got this far, we've failed to make the placement.
     return false;
+}
+
+bool overmapbuffer::place_connection( const overmap_connection &connection,
+                                      const tripoint_abs_omt &src,
+                                      om_direction::type src_dir,
+                                      const tripoint_abs_omt &dst,
+                                      om_direction::type dst_dir,
+                                      bool must_be_unexplored )
+{
+    const overmap_with_local_coords om_loc_src = get_om_global( src );
+    const overmap_with_local_coords om_loc_dest = get_om_global( dst );
+
+    if( om_loc_src.om != om_loc_dest.om ) {
+        return false;
+    }
+
+    overmap &om = *om_loc_src.om;
+
+    const overmap_generation::ConnPath path =
+        overmap_generation::lay_out_connection(
+            om,
+            connection,
+            om_loc_src.local,
+            src_dir,
+            om_loc_dest.local,
+            dst_dir,
+            must_be_unexplored
+        );
+
+    overmap_generation::build_connection( om, path );
+    return true;
 }
 
 std::set<tripoint_abs_omt> overmapbuffer::electric_grid_at( const tripoint_abs_omt &p )
