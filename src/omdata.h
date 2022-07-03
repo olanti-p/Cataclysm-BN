@@ -426,17 +426,9 @@ struct overmap_special_terrain {
     overmap_special_terrain() = default;
     tripoint p;
     oter_str_id terrain;
-    std::set<std::string> flags;
     std::set<overmap_location_id> locations;
 
-    template<typename JsonStream>
-    void deserialize( JsonStream &jsin ) {
-        auto om = jsin.get_object();
-        om.read( "point", p );
-        om.read( "overmap", terrain );
-        om.read( "flags", flags );
-        om.read( "locations", locations );
-    }
+    void deserialize( const JsonObject &jo );
 
     /**
      * Returns whether this terrain of the special can be placed on the specified terrain.

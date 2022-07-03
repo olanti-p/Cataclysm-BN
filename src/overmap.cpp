@@ -424,6 +424,13 @@ const std::vector<overmap_land_use_code> &overmap_land_use_codes::get_all()
     return land_use_codes.get_all();
 }
 
+void overmap_special_terrain::deserialize( const JsonObject &jo )
+{
+    mandatory( jo, false, "point", p );
+    optional( jo, false, "overmap", terrain );
+    optional( jo, false, "locations", locations );
+}
+
 void overmap_special_connection::deserialize( const JsonObject &jo )
 {
     mandatory( jo, false, "point", p );
