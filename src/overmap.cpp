@@ -3759,6 +3759,22 @@ pf::directed_path<point_om_omt> overmap::lay_out_street( const overmap_connectio
 }
 
 void overmap::build_connection(
+    const overmap_connection &connection,
+    const tripoint_om_omt &src,
+    om_direction::type src_dir,
+    const tripoint_om_omt &dst,
+    om_direction::type dst_dir,
+    bool must_be_unexplored
+)
+{
+    if( src.z() != dst.z() ) {
+        // TODO: connections can change z level
+        return;
+    }
+    build_connection( src.xy(), dst.xy(), src.z(), connection, must_be_unexplored, src_dir, dst_dir );
+}
+
+void overmap::build_connection(
     const overmap_connection &connection, const pf::directed_path<point_om_omt> &path, int z,
     const om_direction::type &initial_dir, const om_direction::type &final_dir )
 {

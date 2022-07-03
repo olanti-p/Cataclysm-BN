@@ -55,6 +55,7 @@
 #include "overmap.h"
 #include "overmap_types.h"
 #include "overmapbuffer.h"
+#include "overmap_connection.h"
 #include "regional_settings.h"
 #include "rng.h"
 #include "sdltiles.h"
@@ -1405,6 +1406,7 @@ static void draw_om_sidebar(
         if( data.debug_editor ) {
             print_hint( "PLACE_TERRAIN", c_light_blue );
             print_hint( "PLACE_SPECIAL", c_light_blue );
+            print_hint( "PLACE_CONNECTION", c_light_blue );
             ++y;
         }
 
@@ -1685,15 +1687,17 @@ static bool search( const ui_adaptor &om_ui, tripoint_abs_omt &curs, const tripo
     return true;
 }
 
-static void place_ter_or_special( const ui_adaptor &om_ui, tripoint_abs_omt &curs,
-                                  const std::string &om_action )
+static void place_feature( const ui_adaptor &om_ui, tripoint_abs_omt &curs,
+                           const std::string &om_action )
 {
     uilist pmenu;
     // This simplifies overmap_special selection using uilist
     std::vector<const overmap_special *> oslist;
-    const bool terrain = om_action == "PLACE_TERRAIN";
+    const bool is_terrain = om_action == "PLACE_TERRAIN";
+    const bool is_connection = om_action == "PLACE_CONNECTION";
+    const bool is_special = !is_terrain && !is_connection;
 
-    if( terrain ) {
+    if( is_terrain ) {
         pmenu.title = _( "Select terrain to place:" );
         for( const oter_t &oter : overmap_terrains::get_all() ) {
             const std::string entry_text = string_format(
@@ -1705,6 +1709,15 @@ static void place_ter_or_special( const ui_adaptor &om_ui, tripoint_abs_omt &cur
                                                colorize( oter.get_name(), oter.get_color() ),
                                                colorize( oter.id.str(), c_white ) );
             pmenu.addentry( oter.id.id().to_i(), true, 0, entry_text );
+        }
+    } else if( is_connection ) {
+        pmenu.title = _( "Select connection to place:" );
+        for( const overmap_connection &conn : overmap_connections::get_all() ) {
+            const std::string entry_text = string_format(
+                                               _( "id: [ %s ]" ),
+                                               colorize( conn.id.str(), c_white )
+                                           );
+            pmenu.addentry( conn.id.id().to_i(), true, 0, entry_text );
         }
     } else {
         pmenu.title = _( "Select special to place:" );
@@ -1721,7 +1734,7 @@ static void place_ter_or_special( const ui_adaptor &om_ui, tripoint_abs_omt &cur
 
         ui_adaptor ui;
         ui.on_screen_resize( [&]( ui_adaptor & ui ) {
-            w_editor = catacurses::newwin( 15, 27, point( TERMX - 27, 3 ) );
+            w_editor = catacurses::newwin( 16, 27, point( TERMX - 27, 3 ) );
 
             ui.position_from_window( w_editor );
         } );
@@ -1735,18 +1748,30 @@ static void place_ter_or_special( const ui_adaptor &om_ui, tripoint_abs_omt &cur
         ctxt.register_action( "HELP_KEYBINDINGS" );
         ctxt.register_action( "ANY_INPUT" );
 
-        if( terrain ) {
+        if( is_terrain ) {
             uistate.place_terrain = &oter_id( pmenu.ret ).obj();
-        } else {
+        } else if( is_special ) {
             uistate.place_special = oslist[pmenu.ret];
+        } else {
+            uistate.place_connection = &int_id<overmap_connection>( pmenu.ret ).obj();
         }
         // TODO: Unify these things.
-        const bool can_rotate = terrain ? uistate.place_terrain->is_rotatable() :
-                                uistate.place_special->rotatable;
+        bool can_rotate = true;
+        if( is_terrain ) {
+            can_rotate = uistate.place_terrain->is_rotatable();
+        } else if( is_special ) {
+            can_rotate = uistate.place_special->rotatable;
+        }
 
-        uistate.omedit_rotation = om_direction::type::none;
+        if( is_connection ) {
+            // Connections start at 'any direction'
+            uistate.omedit_rotation = om_direction::type::invalid;
+        } else {
+            uistate.omedit_rotation = om_direction::type::none;
+        }
+
         // If user chose an already rotated submap, figure out its direction
-        if( terrain && can_rotate ) {
+        if( is_terrain && can_rotate ) {
             for( om_direction::type r : om_direction::all ) {
                 if( uistate.place_terrain->id.id() == uistate.place_terrain->get_rotated( r ) ) {
                     uistate.omedit_rotation = r;
@@ -1755,42 +1780,54 @@ static void place_ter_or_special( const ui_adaptor &om_ui, tripoint_abs_omt &cur
             }
         }
 
+        cata::optional<tripoint_abs_omt> first_point;
+        cata::optional<om_direction::type> first_rot;
+
         ui.on_redraw( [&]( const ui_adaptor & ) {
+            werase( w_editor );
             draw_border( w_editor );
-            if( terrain ) {
+
+            int y = 1;
+            if( is_terrain ) {
                 // NOLINTNEXTLINE(cata-use-named-point-constants)
-                mvwprintz( w_editor, point( 1, 1 ), c_white, _( "Place overmap terrain:" ) );
-                mvwprintz( w_editor, point( 1, 2 ), c_light_blue, "                         " );
-                mvwprintz( w_editor, point( 1, 2 ), c_light_blue, uistate.place_terrain->id.c_str() );
+                mvwprintz( w_editor, point( 1, y++ ), c_white, _( "Place overmap terrain:" ) );
+                mvwprintz( w_editor, point( 1, y++ ), c_light_blue, uistate.place_terrain->id.c_str() );
+            } else if( is_special ) {
+                mvwprintz( w_editor, point( 1, y++ ), c_white, _( "Place overmap special:" ) );
+                mvwprintz( w_editor, point( 1, y++ ), c_light_blue, uistate.place_special->id.c_str() );
             } else {
-                mvwprintz( w_editor, point_south_east, c_white, _( "Place overmap special:" ) );
-                mvwprintz( w_editor, point( 1, 2 ), c_light_blue, "                         " );
-                mvwprintz( w_editor, point( 1, 2 ), c_light_blue, uistate.place_special->id.c_str() );
+                mvwprintz( w_editor, point( 1, y++ ), c_white, _( "Place overmap connection:" ) );
+                mvwprintz( w_editor, point( 1, y++ ), c_light_blue, uistate.place_connection->id.c_str() );
+                if( first_point ) {
+                    mvwprintz( w_editor, point( 1, y++ ), c_light_green, " select end point" );
+                } else {
+                    mvwprintz( w_editor, point( 1, y++ ), c_light_green, " select start point" );
+                }
             }
             const std::string &rotation = om_direction::name( uistate.omedit_rotation );
 
-            mvwprintz( w_editor, point( 1, 3 ), c_light_gray, "                         " );
-            mvwprintz( w_editor, point( 1, 3 ), c_light_gray, _( "Rotation: %s %s" ), rotation,
+            mvwprintz( w_editor, point( 1, y++ ), c_light_gray, _( "Rotation: %s %s" ), rotation,
                        can_rotate ? "" : _( "(fixed)" ) );
-            mvwprintz( w_editor, point( 1, 5 ), c_red, _( "Areas highlighted in red" ) );
-            mvwprintz( w_editor, point( 1, 6 ), c_red, _( "already have map content" ) );
+            y++;
+            mvwprintz( w_editor, point( 1, y++ ), c_red, _( "Areas highlighted in red" ) );
+            mvwprintz( w_editor, point( 1, y++ ), c_red, _( "already have map content" ) );
             // NOLINTNEXTLINE(cata-text-style): single space after period for compactness
-            mvwprintz( w_editor, point( 1, 7 ), c_red, _( "generated. Their overmap" ) );
-            mvwprintz( w_editor, point( 1, 8 ), c_red, _( "id will change, but not" ) );
-            mvwprintz( w_editor, point( 1, 9 ), c_red, _( "their contents." ) );
-            if( ( terrain && uistate.place_terrain->is_rotatable() ) ||
-                ( !terrain && uistate.place_special->rotatable ) ) {
-                mvwprintz( w_editor, point( 1, 11 ), c_white, _( "[%s] Rotate" ),
+            mvwprintz( w_editor, point( 1, y++ ), c_red, _( "generated. Their overmap" ) );
+            mvwprintz( w_editor, point( 1, y++ ), c_red, _( "id will change, but not" ) );
+            mvwprintz( w_editor, point( 1, y++ ), c_red, _( "their contents." ) );
+            y++;
+            if( can_rotate ) {
+                mvwprintz( w_editor, point( 1, y++ ), c_white, _( "[%s] Rotate" ),
                            ctxt.get_desc( "ROTATE" ) );
             }
-            mvwprintz( w_editor, point( 1, 12 ), c_white, _( "[%s] Apply" ),
+            mvwprintz( w_editor, point( 1, y++ ), c_white, _( "[%s] Apply" ),
                        ctxt.get_desc( "CONFIRM" ) );
-            mvwprintz( w_editor, point( 1, 13 ), c_white, _( "[ESCAPE/Q] Cancel" ) );
+            mvwprintz( w_editor, point( 1, y++ ), c_white, _( "[ESCAPE/Q] Cancel" ) );
             wnoutrefresh( w_editor );
         } );
 
         std::string action;
-        do {
+        for( ;; ) {
             om_ui.invalidate_ui();
             ui_manager::redraw();
 
@@ -1799,31 +1836,61 @@ static void place_ter_or_special( const ui_adaptor &om_ui, tripoint_abs_omt &cur
             if( const cata::optional<tripoint> vec = ctxt.get_direction( action ) ) {
                 curs += vec->xy();
             } else if( action == "CONFIRM" ) { // Actually modify the overmap
-                if( terrain ) {
+                if( is_terrain ) {
                     overmap_buffer.ter_set( curs, uistate.place_terrain->id.id() );
                     overmap_buffer.set_seen( curs, true );
-                } else {
+                    break;
+                } else if( is_special ) {
                     overmap_buffer.place_special( *uistate.place_special, curs, uistate.omedit_rotation, false, true );
                     for( const overmap_special_terrain &s_ter : uistate.place_special->terrains ) {
                         const tripoint_abs_omt pos =
                             curs + om_direction::rotate( s_ter.p, uistate.omedit_rotation );
                         overmap_buffer.set_seen( pos, true );
                     }
+                    break;
+                } else {
+                    if( !first_point ) {
+                        first_point = curs;
+                        first_rot = uistate.omedit_rotation;
+                    } else {
+                        overmap_buffer.place_connection( *uistate.place_connection, *first_point, *first_rot, curs,
+                                                         uistate.omedit_rotation, false );
+                        break;
+                    }
                 }
-                break;
             } else if( action == "ROTATE" && can_rotate ) {
-                uistate.omedit_rotation = om_direction::turn_right( uistate.omedit_rotation );
-                if( terrain ) {
-                    uistate.place_terrain = &uistate.place_terrain->get_rotated( uistate.omedit_rotation ).obj();
+                if( is_connection ) {
+                    // Connections support 'invalid' rotation to indicate autoselection of end point
+                    om_direction::type &rot = uistate.omedit_rotation;
+                    if( rot == om_direction::type::west ) {
+                        rot = om_direction::type::invalid;
+                    } else if( rot == om_direction::type::invalid ) {
+                        rot = om_direction::type::north;
+                    } else {
+                        rot = om_direction::turn_right( rot );
+                    }
+                } else {
+                    uistate.omedit_rotation = om_direction::turn_right( uistate.omedit_rotation );
+                    if( is_terrain ) {
+                        uistate.place_terrain = &uistate.place_terrain->get_rotated( uistate.omedit_rotation ).obj();
+                    }
+                }
+            } else if( action == "QUIT" ) {
+                if( first_point ) {
+                    first_point = cata::nullopt;
+                    first_rot = cata::nullopt;
+                } else {
+                    break;
                 }
             }
             if( uistate.overmap_blinking ) {
                 uistate.overmap_show_overlays = !uistate.overmap_show_overlays;
             }
-        } while( action != "QUIT" );
+        } // for(;;)
 
         uistate.place_terrain = nullptr;
         uistate.place_special = nullptr;
+        uistate.place_connection = nullptr;
     }
 }
 
@@ -1958,6 +2025,7 @@ static tripoint_abs_omt display( const tripoint_abs_omt &orig,
     if( data.debug_editor ) {
         ictxt.register_action( "PLACE_TERRAIN" );
         ictxt.register_action( "PLACE_SPECIAL" );
+        ictxt.register_action( "PLACE_CONNECTION" );
     }
     ictxt.register_action( "QUIT" );
     std::string action;
@@ -2095,8 +2163,10 @@ static tripoint_abs_omt display( const tripoint_abs_omt &orig,
             if( !search( ui, curs, orig ) ) {
                 continue;
             }
-        } else if( action == "PLACE_TERRAIN" || action == "PLACE_SPECIAL" ) {
-            place_ter_or_special( ui, curs, action );
+        } else if( action == "PLACE_TERRAIN"
+                   || action == "PLACE_SPECIAL"
+                   || action == "PLACE_CONNECTION" ) {
+            place_feature( ui, curs, action );
         } else if( action == "MISSIONS" ) {
             g->list_missions();
         }
