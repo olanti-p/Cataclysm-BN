@@ -1680,6 +1680,30 @@ bool overmapbuffer::place_special( const overmap_special_id &special_id,
     return false;
 }
 
+bool overmapbuffer::place_connection( const overmap_connection &connection,
+                                      const tripoint_abs_omt &src,
+                                      om_direction::type src_dir,
+                                      const tripoint_abs_omt &dst,
+                                      om_direction::type dst_dir,
+                                      bool must_be_unexplored )
+{
+    const overmap_with_local_coords om_loc_src = get_om_global( src );
+    const overmap_with_local_coords om_loc_dest = get_om_global( dst );
+
+    if( om_loc_src.om != om_loc_dest.om ) {
+        return false;
+    }
+    om_loc_src.om->build_connection(
+        connection,
+        om_loc_src.local,
+        src_dir,
+        om_loc_dest.local,
+        dst_dir,
+        must_be_unexplored
+    );
+    return true;
+}
+
 std::set<tripoint_abs_omt> overmapbuffer::electric_grid_at( const tripoint_abs_omt &p )
 {
     std::set<tripoint_abs_omt> result;

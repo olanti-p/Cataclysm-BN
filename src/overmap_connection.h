@@ -81,6 +81,8 @@ void finalize();
 void check_consistency();
 void reset();
 
+const std::vector<overmap_connection> &get_all();
+
 overmap_connection_id guess_for( const oter_type_id &oter );
 overmap_connection_id guess_for( const oter_id &oter );
 

@@ -435,6 +435,14 @@ class overmap
             om_direction::type dir, size_t len ) const;
 
         void build_connection(
+            const overmap_connection &connection,
+            const tripoint_om_omt &src,
+            om_direction::type src_dir,
+            const tripoint_om_omt &dst,
+            om_direction::type dst_dir,
+            bool must_be_unexplored
+        );
+        void build_connection(
             const overmap_connection &connection, const pf::directed_path<point_om_omt> &path, int z,
             const om_direction::type &initial_dir = om_direction::type::invalid,
             const om_direction::type &final_dir = om_direction::type::invalid );
