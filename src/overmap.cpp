@@ -1,4 +1,6 @@
+#include "om_direction.h" // IWYU pragma: associated
 #include "omdata.h" // IWYU pragma: associated
+#include "overmap_special.h" // IWYU pragma: associated
 #include "overmap.h" // IWYU pragma: associated
 
 #include <algorithm>
@@ -427,7 +429,7 @@ const std::vector<overmap_land_use_code> &overmap_land_use_codes::get_all()
 void overmap_special_terrain::deserialize( const JsonObject &jo )
 {
     mandatory( jo, false, "point", p );
-    optional( jo, false, "overmap", terrain );
+    mandatory( jo, false, "overmap", terrain );
     optional( jo, false, "locations", locations );
 }
 
@@ -437,6 +439,12 @@ void overmap_special_connection::deserialize( const JsonObject &jo )
     mandatory( jo, false, "connection", connection );
     optional( jo, false, "existing", existing );
     optional( jo, false, "from", from );
+}
+
+void overmap_special_spawns::deserialize( const JsonObject &jo )
+{
+    overmap_spawns::load( jo );
+    jo.read( "radius", radius );
 }
 
 void overmap_specials::load( const JsonObject &jo, const std::string &src )
