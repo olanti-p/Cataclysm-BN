@@ -3962,12 +3962,32 @@ void overmap::build_connection( const point_om_omt &source, const point_om_omt &
                                 const overmap_connection &connection, const bool must_be_unexplored,
                                 const om_direction::type &initial_dir, const om_direction::type &final_dir )
 {
+    tripoint_om_omt src( source, z );
+    tripoint_om_omt dst( dest, z );
+    // HACK: Put default terrain at start and end before trying to find path to avoid
+    //       bridge ramp generation at these positions.
+    //       If generation fails, revert changes.
+    oter_id ter_src_old = ter( src );
+    oter_id ter_dst_old = ter( dst );
+    constexpr size_t unconnected = 0;
+    if( !connection.has( ter_src_old ) ) {
+        ter_set( src, connection.default_terrain->get_linear( unconnected ) );
+    }
+    if( !connection.has( ter_dst_old ) ) {
+        ter_set( dst, connection.default_terrain->get_linear( unconnected ) );
+    }
+
     pf::directed_path<point_om_omt> path = lay_out_connection( connection, source, dest, z,
                                            must_be_unexplored );
-    build_connection( connection, path, z,
-                      decide_connection_dir( source, initial_dir ),
-                      decide_connection_dir( dest, final_dir )
-                    );
+    if( path.nodes.empty() ) {
+        ter_set( src, ter_src_old );
+        ter_set( dst, ter_dst_old );
+    } else {
+        build_connection( connection, path, z,
+                          decide_connection_dir( source, initial_dir ),
+                          decide_connection_dir( dest, final_dir )
+                        );
+    }
 }
 
 void overmap::connect_closest_points( const std::vector<point_om_omt> &points, int z,
