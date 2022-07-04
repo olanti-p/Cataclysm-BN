@@ -10,6 +10,7 @@
 #include "cuboid_rectangle.h"
 #include "enums.h"
 #include "game_constants.h"
+#include "hash_traits.h"
 #include "point.h"
 #include "debug.h"
 
@@ -441,6 +442,13 @@ inline auto project_bounds( const coord_point<tripoint, Origin, CoarseScale> &co
 }
 
 } // namespace coords
+
+template<typename Point, coords::origin Origin, coords::scale Scale>
+struct hash_traits<coords::coord_point<Point, Origin, Scale>> {
+    u64 operator()( const coords::coord_point<Point, Origin, Scale> &p ) const noexcept {
+        return hash_traits<Point> {}( p.raw() );
+    }
+};
 
 namespace std
 {

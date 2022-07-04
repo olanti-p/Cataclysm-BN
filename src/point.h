@@ -16,6 +16,8 @@
 #include <string>
 #include <vector>
 
+#include "hash_traits.h"
+
 #else
 
 #define assert(...)
@@ -320,6 +322,27 @@ static constexpr tripoint tripoint_max{ INT_MAX, INT_MAX, INT_MAX };
 
 static constexpr point point_min{ tripoint_min.xy() };
 static constexpr point point_max{ tripoint_max.xy() };
+
+template<>
+struct hash_traits<point> {
+    u64 operator()( const point &p ) const noexcept {
+        u64 ret = HASH_SEED;
+        hash_combine( ret, p.x );
+        hash_combine( ret, p.y );
+        return ret;
+    }
+};
+
+template<>
+struct hash_traits<tripoint> {
+    u64 operator()( const tripoint &p ) const noexcept {
+        u64 ret = HASH_SEED;
+        hash_combine( ret, p.x );
+        hash_combine( ret, p.y );
+        hash_combine( ret, p.z );
+        return ret;
+    }
+};
 
 // Make point hashable so it can be used as an unordered_set or unordered_map key,
 // or a component of one.
