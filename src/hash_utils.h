@@ -16,7 +16,7 @@ namespace cata
 //     http://stackoverflow.com/questions/4948780
 
 template <class T, typename Hash = std::hash<T>>
-inline void hash_combine( std::size_t &seed, const T &v, const Hash &hash = std::hash<T>() )
+inline void hash_combine_szt( std::size_t &seed, const T &v, const Hash &hash = std::hash<T>() )
 {
     seed ^= hash( v ) + 0x9e3779b9 + ( seed << 6 ) + ( seed >> 2 );
 }
@@ -30,14 +30,14 @@ struct Impl
 {
     static void apply( size_t &seed, const Tuple &tuple ) {
         Impl < Tuple, Index - 1 >::apply( seed, tuple );
-        hash_combine( seed, std::get<Index>( tuple ) );
+        hash_combine_szt( seed, std::get<Index>( tuple ) );
     }
 };
 
 template <class Tuple>
 struct Impl<Tuple, 0> {
     static void apply( size_t &seed, const Tuple &tuple ) {
-        hash_combine( seed, std::get<0>( tuple ) );
+        hash_combine_szt( seed, std::get<0>( tuple ) );
     }
 };
 
@@ -54,8 +54,8 @@ struct tuple_hash {
     template <class A, class B>
     std::size_t operator()( const std::pair<A, B> &v ) const {
         std::size_t seed = 0;
-        hash_combine( seed, v.first );
-        hash_combine( seed, v.second );
+        hash_combine_szt( seed, v.first );
+        hash_combine_szt( seed, v.second );
         return seed;
     }
 };
@@ -80,7 +80,7 @@ struct range_hash {
 
         std::size_t seed = range.size();
         for( const auto &value : range ) {
-            hash_combine( seed, value, hash );
+            hash_combine_szt( seed, value, hash );
         }
         return seed;
     }
@@ -95,7 +95,7 @@ std::enable_if_t < sizeof( T ) < 8, T > maybe_mix_bits( std::uint64_t val )
     std::uint32_t hi = val >> 32;
     std::uint32_t lo = val;
     T ret = hi;
-    hash_combine( ret, lo );
+    hash_combine_szt( ret, lo );
     return ret;
 }
 
@@ -108,7 +108,7 @@ std::enable_if_t < sizeof( T ) >= 8, T > maybe_mix_bits( std::uint64_t val )
 } // namespace hash64_detail
 
 // hash64 hashes a 64-bit integer, either using the identity function (on 64-bit systems)
-// or using hash_combine on the two 32-bit halves (on 32-bit systems)
+// or using hash_combine_szt on the two 32-bit halves (on 32-bit systems)
 inline std::size_t hash64( std::uint64_t val )
 {
     return hash64_detail::maybe_mix_bits<std::size_t>( val );
