@@ -35,4 +35,12 @@ float om_noise_layer_lake::noise_at( const point_om_omt &local_omt_pos ) const
     return r;
 }
 
+float om_noise_layer_river::noise_at( const point_om_omt &local_omt_pos ) const
+{
+    // TODO: tweak this?
+    const point_abs_omt p = global_omt_pos( local_omt_pos );
+    float r = scaled_octave_noise_3d( 16, 0.5, 0.02, -1.0f, 1.0f, p.x(), p.y(), get_seed() );
+    return r;
+}
+
 } // namespace om_noise

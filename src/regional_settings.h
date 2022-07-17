@@ -34,6 +34,11 @@ class building_bin
         void finalize();
 };
 
+struct river_settings {
+    int spacing = 120;
+    int pos_variance = 40;
+};
+
 struct city_settings {
     // About the average US city non-residential, non-park land usage
     int shop_radius = 30;
@@ -220,7 +225,6 @@ struct region_terrain_and_furniture_settings {
 struct regional_settings {
     std::string id;           //
     oter_str_id default_oter; // 'field'
-    double river_scale = 1;
     weighted_int_list<ter_id> default_groundcover; // i.e., 'grass_or_dirt'
     shared_ptr_fast<weighted_int_list<ter_str_id>> default_groundcover_str;
 
@@ -233,6 +237,7 @@ struct regional_settings {
     overmap_forest_settings overmap_forest;
     overmap_lake_settings overmap_lake;
     region_terrain_and_furniture_settings region_terrain_and_furniture;
+    river_settings river;
 
     std::unordered_map<std::string, map_extras> region_extras;
 

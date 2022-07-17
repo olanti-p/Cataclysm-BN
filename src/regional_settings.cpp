@@ -419,8 +419,11 @@ void load_region_settings( const JsonObject &jo )
     if( !jo.read( "default_oter", new_region.default_oter ) && strict ) {
         jo.throw_error( "default_oter required for default ( though it should probably remain 'field' )" );
     }
-    if( !jo.read( "river_scale", new_region.river_scale ) && strict ) {
-        jo.throw_error( "river_scale required for default" );
+    if( !jo.read( "river_spacing", new_region.river.spacing ) && strict ) {
+        jo.throw_error( "river_spacing required for default" );
+    }
+    if( !jo.read( "river_pos_variance", new_region.river.pos_variance ) && strict ) {
+        jo.throw_error( "river_pos_variance required for default" );
     }
     if( jo.has_array( "default_groundcover" ) ) {
         new_region.default_groundcover_str.reset( new weighted_int_list<ter_str_id> );
@@ -613,7 +616,8 @@ void load_region_overlay( const JsonObject &jo )
 void apply_region_overlay( const JsonObject &jo, regional_settings &region )
 {
     jo.read( "default_oter", region.default_oter );
-    jo.read( "river_scale", region.river_scale );
+    jo.read( "river_spacing", region.river.spacing );
+    jo.read( "river_pos_variance", region.river.pos_variance );
     if( jo.has_array( "default_groundcover" ) ) {
         region.default_groundcover_str.reset( new weighted_int_list<ter_str_id> );
         for( JsonArray inner : jo.get_array( "default_groundcover" ) ) {

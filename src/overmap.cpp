@@ -42,6 +42,7 @@
 #include "optional.h"
 #include "options.h"
 #include "output.h"
+#include "overmap_generation.h"
 #include "overmap_connection.h"
 #include "overmap_location.h"
 #include "overmap_noise.h"
@@ -2714,9 +2715,18 @@ void overmap::place_lakes()
 void overmap::place_rivers( const overmap *north, const overmap *east, const overmap *south,
                             const overmap *west )
 {
-    if( settings->river_scale == 0.0 ) {
-        return;
+    ( void )north;
+    ( void )east;
+    ( void )south;
+    ( void )west;
+
+    std::vector<river_data> rivers = gen_rivers( 1337, settings->river, pos() );
+
+    for( const river_data &riv : rivers ) {
+        place_river( riv.start, riv.end );
     }
+
+    /*
     int river_chance = static_cast<int>( std::max( 1.0, 1.0 / settings->river_scale ) );
     int river_scale = static_cast<int>( std::max( 1.0, settings->river_scale ) );
     // West/North endpoints of rivers
@@ -2863,6 +2873,7 @@ void overmap::place_rivers( const overmap *north, const overmap *east, const ove
             place_river( river_start[i], river_end[i] );
         }
     }
+    */
 }
 
 void overmap::place_swamps()
@@ -3005,8 +3016,12 @@ void overmap::place_roads( const overmap *north, const overmap *east, const over
 void overmap::place_river( point_om_omt pa, point_om_omt pb )
 {
     const oter_id river_center( "river_center" );
+    /*
     int river_chance = static_cast<int>( std::max( 1.0, 1.0 / settings->river_scale ) );
     int river_scale = static_cast<int>( std::max( 1.0, settings->river_scale ) );
+    */
+    int river_chance = 1.0f;
+    int river_scale = 1.0f;
     point_om_omt p2( pa );
     do {
         p2.x() += rng( -1, 1 );

@@ -149,7 +149,8 @@
         "f_region_water_plant": { "f_cattails": 15, "f_lilypad": 1, "f_lotus": 5 }
       }
     },
-    "river_scale": 1.0,
+    "river_spacing": 170,
+    "river_pos_variance": 120,
     "field_coverage": {
       "percent_coverage": 0.2,
       "default_ter": "t_shrub",
