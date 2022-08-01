@@ -443,8 +443,13 @@ ifeq ($(PCH), 1)
   endif
 endif
 
-ifeq ($(MODULES), 1)
+ifeq ($(MODULES_GCC), 1)
   CXXFLAGS += -fmodules-ts
+endif
+
+ifeq ($(MODULES_CLANG), 1)
+  CXXFLAGS += -fmodules -fprebuilt-module-path=obj/tiles/
+  MODULE_EXPORT_FLAGS = -Xclang -emit-module-interface
 endif
 
 CXXFLAGS += $(WARNINGS) $(DEBUG) $(DEBUGSYMS) $(PROFILE) $(OTHERS) -MMD -MP
@@ -887,6 +892,9 @@ $(shell mkdir -p $(ODIR))
 
 $(ODIR)/%.o: $(SRC_DIR)/%.cpp $(PCH_P)
 	$(CXX) $(CPPFLAGS) $(DEFINES) $(CXXFLAGS) $(PCHFLAGS) -c $< -o $@
+
+$(ODIR)/%.pcm: $(SRC_DIR)/%.cpp $(PCH_P)
+	$(CXX) $(CPPFLAGS) $(MODULE_EXPORT_FLAGS) $(DEFINES) $(CXXFLAGS) $(PCHFLAGS) -c $< -o $@
 
 $(ODIR)/%.o: $(SRC_DIR)/%.rc
 	$(RC) $(RFLAGS) $< -o $@
