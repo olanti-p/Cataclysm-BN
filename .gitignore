@@ -44,6 +44,7 @@ cataclysmdda-*
 chkjson*
 debug.log
 logg.txt
+/gcm.cache/
 
 # Visual Studio files
 *.code-workspace
