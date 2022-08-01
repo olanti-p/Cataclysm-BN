@@ -55,6 +55,9 @@ inline std::string _translate_internal( const std::string &msg )
     return _translate_internal( msg.c_str() );
 }
 
+} // namespace detail
+
+/*
 template<typename T>
 class local_translation_cache;
 
@@ -118,6 +121,15 @@ static inline local_translation_cache<std::string> get_local_translation_cache(
         static auto cache = detail::get_local_translation_cache( arg ); \
         return cache( arg ); \
     } )( msg ) )
+*/
+
+inline const char *_( const char *msgid ) {
+    return detail::_translate_internal( msgid );
+}
+
+inline const char *_( const std::string& msgid ) {
+    return detail::_translate_internal( msgid.c_str() );
+}
 
 const char *vgettext( const char *msgid, const char *msgid_plural,
                       size_t n ) ATTRIBUTE_FORMAT_ARG( 1 );

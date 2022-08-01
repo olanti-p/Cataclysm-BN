@@ -730,11 +730,11 @@ int vpart_info::format_description( std::string &msg, const nc_color &format_col
     }
     if( ( has_flag( "SEAT" ) || has_flag( "BED" ) ) && !has_flag( "BELTABLE" ) ) {
         json_flag nobelt = json_flag::get( "NONBELTABLE" );
-        long_descrip += "  " + _( nobelt.info() );
+        long_descrip += std::string( "  " ) + _( nobelt.info() );
     }
     if( has_flag( "BOARDABLE" ) && has_flag( "OPENABLE" ) ) {
         json_flag nobelt = json_flag::get( "DOOR" );
-        long_descrip += "  " + _( nobelt.info() );
+        long_descrip += std::string( "  " ) + _( nobelt.info() );
     }
     if( has_flag( "TURRET" ) ) {
         class::item base( item );
