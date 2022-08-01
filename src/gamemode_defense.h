@@ -13,7 +13,7 @@
 #include "point.h"
 #include "type_id.h"
 
-enum action_id : int;
+import action_id_m;
 
 enum defense_style {
     DEFENSE_CUSTOM = 0,

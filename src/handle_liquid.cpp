@@ -12,7 +12,6 @@
 #include <string>
 #include <vector>
 
-#include "action.h"
 #include "avatar.h"
 #include "cata_utility.h"
 #include "colony.h"
@@ -38,6 +37,8 @@
 #include "vehicle.h"
 #include "vpart_position.h"
 #include "vpart_range.h"
+
+import action_m;
 
 // All serialize_liquid_source functions should add the same number of elements to the vectors of
 // the activity. This makes it easier to distinguish the values of the source and the values of the target.

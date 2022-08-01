@@ -9,7 +9,6 @@
 #include <sstream>
 #include <tuple>
 
-#include "action.h"
 #include "activity_handlers.h"
 #include "avatar.h"
 #include "bodypart.h"
@@ -52,6 +51,8 @@
 #include "vpart_position.h"
 #include "vpart_range.h"
 #include "weather.h"
+
+import action_m;
 
 static const activity_id ACT_HOTWIRE_CAR( "ACT_HOTWIRE_CAR" );
 static const activity_id ACT_RELOAD( "ACT_RELOAD" );

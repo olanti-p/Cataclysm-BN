@@ -50,7 +50,6 @@ DEFAULT_HOTKEYS( "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 
 class recipe_subset;
 
-enum action_id : int;
 class JsonIn;
 class JsonObject;
 class JsonOut;

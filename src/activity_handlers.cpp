@@ -14,7 +14,6 @@
 #include <string>
 #include <utility>
 
-#include "action.h"
 #include "advanced_inv.h"
 #include "avatar.h"
 #include "avatar_action.h"
@@ -101,6 +100,8 @@
 #include "veh_interact.h"
 #include "vehicle.h"
 #include "vpart_position.h"
+
+import action_m;
 
 static const activity_id ACT_ADV_INVENTORY( "ACT_ADV_INVENTORY" );
 static const activity_id ACT_ARMOR_LAYERS( "ACT_ARMOR_LAYERS" );

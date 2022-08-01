@@ -2,7 +2,6 @@
 
 #include <algorithm>
 
-#include "action.h"
 #include "character.h"
 #include "color.h"
 #include "enums.h"
@@ -12,6 +11,8 @@
 #include "output.h"
 #include "string_id.h"
 #include "translations.h"
+
+import action_m;
 
 static const matype_id style_kicks( "style_kicks" );
 static const matype_id style_none( "style_none" );

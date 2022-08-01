@@ -16,7 +16,6 @@
 #include <utility>
 #include <vector>
 
-#include "action.h"
 #include "calendar.h"
 #include "character_id.h"
 #include "coordinates.h"
@@ -30,6 +29,8 @@
 #include "pimpl.h"
 #include "point.h"
 #include "type_id.h"
+
+import action_id_m;
 
 class Character;
 class Creature_tracker;
@@ -80,7 +81,6 @@ enum safe_mode_type {
 };
 
 enum body_part : int;
-enum action_id : int;
 
 struct special_game;
 

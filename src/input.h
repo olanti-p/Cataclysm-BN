@@ -17,7 +17,7 @@
 #include "point.h"
 #include "translations.h"
 
-enum action_id : int;
+import action_id_m;
 
 namespace cata
 {

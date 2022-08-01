@@ -14,7 +14,6 @@
 #include <tuple>
 #include <unordered_set>
 
-#include "action.h"
 #include "avatar.h"
 #include "calendar.h"
 #include "cata_utility.h"
@@ -74,6 +73,8 @@
 #include "vpart_position.h"
 #include "weather.h"
 #include "weighted_list.h"
+
+import action_m;
 
 #define dbg(x) DebugLogFL((x),DC::SDL)
 

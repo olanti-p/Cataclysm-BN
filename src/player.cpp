@@ -10,7 +10,6 @@
 #include <string>
 #include <unordered_map>
 
-#include "action.h"
 #include "activity_handlers.h"
 #include "ammo.h"
 #include "avatar.h"
@@ -83,6 +82,8 @@
 #include "vpart_position.h"
 #include "weather.h"
 #include "weather_gen.h"
+
+import action_m;
 
 static const activity_id ACT_READ( "ACT_READ" );
 

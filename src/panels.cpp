@@ -11,7 +11,6 @@
 #include <string>
 #include <utility>
 
-#include "action.h"
 #include "avatar.h"
 #include "behavior.h"
 #include "bodypart.h"
@@ -56,6 +55,8 @@
 #include "vehicle.h"
 #include "vpart_position.h"
 #include "weather.h"
+
+import action_m;
 
 static const trait_id trait_SELFAWARE( "SELFAWARE" );
 static const trait_id trait_THRESH_FELINE( "THRESH_FELINE" );

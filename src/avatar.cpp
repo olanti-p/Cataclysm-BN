@@ -12,7 +12,6 @@
 #include <unordered_map>
 #include <utility>
 
-#include "action.h"
 #include "bodypart.h"
 #include "calendar.h"
 #include "cata_utility.h"
@@ -71,6 +70,8 @@
 #include "value_ptr.h"
 #include "vehicle.h"
 #include "vpart_position.h"
+
+import action_m;
 
 static const activity_id ACT_READ( "ACT_READ" );
 

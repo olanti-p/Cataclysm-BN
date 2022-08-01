@@ -9,10 +9,11 @@
 #include "enums.h"
 #include "gamemode.h"
 
+import action_id_m;
+
 template <typename E> struct enum_traits;
 
 enum special_game_id : int;
-enum action_id : int;
 
 enum class tut_lesson : int {
     LESSON_INTRO = 0,

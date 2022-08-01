@@ -11,7 +11,6 @@
 #include <utility>
 #include <vector>
 
-#include "action.h"
 #include "activity_actor_definitions.h"
 #include "avatar.h"
 #include "bodypart.h"
@@ -54,6 +53,8 @@
 #include "veh_type.h"
 #include "vehicle.h"
 #include "vpart_position.h"
+
+import action_m;
 
 class player;
 

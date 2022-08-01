@@ -8,7 +8,6 @@
 #include <numeric>
 #include <vector>
 
-#include "action.h"
 #include "cata_utility.h"
 #include "catacharset.h"
 #include "color.h"
@@ -26,6 +25,8 @@
 #include "text_snippets.h"
 #include "translations.h"
 #include "ui_manager.h"
+
+import action_m;
 
 help &get_help()
 {

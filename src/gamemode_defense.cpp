@@ -6,7 +6,6 @@
 #include <ostream>
 #include <set>
 
-#include "action.h"
 #include "avatar.h"
 #include "basecamp.h"
 #include "color.h"
@@ -39,6 +38,8 @@
 #include "translations.h"
 #include "ui_manager.h"
 #include "weather.h"
+
+import action_m;
 
 static const skill_id skill_barter( "barter" );
 

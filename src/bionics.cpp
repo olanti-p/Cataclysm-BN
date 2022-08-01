@@ -11,7 +11,6 @@
 #include <memory>
 #include <type_traits>
 
-#include "action.h"
 #include "assign.h"
 #include "avatar.h"
 #include "avatar_action.h"
@@ -81,6 +80,8 @@
 #include "vpart_position.h"
 #include "weather.h"
 #include "weather_gen.h"
+
+import action_m;
 
 static const activity_id ACT_OPERATION( "ACT_OPERATION" );
 

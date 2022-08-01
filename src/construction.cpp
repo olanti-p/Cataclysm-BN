@@ -8,7 +8,6 @@
 #include <numeric>
 #include <utility>
 
-#include "action.h"
 #include "avatar.h"
 #include "calendar.h"
 #include "colony.h"
@@ -57,6 +56,8 @@
 #include "veh_type.h"
 #include "vehicle.h"
 #include "vpart_position.h"
+
+import action_m;
 
 static const activity_id ACT_BUILD( "ACT_BUILD" );
 static const activity_id ACT_MULTIPLE_CONSTRUCTION( "ACT_MULTIPLE_CONSTRUCTION" );

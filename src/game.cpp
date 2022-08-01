@@ -32,7 +32,6 @@
 #include <vector>
 
 #include "achievement.h"
-#include "action.h"
 #include "activity_actor.h"
 #include "activity_actor_definitions.h"
 #include "activity_handlers.h"
@@ -165,6 +164,8 @@
 #include "wcwidth.h"
 #include "weather.h"
 #include "worldfactory.h"
+
+import action_m;
 
 class computer;
 

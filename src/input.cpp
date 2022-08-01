@@ -12,7 +12,6 @@
 #include <set>
 #include <utility>
 
-#include "action.h"
 #include "catacharset.h"
 #include "cursesdef.h"
 #include "debug.h"
@@ -34,6 +33,8 @@
 #include "ui_manager.h"
 #include "color.h"
 #include "point.h"
+
+import action_m;
 
 using std::min; // from <algorithm>
 using std::max;

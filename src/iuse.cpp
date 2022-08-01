@@ -17,7 +17,6 @@
 #include <utility>
 #include <vector>
 
-#include "action.h"
 #include "activity_actor.h"
 #include "activity_actor_definitions.h"
 #include "active_tile_data_def.h"
@@ -116,6 +115,8 @@
 #include "vpart_range.h"
 #include "weather.h"
 #include "weather_gen.h"
+
+import action_m;
 
 static const activity_id ACT_BURROW( "ACT_BURROW" );
 static const activity_id ACT_CHOP_LOGS( "ACT_CHOP_LOGS" );

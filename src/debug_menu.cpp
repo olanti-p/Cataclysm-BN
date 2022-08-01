@@ -22,7 +22,6 @@
 #include <utility>
 #include <vector>
 
-#include "action.h"
 #include "artifact.h"
 #include "avatar.h"
 #include "bodypart.h"
@@ -102,6 +101,8 @@
 #include "weather.h"
 #include "weather_gen.h"
 #include "weighted_list.h"
+
+import action_m;
 
 static const mtype_id mon_generator( "mon_generator" );
 

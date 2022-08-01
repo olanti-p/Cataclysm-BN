@@ -19,7 +19,6 @@
 #include <utility>
 #include <vector>
 
-#include "action.h"
 #include "bodypart.h"
 #include "calendar.h"
 #include "character_id.h"
@@ -49,6 +48,8 @@
 #include "units.h"
 #include "visitable.h"
 #include "weighted_list.h"
+
+import action_id_m;
 
 class JsonIn;
 class JsonObject;

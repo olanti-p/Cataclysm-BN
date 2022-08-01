@@ -11,7 +11,6 @@
 #include <memory>
 #include <sstream>
 
-#include "action.h"
 #include "activity_handlers.h"
 #include "ammo.h"
 #include "animation.h"
@@ -84,6 +83,8 @@
 #include "vpart_position.h"
 #include "vpart_range.h"
 #include "weather.h"
+
+import action_m;
 
 static const activity_id ACT_FIRSTAID( "ACT_FIRSTAID" );
 static const activity_id ACT_MAKE_ZLAVE( "ACT_MAKE_ZLAVE" );

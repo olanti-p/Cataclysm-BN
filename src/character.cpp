@@ -11,7 +11,6 @@
 #include <ostream>
 #include <type_traits>
 
-#include "action.h"
 #include "activity_handlers.h"
 #include "activity_actor_definitions.h"
 #include "anatomy.h"
@@ -95,6 +94,8 @@
 #include "vpart_range.h"
 #include "weather.h"
 #include "weather_gen.h"
+
+import action_m;
 
 struct dealt_projectile_attack;
 

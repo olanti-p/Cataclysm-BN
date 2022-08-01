@@ -1,11 +1,16 @@
-#include "action.h"
+module;
 
 #include <algorithm>
 #include <climits>
+#include <functional>
 #include <istream>
 #include <iterator>
+#include <map>
 #include <memory>
+#include <set>
+#include <string>
 #include <utility>
+#include <vector>
 
 #include "avatar.h"
 #include "cata_utility.h"
@@ -17,6 +22,7 @@
 #include "game.h"
 #include "iexamine.h"
 #include "input.h"
+#include "inventory.h"
 #include "item.h"
 #include "map.h"
 #include "map_iterator.h"
@@ -38,6 +44,269 @@
 #include "vehicle.h"
 #include "vpart_position.h"
 
+import action_id_m;
+
+export module action_m;
+
+export {
+
+/**
+ * Get list of keys bound to an action ID.
+ *
+ * Returns a vector of all keys currently bound to the given action.  If not keys are bound to the
+ * given action then the returned vector is simply left empty.
+ *
+ * @param act Action ID to lookup in keymap
+ * @param restrict_to_printable If `true` the function returns the bound keys only if they are printable. If `false`, all keys (whether they are printable or not) are returned.
+ * @returns all keys (as characters) currently bound to a give action ID
+ */
+std::vector<char> keys_bound_to( action_id act, bool restrict_to_printable = true );
+
+/**
+ * Get the key for an action, used in the action menu to give each action the hotkey it is bound to.
+ * @param action Action ID to lookup in keymap.
+ * @param restrict_to_printable If `true` the function returns the bound key only if it is printable. If `false`, any key (whether they it is printable or not) is returned.
+ * @returns the key code for the hotkey or -1 if no key is associated with the given action.
+ * @note We ignore bindings to '?' because that will already do something else in this menu (open the menu keybindings).
+ */
+int hotkey_for_action( action_id action, bool restrict_to_printable = true );
+
+/**
+ * Lookup an action ID by its unique string identifier
+ *
+ * Translates a unique string identifier into an @ref action_id.  This identifier is generally the
+ * value used in a keymap configuration file.  If no corresponding action_id is found for this
+ * identifier then ACTION_NULL is returned instead.
+ *
+ * @param ident Unique string identifier corresponding to an @ref action_id
+ * @returns Corresponding action_id for the supplied string identifier
+ */
+action_id look_up_action( const std::string &ident );
+
+/**
+ * Lookup a unique string identifier for a given action ID.
+ *
+ * Translates an @ref action_id into a unique string identifier.  This is the value recorded in the
+ * keymap configuration file.
+ *
+ * @note The values we use here are more or less human-readable, but are not always suitable for
+ * display directly to the user.
+ *
+ * @param act The action ID to lookup an identifier for
+ * @returns The string identifier for the specified action ID.
+ */
+std::string action_ident( action_id act );
+
+/**
+ * Lookup whether an action can affect the state of the game world.
+ *
+ * Looks an action ID up and determines if that action can change world state in any case.  This
+ * is a static determination from a hard-coded list.
+ *
+ * This function can be used to count the number of user actions that actually affected the game
+ * state separate from other actions that only result in view and menu navigation.  The only current
+ * example of this is @ref game::user_action_counter.
+ *
+ * @param act action ID to lookup in table
+ * @returns true if action has potential to alter world state, otherwise returns false.
+ */
+bool can_action_change_worldstate( action_id act );
+
+/**
+ * Lookup the action ID assigned to a given key.
+ *
+ * Looks up a key by character and returns the @ref action_id currently mapped to that key.  If no
+ * key is currently mapped then ACTION_NULL is returned instead
+ *
+ * @param ch The character corresponding to the key to look up
+ * @returns The action id of the specified key
+ */
+action_id action_from_key( char ch );
+
+/**
+ * Request player input of adjacent tile, possibly including vertical tiles
+ *
+ * Asks the player to input desired direction of an adjacent tile, for example when executing
+ * an examine or directional item drop.  This version of the function supports selection of tiles
+ * above and below the player if an appropriate flag is set.
+ *
+ * @param[in] message Message used in assembling the prompt to the player
+ * @param[in] allow_vertical Allows player to select tiles above/below them if true
+ */
+cata::optional<tripoint> choose_adjacent( const std::string &message, bool allow_vertical = false );
+
+/**
+ * Request player input of a direction, possibly including vertical component
+ *
+ * Asks the player to input a desired direction.  This differs from @ref choose_adjacent in that
+ * the selected direction is returned as an offset to the player's current position rather than
+ * coordinate of a tile.  This version of the function allows selection of the tile above and below
+ * the player if the appropriate flag is set.
+ *
+ * @param[in] message Message used in assembling the prompt to the player
+ * @param[in] allow_vertical Allows direction vector to have vertical component if true
+ */
+cata::optional<tripoint> choose_direction( const std::string &message,
+        bool allow_vertical = false );
+
+/**
+ * Request player input of adjacent tile with highlighting, possibly on different z-level
+ *
+ * Asks the player to input desired direction of an adjacent tile, for example when executing
+ * an examine or directional item drop.  This version of the function allows the player to select
+ * a tile above or below.
+ *
+ * This function is identical to @ref choose_adjacent except that squares are highlighted for
+ * the player to indicate valid squares for a given @ref action_id
+ *
+ * @param[in] message Message used in assembling the prompt to the player
+ * @param[in] failure_message Message used if there is no vaild adjacent tile
+ * @param[in] action An action ID to drive the highlighting output
+ * @param[in] allow_vertical Allows direction vector to have vertical component if true
+ */
+cata::optional<tripoint> choose_adjacent_highlight( const std::string &message,
+        const std::string &failure_message, action_id action, bool allow_vertical = false );
+
+/**
+ * Request player input of adjacent tile with highlighting, possibly on different z-level
+ *
+ * Asks the player to input desired direction of an adjacent tile, for example when executing
+ * an examine or directional item drop.  This version of the function allows the player to select
+ * a tile above or below.
+ *
+ * This function is identical to @ref choose_adjacent except that squares are highlighted for
+ * the player to indicate valid squares, based on the result of the provided @ref should_highlight
+ * function.
+ *
+ * @param[in] message Message used in assembling the prompt to the player
+ * @param[in] failure_message Message used if there is no vaild adjacent tile
+ * @param[in] allowed A function that will be called to determine if a given location is allowed for selection
+ * @param[in] allow_vertical Allows direction vector to have vertical component if true
+ */
+cata::optional<tripoint> choose_adjacent_highlight( const std::string &message,
+        const std::string &failure_message, const std::function<bool( const tripoint & )> &allowed,
+        bool allow_vertical = false );
+
+// (Press X (or Y)|Try) to Z
+std::string press_x( action_id act );
+std::string press_x( action_id act, const std::string &key_bound,
+                     const std::string &key_unbound );
+std::string press_x( action_id act, const std::string &key_bound_pre,
+                     const std::string &key_bound_suf, const std::string &key_unbound );
+// ('Z'ing|zing) (X( or Y)))
+std::string press_x( action_id act, const std::string &act_desc );
+// Return "Press X" or nullopt if not bound
+cata::optional<std::string> press_x_if_bound( action_id act );
+
+// only has effect in iso mode
+enum class iso_rotate {
+    no, yes
+};
+
+// Helper function to convert coordinate delta to a movement action
+/**
+ * Translate coordinate delta into movement action
+ *
+ * For a given coordinate delta, this function returns the associated user movement action
+ * that would generated that delta.  See @ref action_id for the list of available movement
+ * commands that may be generated.  This function takes iso mode into account.
+ *
+ * The only valid values for the coordinates of \p d are -1, 0 and 1
+ *
+ * @note: This function does not sanitize its inputs, which can result in some strange behavior:
+ * 1. If d.z is valid and non-zero, then d.x and d.y are ignored.
+ * 2. If d.z is invalid, it is treated as if it were zero.
+ * 3. If d.z is 0 or invalid, then any invalid d.x or d.y results in @ref ACTION_MOVE_FORTH_LEFT
+ * 4. If d.z is 0 or invalid, then a d.x == d.y == 0 results in @ref ACTION_MOVE_FORTH_LEFT
+ *
+ * @param[in] d coordinate delta, each coordinate should be -1, 0, or 1
+ * @returns ID of corresponding move action (usually... see note above)
+ */
+action_id get_movement_action_from_delta( const tripoint &d, iso_rotate rot );
+
+// Helper function to convert movement action to coordinate delta point
+point get_delta_from_movement_action( action_id act, iso_rotate rot );
+
+/**
+ * Show the action menu
+ *
+ * Prompts the user with the action menu, and returns any action requested by user input at
+ * that menu.
+ *
+ * @returns action_id ID of action requested by user at menu.
+ */
+action_id handle_action_menu();
+
+/**
+ * Show in-game main menu
+ *
+ * Prompts the user with the main game menu, and returns any action requested by user input at
+ * that menu.
+ *
+ * @returns action_id ID of action requested by user at menu.
+ */
+action_id handle_main_menu();
+
+/**
+ * Test whether it is possible to perform a given action.
+ *
+ * Checks whether we can interact with something using the specified action and the given tile.
+ *
+ * @note: This is part of a new API that will allow for a more robust user interface. Possible
+ * features include: Extending the "select a nearby tile" widget to highlight tiles that can be
+ * interacted with, "suggest" context-sensitive actions to the user that are currently relevant.
+ *
+ * @param action The action ID to perform the test for
+ * @param p Point to perform test at
+ * @returns true if movement is possible in the indicated direction
+ */
+bool can_interact_at( action_id action, const tripoint &p );
+
+/**
+ * Test whether it is possible to perform butcher action
+ *
+ * Checks whether the butcher action makes sense at a given point.  Checks for both corpses
+ * and items that can be disassembled.
+ *
+ * This is part of a new API that will allow for a more robust user interface.  See the note in
+ * @ref can_interact_at()
+ *
+ * @param p Point to perform the test at
+ * @returns true if there is a corpse or item that can be disassembled at a point, otherwise false
+ */
+bool can_butcher_at( const tripoint &p );
+
+/**
+ * Test whether vertical movement is possible
+ *
+ * Checks whether it is possible to perform up or down movement actions at this location, defined
+ * as whether it is possible to swim up/down at this location, or if there is an up or down
+ * staircase at this location.
+ *
+ * This is part of a new API that will allow for a more robust user interface.  See the note in
+ * @ref can_interact_at()
+ *
+ * @param p Point to perform test at
+ * @param movez Direction to move. -1 for down, all other values for up
+ * @returns true if movement is possible in the indicated direction, otherwise false
+ */
+bool can_move_vertical_at( const tripoint &p, int movez );
+
+/**
+ * Test whether examine is possible
+ *
+ * Checks whether the examine action makes sense at a given point.
+ *
+ * This is part of a new API that will allow for a more robust user interface.  See the note in
+ * @ref can_interact_at()
+ *
+ * @param p Point to perform the test at
+ * @returns true if the examine action is possible at this point, otherwise false
+ */
+bool can_examine_at( const tripoint &p );
+
+}
+
 static const quality_id qual_BUTCHER( "BUTCHER" );
 static const quality_id qual_CUT_FINE( "CUT_FINE" );
 
@@ -47,8 +316,6 @@ static const std::string flag_GOES_DOWN( "GOES_DOWN" );
 static const std::string flag_GOES_UP( "GOES_UP" );
 static const std::string flag_REACH_ATTACK( "REACH_ATTACK" );
 static const std::string flag_SWIMMABLE( "SWIMMABLE" );
-
-class inventory;
 
 std::vector<char> keys_bound_to( action_id act, const bool restrict_to_printable )
 {

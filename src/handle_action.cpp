@@ -7,7 +7,6 @@
 #include <sstream>
 #include <utility>
 
-#include "action.h"
 #include "advanced_inv.h"
 #include "animation.h"
 #include "auto_note.h"
@@ -80,6 +79,8 @@
 #include "vpart_range.h"
 #include "weather.h"
 #include "worldfactory.h"
+
+import action_m;
 
 static const activity_id ACT_FERTILIZE_PLOT( "ACT_FERTILIZE_PLOT" );
 static const activity_id ACT_MOVE_LOOT( "ACT_MOVE_LOOT" );

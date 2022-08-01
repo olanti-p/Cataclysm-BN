@@ -5,7 +5,6 @@
 #include <memory>
 #include <string>
 
-#include "action.h"
 #include "avatar.h"
 #include "calendar.h"
 #include "coordinate_conversions.h"
@@ -32,6 +31,8 @@
 #include "type_id.h"
 #include "units.h"
 #include "weather.h"
+
+import action_m;
 
 static const itype_id itype_cig( "cig" );
 static const itype_id itype_codeine( "codeine" );
