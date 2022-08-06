@@ -2,7 +2,7 @@ project('cataclysm-bn', 'cpp', default_options: ['default_library=static', 'cpp_
 
 subdir('src/')
 
-precompiled_hdr = 'src/pch.h'
+precompiled_hdr = 'pch/main-pch.hpp'
 
 # SDL build dependencies
 sdl2_dep = dependency('sdl2', required: true)
