@@ -92,7 +92,7 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <WarningLevel>Level1</WarningLevel>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <SDLCheck>false</SDLCheck>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <CompileAsManaged>false</CompileAsManaged>
@@ -100,7 +100,6 @@
       <MinimalRebuild>false</MinimalRebuild>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4819;4146;26495;26444;26451;4068</DisableSpecificWarnings>
-      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
       <AdditionalOptions>/bigobj /utf-8 %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;_WINDOWS;SDL_SOUND;TILES;USE_VCPKG;USE_WINMAIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp20</LanguageStandard>
@@ -152,9 +151,6 @@
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\messages.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader>Create</PrecompiledHeader>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Cataclysm-lib-vcpkg-static.vcxproj">

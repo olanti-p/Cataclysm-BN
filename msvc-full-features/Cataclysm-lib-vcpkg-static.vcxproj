@@ -75,7 +75,7 @@
     <ItemDefinitionGroup>
         <ClCompile>
             <WarningLevel>Level1</WarningLevel>
-            <PrecompiledHeader>Use</PrecompiledHeader>
+            <PrecompiledHeader>NotUsing</PrecompiledHeader>
             <SDLCheck>false</SDLCheck>
             <BufferSecurityCheck>false</BufferSecurityCheck>
             <CompileAsManaged>false</CompileAsManaged>
@@ -83,7 +83,6 @@
             <MinimalRebuild>false</MinimalRebuild>
             <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
             <DisableSpecificWarnings>4819;4146;26495;26444;26451;4068</DisableSpecificWarnings>
-            <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
             <AdditionalOptions>/bigobj /utf-8 %(AdditionalOptions)</AdditionalOptions>
             <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;_CONSOLE;SDL_SOUND;TILES;SDL_BUILDING_LIBRARY;USE_VCPKG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
             <LanguageStandard>stdcpp20</LanguageStandard>
@@ -139,9 +138,9 @@
     </ItemGroup>
     <ItemGroup>
         <ClCompile Include="..\src\*.cpp" Exclude="..\src\main.cpp;..\src\messages.cpp" />
-        <ClCompile Include="stdafx.cpp">
-            <PrecompiledHeader>Create</PrecompiledHeader>
-        </ClCompile>
+    </ItemGroup>
+    <ItemGroup>
+        <ClInclude Include="..\src\*.ixx" />
     </ItemGroup>
     <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
     <ImportGroup Label="ExtensionTargets">
