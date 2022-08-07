@@ -6,6 +6,7 @@ precompiled_hdr = 'pch/main-pch.hpp'
 
 # SDL build dependencies
 thread_dep = dependency('threads')
+opengl_dep = dependency('GL')
 sdl2_dep = subproject('sdl2').get_variable('sdl2_dep')
 sdl2_image_dep = subproject('sdl2_image').get_variable('sdl2_image_dep')
 sdl2_ttf_dep = subproject('sdl2_ttf').get_variable('sdl2_ttf_dep')
@@ -23,12 +24,13 @@ lib_dependencies = [
     sdl2_image_dep,
     sdl2_ttf_dep,
     thread_dep,
+    opengl_dep,
     imgui_dep,
 ]
 
 libcata = static_library(
     'cata-lib',
-    sources: lib_sources,
+    sources: lib_sources + editor_sources,
     dependencies : lib_dependencies,
     cpp_pch : precompiled_hdr,
     cpp_args : cpp_args,

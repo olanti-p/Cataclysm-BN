@@ -1,0 +1,9 @@
+#ifndef CATA_SRC_EDITOR_EDITOR_MAIN_H
+#define CATA_SRC_EDITOR_EDITOR_MAIN_H
+
+namespace editor
+{
+
+}
+
+#endif // CATA_SRC_EDITOR_EDITOR_MAIN_H

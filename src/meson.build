@@ -303,6 +303,8 @@ lib_sources = files(
     'worldfactory.cpp',
 )
 
+subdir('editor/')
+
 version_h = custom_target(
     'version.h',
     output: 'version.h',

@@ -73,6 +73,8 @@
 #include "wcwidth.h"
 #include "worldfactory.h"
 
+#include "editor/editor_engine.h"
+
 #if defined(__linux__)
 #   include <cstdlib> // getenv()/setenv()
 #endif
@@ -538,6 +540,8 @@ void refresh_display()
     if( test_mode ) {
         return;
     }
+
+    editor::render_ui();
 
     // Select default target (the window), copy rendered buffer
     // there, present it, select the buffer as target again.
@@ -2993,6 +2997,12 @@ static void CheckMessages()
     bool render_target_reset = false;
 
     while( SDL_PollEvent( &ev ) ) {
+        if( editor::process_event( ev ) ) {
+            last_input = input_event();
+            need_redraw = true;
+            needupdate = true;
+            continue;
+        }
         switch( ev.type ) {
             case SDL_WINDOWEVENT:
                 switch( ev.window.event ) {
@@ -3511,6 +3521,18 @@ static void init_term_size_and_scaling_factor()
     TERMINAL_HEIGHT = terminal.y / scaling_factor;
 }
 
+static void init_imgui_interface()
+{
+    DebugLog( DL::Info, DC::Main ) << "Initializing IMGUI";
+    editor::init_ui( *window.get(), *renderer.get() );
+}
+
+static void deinit_imgui_interface()
+{
+    DebugLog( DL::Info, DC::Main ) << "Deinitializing IMGUI";
+    editor::shutdown_ui();
+}
+
 //Basic Init, create the font, backbuffer, etc
 void catacurses::init_interface()
 {
@@ -3582,6 +3604,8 @@ void catacurses::init_interface()
     preview_terminal_width = TERMINAL_WIDTH * fontwidth;
     preview_terminal_height = TERMINAL_HEIGHT * fontheight;
 #endif
+
+    init_imgui_interface();
 }
 
 // This is supposed to be called from init.cpp, and only from there.
@@ -3603,6 +3627,7 @@ void load_tileset()
 //Ends the terminal, destroy everything
 void catacurses::endwin()
 {
+    deinit_imgui_interface();
     tilecontext.reset();
     font.reset();
     map_font.reset();
