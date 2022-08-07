@@ -69,9 +69,9 @@ static void show_control_window( editor_state &state )
 
     // Mouse position
     {
-        ImVec2 mouse_pos = ImGui::GetMousePos();
+        point mouse_pos = get_mouse_screen_pos( state );
         cata::optional<tripoint> tile_pos = get_mouse_tile_pos( state );
-        ImGui::Text( "Mouse pos, px: (%f,%f)", mouse_pos.x, mouse_pos.y );
+        ImGui::Text( "Mouse pos, px: %s", mouse_pos.to_string().c_str() );
         if( tile_pos ) {
             ImGui::Text( "Mouse pos, tile: %s", tile_pos->to_string().c_str() );
         } else {
@@ -80,6 +80,14 @@ static void show_control_window( editor_state &state )
     }
 
     ImGui::End();
+}
+
+static void highlight_tile( ImDrawList *draw_list, point tile, ImU32 col )
+{
+    std::pair<point, point> rect = editor::tile_to_screen( tile );
+    ImVec2 p_min( rect.first.x, rect.first.y );
+    ImVec2 p_max( rect.second.x, rect.second.y );
+    draw_list->AddRect( p_min, p_max, col, 0.0f, ImDrawFlags_None, 1.0f );
 }
 
 static void show_canvas_overlay_window( editor_state &state )
@@ -103,10 +111,7 @@ static void show_canvas_overlay_window( editor_state &state )
 
     cata::optional<tripoint> tile_pos = get_mouse_tile_pos( state );
     if( tile_pos ) {
-        std::pair<point, point> rect = editor::tile_to_screen( tile_pos->xy() );
-        ImVec2 p_min( rect.first.x, rect.first.y );
-        ImVec2 p_max( rect.second.x, rect.second.y );
-        draw_list->AddRect( p_min, p_max, col, 0.0f, ImDrawFlags_None, 1.0f );
+        highlight_tile( draw_list, tile_pos->xy(), col );
     }
 
     ImGui::End();
