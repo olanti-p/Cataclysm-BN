@@ -2,6 +2,7 @@
 
 #include "imgui.h"
 
+#include "../avatar.h"
 #include "../game.h"
 #include "../input.h"
 #include "../map.h"
@@ -23,6 +24,27 @@ static void show_control_window()
     if( ImGui::Button( "Toggle Demo Window" ) ) {
         show_demo_wnd = !show_demo_wnd;
     }
+
+    int zoom_now = g->get_zoom();
+    int zoom_old = zoom_now;
+    ImGui::DragInt( "Zoom", &zoom_now, 0.2f, 4, 64 );
+    if( zoom_now != zoom_old ) {
+        g->set_zoom( zoom_now );
+        g->mark_main_ui_adaptor_resize();
+    }
+
+    std::vector<int> offs = {{
+            g->u.view_offset.x,
+            g->u.view_offset.y
+        }
+    };
+    std::vector<int> offs_old = offs;
+    ImGui::DragInt2( "Offset", &offs[0], 0.2f, -60, 60 );
+    if( offs != offs_old ) {
+        g->u.view_offset.x = offs[0];
+        g->u.view_offset.y = offs[1];
+    }
+
     ImGui::End();
 }
 
