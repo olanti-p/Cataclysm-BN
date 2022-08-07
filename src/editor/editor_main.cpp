@@ -1,23 +1,69 @@
 #include "editor_main.h"
 
 #include "imgui.h"
+#include "misc/cpp/imgui_stdlib.h"
 
 #include "../avatar.h"
+#include "../field.h"
 #include "../game.h"
 #include "../input.h"
+#include "../item_factory.h"
+#include "../item_group.h"
 #include "../map.h"
+#include "../mapdata.h"
+#include "../mongroup.h"
+#include "../monstergenerator.h"
 #include "../output.h"
-#include "../trap.h"
-#include "../field.h"
-#include "../ui_manager.h"
-#include "../string_formatter.h"
 #include "../sdltiles_editor.h"
+#include "../string_formatter.h"
+#include "../string_utils.h"
+#include "../trap.h"
+#include "../ui_manager.h"
+
+// For some fun reason item_group_id does not actually refer to any item group.
+// Not that item groups appear to be stored at all...!?
+struct igroup_plug {
+    item_group_id id;
+};
+
+struct asset_library {
+    std::vector<igroup_plug> igroup_plugs;
+
+    std::vector<const ter_t *> all_terrain;
+    std::vector<const furn_t *> all_furniture;
+    std::vector<const trap *> all_trap;
+    std::vector<const field_type *> all_field;
+    std::vector<const itype *> all_itype;
+    std::vector<const igroup_plug *> all_igroup;
+    std::vector<const mtype *> all_mtype;
+    std::vector<const MonsterGroup *> all_mgroup;
+
+    std::string terrain_filter;
+    std::string furniture_filter;
+    std::string trap_filter;
+    std::string field_filter;
+    std::string itype_filter;
+    std::string igroup_filter;
+    std::string mtype_filter;
+    std::string mgroup_filter;
+
+    int selected_terrain = 0;
+    int selected_furniture = 0;
+    int selected_trap = 0;
+    int selected_field = 0;
+    int selected_itype = 0;
+    int selected_igroup = 0;
+    int selected_mtype = 0;
+    int selected_mgroup = 0;
+};
 
 struct editor_state {
     bool do_loop = true;
     bool show_demo_wnd = false;
     int loops = 0;
     int frames = 0;
+
+    asset_library assets;
 
     cata::optional<tripoint> single_selection;
 };
@@ -255,6 +301,67 @@ static void show_canvas_overlay_window( editor_state &state )
     ImGui::End();
 }
 
+static bool filter_matches( const std::string &s, const std::string &filter )
+{
+    return lcmatch( s, filter );
+}
+
+template<typename T>
+void show_assetlib_tab( const char *name, int &selected, std::string &filter,
+                        const std::vector<const T *> &all )
+{
+    if( !ImGui::BeginTabItem( name ) ) {
+        return;
+    }
+
+    int num_all = static_cast<int>( all.size() );
+    ImGui::Text( "%s - %d entries", name, num_all );
+
+    ImGui::InputText( "##filter", &filter );
+    std::string lb_name = string_format( "##%s", name );
+    if( ImGui::BeginListBox( lb_name.c_str(), ImVec2( -1.0f, -1.0f ) ) ) {
+        for( int i = 0; i < num_all; i++ ) {
+            if( !filter_matches( all[i]->id.str(), filter ) ) {
+                continue;
+            }
+            const bool is_selected = i == selected;
+            if( ImGui::Selectable( all[i]->id.c_str(), is_selected ) ) {
+                selected = i;
+            }
+            // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+            if( is_selected ) {
+                ImGui::SetItemDefaultFocus();
+            }
+        }
+        ImGui::EndListBox();
+    }
+
+    ImGui::EndTabItem();
+}
+
+static void show_asset_library_window( asset_library &state )
+{
+    ImGui::Begin( "Asset Library" );
+
+    ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_FittingPolicyResizeDown;
+    if( ImGui::BeginTabBar( "Asset Types", tab_bar_flags ) ) {
+
+        show_assetlib_tab( "Terrain", state.selected_terrain, state.terrain_filter, state.all_terrain );
+        show_assetlib_tab( "Furniture", state.selected_furniture, state.furniture_filter,
+                           state.all_furniture );
+        show_assetlib_tab( "Trap", state.selected_trap, state.trap_filter, state.all_trap );
+        show_assetlib_tab( "Field", state.selected_field, state.field_filter, state.all_field );
+        show_assetlib_tab( "Item", state.selected_itype, state.itype_filter, state.all_itype );
+        show_assetlib_tab( "IGroup", state.selected_igroup, state.igroup_filter, state.all_igroup );
+        show_assetlib_tab( "Monster", state.selected_mtype, state.mtype_filter, state.all_mtype );
+        show_assetlib_tab( "MGroup", state.selected_mgroup, state.mgroup_filter, state.all_mgroup );
+
+        ImGui::EndTabBar();
+    }
+
+    ImGui::End();
+}
+
 static void show_editor_ui( editor_state &state )
 {
     show_canvas_overlay_window( state );
@@ -264,8 +371,41 @@ static void show_editor_ui( editor_state &state )
     } else {
         show_tile_properties_window( state, get_mouse_tile_pos( state ) );
     }
+    show_asset_library_window( state.assets );
     if( state.show_demo_wnd ) {
         ImGui::ShowDemoWindow( &state.show_demo_wnd );
+    }
+}
+
+static void init_state( editor_state &state )
+{
+    asset_library &assets = state.assets;
+    for( const ter_t &elem : ter_t::get_all() ) {
+        assets.all_terrain.push_back( &elem );
+    }
+    for( const furn_t &elem : furn_t::get_all() ) {
+        assets.all_furniture.push_back( &elem );
+    }
+    for( const trap &elem : trap::get_all() ) {
+        assets.all_trap.push_back( &elem );
+    }
+    for( const field_type &elem : field_types::get_all() ) {
+        assets.all_field.push_back( &elem );
+    }
+    assets.all_itype = item_controller->all();
+    for( const item_group_id &elem : item_controller->get_all_group_names() ) {
+        igroup_plug plug;
+        plug.id = elem;
+        assets.igroup_plugs.push_back( std::move( plug ) );
+    }
+    for( const igroup_plug &elem : assets.igroup_plugs ) {
+        assets.all_igroup.push_back( &elem );
+    }
+    for( const mtype &elem : MonsterGenerator::generator().get_all_mtypes() ) {
+        assets.all_mtype.push_back( &elem );
+    }
+    for( const auto &elem : MonsterGroupManager::get_all() ) {
+        assets.all_mgroup.push_back( &elem.second );
     }
 }
 
@@ -276,6 +416,7 @@ namespace editor
 void advanced_editor_run()
 {
     editor_state state;
+    init_state( state );
     current_state = &state;
 
     bool old_submap_grid = g->debug_submap_grid_overlay;
