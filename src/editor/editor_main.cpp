@@ -7,6 +7,8 @@
 #include "../input.h"
 #include "../map.h"
 #include "../output.h"
+#include "../trap.h"
+#include "../field.h"
 #include "../ui_manager.h"
 #include "../string_formatter.h"
 #include "../sdltiles_editor.h"
@@ -65,6 +67,13 @@ static void show_control_window( editor_state &state )
             u.view_offset.x = offs[0];
             u.view_offset.y = offs[1];
         }
+
+        int zlev = u.posz() + u.view_offset.z;
+        int zlev_old = zlev;
+        ImGui::DragInt( "Z-Level", &zlev, 0.05f, -10, 10 );
+        if( zlev != zlev_old && zlev >= -10 && zlev <= 10 ) {
+            u.view_offset.z = zlev - u.posz();
+        }
     }
 
     // Mouse position
@@ -77,6 +86,55 @@ static void show_control_window( editor_state &state )
         } else {
             ImGui::Text( "Mouse pos, tile: ???" );
         }
+    }
+
+    ImGui::End();
+}
+
+static void show_tile_properties_window( editor_state &state )
+{
+    ImGui::Begin( "Tile Properties" );
+
+    cata::optional<tripoint> tile_pos_opt = get_mouse_tile_pos( state );
+    if( !tile_pos_opt ) {
+        ImGui::Text( "< ??? >" );
+        ImGui::End();
+        return;
+    }
+
+    tripoint p = *tile_pos_opt;
+
+    map &here = get_map();
+
+    if( !here.inbounds( p ) ) {
+        ImGui::Text( "< Out of bounds >" );
+        ImGui::End();
+        return;
+    }
+
+    // Terrain
+    ter_id tid = here.ter( p );
+    std::string tname = here.tername( p );
+    ImGui::Text( "%s <%s>", tname.c_str(), tid->id.c_str() );
+
+    // Furniture
+    furn_id fid = here.furn( p );
+    std::string fname = here.furnname( p );
+    ImGui::Text( "%s <%s>", fname.c_str(), fid->id.c_str() );
+
+    // Trap
+    const trap &tr = here.tr_at( p );
+    std::string trname = tr.name();
+    ImGui::Text( "%s <%s>", trname.c_str(), tr.id.c_str() );
+
+    // Field
+    const field &fields = here.field_at( p );
+    for( const auto &fld : fields ) {
+        std::string name = fld.second.name();
+        const field_type_str_id &id = fld.first.id();
+        int intensity = fld.second.get_field_intensity();
+        time_duration dur = fld.second.get_field_age();
+        ImGui::Text( "%s <%s> [%d] %d", name.c_str(), id.c_str(), intensity, to_turns<int>( dur ) );
     }
 
     ImGui::End();
@@ -121,6 +179,7 @@ static void show_editor_ui( editor_state &state )
 {
     show_canvas_overlay_window( state );
     show_control_window( state );
+    show_tile_properties_window( state );
     if( state.show_demo_wnd ) {
         ImGui::ShowDemoWindow( &state.show_demo_wnd );
     }
@@ -136,11 +195,17 @@ void advanced_editor_run()
     current_state = &state;
 
     bool old_submap_grid = g->debug_submap_grid_overlay;
-    g->debug_submap_grid_overlay = true;
+    tripoint old_view = get_avatar().view_offset;
+    int old_zoom = g->get_zoom();
     on_out_of_scope _close_ui( [&]() {
         current_state = nullptr;
         g->debug_submap_grid_overlay = old_submap_grid;
+        get_avatar().view_offset = old_view;
+        g->set_zoom( old_zoom );
+        g->mark_main_ui_adaptor_resize();
     } );
+
+    g->debug_submap_grid_overlay = true;
 
     g->invalidate_main_ui_adaptor();
     ui_manager::redraw();

@@ -3825,7 +3825,7 @@ cata::optional<tripoint> editor::screen_to_tile( point mouse_pos )
     const point view_offset = g->ter_view_p.xy();
     const point p = view_offset + selected - dim.window_size_cell / 2;
 
-    return tripoint( p, g->get_levz() );
+    return tripoint( p, g->get_levz() + get_avatar().view_offset.z );
 }
 
 std::pair<point, point> editor::tile_to_screen( point pos )
