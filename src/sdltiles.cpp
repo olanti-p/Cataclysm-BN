@@ -3836,7 +3836,6 @@ std::pair<point, point> editor::tile_to_screen( point pos )
     const int &fw = dim.scaled_font_size.x;
     const int &fh = dim.scaled_font_size.y;
     const point &win_min = dim.window_pos_pixel;
-    const point &win_size = dim.window_size_pixel;
 
     const point view_offset = g->ter_view_p.xy();
     const point center_offset = dim.window_size_cell / 2;
