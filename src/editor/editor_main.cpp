@@ -18,7 +18,46 @@ struct editor_state {
     bool show_demo_wnd = false;
     int loops = 0;
     int frames = 0;
+
+    cata::optional<tripoint> single_selection;
 };
+
+static int get_current_z( const editor_state & /*state*/ )
+{
+    return get_avatar().posz() + get_avatar().view_offset.z;
+}
+
+static void set_current_z( const editor_state &state, int z )
+{
+    int new_z = clamp( z, -10, 10 );
+    if( get_current_z( state ) != new_z ) {
+        get_avatar().view_offset.z = new_z - get_avatar().posz();
+    }
+}
+
+static tripoint get_view_center( const editor_state & /*state*/ )
+{
+    return get_avatar().pos() + get_avatar().view_offset;
+}
+
+static void set_view_center( const editor_state & /*state*/, const tripoint &pos )
+{
+    get_avatar().view_offset = pos - get_avatar().pos();
+}
+
+static int get_zoom( const editor_state & /*state*/ )
+{
+    return g->get_zoom();
+}
+
+static void set_zoom( editor_state &state, int zoom )
+{
+    int new_zoom = clamp( zoom, 4, 64 );
+    if( new_zoom != get_zoom( state ) ) {
+        g->set_zoom( new_zoom );
+        g->mark_main_ui_adaptor_resize();
+    }
+}
 
 static point get_mouse_screen_pos( const editor_state & /*state*/ )
 {
@@ -45,13 +84,9 @@ static void show_control_window( editor_state &state )
 
     // Camera zoom
     {
-        int zoom_now = g->get_zoom();
-        int zoom_old = zoom_now;
-        ImGui::DragInt( "Zoom", &zoom_now, 0.2f, 4, 64 );
-        if( zoom_now != zoom_old && zoom_now >= 4 && zoom_now <= 64 ) {
-            g->set_zoom( zoom_now );
-            g->mark_main_ui_adaptor_resize();
-        }
+        int zoom = get_zoom( state );
+        ImGui::DragInt( "Zoom", &zoom, 0.2f, 4, 64 );
+        set_zoom( state, zoom );
     }
 
     // Camera offset
@@ -68,12 +103,9 @@ static void show_control_window( editor_state &state )
             u.view_offset.y = offs[1];
         }
 
-        int zlev = u.posz() + u.view_offset.z;
-        int zlev_old = zlev;
+        int zlev = get_current_z( state );
         ImGui::DragInt( "Z-Level", &zlev, 0.05f, -10, 10 );
-        if( zlev != zlev_old && zlev >= -10 && zlev <= 10 ) {
-            u.view_offset.z = zlev - u.posz();
-        }
+        set_current_z( state, zlev );
     }
 
     // Mouse position
@@ -91,21 +123,21 @@ static void show_control_window( editor_state &state )
     ImGui::End();
 }
 
-static void show_tile_properties_window( editor_state &state )
+static void show_tile_properties_window( editor_state &state,
+        const cata::optional<tripoint> &tile_pos )
 {
     ImGui::Begin( "Tile Properties" );
 
-    cata::optional<tripoint> tile_pos_opt = get_mouse_tile_pos( state );
-    if( !tile_pos_opt ) {
+    if( !tile_pos ) {
         ImGui::Text( "< ??? >" );
         ImGui::End();
         return;
     }
 
-    tripoint p = *tile_pos_opt;
+    tripoint p = *tile_pos;
+    ImGui::Text( "pos: %s", p.to_string().c_str() );
 
     map &here = get_map();
-
     if( !here.inbounds( p ) ) {
         ImGui::Text( "< Out of bounds >" );
         ImGui::End();
@@ -164,7 +196,7 @@ static void show_canvas_overlay_window( editor_state &state )
     ImGui::SetNextWindowPos( ImVec2( 0, 0 ) );
     ImGui::SetNextWindowSize( disp_size );
     ImGui::Begin( "<canvas>", nullptr,
-                  ImGuiWindowFlags_NoInputs |
+                  ImGuiWindowFlags_NoNav |
                   ImGuiWindowFlags_NoDecoration |
                   ImGuiWindowFlags_NoFocusOnAppearing |
                   ImGuiWindowFlags_NoBackground |
@@ -173,12 +205,39 @@ static void show_canvas_overlay_window( editor_state &state )
 
     ImDrawList *draw_list = ImGui::GetWindowDrawList();
 
-    const ImVec4 colf = ImVec4( 1.0f, 1.0f, 0.4f, 1.0f );
-    const ImU32 col = ImColor( colf );
+    const ImU32 col_cursor = ImColor( 0.8f, 0.8f, 0.4f, 1.0f );
+    const ImU32 col_selected = ImColor( 1.0f, 1.0f, 0.0f, 1.0f );
 
     cata::optional<tripoint> tile_pos = get_mouse_tile_pos( state );
     if( tile_pos ) {
-        highlight_tile( draw_list, tile_pos->xy(), col );
+        highlight_tile( draw_list, tile_pos->xy(), col_cursor );
+    }
+
+    if( state.single_selection && state.single_selection->z == get_current_z( state ) ) {
+        highlight_tile( draw_list, state.single_selection->xy(), col_selected );
+    }
+
+    ImGuiIO &io = ImGui::GetIO();
+    if( ImGui::IsWindowHovered() ) {
+        if( tile_pos ) {
+            if( ImGui::IsMouseClicked( ImGuiMouseButton_Left ) ) {
+                if( tile_pos == state.single_selection ) {
+                    state.single_selection = cata::nullopt;
+                } else {
+                    state.single_selection = tile_pos;
+                }
+            }
+            if( ImGui::IsKeyDown( ImGuiKey_ModShift ) && ImGui::IsMouseClicked( ImGuiMouseButton_Right ) ) {
+                set_view_center( state, *tile_pos );
+            }
+        }
+        if( std::abs( io.MouseWheel ) > 0.5f ) {
+            if( ImGui::IsKeyDown( ImGuiKey_ModCtrl ) ) {
+                set_zoom( state, get_zoom( state ) + io.MouseWheel );
+            } else if( ImGui::IsKeyDown( ImGuiKey_ModShift ) ) {
+                set_current_z( state, get_current_z( state ) - io.MouseWheel );
+            }
+        }
     }
 
     ImGui::End();
@@ -188,7 +247,11 @@ static void show_editor_ui( editor_state &state )
 {
     show_canvas_overlay_window( state );
     show_control_window( state );
-    show_tile_properties_window( state );
+    if( state.single_selection ) {
+        show_tile_properties_window( state, state.single_selection );
+    } else {
+        show_tile_properties_window( state, get_mouse_tile_pos( state ) );
+    }
     if( state.show_demo_wnd ) {
         ImGui::ShowDemoWindow( &state.show_demo_wnd );
     }
