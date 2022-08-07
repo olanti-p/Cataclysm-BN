@@ -2133,7 +2133,7 @@ void mapgen_palette::load_place_mapings( const JsonObject &jo, const std::string
     }
 }
 
-std::map<std::string, mapgen_palette> palettes;
+std::map<palette_id, mapgen_palette> palettes;
 
 static bool check_furn( const furn_id &id, const std::string &context )
 {
@@ -2151,7 +2151,7 @@ static bool check_furn( const furn_id &id, const std::string &context )
 
 void mapgen_palette::check()
 {
-    std::string context = "palette " + id;
+    std::string context = "palette " + id.str();
     for( const std::pair<const map_key, furn_id> &p : format_furniture ) {
         if( check_furn( p.second, context ) ) {
             return;
@@ -2173,7 +2173,7 @@ mapgen_palette mapgen_palette::load_temp( const JsonObject &jo, const std::strin
 void mapgen_palette::load( const JsonObject &jo, const std::string &src )
 {
     mapgen_palette ret = load_internal( jo, src, true, false );
-    if( ret.id.empty() ) {
+    if( ret.id.is_empty() ) {
         jo.throw_error( "Named palette needs an id" );
     }
 
@@ -2195,6 +2195,11 @@ const mapgen_palette &mapgen_palette::get( const palette_id &id )
     debugmsg( "Requested palette with unknown id %s", id.c_str() );
     static mapgen_palette dummy;
     return dummy;
+}
+
+const std::map<palette_id, mapgen_palette> &mapgen_palette::get_all()
+{
+    return palettes;
 }
 
 void mapgen_palette::check_definitions()
@@ -2230,14 +2235,14 @@ mapgen_palette mapgen_palette::load_internal( const JsonObject &jo, const std::s
     auto &format_terrain = new_pal.format_terrain;
     auto &format_furniture = new_pal.format_furniture;
     if( require_id ) {
-        new_pal.id = jo.get_string( "id" );
+        new_pal.id = palette_id( jo.get_string( "id" ) );
     }
 
     if( jo.has_array( "palettes" ) ) {
         if( allow_recur ) {
             auto pals = jo.get_string_array( "palettes" );
             for( auto &p : pals ) {
-                new_pal.add( p );
+                new_pal.add( palette_id( p ) );
             }
         } else {
             jo.throw_error( "Recursive palettes are not implemented yet" );
@@ -6718,3 +6723,18 @@ bool has_update_id( const mapgen_id &id )
 }
 
 } // namespace mapgen
+
+/** @relates string_id */
+template<>
+bool string_id<mapgen_palette>::is_valid() const
+{
+    const auto iter = palettes.find( *this );
+    return iter != palettes.end();
+}
+
+/** @relates string_id */
+template<>
+const mapgen_palette &string_id<mapgen_palette>::obj() const
+{
+    return mapgen_palette::get( *this );
+}
