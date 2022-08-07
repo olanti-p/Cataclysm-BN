@@ -46,7 +46,7 @@ static void show_control_window( editor_state &state )
         int zoom_now = g->get_zoom();
         int zoom_old = zoom_now;
         ImGui::DragInt( "Zoom", &zoom_now, 0.2f, 4, 64 );
-        if( zoom_now != zoom_old ) {
+        if( zoom_now != zoom_old && zoom_now >= 4 && zoom_now <= 64 ) {
             g->set_zoom( zoom_now );
             g->mark_main_ui_adaptor_resize();
         }
