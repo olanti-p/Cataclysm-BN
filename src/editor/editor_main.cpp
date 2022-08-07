@@ -125,6 +125,9 @@ static void show_control_window( editor_state &state )
     if( ImGui::Button( "Toggle Demo Window" ) ) {
         state.show_demo_wnd = !state.show_demo_wnd;
     }
+    if( ImGui::Button( "Toggle Submap Grid" ) ) {
+        g->debug_submap_grid_overlay = !g->debug_submap_grid_overlay;
+    }
 
     avatar &u = get_avatar();
 
