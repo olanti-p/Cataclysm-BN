@@ -76,38 +76,6 @@ bool process_event( SDL_Event &event )
         return false;
     }
 
-    /*
-    bool is_kb = false;
-    bool is_mouse = false;
-    switch( event.type ) {
-        case SDL_KEYDOWN:
-        case SDL_KEYUP:
-        case SDL_TEXTINPUT:
-        case SDL_TEXTEDITING:
-            is_kb = true;
-            break;
-
-        case SDL_MOUSEBUTTONUP:
-        case SDL_MOUSEBUTTONDOWN:
-        case SDL_MOUSEMOTION:
-        case SDL_MOUSEWHEEL:
-        case SDL_MOUSEWHEEL_NORMAL:
-        case SDL_MOUSEWHEEL_FLIPPED:
-            is_mouse = true;
-            break;
-
-        default:
-            break;
-    }
-
-    ImGuiIO &io = ImGui::GetIO();
-    if( is_mouse || ( is_kb && io.WantCaptureKeyboard ) ) {
-        ImGui_ImplSDL2_ProcessEvent( &event );
-        return true;
-    }
-    return false;
-    */
-
     ImGui_ImplSDL2_ProcessEvent( &event );
     return true;
 }
