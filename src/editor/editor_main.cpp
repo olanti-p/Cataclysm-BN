@@ -27,38 +27,25 @@ struct igroup_plug {
     item_group_id id;
 };
 
+template<typename T>
+struct asset_library_cat {
+    std::vector<const T *> entries;
+    std::string filter;
+    int selected = 0;
+};
+
 struct asset_library {
     std::vector<igroup_plug> igroup_plugs;
 
-    std::vector<const ter_t *> all_terrain;
-    std::vector<const furn_t *> all_furniture;
-    std::vector<const trap *> all_trap;
-    std::vector<const field_type *> all_field;
-    std::vector<const itype *> all_itype;
-    std::vector<const igroup_plug *> all_igroup;
-    std::vector<const mtype *> all_mtype;
-    std::vector<const MonsterGroup *> all_mgroup;
-    std::vector<const mapgen_palette *> all_palette;
-
-    std::string terrain_filter;
-    std::string furniture_filter;
-    std::string trap_filter;
-    std::string field_filter;
-    std::string itype_filter;
-    std::string igroup_filter;
-    std::string mtype_filter;
-    std::string mgroup_filter;
-    std::string palette_filter;
-
-    int selected_terrain = 0;
-    int selected_furniture = 0;
-    int selected_trap = 0;
-    int selected_field = 0;
-    int selected_itype = 0;
-    int selected_igroup = 0;
-    int selected_mtype = 0;
-    int selected_mgroup = 0;
-    int selected_palette = 0;
+    asset_library_cat<ter_t> terrains;
+    asset_library_cat<furn_t> furnitures;
+    asset_library_cat<trap> traps;
+    asset_library_cat<field_type> fields;
+    asset_library_cat<itype> itypes;
+    asset_library_cat<igroup_plug> igroups;
+    asset_library_cat<mtype> mtypes;
+    asset_library_cat<MonsterGroup> mgroups;
+    asset_library_cat<mapgen_palette> palettes;
 };
 
 struct editor_state {
@@ -314,26 +301,25 @@ static bool filter_matches( const std::string &s, const std::string &filter )
 }
 
 template<typename T>
-void show_assetlib_tab( const char *name, int &selected, std::string &filter,
-                        const std::vector<const T *> &all )
+void show_assetlib_tab( const char *name, asset_library_cat<T> &cat )
 {
     if( !ImGui::BeginTabItem( name ) ) {
         return;
     }
 
-    int num_all = static_cast<int>( all.size() );
+    int num_all = static_cast<int>( cat.entries.size() );
     ImGui::Text( "%s - %d entries", name, num_all );
 
-    ImGui::InputText( "##filter", &filter );
+    ImGui::InputText( "##filter", &cat.filter );
     std::string lb_name = string_format( "##%s", name );
     if( ImGui::BeginListBox( lb_name.c_str(), ImVec2( -1.0f, -1.0f ) ) ) {
         for( int i = 0; i < num_all; i++ ) {
-            if( !filter_matches( all[i]->id.str(), filter ) ) {
+            if( !filter_matches( cat.entries[i]->id.str(), cat.filter ) ) {
                 continue;
             }
-            const bool is_selected = i == selected;
-            if( ImGui::Selectable( all[i]->id.c_str(), is_selected ) ) {
-                selected = i;
+            const bool is_selected = i == cat.selected;
+            if( ImGui::Selectable( cat.entries[i]->id.c_str(), is_selected ) ) {
+                cat.selected = i;
             }
             // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
             if( is_selected ) {
@@ -346,23 +332,22 @@ void show_assetlib_tab( const char *name, int &selected, std::string &filter,
     ImGui::EndTabItem();
 }
 
-static void show_asset_library_window( asset_library &state )
+static void show_asset_library_window( asset_library &assets )
 {
     ImGui::Begin( "Asset Library" );
 
     ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_FittingPolicyResizeDown;
     if( ImGui::BeginTabBar( "Asset Types", tab_bar_flags ) ) {
 
-        show_assetlib_tab( "Terrain", state.selected_terrain, state.terrain_filter, state.all_terrain );
-        show_assetlib_tab( "Furniture", state.selected_furniture, state.furniture_filter,
-                           state.all_furniture );
-        show_assetlib_tab( "Trap", state.selected_trap, state.trap_filter, state.all_trap );
-        show_assetlib_tab( "Field", state.selected_field, state.field_filter, state.all_field );
-        show_assetlib_tab( "Item", state.selected_itype, state.itype_filter, state.all_itype );
-        show_assetlib_tab( "IGroup", state.selected_igroup, state.igroup_filter, state.all_igroup );
-        show_assetlib_tab( "Monster", state.selected_mtype, state.mtype_filter, state.all_mtype );
-        show_assetlib_tab( "MGroup", state.selected_mgroup, state.mgroup_filter, state.all_mgroup );
-        show_assetlib_tab( "Palette", state.selected_palette, state.palette_filter, state.all_palette );
+        show_assetlib_tab( "Terrain", assets.terrains );
+        show_assetlib_tab( "Furniture", assets.furnitures );
+        show_assetlib_tab( "Trap", assets.traps );
+        show_assetlib_tab( "Field", assets.fields );
+        show_assetlib_tab( "Item", assets.itypes );
+        show_assetlib_tab( "IGroup", assets.igroups );
+        show_assetlib_tab( "Monster", assets.mtypes );
+        show_assetlib_tab( "MGroup", assets.mgroups );
+        show_assetlib_tab( "Palette", assets.palettes );
 
         ImGui::EndTabBar();
     }
@@ -385,38 +370,37 @@ static void show_editor_ui( editor_state &state )
     }
 }
 
-static void init_state( editor_state &state )
+static void init_assets( asset_library &assets )
 {
-    asset_library &assets = state.assets;
     for( const ter_t &elem : ter_t::get_all() ) {
-        assets.all_terrain.push_back( &elem );
+        assets.terrains.entries.push_back( &elem );
     }
     for( const furn_t &elem : furn_t::get_all() ) {
-        assets.all_furniture.push_back( &elem );
+        assets.furnitures.entries.push_back( &elem );
     }
     for( const trap &elem : trap::get_all() ) {
-        assets.all_trap.push_back( &elem );
+        assets.traps.entries.push_back( &elem );
     }
     for( const field_type &elem : field_types::get_all() ) {
-        assets.all_field.push_back( &elem );
+        assets.fields.entries.push_back( &elem );
     }
-    assets.all_itype = item_controller->all();
+    assets.itypes.entries = item_controller->all();
     for( const item_group_id &elem : item_controller->get_all_group_names() ) {
         igroup_plug plug;
         plug.id = elem;
         assets.igroup_plugs.push_back( std::move( plug ) );
     }
     for( const igroup_plug &elem : assets.igroup_plugs ) {
-        assets.all_igroup.push_back( &elem );
+        assets.igroups.entries.push_back( &elem );
     }
     for( const mtype &elem : MonsterGenerator::generator().get_all_mtypes() ) {
-        assets.all_mtype.push_back( &elem );
+        assets.mtypes.entries.push_back( &elem );
     }
     for( const auto &elem : MonsterGroupManager::get_all() ) {
-        assets.all_mgroup.push_back( &elem.second );
+        assets.mgroups.entries.push_back( &elem.second );
     }
     for( const auto &elem : mapgen_palette::get_all() ) {
-        assets.all_palette.push_back( &elem.second );
+        assets.palettes.entries.push_back( &elem.second );
     }
 }
 
@@ -427,7 +411,7 @@ namespace editor
 void advanced_editor_run()
 {
     editor_state state;
-    init_state( state );
+    init_assets( state.assets );
     current_state = &state;
 
     bool old_submap_grid = g->debug_submap_grid_overlay;
