@@ -302,3 +302,10 @@ lib_sources = files(
     'wisheffect.cpp',
     'worldfactory.cpp',
 )
+
+version_h = custom_target(
+    'version.h',
+    output: 'version.h',
+    input: 'version_static.h',
+    command: [ find_program('cp'), '@INPUT@', '@OUTPUT@']
+)
