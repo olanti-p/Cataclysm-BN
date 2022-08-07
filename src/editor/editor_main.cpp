@@ -9,6 +9,7 @@
 #include "../output.h"
 #include "../ui_manager.h"
 #include "../string_formatter.h"
+#include "../sdltiles_editor.h"
 
 static bool st_ui_exists = false;
 static bool do_loop = false;
@@ -45,6 +46,16 @@ static void show_control_window()
         g->u.view_offset.y = offs[1];
     }
 
+    ImVec2 mouse_pos = ImGui::GetMousePos();
+    point mouse_pos_p( mouse_pos.x, mouse_pos.y );
+    cata::optional<tripoint> tile_pos = editor::screen_to_tile( mouse_pos_p );
+    ImGui::Text( "Mouse pos, px: %s", mouse_pos_p.to_string().c_str() );
+    if( tile_pos ) {
+        ImGui::Text( "Mouse pos, tile: %s", tile_pos->to_string().c_str() );
+    } else {
+        ImGui::Text( "Mouse pos, tile: ???" );
+    }
+
     ImGui::End();
 }
 
@@ -54,8 +65,12 @@ void advanced_editor_run()
 {
     st_ui_exists = true;
     do_loop = true;
-    on_out_of_scope _close_ui( []() {
+
+    bool old_submap_grid = g->debug_submap_grid_overlay;
+    g->debug_submap_grid_overlay = true;
+    on_out_of_scope _close_ui( [&]() {
         st_ui_exists = false;
+        g->debug_submap_grid_overlay = old_submap_grid;
     } );
 
     g->invalidate_main_ui_adaptor();
