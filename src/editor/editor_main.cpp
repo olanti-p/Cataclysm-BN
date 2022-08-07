@@ -12,6 +12,7 @@
 #include "../map.h"
 #include "../mapdata.h"
 #include "../mapgen.h"
+#include "../mapgen_factory.h"
 #include "../mongroup.h"
 #include "../monstergenerator.h"
 #include "../output.h"
@@ -27,6 +28,21 @@ struct igroup_plug {
     item_group_id id;
 };
 
+struct nested_mapgen_plug {
+    std::string id;
+    std::shared_ptr<mapgen_function_json_nested> data;
+};
+
+struct update_mapgen_plug {
+    std::string id;
+    update_mapgen_function_json *data = nullptr;
+};
+
+struct oter_mapgen_plug {
+    std::string id;
+    std::shared_ptr<mapgen_function> data;
+};
+
 template<typename T>
 struct asset_library_cat {
     std::vector<const T *> entries;
@@ -36,6 +52,9 @@ struct asset_library_cat {
 
 struct asset_library {
     std::vector<igroup_plug> igroup_plugs;
+    std::vector<nested_mapgen_plug> nested_mapgen_plugs;
+    std::vector<update_mapgen_plug> update_mapgen_plugs;
+    std::vector<oter_mapgen_plug> oter_mapgen_plugs;
 
     asset_library_cat<ter_t> terrains;
     asset_library_cat<furn_t> furnitures;
@@ -46,6 +65,9 @@ struct asset_library {
     asset_library_cat<mtype> mtypes;
     asset_library_cat<MonsterGroup> mgroups;
     asset_library_cat<mapgen_palette> palettes;
+    asset_library_cat<nested_mapgen_plug> nested_mapgens;
+    asset_library_cat<update_mapgen_plug> update_mapgens;
+    asset_library_cat<oter_mapgen_plug> oter_mapgens;
 };
 
 struct editor_state {
@@ -314,7 +336,7 @@ void show_assetlib_tab( const char *name, asset_library_cat<T> &cat )
     std::string lb_name = string_format( "##%s", name );
     if( ImGui::BeginListBox( lb_name.c_str(), ImVec2( -1.0f, -1.0f ) ) ) {
         for( int i = 0; i < num_all; i++ ) {
-            if( !filter_matches( cat.entries[i]->id.str(), cat.filter ) ) {
+            if( !filter_matches( cat.entries[i]->id.c_str(), cat.filter ) ) {
                 continue;
             }
             const bool is_selected = i == cat.selected;
@@ -348,6 +370,9 @@ static void show_asset_library_window( asset_library &assets )
         show_assetlib_tab( "Monster", assets.mtypes );
         show_assetlib_tab( "MGroup", assets.mgroups );
         show_assetlib_tab( "Palette", assets.palettes );
+        show_assetlib_tab( "N_Mapgen", assets.nested_mapgens );
+        show_assetlib_tab( "U_Mapgen", assets.update_mapgens );
+        show_assetlib_tab( "O_Mapgen", assets.oter_mapgens );
 
         ImGui::EndTabBar();
     }
@@ -401,6 +426,54 @@ static void init_assets( asset_library &assets )
     }
     for( const auto &elem : mapgen_palette::get_all() ) {
         assets.palettes.entries.push_back( &elem.second );
+    }
+
+    const auto &all_nested = get_all_nested_mapgen();
+    for( auto &it : all_nested ) {
+        const std::string &id = it.first;
+        int i = 0;
+        for( auto &obj : it.second ) {
+            nested_mapgen_plug plug;
+            plug.id = string_format( "%s:w=%d:i=%d", id, obj.weight, i );
+            plug.data = obj.obj;
+            assets.nested_mapgen_plugs.push_back( std::move( plug ) );
+            i++;
+        }
+    }
+    for( const nested_mapgen_plug &elem : assets.nested_mapgen_plugs ) {
+        assets.nested_mapgens.entries.push_back( &elem );
+    }
+
+    const auto &all_update = get_all_update_mapgen();
+    for( const auto &it : all_update ) {
+        const std::string &id = it.first;
+        int i = 0;
+        for( const auto &obj : it.second ) {
+            update_mapgen_plug plug;
+            plug.id = string_format( "%s:i=%d", id, i );
+            plug.data = obj.get();
+            assets.update_mapgen_plugs.push_back( std::move( plug ) );
+            i++;
+        }
+    }
+    for( const update_mapgen_plug &elem : assets.update_mapgen_plugs ) {
+        assets.update_mapgens.entries.push_back( &elem );
+    }
+
+    const mapgen_factory &all_oter = get_all_oter_mapgen();
+    for( const auto &it : all_oter.mapgens_ ) {
+        const std::string &id = it.first;
+        int i = 0;
+        for( const auto &obj : it.second.weights_ ) {
+            oter_mapgen_plug plug;
+            plug.id = string_format( "%s:w=%d:i=%d", id, obj.weight, i );
+            plug.data = obj.obj;
+            assets.oter_mapgen_plugs.push_back( std::move( plug ) );
+            i++;
+        }
+    }
+    for( const oter_mapgen_plug &elem : assets.oter_mapgen_plugs ) {
+        assets.oter_mapgens.entries.push_back( &elem );
     }
 }
 
