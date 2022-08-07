@@ -11,6 +11,7 @@
 #include "../item_group.h"
 #include "../map.h"
 #include "../mapdata.h"
+#include "../mapgen.h"
 #include "../mongroup.h"
 #include "../monstergenerator.h"
 #include "../output.h"
@@ -37,6 +38,7 @@ struct asset_library {
     std::vector<const igroup_plug *> all_igroup;
     std::vector<const mtype *> all_mtype;
     std::vector<const MonsterGroup *> all_mgroup;
+    std::vector<const mapgen_palette *> all_palette;
 
     std::string terrain_filter;
     std::string furniture_filter;
@@ -46,6 +48,7 @@ struct asset_library {
     std::string igroup_filter;
     std::string mtype_filter;
     std::string mgroup_filter;
+    std::string palette_filter;
 
     int selected_terrain = 0;
     int selected_furniture = 0;
@@ -55,6 +58,7 @@ struct asset_library {
     int selected_igroup = 0;
     int selected_mtype = 0;
     int selected_mgroup = 0;
+    int selected_palette = 0;
 };
 
 struct editor_state {
@@ -358,6 +362,7 @@ static void show_asset_library_window( asset_library &state )
         show_assetlib_tab( "IGroup", state.selected_igroup, state.igroup_filter, state.all_igroup );
         show_assetlib_tab( "Monster", state.selected_mtype, state.mtype_filter, state.all_mtype );
         show_assetlib_tab( "MGroup", state.selected_mgroup, state.mgroup_filter, state.all_mgroup );
+        show_assetlib_tab( "Palette", state.selected_palette, state.palette_filter, state.all_palette );
 
         ImGui::EndTabBar();
     }
@@ -409,6 +414,9 @@ static void init_state( editor_state &state )
     }
     for( const auto &elem : MonsterGroupManager::get_all() ) {
         assets.all_mgroup.push_back( &elem.second );
+    }
+    for( const auto &elem : mapgen_palette::get_all() ) {
+        assets.all_palette.push_back( &elem.second );
     }
 }
 
