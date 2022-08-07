@@ -19,6 +19,7 @@ class JsonMember;
 class JsonObject;
 class map;
 class mapgendata;
+class mapgen_factory;
 class mission;
 struct json_source_location;
 template <typename T> struct weighted_int_list;
@@ -428,6 +429,12 @@ bool has_mapgen_for( const std::string &key );
 void calculate_mapgen_weights(); // throws
 
 void check_mapgen_definitions();
+
+const std::map<std::string, weighted_int_list<std::shared_ptr<mapgen_function_json_nested>> >
+        &get_all_nested_mapgen();
+const std::map<std::string, std::vector<std::unique_ptr<update_mapgen_function_json>> >
+        &get_all_update_mapgen();
+const mapgen_factory &get_all_oter_mapgen();
 
 /// move to building_generation
 enum room_type {
