@@ -2103,6 +2103,7 @@ static tripoint_abs_omt display( const tripoint_abs_omt &orig,
             g->list_missions();
         } else if ( action == "RELOAD_TILESET" ) {
             g->reload_tileset();
+            ui.mark_resize();
         }
 
         std::chrono::time_point<std::chrono::steady_clock> now = std::chrono::steady_clock::now();
