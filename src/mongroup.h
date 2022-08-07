@@ -63,6 +63,7 @@ struct MonsterGroupResult {
 
 struct MonsterGroup {
     mongroup_id name;
+    mongroup_id id; // Alias for asset manager
     mtype_id defaultMonster;
     FreqDef  monsters;
     bool IsMonsterInGroup( const mtype_id &id ) const;
@@ -184,6 +185,10 @@ class MonsterGroupManager
         static bool monster_is_blacklisted( const mtype_id &m );
 
         static bool is_animal( const mongroup_id &group );
+
+        static inline const std::map<mongroup_id, MonsterGroup> &get_all() {
+            return monsterGroupMap;
+        }
 
     private:
         static std::map<mongroup_id, MonsterGroup> monsterGroupMap;

@@ -336,6 +336,7 @@ void MonsterGroupManager::LoadMonsterGroup( const JsonObject &jo )
     MonsterGroup g;
 
     g.name = mongroup_id( jo.get_string( "name" ) );
+    g.id = g.name;
     bool extending = false;  //If already a group with that name, add to it instead of overwriting it
     bool allow_override = jo.get_bool( "override", false );
     if( monsterGroupMap.count( g.name ) != 0 && !allow_override ) {
