@@ -30,7 +30,7 @@ lib_dependencies = [
 
 libcata = static_library(
     'cata-lib',
-    sources: lib_sources + editor_sources,
+    sources: editor_sources + lib_sources,
     dependencies : lib_dependencies,
     cpp_pch : precompiled_hdr,
     cpp_args : cpp_args,
