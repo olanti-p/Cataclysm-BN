@@ -55,12 +55,15 @@ void shutdown_ui()
 
 void render_ui()
 {
+    if( !editor::ui_exists() ) {
+        return;
+    }
     // Start the Dear ImGui frame
     ImGui_ImplSDLRenderer_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
 
-    ImGui::ShowDemoWindow();
+    editor::show_ui();
 
     // Rendering
     ImGui::Render();
@@ -69,8 +72,11 @@ void render_ui()
 
 bool process_event( SDL_Event &event )
 {
-    ImGuiIO &io = ImGui::GetIO();
+    if( !editor::ui_exists() ) {
+        return false;
+    }
 
+    /*
     bool is_kb = false;
     bool is_mouse = false;
     switch( event.type ) {
@@ -94,11 +100,15 @@ bool process_event( SDL_Event &event )
             break;
     }
 
+    ImGuiIO &io = ImGui::GetIO();
     if( is_mouse || ( is_kb && io.WantCaptureKeyboard ) ) {
         ImGui_ImplSDL2_ProcessEvent( &event );
         return true;
     }
-
     return false;
+    */
+
+    ImGui_ImplSDL2_ProcessEvent( &event );
+    return true;
 }
 }

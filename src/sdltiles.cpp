@@ -2997,6 +2997,10 @@ static void CheckMessages()
     bool render_target_reset = false;
 
     while( SDL_PollEvent( &ev ) ) {
+        if( ev.type == SDL_QUIT ) {
+            quit = true;
+            break;
+        }
         if( editor::process_event( ev ) ) {
             last_input = input_event();
             need_redraw = true;
@@ -3681,7 +3685,9 @@ input_event input_manager::get_input_event()
         wrefresh( catacurses::stdscr );
     }
 
-    if( inputdelay < 0 ) {
+    if( editor::ui_exists() ) {
+        CheckMessages();
+    } else if( inputdelay < 0 ) {
         do {
             CheckMessages();
             if( last_input.type != CATA_INPUT_ERROR ) {
