@@ -178,6 +178,18 @@ static void show_tile_properties_window( editor_state &state,
         ImGui::Text( "%s <%s> [%d] %d", name.c_str(), id.c_str(), intensity, to_turns<int>( dur ) );
     }
 
+    // Items
+    map_stack items = here.i_at( p );
+    if( !items.empty() ) {
+        ImGui::Text( "%d Item(s)", static_cast<int>( items.size() ) );
+    } else {
+        ImGui::Text( "< No items here >" );
+    }
+
+    // Radiation
+    int rad = here.get_radiation( p );
+    ImGui::Text( "Rad level: %d", rad );
+
     ImGui::End();
 }
 
