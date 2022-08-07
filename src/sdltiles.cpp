@@ -3820,26 +3820,34 @@ cata::optional<tripoint> editor::screen_to_tile( point mouse_pos )
         return cata::nullopt;
     }
 
-    point view_offset;
-    if( capture_win == g->w_terrain ) {
-        view_offset = g->ter_view_p.xy();
-    }
-
     const point screen_pos = mouse_pos - win_min;
-    point p;
-    if( tile_iso && use_tiles ) {
-        const float win_mid_x = win_min.x + win_size.x / 2.0f;
-        const float win_mid_y = -win_min.y + win_size.y / 2.0f;
-        const int screen_col = std::round( ( screen_pos.x - win_mid_x ) / ( fw / 2.0 ) );
-        const int screen_row = std::round( ( screen_pos.y - win_mid_y ) / ( fw / 4.0 ) );
-        const point selected( ( screen_col - screen_row ) / 2, ( screen_row + screen_col ) / 2 );
-        p = view_offset + selected;
-    } else {
-        const point selected( screen_pos.x / fw, screen_pos.y / fh );
-        p = view_offset + selected - dim.window_size_cell / 2;
-    }
+    const point selected( screen_pos.x / fw, screen_pos.y / fh );
+    const point view_offset = g->ter_view_p.xy();
+    const point p = view_offset + selected - dim.window_size_cell / 2;
 
     return tripoint( p, g->get_levz() );
+}
+
+std::pair<point, point> editor::tile_to_screen( point pos )
+{
+    const catacurses::window &capture_win = g->w_terrain;
+    const window_dimensions dim = get_window_dimensions( capture_win );
+
+    const int &fw = dim.scaled_font_size.x;
+    const int &fh = dim.scaled_font_size.y;
+    const point &win_min = dim.window_pos_pixel;
+    const point &win_size = dim.window_size_pixel;
+
+    const point view_offset = g->ter_view_p.xy();
+    const point center_offset = dim.window_size_cell / 2;
+
+    const point selected = pos - view_offset + center_offset;
+    const point p_min( selected.x * fw, selected.y * fh );
+    const point p_max( ( selected.x + 1 ) * fw, ( selected.y + 1 ) * fh );
+    return std::make_pair<point, point>(
+               p_min + win_min,
+               p_max + win_min
+           );
 }
 
 cata::optional<tripoint> input_context::get_coordinates( const catacurses::window &capture_win_ )
