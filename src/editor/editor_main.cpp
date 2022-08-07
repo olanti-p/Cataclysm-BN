@@ -127,6 +127,15 @@ static void show_tile_properties_window( editor_state &state )
     std::string trname = tr.name();
     ImGui::Text( "%s <%s>", trname.c_str(), tr.id.c_str() );
 
+    // Creature
+    const Creature *cr = g->critter_at( p );
+    if( cr ) {
+        std::string disp_name = cr->disp_name();
+        ImGui::Text( "%s", disp_name.c_str() );
+    } else {
+        ImGui::Text( "< No creature here >" );
+    }
+
     // Field
     const field &fields = here.field_at( p );
     for( const auto &fld : fields ) {
