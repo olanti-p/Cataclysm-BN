@@ -11,65 +11,78 @@
 #include "../string_formatter.h"
 #include "../sdltiles_editor.h"
 
-static bool st_ui_exists = false;
-static bool do_loop = false;
-static bool show_demo_wnd = false;
-static int loops = 0;
-static int frames = 0;
+struct editor_state {
+    bool do_loop = true;
+    bool show_demo_wnd = false;
+    int loops = 0;
+    int frames = 0;
+};
 
-static cata::optional<tripoint> get_mouse_tile_pos()
+static point get_mouse_screen_pos( const editor_state & /*state*/ )
 {
     ImVec2 mouse_pos = ImGui::GetMousePos();
-    point mouse_pos_p( mouse_pos.x, mouse_pos.y );
-    return editor::screen_to_tile( mouse_pos_p );
+    return point( mouse_pos.x, mouse_pos.y );
 }
 
-static void show_control_window()
+static cata::optional<tripoint> get_mouse_tile_pos( const editor_state &state )
 {
-    ImGui::Begin( "Advanced Map Editor", &do_loop );
-    ImGui::Text( "Close this window to exit the editor. %d/%d", loops, frames );
-    frames++;
+    return editor::screen_to_tile( get_mouse_screen_pos( state ) );
+}
+
+static void show_control_window( editor_state &state )
+{
+    ImGui::Begin( "Advanced Map Editor", &state.do_loop );
+    ImGui::Text( "Close this window to exit the editor. %d/%d", state.loops, state.frames );
+    state.frames++;
     // Debugging
     if( ImGui::Button( "Toggle Demo Window" ) ) {
-        show_demo_wnd = !show_demo_wnd;
+        state.show_demo_wnd = !state.show_demo_wnd;
     }
 
+    avatar &u = get_avatar();
+
     // Camera zoom
-    int zoom_now = g->get_zoom();
-    int zoom_old = zoom_now;
-    ImGui::DragInt( "Zoom", &zoom_now, 0.2f, 4, 64 );
-    if( zoom_now != zoom_old ) {
-        g->set_zoom( zoom_now );
-        g->mark_main_ui_adaptor_resize();
+    {
+        int zoom_now = g->get_zoom();
+        int zoom_old = zoom_now;
+        ImGui::DragInt( "Zoom", &zoom_now, 0.2f, 4, 64 );
+        if( zoom_now != zoom_old ) {
+            g->set_zoom( zoom_now );
+            g->mark_main_ui_adaptor_resize();
+        }
     }
 
     // Camera offset
-    std::vector<int> offs = {{
-            g->u.view_offset.x,
-            g->u.view_offset.y
+    {
+        std::vector<int> offs = {{
+                u.view_offset.x,
+                u.view_offset.y
+            }
+        };
+        std::vector<int> offs_old = offs;
+        ImGui::DragInt2( "Offset", &offs[0], 0.2f, -60, 60 );
+        if( offs != offs_old ) {
+            u.view_offset.x = offs[0];
+            u.view_offset.y = offs[1];
         }
-    };
-    std::vector<int> offs_old = offs;
-    ImGui::DragInt2( "Offset", &offs[0], 0.2f, -60, 60 );
-    if( offs != offs_old ) {
-        g->u.view_offset.x = offs[0];
-        g->u.view_offset.y = offs[1];
     }
 
     // Mouse position
-    ImVec2 mouse_pos = ImGui::GetMousePos();
-    cata::optional<tripoint> tile_pos = get_mouse_tile_pos();
-    ImGui::Text( "Mouse pos, px: (%f,%f)", mouse_pos.x, mouse_pos.y );
-    if( tile_pos ) {
-        ImGui::Text( "Mouse pos, tile: %s", tile_pos->to_string().c_str() );
-    } else {
-        ImGui::Text( "Mouse pos, tile: ???" );
+    {
+        ImVec2 mouse_pos = ImGui::GetMousePos();
+        cata::optional<tripoint> tile_pos = get_mouse_tile_pos( state );
+        ImGui::Text( "Mouse pos, px: (%f,%f)", mouse_pos.x, mouse_pos.y );
+        if( tile_pos ) {
+            ImGui::Text( "Mouse pos, tile: %s", tile_pos->to_string().c_str() );
+        } else {
+            ImGui::Text( "Mouse pos, tile: ???" );
+        }
     }
 
     ImGui::End();
 }
 
-static void show_canvas_overlay_window()
+static void show_canvas_overlay_window( editor_state &state )
 {
     ImVec2 disp_size = ImGui::GetIO().DisplaySize;
 
@@ -88,7 +101,7 @@ static void show_canvas_overlay_window()
     const ImVec4 colf = ImVec4( 1.0f, 1.0f, 0.4f, 1.0f );
     const ImU32 col = ImColor( colf );
 
-    cata::optional<tripoint> tile_pos = get_mouse_tile_pos();
+    cata::optional<tripoint> tile_pos = get_mouse_tile_pos( state );
     if( tile_pos ) {
         std::pair<point, point> rect = editor::tile_to_screen( tile_pos->xy() );
         ImVec2 p_min( rect.first.x, rect.first.y );
@@ -99,17 +112,28 @@ static void show_canvas_overlay_window()
     ImGui::End();
 }
 
+static void show_editor_ui( editor_state &state )
+{
+    show_canvas_overlay_window( state );
+    show_control_window( state );
+    if( state.show_demo_wnd ) {
+        ImGui::ShowDemoWindow( &state.show_demo_wnd );
+    }
+}
+
+static editor_state *current_state = nullptr;
+
 namespace editor
 {
 void advanced_editor_run()
 {
-    st_ui_exists = true;
-    do_loop = true;
+    editor_state state;
+    current_state = &state;
 
     bool old_submap_grid = g->debug_submap_grid_overlay;
     g->debug_submap_grid_overlay = true;
     on_out_of_scope _close_ui( [&]() {
-        st_ui_exists = false;
+        current_state = nullptr;
         g->debug_submap_grid_overlay = old_submap_grid;
     } );
 
@@ -117,8 +141,8 @@ void advanced_editor_run()
     ui_manager::redraw();
     refresh_display();
 
-    while( do_loop ) {
-        loops++;
+    while( state.do_loop ) {
+        state.loops++;
 
         inp_mngr.get_input_event();
         g->invalidate_main_ui_adaptor();
@@ -133,15 +157,11 @@ void advanced_editor_run()
 
 bool ui_exists()
 {
-    return st_ui_exists;
+    return current_state != nullptr;
 }
 
 void show_ui()
 {
-    show_canvas_overlay_window();
-    show_control_window();
-    if( show_demo_wnd ) {
-        ImGui::ShowDemoWindow( &show_demo_wnd );
-    }
+    show_editor_ui( *current_state );
 }
 }
