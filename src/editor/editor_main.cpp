@@ -82,6 +82,7 @@ void advanced_editor_run()
 
         inp_mngr.get_input_event();
         g->invalidate_main_ui_adaptor();
+        ui_manager::redraw();
         refresh_display();
     }
 
