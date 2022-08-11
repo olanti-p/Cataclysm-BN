@@ -1,5 +1,6 @@
 #include "editor_main.h"
 #include "editor_assets.h"
+#include "editor_widgets.h"
 
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
@@ -47,6 +48,8 @@ struct editor_state {
     furn_str_id brush_furn = furn_str_id::NULL_ID();
 
     asset_library assets;
+
+    const asset_lib_entry *copied_entry = nullptr;
 
     cata::optional<tripoint> examine_selection;
 };
@@ -159,10 +162,16 @@ static void show_control_window( editor_state &state )
 
     // Brush contents
     if( state.current_tool == EditorTool::TerPick || state.current_tool == EditorTool::TerSet ) {
-        ImGui::Text( "Brush: %s", state.brush_ter.c_str() );
+        std::string buf = state.brush_ter.str();
+        if( ImGui::InputAssetId( state, "Brush", buf, AssetType::Terrain ) ) {
+            state.brush_ter = ter_str_id( buf );
+        }
     }
     if( state.current_tool == EditorTool::FurnPick || state.current_tool == EditorTool::FurnSet ) {
-        ImGui::Text( "Brush: %s", state.brush_furn.c_str() );
+        std::string buf = state.brush_furn.str();
+        if( ImGui::InputAssetId( state, "Brush", buf, AssetType::Furniture ) ) {
+            state.brush_furn = furn_str_id( buf );
+        }
     }
 
     ImGui::End();
@@ -273,7 +282,7 @@ static const char *get_tool_name( EditorTool tool )
     }
 }
 
-static void apply_tool( editor_state &state, const tripoint &p )
+static void apply_tool_lmb( editor_state &state, const tripoint &p )
 {
     map &here = get_map();
     switch( state.current_tool ) {
@@ -303,8 +312,27 @@ static void apply_tool( editor_state &state, const tripoint &p )
             state.current_tool = EditorTool::FurnSet;
             break;
         }
-        default:
-            std::abort();
+        default: {
+            break;
+        }
+    }
+}
+
+static void apply_tool_rmb( editor_state &state, const tripoint &p )
+{
+    map &here = get_map();
+    switch( state.current_tool ) {
+        case EditorTool::TerSet: {
+            state.brush_ter = here.ter( p ).id();
+            break;
+        }
+        case EditorTool::FurnSet: {
+            state.brush_furn = here.furn( p ).id();
+            break;
+        }
+        default: {
+            break;
+        }
     }
 }
 
@@ -388,10 +416,14 @@ static void show_canvas_overlay_window( editor_state &state )
     if( canvas_hovered ) {
         if( tile_pos ) {
             if( ImGui::IsMouseClicked( ImGuiMouseButton_Left ) && tile_pos ) {
-                apply_tool( state, *tile_pos );
+                apply_tool_lmb( state, *tile_pos );
             }
-            if( ImGui::IsKeyDown( ImGuiKey_ModShift ) && ImGui::IsMouseClicked( ImGuiMouseButton_Right ) ) {
-                set_view_center( state, *tile_pos );
+            if( ImGui::IsMouseClicked( ImGuiMouseButton_Right ) ) {
+                if( ImGui::IsKeyDown( ImGuiKey_ModShift ) ) {
+                    set_view_center( state, *tile_pos );
+                } else {
+                    apply_tool_rmb( state, *tile_pos );
+                }
             }
         }
         if( std::abs( io.MouseWheel ) > 0.5f ) {
@@ -441,12 +473,32 @@ static void show_canvas_overlay_window( editor_state &state )
     ImGui::End();
 }
 
+static void on_asset_double_click( editor_state &state, const asset_lib_entry &entry,
+                                   AssetType atype )
+{
+    if( atype == AssetType::Furniture &&
+        ( state.current_tool == EditorTool::FurnPick || state.current_tool == EditorTool::FurnSet ) ) {
+        state.brush_furn = furn_str_id( entry.get_id() );
+    } else if( atype == AssetType::Terrain &&
+               ( state.current_tool == EditorTool::TerPick || state.current_tool == EditorTool::TerSet ) ) {
+        state.brush_ter = ter_str_id( entry.get_id() );
+    } else if( atype == AssetType::OterMapgen ) {
+        const mapgen_function *func = dynamic_cast<const asset_oter_mapgen &>( entry ).ref.data;
+        const mapgen_function_json *jsfunc = dynamic_cast<const mapgen_function_json *>( func );
+        if( jsfunc ) {
+            set_as_active( jsfunc );
+        }
+    } else {
+        state.copied_entry = &entry;
+    }
+}
+
 static bool filter_matches( const std::string &s, const std::string &filter )
 {
     return lcmatch( s, filter );
 }
 
-static void show_assetlib_tab( asset_library_cat &cat )
+static void show_assetlib_tab( asset_library_cat &cat, editor_state &state )
 {
     const char *cat_name = get_asset_type_name( cat.atype );
     if( !ImGui::BeginTabItem( cat_name ) ) {
@@ -461,7 +513,8 @@ static void show_assetlib_tab( asset_library_cat &cat )
     std::string lb_name = string_format( "##lb-%s", cat_name );
     if( ImGui::BeginListBox( lb_name.c_str(), ImVec2( -1.0f, -1.0f ) ) ) {
         for( int i = 0; i < cat.get_num(); i++ ) {
-            const char *id = cat.get( i ).get_id();
+            const asset_lib_entry &entry = cat.get( i );
+            const char *id = entry.get_id();
             if( !filter_matches( id, cat.filter ) ) {
                 continue;
             }
@@ -473,6 +526,9 @@ static void show_assetlib_tab( asset_library_cat &cat )
             if( is_selected ) {
                 ImGui::SetItemDefaultFocus();
             }
+            if( ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked( ImGuiMouseButton_Left ) ) {
+                on_asset_double_click( state, entry, cat.atype );
+            }
         }
         ImGui::EndListBox();
     }
@@ -480,14 +536,14 @@ static void show_assetlib_tab( asset_library_cat &cat )
     ImGui::EndTabItem();
 }
 
-static void show_asset_library_window( asset_library &assets )
+static void show_asset_library_window( editor_state &state )
 {
     ImGui::Begin( "Asset Library" );
 
     ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_FittingPolicyResizeDown;
     if( ImGui::BeginTabBar( "Asset Types", tab_bar_flags ) ) {
-        for( asset_library_cat &cat : assets.categories ) {
-            show_assetlib_tab( cat );
+        for( asset_library_cat &cat : state.assets.categories ) {
+            show_assetlib_tab( cat, state );
         }
 
         ImGui::EndTabBar();
@@ -539,7 +595,7 @@ static void show_editor_ui( editor_state &state )
         show_tile_properties_window( state, get_mouse_tile_pos( state ) );
     }
     if( state.show_asset_lib ) {
-        show_asset_library_window( state.assets );
+        show_asset_library_window( state );
         show_asset_details_window( state );
     }
     if( state.show_demo_wnd ) {
@@ -667,3 +723,25 @@ point get_visible_map_area()
 }
 
 } // namespace editor
+
+namespace ImGui
+{
+bool InputAssetId( editor::editor_state &state, const std::string &label, std::string &buf,
+                   editor::AssetType atype )
+{
+    ImGui::Text( "%s", label.c_str() );
+    ImGui::SameLine();
+    std::string widget_id = string_format( "##ass-id-in-%s", label );
+    bool ret = ImGui::InputText( widget_id.c_str(), &buf );
+    ImGui::SameLine();
+    ImGuiID curr_id = ImGui::GetID( widget_id.c_str() );
+    ImGui::BeginDisabled( !state.copied_entry || state.copied_entry->get_type() != atype );
+    if( ImGui::Button( "Paste" ) ) {
+        buf = state.copied_entry->get_id();
+        ret = true;
+    }
+    ImGui::EndDisabled();
+    return ret;
+}
+
+} // namespace ImGui
