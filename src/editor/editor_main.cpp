@@ -1,4 +1,5 @@
 #include "editor_main.h"
+#include "editor_assets.h"
 
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
@@ -22,53 +23,8 @@
 #include "../trap.h"
 #include "../ui_manager.h"
 
-// For some fun reason item_group_id does not actually refer to any item group.
-// Not that item groups appear to be stored at all...!?
-struct igroup_plug {
-    item_group_id id;
-};
-
-struct nested_mapgen_plug {
-    std::string id;
-    std::shared_ptr<mapgen_function_json_nested> data;
-};
-
-struct update_mapgen_plug {
-    std::string id;
-    update_mapgen_function_json *data = nullptr;
-};
-
-struct oter_mapgen_plug {
-    std::string id;
-    std::shared_ptr<mapgen_function> data;
-};
-
-template<typename T>
-struct asset_library_cat {
-    std::vector<const T *> entries;
-    std::string filter;
-    int selected = 0;
-};
-
-struct asset_library {
-    std::vector<igroup_plug> igroup_plugs;
-    std::vector<nested_mapgen_plug> nested_mapgen_plugs;
-    std::vector<update_mapgen_plug> update_mapgen_plugs;
-    std::vector<oter_mapgen_plug> oter_mapgen_plugs;
-
-    asset_library_cat<ter_t> terrains;
-    asset_library_cat<furn_t> furnitures;
-    asset_library_cat<trap> traps;
-    asset_library_cat<field_type> fields;
-    asset_library_cat<itype> itypes;
-    asset_library_cat<igroup_plug> igroups;
-    asset_library_cat<mtype> mtypes;
-    asset_library_cat<MonsterGroup> mgroups;
-    asset_library_cat<mapgen_palette> palettes;
-    asset_library_cat<nested_mapgen_plug> nested_mapgens;
-    asset_library_cat<update_mapgen_plug> update_mapgens;
-    asset_library_cat<oter_mapgen_plug> oter_mapgens;
-};
+namespace editor
+{
 
 struct editor_state {
     bool do_loop = true;
@@ -322,25 +278,27 @@ static bool filter_matches( const std::string &s, const std::string &filter )
     return lcmatch( s, filter );
 }
 
-template<typename T>
-void show_assetlib_tab( const char *name, asset_library_cat<T> &cat )
+static void show_assetlib_tab( asset_library_cat &cat )
 {
-    if( !ImGui::BeginTabItem( name ) ) {
+    const char *cat_name = get_asset_type_name( cat.atype );
+    if( !ImGui::BeginTabItem( cat_name ) ) {
+        cat.is_active_tab = false;
         return;
     }
+    cat.is_active_tab = true;
 
-    int num_all = static_cast<int>( cat.entries.size() );
-    ImGui::Text( "%s - %d entries", name, num_all );
+    ImGui::Text( "%s - %d entries", cat_name, cat.get_num() );
 
     ImGui::InputText( "##filter", &cat.filter );
-    std::string lb_name = string_format( "##%s", name );
+    std::string lb_name = string_format( "##lb-%s", cat_name );
     if( ImGui::BeginListBox( lb_name.c_str(), ImVec2( -1.0f, -1.0f ) ) ) {
-        for( int i = 0; i < num_all; i++ ) {
-            if( !filter_matches( cat.entries[i]->id.c_str(), cat.filter ) ) {
+        for( int i = 0; i < cat.get_num(); i++ ) {
+            const char *id = cat.get( i ).get_id();
+            if( !filter_matches( id, cat.filter ) ) {
                 continue;
             }
             const bool is_selected = i == cat.selected;
-            if( ImGui::Selectable( cat.entries[i]->id.c_str(), is_selected ) ) {
+            if( ImGui::Selectable( id, is_selected ) ) {
                 cat.selected = i;
             }
             // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
@@ -360,22 +318,25 @@ static void show_asset_library_window( asset_library &assets )
 
     ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_FittingPolicyResizeDown;
     if( ImGui::BeginTabBar( "Asset Types", tab_bar_flags ) ) {
-
-        show_assetlib_tab( "Terrain", assets.terrains );
-        show_assetlib_tab( "Furniture", assets.furnitures );
-        show_assetlib_tab( "Trap", assets.traps );
-        show_assetlib_tab( "Field", assets.fields );
-        show_assetlib_tab( "Item", assets.itypes );
-        show_assetlib_tab( "IGroup", assets.igroups );
-        show_assetlib_tab( "Monster", assets.mtypes );
-        show_assetlib_tab( "MGroup", assets.mgroups );
-        show_assetlib_tab( "Palette", assets.palettes );
-        show_assetlib_tab( "N_Mapgen", assets.nested_mapgens );
-        show_assetlib_tab( "U_Mapgen", assets.update_mapgens );
-        show_assetlib_tab( "O_Mapgen", assets.oter_mapgens );
+        for( asset_library_cat &cat : assets.categories ) {
+            show_assetlib_tab( cat );
+        }
 
         ImGui::EndTabBar();
     }
+
+    ImGui::End();
+}
+
+static void show_asset_details_window( editor_state &state )
+{
+    const asset_lib_entry &entry = state.assets.get_selected_asset();
+
+    ImGui::Begin( "Asset Details" );
+
+    ImGui::Text( "%s: %s", get_asset_type_name( entry.get_type() ), entry.get_id() );
+
+    entry.show_details();
 
     ImGui::End();
 }
@@ -390,97 +351,14 @@ static void show_editor_ui( editor_state &state )
         show_tile_properties_window( state, get_mouse_tile_pos( state ) );
     }
     show_asset_library_window( state.assets );
+    show_asset_details_window( state );
     if( state.show_demo_wnd ) {
         ImGui::ShowDemoWindow( &state.show_demo_wnd );
     }
 }
 
-static void init_assets( asset_library &assets )
-{
-    for( const ter_t &elem : ter_t::get_all() ) {
-        assets.terrains.entries.push_back( &elem );
-    }
-    for( const furn_t &elem : furn_t::get_all() ) {
-        assets.furnitures.entries.push_back( &elem );
-    }
-    for( const trap &elem : trap::get_all() ) {
-        assets.traps.entries.push_back( &elem );
-    }
-    for( const field_type &elem : field_types::get_all() ) {
-        assets.fields.entries.push_back( &elem );
-    }
-    assets.itypes.entries = item_controller->all();
-    for( const item_group_id &elem : item_controller->get_all_group_names() ) {
-        igroup_plug plug;
-        plug.id = elem;
-        assets.igroup_plugs.push_back( std::move( plug ) );
-    }
-    for( const igroup_plug &elem : assets.igroup_plugs ) {
-        assets.igroups.entries.push_back( &elem );
-    }
-    for( const mtype &elem : MonsterGenerator::generator().get_all_mtypes() ) {
-        assets.mtypes.entries.push_back( &elem );
-    }
-    for( const auto &elem : MonsterGroupManager::get_all() ) {
-        assets.mgroups.entries.push_back( &elem.second );
-    }
-    for( const auto &elem : mapgen_palette::get_all() ) {
-        assets.palettes.entries.push_back( &elem.second );
-    }
+static editor::editor_state *current_state = nullptr;
 
-    const auto &all_nested = get_all_nested_mapgen();
-    for( auto &it : all_nested ) {
-        const std::string &id = it.first;
-        int i = 0;
-        for( auto &obj : it.second ) {
-            nested_mapgen_plug plug;
-            plug.id = string_format( "%s:w=%d:i=%d", id, obj.weight, i );
-            plug.data = obj.obj;
-            assets.nested_mapgen_plugs.push_back( std::move( plug ) );
-            i++;
-        }
-    }
-    for( const nested_mapgen_plug &elem : assets.nested_mapgen_plugs ) {
-        assets.nested_mapgens.entries.push_back( &elem );
-    }
-
-    const auto &all_update = get_all_update_mapgen();
-    for( const auto &it : all_update ) {
-        const std::string &id = it.first;
-        int i = 0;
-        for( const auto &obj : it.second ) {
-            update_mapgen_plug plug;
-            plug.id = string_format( "%s:i=%d", id, i );
-            plug.data = obj.get();
-            assets.update_mapgen_plugs.push_back( std::move( plug ) );
-            i++;
-        }
-    }
-    for( const update_mapgen_plug &elem : assets.update_mapgen_plugs ) {
-        assets.update_mapgens.entries.push_back( &elem );
-    }
-
-    const mapgen_factory &all_oter = get_all_oter_mapgen();
-    for( const auto &it : all_oter.mapgens_ ) {
-        const std::string &id = it.first;
-        int i = 0;
-        for( const auto &obj : it.second.weights_ ) {
-            oter_mapgen_plug plug;
-            plug.id = string_format( "%s:w=%d:i=%d", id, obj.weight, i );
-            plug.data = obj.obj;
-            assets.oter_mapgen_plugs.push_back( std::move( plug ) );
-            i++;
-        }
-    }
-    for( const oter_mapgen_plug &elem : assets.oter_mapgen_plugs ) {
-        assets.oter_mapgens.entries.push_back( &elem );
-    }
-}
-
-static editor_state *current_state = nullptr;
-
-namespace editor
-{
 void advanced_editor_run()
 {
     editor_state state;
@@ -527,4 +405,5 @@ void show_ui()
 {
     show_editor_ui( *current_state );
 }
-}
+
+} // namespace editor
