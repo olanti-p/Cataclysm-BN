@@ -726,6 +726,10 @@ class jmapgen_alternativly : public jmapgen_piece
         bool has_vehicle_collision( mapgendata &dat, const point &p ) const override {
             return dat.m.veh_at( tripoint( p, dat.zlevel() ) ).has_value();
         }
+        JmPieceType get_type() const override {
+            // Not a real piece
+            return JmPieceType::NumJmTypes;
+        }
 };
 
 jmapgen_objects::jmapgen_objects( const point &offset, const point &mapsize )

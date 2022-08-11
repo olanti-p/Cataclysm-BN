@@ -131,6 +131,8 @@ struct jmapgen_setmap {
     bool has_vehicle_collision( mapgendata &dat, const point &offset ) const;
 };
 
+enum class JmPieceType : int;
+
 /**
  * Basic mapgen object. It is supposed to place or do something on a specific square on the map.
  * Inherit from this class and implement the @ref apply function.
@@ -166,6 +168,9 @@ class jmapgen_piece
         virtual bool has_vehicle_collision( mapgendata &/*dat*/, const point &/*offset*/ ) const {
             return false;
         }
+
+        virtual void show_details() const {};
+        virtual JmPieceType get_type() const = 0;
 };
 
 /**

@@ -10,6 +10,38 @@
 
 class npc_template;
 
+enum class JmPieceType : int {
+    Field = 0,
+    NPC,
+    Faction,
+    Sign,
+    Graffiti,
+    VendingMachine,
+    Toilet,
+    GasPump,
+    Liquid,
+    Igroup,
+    Loot,
+    Mgroup,
+    Monster,
+    Vehicle,
+    Item,
+    Trap,
+    Furniture,
+    Terrain,
+    TerFurnTransform,
+    MakeRubble,
+    Computer,
+    SealedItem,
+    Translate,
+    Zone,
+    Nested,
+
+    NumJmTypes
+};
+
+const char *get_piece_type_name( JmPieceType pt );
+
 /**
  * Places fields on the map.
  * "field": field type ident.
@@ -24,6 +56,10 @@ class jmapgen_field : public jmapgen_piece
         time_duration age;
         jmapgen_field( const JsonObject &jsi );
         void apply( mapgendata &dat, const jmapgen_int &x, const jmapgen_int &y ) const override;
+        void show_details() const override;
+        JmPieceType get_type() const override {
+            return JmPieceType::Field;
+        }
 };
 
 /**
@@ -38,6 +74,10 @@ class jmapgen_npc : public jmapgen_piece
         std::vector<std::string> traits;
         jmapgen_npc( const JsonObject &jsi );
         void apply( mapgendata &dat, const jmapgen_int &x, const jmapgen_int &y ) const override;
+        void show_details() const override;
+        JmPieceType get_type() const override {
+            return JmPieceType::NPC;
+        }
 };
 
 /**
@@ -49,6 +89,10 @@ class jmapgen_faction : public jmapgen_piece
         faction_id id;
         jmapgen_faction( const JsonObject &jsi );
         void apply( mapgendata &dat, const jmapgen_int &x, const jmapgen_int &y ) const override;
+        void show_details() const override;
+        JmPieceType get_type() const override {
+            return JmPieceType::Faction;
+        }
 };
 
 /**
@@ -64,6 +108,10 @@ class jmapgen_sign : public jmapgen_piece
         void apply( mapgendata &dat, const jmapgen_int &x, const jmapgen_int &y ) const override;
         std::string apply_all_tags( std::string signtext, const std::string &cityname ) const;
         bool has_vehicle_collision( mapgendata &dat, const point &p ) const override;
+        void show_details() const override;
+        JmPieceType get_type() const override {
+            return JmPieceType::Sign;
+        }
 };
 
 /**
@@ -79,6 +127,10 @@ class jmapgen_graffiti : public jmapgen_piece
         jmapgen_graffiti( const JsonObject &jsi );
         void apply( mapgendata &dat, const jmapgen_int &x, const jmapgen_int &y ) const override;
         std::string apply_all_tags( std::string graffiti, const std::string &cityname ) const;
+        void show_details() const override;
+        JmPieceType get_type() const override {
+            return JmPieceType::Graffiti;
+        }
 };
 
 /**
@@ -93,6 +145,10 @@ class jmapgen_vending_machine : public jmapgen_piece
         jmapgen_vending_machine( const JsonObject &jsi );
         void apply( mapgendata &dat, const jmapgen_int &x, const jmapgen_int &y ) const override;
         bool has_vehicle_collision( mapgendata &dat, const point &p ) const override;
+        void show_details() const override;
+        JmPieceType get_type() const override {
+            return JmPieceType::VendingMachine;
+        }
 };
 /**
  * Place a toilet with (dirty) water in it.
@@ -105,6 +161,10 @@ class jmapgen_toilet : public jmapgen_piece
         jmapgen_toilet( const JsonObject &jsi );
         void apply( mapgendata &dat, const jmapgen_int &x, const jmapgen_int &y ) const override;
         bool has_vehicle_collision( mapgendata &dat, const point &p ) const override;
+        void show_details() const override;
+        JmPieceType get_type() const override {
+            return JmPieceType::Toilet;
+        }
 };
 /**
  * Place a gas pump with fuel in it.
@@ -118,6 +178,10 @@ class jmapgen_gaspump : public jmapgen_piece
         jmapgen_gaspump( const JsonObject &jsi );
         void apply( mapgendata &dat, const jmapgen_int &x, const jmapgen_int &y ) const override;
         bool has_vehicle_collision( mapgendata &dat, const point &p ) const override;
+        void show_details() const override;
+        JmPieceType get_type() const override {
+            return JmPieceType::GasPump;
+        }
 };
 
 /**
@@ -134,6 +198,10 @@ class jmapgen_liquid_item : public jmapgen_piece
         jmapgen_int chance;
         jmapgen_liquid_item( const JsonObject &jsi );
         void apply( mapgendata &dat, const jmapgen_int &x, const jmapgen_int &y ) const override;
+        void show_details() const override;
+        JmPieceType get_type() const override {
+            return JmPieceType::Liquid;
+        }
 };
 
 /**
@@ -149,19 +217,24 @@ class jmapgen_item_group : public jmapgen_piece
         jmapgen_int chance;
         jmapgen_item_group( const JsonObject &jsi );
         void apply( mapgendata &dat, const jmapgen_int &x, const jmapgen_int &y ) const override;
+        void show_details() const override;
+        JmPieceType get_type() const override {
+            return JmPieceType::Igroup;
+        }
 };
 
 /** Place items from an item group */
 class jmapgen_loot : public jmapgen_piece
 {
-        friend jmapgen_objects;
-
     public:
         jmapgen_loot( const JsonObject &jsi );
 
         void apply( mapgendata &dat, const jmapgen_int &x, const jmapgen_int &y ) const override;
+        void show_details() const override;
+        JmPieceType get_type() const override {
+            return JmPieceType::Loot;
+        }
 
-    private:
         Item_group result_group;
         int chance;
 };
@@ -180,6 +253,10 @@ class jmapgen_monster_group : public jmapgen_piece
         jmapgen_int chance;
         jmapgen_monster_group( const JsonObject &jsi );
         void apply( mapgendata &dat, const jmapgen_int &x, const jmapgen_int &y ) const override;
+        void show_details() const override;
+        JmPieceType get_type() const override {
+            return JmPieceType::Mgroup;
+        }
 };
 /**
  * Place spawn points for a specific monster.
@@ -206,6 +283,10 @@ class jmapgen_monster : public jmapgen_piece
         bool target;
         jmapgen_monster( const JsonObject &jsi );
         void apply( mapgendata &dat, const jmapgen_int &x, const jmapgen_int &y ) const override;
+        void show_details() const override;
+        JmPieceType get_type() const override {
+            return JmPieceType::Monster;
+        }
 };
 
 /**
@@ -227,6 +308,10 @@ class jmapgen_vehicle : public jmapgen_piece
         jmapgen_vehicle( const JsonObject &jsi );
         void apply( mapgendata &dat, const jmapgen_int &x, const jmapgen_int &y ) const override;
         bool has_vehicle_collision( mapgendata &dat, const point &p ) const override;
+        void show_details() const override;
+        JmPieceType get_type() const override {
+            return JmPieceType::Vehicle;
+        }
 };
 /**
  * Place a specific item.
@@ -243,6 +328,10 @@ class jmapgen_spawn_item : public jmapgen_piece
         jmapgen_int chance;
         jmapgen_spawn_item( const JsonObject &jsi );
         void apply( mapgendata &dat, const jmapgen_int &x, const jmapgen_int &y ) const override;
+        void show_details() const override;
+        JmPieceType get_type() const override {
+            return JmPieceType::Item;
+        }
 };
 /**
  * Place a trap.
@@ -257,6 +346,10 @@ class jmapgen_trap : public jmapgen_piece
         jmapgen_trap( const std::string &tid );
         void apply( mapgendata &dat, const jmapgen_int &x, const jmapgen_int &y ) const override;
         bool has_vehicle_collision( mapgendata &dat, const point &p ) const override;
+        void show_details() const override;
+        JmPieceType get_type() const override {
+            return JmPieceType::Trap;
+        }
 };
 /**
  * Place a furniture.
@@ -270,6 +363,10 @@ class jmapgen_furniture : public jmapgen_piece
         jmapgen_furniture( const std::string &fid );
         void apply( mapgendata &dat, const jmapgen_int &x, const jmapgen_int &y ) const override;
         bool has_vehicle_collision( mapgendata &dat, const point &p ) const override;
+        void show_details() const override;
+        JmPieceType get_type() const override {
+            return JmPieceType::Furniture;
+        }
 };
 /**
  * Place terrain.
@@ -283,6 +380,10 @@ class jmapgen_terrain : public jmapgen_piece
         jmapgen_terrain( const std::string &tid );
         void apply( mapgendata &dat, const jmapgen_int &x, const jmapgen_int &y ) const override;
         bool has_vehicle_collision( mapgendata &dat, const point &p ) const override;
+        void show_details() const override;
+        JmPieceType get_type() const override {
+            return JmPieceType::Terrain;
+        }
 };
 /**
  * Run a transformation.
@@ -295,6 +396,10 @@ class jmapgen_ter_furn_transform: public jmapgen_piece
         jmapgen_ter_furn_transform( const JsonObject &jsi );
         jmapgen_ter_furn_transform( const std::string &rid );
         void apply( mapgendata &dat, const jmapgen_int &x, const jmapgen_int &y ) const override;
+        void show_details() const override;
+        JmPieceType get_type() const override {
+            return JmPieceType::TerFurnTransform;
+        }
 };
 /**
  * Calls @ref map::make_rubble to create rubble and destroy the existing terrain/furniture.
@@ -309,6 +414,10 @@ class jmapgen_make_rubble : public jmapgen_piece
         bool overwrite = false;
         jmapgen_make_rubble( const JsonObject &jsi );
         void apply( mapgendata &dat, const jmapgen_int &x, const jmapgen_int &y ) const override;
+        void show_details() const override;
+        JmPieceType get_type() const override {
+            return JmPieceType::MakeRubble;
+        }
 };
 
 /**
@@ -328,6 +437,10 @@ class jmapgen_computer : public jmapgen_piece
         jmapgen_computer( const JsonObject &jsi );
         void apply( mapgendata &dat, const jmapgen_int &x, const jmapgen_int &y ) const override;
         bool has_vehicle_collision( mapgendata &dat, const point &p ) const override;
+        void show_details() const override;
+        JmPieceType get_type() const override {
+            return JmPieceType::Computer;
+        }
 };
 
 /**
@@ -349,6 +462,10 @@ class jmapgen_sealed_item : public jmapgen_piece
 
         void apply( mapgendata &dat, const jmapgen_int &x, const jmapgen_int &y ) const override;
         bool has_vehicle_collision( mapgendata &dat, const point &p ) const override;
+        void show_details() const override;
+        JmPieceType get_type() const override {
+            return JmPieceType::SealedItem;
+        }
 };
 /**
  * Translate terrain from one ter_id to another.
@@ -363,6 +480,10 @@ class jmapgen_translate : public jmapgen_piece
         ter_id to;
         jmapgen_translate( const JsonObject &jsi );
         void apply( mapgendata &dat, const jmapgen_int &/*x*/, const jmapgen_int &/*y*/ ) const override;
+        void show_details() const override;
+        JmPieceType get_type() const override {
+            return JmPieceType::Translate;
+        }
 };
 /**
  * Place a zone
@@ -375,6 +496,10 @@ class jmapgen_zone : public jmapgen_piece
         std::string name = "";
         jmapgen_zone( const JsonObject &jsi );
         void apply( mapgendata &dat, const jmapgen_int &x, const jmapgen_int &y ) const override;
+        void show_details() const override;
+        JmPieceType get_type() const override {
+            return JmPieceType::Zone;
+        }
 };
 
 class neighborhood_check
@@ -404,6 +529,10 @@ class jmapgen_nested : public jmapgen_piece
         jmapgen_nested( const JsonObject &jsi );
         void apply( mapgendata &dat, const jmapgen_int &x, const jmapgen_int &y ) const override;
         bool has_vehicle_collision( mapgendata &dat, const point &p ) const override;
+        void show_details() const override;
+        JmPieceType get_type() const override {
+            return JmPieceType::Nested;
+        }
 };
 
 #endif // CATA_SRC_MAPGEN_PIECE_H
