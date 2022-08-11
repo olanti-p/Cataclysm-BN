@@ -8,15 +8,12 @@
 #include "../field.h"
 #include "../game.h"
 #include "../input.h"
-#include "../item_factory.h"
-#include "../item_group.h"
 #include "../map.h"
 #include "../mapdata.h"
 #include "../mapgen.h"
-#include "../mapgen_factory.h"
 #include "../mongroup.h"
-#include "../monstergenerator.h"
 #include "../output.h"
+#include "../sdl_utils.h"
 #include "../sdltiles_editor.h"
 #include "../string_formatter.h"
 #include "../string_utils.h"
@@ -406,4 +403,24 @@ void show_ui()
     show_editor_ui( *current_state );
 }
 
+ImVec4 curses_color_to_imgui( nc_color nc )
+{
+    SDL_Color col = curses_color_to_SDL( nc );
+    return ImVec4( col.r, col.g, col.b, col.a );
+}
+
 } // namespace editor
+
+
+namespace ImGui
+{
+void SymbolColored( const std::string &sym, nc_color col )
+{
+    ImGui::TextColored( editor::curses_color_to_imgui( col ), "%s", sym.c_str() );
+}
+void SymbolColored( int sym, nc_color col )
+{
+    SymbolColored( utf32_to_utf8( sym ), col );
+}
+
+} // namespace ImGui

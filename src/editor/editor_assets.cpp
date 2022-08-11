@@ -1,26 +1,21 @@
 #include "editor_assets.h"
+#include "editor_main.h"
 
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
 
-#include "../avatar.h"
 #include "../field.h"
 #include "../game.h"
-#include "../input.h"
 #include "../item_factory.h"
 #include "../item_group.h"
-#include "../map.h"
 #include "../mapdata.h"
 #include "../mapgen.h"
 #include "../mapgen_factory.h"
 #include "../mongroup.h"
 #include "../monstergenerator.h"
-#include "../output.h"
-#include "../sdltiles_editor.h"
 #include "../string_formatter.h"
 #include "../string_utils.h"
 #include "../trap.h"
-#include "../ui_manager.h"
 
 namespace editor
 {
@@ -106,53 +101,76 @@ const char *asset_oter_mapgen::get_id() const
     return ref.id.c_str();
 }
 
+static void show_common_furn_ter( const map_data_common_t &ref )
+{
+    ImGui::Text( "Name: %s", ref.name().c_str() );
+    ImGui::Text( "Symbol:" );
+    ImGui::SameLine();
+    ImGui::SymbolColored( ref.symbol(), ref.color() );
+    ImGui::SameLine();
+    ImGui::Text( "Movecost: %d", ref.movecost );
+}
+
 void asset_terrain::show_details() const
 {
-
+    show_common_furn_ter( ref );
 }
 void asset_furniture::show_details() const
 {
-
+    show_common_furn_ter( ref );
 }
 void asset_trap::show_details() const
 {
-
+    ImGui::Text( "Name: %s", ref.name().c_str() );
 }
 void asset_field_type::show_details() const
 {
-
+    int max_int = ref.get_max_intensity();
+    for( int i = 0; i < max_int; i++ ) {
+        ImGui::Text( "[%d]", i + 1 );
+        ImGui::SameLine();
+        ImGui::SymbolColored( ref.get_symbol( i ), ref.get_color( i ) );
+        ImGui::SameLine();
+        ImGui::Text( "%s", ref.get_name( i ).c_str() );
+    }
 }
 void asset_itype::show_details() const
 {
-
+    ImGui::Text( "Name: %s", ref.nname( 1 ).c_str() );
+    ImGui::Text( "Symbol:" );
+    ImGui::SameLine();
+    ImGui::SymbolColored( ref.sym, ref.color );
 }
 void asset_igroup::show_details() const
 {
-
+    ImGui::Text( "TODO" );
 }
 void asset_mtype::show_details() const
 {
-
+    ImGui::Text( "Name: %s", ref.nname().c_str() );
+    ImGui::Text( "Symbol:" );
+    ImGui::SameLine();
+    ImGui::SymbolColored( ref.sym, ref.color );
 }
 void asset_mgroup::show_details() const
 {
-
+    ImGui::Text( "TODO" );
 }
 void asset_palette::show_details() const
 {
-
+    ImGui::Text( "TODO" );
 }
 void asset_nested_mapgen::show_details() const
 {
-
+    ImGui::Text( "TODO" );
 }
 void asset_update_mapgen::show_details() const
 {
-
+    ImGui::Text( "TODO" );
 }
 void asset_oter_mapgen::show_details() const
 {
-
+    ImGui::Text( "TODO" );
 }
 
 void init_assets( asset_library &assets )
