@@ -41,6 +41,7 @@ class mapgen_function
         virtual void setup() { } // throws
         virtual void check( const std::string & /*oter_name*/ ) const { }
         virtual void generate( mapgendata & ) = 0;
+        virtual void editor_show_details() const;
 };
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -49,10 +50,12 @@ class mapgen_function_builtin : public virtual mapgen_function
 {
     public:
         building_gen_pointer fptr;
+        std::string fname;
         mapgen_function_builtin( building_gen_pointer ptr, int w = 1000 ) : mapgen_function( w ),
             fptr( ptr ) {
         }
         void generate( mapgendata &mgd ) override;
+        void editor_show_details() const override;
 };
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -265,7 +268,7 @@ class mapgen_palette
 };
 
 struct jmapgen_objects {
-
+    public:
         jmapgen_objects( const point &offset, const point &mapsize );
 
         bool check_bounds( const jmapgen_place &place, const JsonObject &jso );
@@ -298,7 +301,6 @@ struct jmapgen_objects {
          **/
         bool has_vehicle_collision( mapgendata &dat, const point &offset ) const;
 
-    private:
         /**
          * Combination of where to place something and what to place.
          */
@@ -314,6 +316,8 @@ class mapgen_function_json_base
         bool check_inbounds( const jmapgen_int &x, const jmapgen_int &y, const JsonObject &jso ) const;
         size_t calc_index( const point &p ) const;
         bool has_vehicle_collision( mapgendata &dat, const point &offset ) const;
+
+        void editor_show_details_base() const;
 
     private:
         pimpl<json_source_location> jsrcloc;
@@ -354,6 +358,8 @@ class mapgen_function_json : public mapgen_function_json_base, public virtual ma
                               const point &grid_offset = point_zero );
         ~mapgen_function_json() override = default;
 
+        void editor_show_details() const override;
+
         ter_id fill_ter;
         oter_id predecessor_mapgen;
 
@@ -378,6 +384,8 @@ class update_mapgen_function_json : public mapgen_function_json_base
         bool update_map( mapgendata &md, const point &offset = point_zero,
                          bool verify = false ) const;
 
+        void editor_show_details() const;
+
     protected:
         bool setup_internal( const JsonObject &/*jo*/ ) override;
         ter_id fill_ter;
@@ -392,6 +400,9 @@ class mapgen_function_json_nested : public mapgen_function_json_base
         ~mapgen_function_json_nested() override = default;
 
         void nest( mapgendata &dat, const point &offset ) const;
+
+        void editor_show_details() const;
+
     protected:
         bool setup_internal( const JsonObject &jo ) override;
 

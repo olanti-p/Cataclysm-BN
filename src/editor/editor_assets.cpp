@@ -162,16 +162,74 @@ void asset_palette::show_details() const
 }
 void asset_nested_mapgen::show_details() const
 {
-    ImGui::Text( "TODO" );
+    ref.data->editor_show_details();
 }
 void asset_update_mapgen::show_details() const
 {
-    ImGui::Text( "TODO" );
+    ref.data->editor_show_details();
 }
 void asset_oter_mapgen::show_details() const
 {
-    ImGui::Text( "TODO" );
+    ref.data->editor_show_details();
 }
+
+} // namespace editor
+
+void mapgen_function::editor_show_details() const
+{
+    ImGui::Separator();
+    ImGui::Text( "MAPGEN_FUNCTION" );
+    ImGui::Text( "weight: %d", weight );
+}
+
+void mapgen_function_builtin::editor_show_details() const
+{
+    mapgen_function::editor_show_details();
+    ImGui::Separator();
+    ImGui::Text( "BUILTIN" );
+    ImGui::Text( "function: %s", fname.c_str() );
+}
+
+void mapgen_function_json_base::editor_show_details_base() const
+{
+    ImGui::Separator();
+    ImGui::Text( "JSON_BASE" );
+    ImGui::Text( "size: %s", mapgensize.to_string().c_str() );
+    ImGui::Text( "offset: %s", m_offset.to_string().c_str() );
+    ImGui::Text( "format: %d elem(s)", static_cast<int>( format.size() ) );
+    ImGui::Text( "setmap: %d elem(s)", static_cast<int>( setmap_points.size() ) );
+    ImGui::Text( "objects: TODO" );
+}
+
+void mapgen_function_json::editor_show_details() const
+{
+    mapgen_function_json_base::editor_show_details_base();
+    mapgen_function::editor_show_details();
+    ImGui::Separator();
+    ImGui::Text( "OTER_MAPGEN" );
+    ImGui::Text( "fill_ter: %s", fill_ter.id().c_str() );
+    ImGui::Text( "predecessor_mapgen: %s", predecessor_mapgen.id().c_str() );
+    ImGui::Text( "rotation: TODO" );
+}
+
+void update_mapgen_function_json::editor_show_details() const
+{
+    mapgen_function_json_base::editor_show_details_base();
+    ImGui::Separator();
+    ImGui::Text( "UPDATE_MAPGEN" );
+    ImGui::Text( "fill_ter: %s", fill_ter.id().c_str() );
+}
+
+void mapgen_function_json_nested::editor_show_details() const
+{
+    mapgen_function_json_base::editor_show_details_base();
+    ImGui::Separator();
+    ImGui::Text( "NESTED_MAPGEN" );
+    ImGui::Text( "rotation: TODO" );
+}
+
+namespace editor
+{
 
 void init_assets( asset_library &assets )
 {

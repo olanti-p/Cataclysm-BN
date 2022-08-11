@@ -322,8 +322,11 @@ load_mapgen_function( const JsonObject &jio, const std::string &id_base, const p
     }
     const std::string mgtype = jio.get_string( "method" );
     if( mgtype == "builtin" ) {
-        if( const auto ptr = get_mapgen_cfunction( jio.get_string( "name" ) ) ) {
-            ret = std::make_shared<mapgen_function_builtin>( ptr, mgweight );
+        std::string fname = jio.get_string( "name" );
+        if( const auto ptr = get_mapgen_cfunction( fname ) ) {
+            auto ret_ptr = std::make_shared<mapgen_function_builtin>( ptr, mgweight );
+            ret_ptr->fname = fname;
+            ret = ret_ptr;
             oter_mapgen.add( id_base, ret );
         } else {
             jio.throw_error( "function does not exist", "name" );
