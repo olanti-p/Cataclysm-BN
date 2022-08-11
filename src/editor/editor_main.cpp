@@ -410,17 +410,3 @@ ImVec4 curses_color_to_imgui( nc_color nc )
 }
 
 } // namespace editor
-
-
-namespace ImGui
-{
-void SymbolColored( const std::string &sym, nc_color col )
-{
-    ImGui::TextColored( editor::curses_color_to_imgui( col ), "%s", sym.c_str() );
-}
-void SymbolColored( int sym, nc_color col )
-{
-    SymbolColored( utf32_to_utf8( sym ), col );
-}
-
-} // namespace ImGui

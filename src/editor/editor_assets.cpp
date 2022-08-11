@@ -1,5 +1,6 @@
 #include "editor_assets.h"
 #include "editor_main.h"
+#include "editor_widgets.h"
 
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
@@ -190,15 +191,39 @@ void mapgen_function_builtin::editor_show_details() const
     ImGui::Text( "function: %s", fname.c_str() );
 }
 
+static void JmapgenPieceWidget( const jmapgen_piece &jmp )
+{
+    ImGui::JmapgenInt( "repeat", jmp.repeat );
+    ImGui::Text( "TODO" );
+}
+
 void mapgen_function_json_base::editor_show_details_base() const
 {
     ImGui::Separator();
     ImGui::Text( "JSON_BASE" );
     ImGui::Text( "size: %s", mapgensize.to_string().c_str() );
     ImGui::Text( "offset: %s", m_offset.to_string().c_str() );
-    ImGui::Text( "format: %d elem(s)", static_cast<int>( format.size() ) );
     ImGui::Text( "setmap: %d elem(s)", static_cast<int>( setmap_points.size() ) );
-    ImGui::Text( "objects: TODO" );
+    ImGui::Text( "objects size: %s", objects.mapgensize.to_string().c_str() );
+    ImGui::Text( "objects offset: %s", objects.m_offset.to_string().c_str() );
+
+    int num_objects = static_cast<int>( objects.objects.size() );
+    if( ImGui::TreeNode( "objects_list", "objects data: %d elem(s)", num_objects ) ) {
+        for( int i = 0; i < num_objects; i++ ) {
+            const void *node_id = ( const void * )( intptr_t )i;
+            if( ImGui::TreeNode( node_id, "elem %d", i ) ) {
+                const jmapgen_objects::jmapgen_obj &ref = objects.objects[i];
+                ImGui::Separator();
+                ImGui::JmapgenPlace( "placement", ref.first );
+                ImGui::Separator();
+                JmapgenPieceWidget( *ref.second );
+                ImGui::Separator();
+
+                ImGui::TreePop();
+            }
+        }
+        ImGui::TreePop();
+    }
 }
 
 void mapgen_function_json::editor_show_details() const
@@ -209,7 +234,7 @@ void mapgen_function_json::editor_show_details() const
     ImGui::Text( "OTER_MAPGEN" );
     ImGui::Text( "fill_ter: %s", fill_ter.id().c_str() );
     ImGui::Text( "predecessor_mapgen: %s", predecessor_mapgen.id().c_str() );
-    ImGui::Text( "rotation: TODO" );
+    ImGui::JmapgenInt( "rotation", rotation );
 }
 
 void update_mapgen_function_json::editor_show_details() const
@@ -225,7 +250,7 @@ void mapgen_function_json_nested::editor_show_details() const
     mapgen_function_json_base::editor_show_details_base();
     ImGui::Separator();
     ImGui::Text( "NESTED_MAPGEN" );
-    ImGui::Text( "rotation: TODO" );
+    ImGui::JmapgenInt( "rotation", rotation );
 }
 
 namespace editor
