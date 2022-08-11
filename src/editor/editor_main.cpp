@@ -24,6 +24,16 @@
 namespace editor
 {
 
+enum class EditorTool : int {
+    Examine,
+    TerSet,
+    TerPick,
+    FurnSet,
+    FurnPick,
+
+    NumEditorTools
+};
+
 struct editor_state {
     bool do_loop = true;
     bool show_demo_wnd = false;
@@ -32,9 +42,13 @@ struct editor_state {
     int frames = 0;
     const mapgen_function_json *selected_oter_mapgen = nullptr;
 
+    EditorTool current_tool = EditorTool::Examine;
+    ter_str_id brush_ter = ter_str_id::NULL_ID();
+    furn_str_id brush_furn = furn_str_id::NULL_ID();
+
     asset_library assets;
 
-    cata::optional<tripoint> single_selection;
+    cata::optional<tripoint> examine_selection;
 };
 
 static int get_current_z( const editor_state & /*state*/ )
@@ -143,6 +157,14 @@ static void show_control_window( editor_state &state )
         }
     }
 
+    // Brush contents
+    if( state.current_tool == EditorTool::TerPick || state.current_tool == EditorTool::TerSet ) {
+        ImGui::Text( "Brush: %s", state.brush_ter.c_str() );
+    }
+    if( state.current_tool == EditorTool::FurnPick || state.current_tool == EditorTool::FurnSet ) {
+        ImGui::Text( "Brush: %s", state.brush_furn.c_str() );
+    }
+
     ImGui::End();
 }
 
@@ -233,6 +255,59 @@ static void show_tile_properties_window( editor_state &state,
     ImGui::End();
 }
 
+static const char *get_tool_name( EditorTool tool )
+{
+    switch( tool ) {
+        case EditorTool::Examine:
+            return "Examine";
+        case EditorTool::TerSet:
+            return "Set Terrain";
+        case EditorTool::TerPick:
+            return "Pick Terrain";
+        case EditorTool::FurnSet:
+            return "Set Furniture";
+        case EditorTool::FurnPick:
+            return "Pick Furniture";
+        default:
+            std::abort();
+    }
+}
+
+static void apply_tool( editor_state &state, const tripoint &p )
+{
+    map &here = get_map();
+    switch( state.current_tool ) {
+        case EditorTool::Examine: {
+            if( state.examine_selection && p == *state.examine_selection ) {
+                state.examine_selection = cata::nullopt;
+            } else {
+                state.examine_selection = p;
+            }
+            break;
+        }
+        case EditorTool::TerSet: {
+            here.ter_set( p, state.brush_ter.id() );
+            break;
+        }
+        case EditorTool::TerPick: {
+            state.brush_ter = here.ter( p ).id();
+            state.current_tool = EditorTool::TerSet;
+            break;
+        }
+        case EditorTool::FurnSet: {
+            here.furn_set( p, state.brush_furn.id() );
+            break;
+        }
+        case EditorTool::FurnPick: {
+            state.brush_furn = here.furn( p ).id();
+            state.current_tool = EditorTool::FurnSet;
+            break;
+        }
+        default:
+            std::abort();
+    }
+}
+
 static void draw_frame( ImDrawList *draw_list, const point &p1, const point &p2, ImVec4 col,
                         bool filled )
 {
@@ -302,20 +377,18 @@ static void show_canvas_overlay_window( editor_state &state )
         highlight_tile( draw_list, tile_pos->xy(), col_cursor );
     }
 
-    if( state.single_selection && state.single_selection->z == get_current_z( state ) ) {
-        highlight_tile( draw_list, state.single_selection->xy(), col_selected );
+    if( state.current_tool == EditorTool::Examine &&
+        state.examine_selection &&
+        state.examine_selection->z == get_current_z( state ) ) {
+        highlight_tile( draw_list, state.examine_selection->xy(), col_selected );
     }
 
     ImGuiIO &io = ImGui::GetIO();
     bool canvas_hovered = ImGui::IsWindowHovered();
     if( canvas_hovered ) {
         if( tile_pos ) {
-            if( ImGui::IsMouseClicked( ImGuiMouseButton_Left ) ) {
-                if( tile_pos == state.single_selection ) {
-                    state.single_selection = cata::nullopt;
-                } else {
-                    state.single_selection = tile_pos;
-                }
+            if( ImGui::IsMouseClicked( ImGuiMouseButton_Left ) && tile_pos ) {
+                apply_tool( state, *tile_pos );
             }
             if( ImGui::IsKeyDown( ImGuiKey_ModShift ) && ImGui::IsMouseClicked( ImGuiMouseButton_Right ) ) {
                 set_view_center( state, *tile_pos );
@@ -436,12 +509,32 @@ static void show_asset_details_window( editor_state &state )
     ImGui::End();
 }
 
+static void set_current_tool( editor_state &state, EditorTool tool )
+{
+    state.examine_selection = cata::nullopt;
+    state.current_tool = tool;
+}
+
+static void show_tool_bar( editor_state &state )
+{
+    ImGui::Begin( "Tools" );
+
+    for( int i = 0; i < static_cast<int>( EditorTool::NumEditorTools ); i++ ) {
+        const EditorTool ie = static_cast<EditorTool>( i );
+        if( ImGui::Selectable( get_tool_name( ie ), ie == state.current_tool ) ) {
+            state.current_tool = ie;
+        }
+    }
+
+    ImGui::End();
+}
+
 static void show_editor_ui( editor_state &state )
 {
     show_canvas_overlay_window( state );
     show_control_window( state );
-    if( state.single_selection ) {
-        show_tile_properties_window( state, state.single_selection );
+    if( state.current_tool == EditorTool::Examine && state.examine_selection ) {
+        show_tile_properties_window( state, state.examine_selection );
     } else {
         show_tile_properties_window( state, get_mouse_tile_pos( state ) );
     }
@@ -451,6 +544,9 @@ static void show_editor_ui( editor_state &state )
     }
     if( state.show_demo_wnd ) {
         ImGui::ShowDemoWindow( &state.show_demo_wnd );
+    }
+    if( state.selected_oter_mapgen ) {
+        show_tool_bar( state );
     }
 }
 
@@ -518,6 +614,7 @@ void invalidate_map_cache()
 void set_as_active( const mapgen_function_json *mgfunc )
 {
     current_state->selected_oter_mapgen = mgfunc;
+    set_current_tool( *current_state, EditorTool::Examine );
     if( !mgfunc ) {
         return;
     }
