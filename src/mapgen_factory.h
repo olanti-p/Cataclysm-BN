@@ -2,6 +2,7 @@
 #ifndef CATA_SRC_FACTORY_H
 #define CATA_SRC_FACTORY_H
 
+#include "debug.h"
 #include "mapgen.h"
 #include "rng.h"
 #include "map_extras.h"
@@ -16,6 +17,9 @@ class mapgen_basic_container
 
         int add( const std::shared_ptr<mapgen_function> ptr ) {
             assert( ptr );
+            if( std::find( mapgens_.begin(), mapgens_.end(), ptr ) != mapgens_.end() ) {
+                debugmsg( "Adding duplicate mapgen to container!" );
+            }
             mapgens_.push_back( ptr );
             return mapgens_.size() - 1;
         }

@@ -29,6 +29,7 @@
 #include "json.h"
 #include "line.h"
 #include "map.h"
+#include "mapgen.h"
 #include "map_iterator.h"
 #include "mapbuffer.h"
 #include "mapgen.h"
@@ -630,7 +631,7 @@ static void load_overmap_terrain_mapgens( const JsonObject &jo, const std::strin
     register_mapgen_function( fmapkey );
     if( jo.has_array( jsonkey ) ) {
         for( JsonObject jio : jo.get_array( jsonkey ) ) {
-            load_mapgen_function( jio, fmapkey, point_zero );
+            load_and_add_mapgen_function( jio, fmapkey, point_zero );
         }
     }
 }
