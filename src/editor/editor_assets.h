@@ -72,10 +72,9 @@ class asset_lib_entry
 
 class asset_terrain : public asset_lib_entry
 {
-    private:
+    public:
         const ter_t &ref;
 
-    public:
         asset_terrain( const ter_t &r ) : ref( r ) {}
         AssetType get_type() const override {
             return AssetType::Terrain;
@@ -86,10 +85,9 @@ class asset_terrain : public asset_lib_entry
 
 class asset_furniture : public asset_lib_entry
 {
-    private:
+    public:
         const furn_t &ref;
 
-    public:
         asset_furniture( const furn_t &r ) : ref( r ) {}
         AssetType get_type() const override {
             return AssetType::Furniture;
@@ -100,10 +98,9 @@ class asset_furniture : public asset_lib_entry
 
 class asset_trap : public asset_lib_entry
 {
-    private:
+    public:
         const trap &ref;
 
-    public:
         asset_trap( const trap &r ) : ref( r ) {}
         AssetType get_type() const override {
             return AssetType::Trap;
@@ -114,10 +111,9 @@ class asset_trap : public asset_lib_entry
 
 class asset_field_type : public asset_lib_entry
 {
-    private:
+    public:
         const field_type &ref;
 
-    public:
         asset_field_type( const field_type &r ) : ref( r ) {}
         AssetType get_type() const override {
             return AssetType::Field;
@@ -128,10 +124,9 @@ class asset_field_type : public asset_lib_entry
 
 class asset_itype : public asset_lib_entry
 {
-    private:
+    public:
         const itype &ref;
 
-    public:
         asset_itype( const itype &r ) : ref( r ) {}
         AssetType get_type() const override {
             return AssetType::Itype;
@@ -142,10 +137,9 @@ class asset_itype : public asset_lib_entry
 
 class asset_igroup : public asset_lib_entry
 {
-    private:
+    public:
         const igroup_plug &ref;
 
-    public:
         asset_igroup( const igroup_plug &r ) : ref( r ) {}
         AssetType get_type() const override {
             return AssetType::Igroup;
@@ -156,10 +150,9 @@ class asset_igroup : public asset_lib_entry
 
 class asset_mtype : public asset_lib_entry
 {
-    private:
+    public:
         const mtype &ref;
 
-    public:
         asset_mtype( const mtype &r ) : ref( r ) {}
         AssetType get_type() const override {
             return AssetType::Mtype;
@@ -170,10 +163,9 @@ class asset_mtype : public asset_lib_entry
 
 class asset_mgroup : public asset_lib_entry
 {
-    private:
+    public:
         const MonsterGroup &ref;
 
-    public:
         asset_mgroup( const MonsterGroup &r ) : ref( r ) {}
         AssetType get_type() const override {
             return AssetType::Mgroup;
@@ -184,10 +176,9 @@ class asset_mgroup : public asset_lib_entry
 
 class asset_palette : public asset_lib_entry
 {
-    private:
+    public:
         const mapgen_palette &ref;
 
-    public:
         asset_palette( const mapgen_palette &r ) : ref( r ) {}
         AssetType get_type() const override {
             return AssetType::Palette;
@@ -198,10 +189,9 @@ class asset_palette : public asset_lib_entry
 
 class asset_nested_mapgen : public asset_lib_entry
 {
-    private:
+    public:
         const nested_mapgen_plug &ref;
 
-    public:
         asset_nested_mapgen( const nested_mapgen_plug &r ) : ref( r ) {}
         AssetType get_type() const override {
             return AssetType::NestedMapgen;
@@ -212,10 +202,9 @@ class asset_nested_mapgen : public asset_lib_entry
 
 class asset_update_mapgen : public asset_lib_entry
 {
-    private:
+    public:
         const update_mapgen_plug &ref;
 
-    public:
         asset_update_mapgen( const update_mapgen_plug &r ) : ref( r ) {}
         AssetType get_type() const override {
             return AssetType::UpdateMapgen;
@@ -226,10 +215,9 @@ class asset_update_mapgen : public asset_lib_entry
 
 class asset_oter_mapgen : public asset_lib_entry
 {
-    private:
+    public:
         const oter_mapgen_plug &ref;
 
-    public:
         asset_oter_mapgen( const oter_mapgen_plug &r ) : ref( r ) {}
         AssetType get_type() const override {
             return AssetType::OterMapgen;
