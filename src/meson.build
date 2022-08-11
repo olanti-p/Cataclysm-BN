@@ -154,6 +154,8 @@ lib_sources = files(
     'mapdata.cpp',
     'mapgen.cpp',
     'mapgen_functions.cpp',
+    'mapgen_piece.cpp',
+    'mapgen_factory.cpp',
     'mapgendata.cpp',
     'mapgenformat.cpp',
     'mapsharing.cpp',

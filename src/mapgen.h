@@ -489,4 +489,7 @@ void circle( map *m, const ter_id &type, const point &, int rad );
 void circle_furn( map *m, const furn_id &type, const point &, int rad );
 void add_corpse( map *m, const point & );
 
+void set_mapgen_defer( const JsonObject &jsi, const std::string &member,
+                       const std::string &message );
+
 #endif // CATA_SRC_MAPGEN_H
