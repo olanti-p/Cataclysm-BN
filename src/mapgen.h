@@ -324,10 +324,8 @@ class mapgen_function_json_base
 
         void editor_show_details_base() const;
 
-    private:
         pimpl<json_source_location> jsrcloc;
 
-    protected:
         explicit mapgen_function_json_base( const json_source_location &jsrcloc );
         virtual ~mapgen_function_json_base();
 
@@ -368,10 +366,8 @@ class mapgen_function_json : public mapgen_function_json_base, public virtual ma
         ter_id fill_ter;
         oter_id predecessor_mapgen;
 
-    protected:
         bool setup_internal( const JsonObject &jo ) override;
 
-    private:
         jmapgen_int rotation;
 };
 
@@ -391,7 +387,6 @@ class update_mapgen_function_json : public mapgen_function_json_base
 
         void editor_show_details() const;
 
-    protected:
         bool setup_internal( const JsonObject &/*jo*/ ) override;
         ter_id fill_ter;
 };
@@ -408,10 +403,8 @@ class mapgen_function_json_nested : public mapgen_function_json_base
 
         void editor_show_details() const;
 
-    protected:
         bool setup_internal( const JsonObject &jo ) override;
 
-    private:
         jmapgen_int rotation;
 };
 
