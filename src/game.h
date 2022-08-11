@@ -355,6 +355,8 @@ class game
         /** Swaps positions of two creatures */
         bool swap_critters( Creature &, Creature & );
 
+        void erase_creature( const Creature &cr );
+
     private:
         friend class monster_range;
         friend class Creature_range;

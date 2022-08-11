@@ -5,6 +5,7 @@
 #include "misc/cpp/imgui_stdlib.h"
 
 #include "../avatar.h"
+#include "../creature_tracker.h"
 #include "../field.h"
 #include "../game.h"
 #include "../input.h"
@@ -520,15 +521,31 @@ void set_as_active( const mapgen_function_json *mgfunc )
     if( !mgfunc ) {
         return;
     }
+    point size = mgfunc->mapgensize;
+    map &here = get_map();
+
     // Set view center
-    point new_view_center = mgfunc->mapgensize / 2;
+    point new_view_center = size / 2;
     set_view_center( *current_state, tripoint( new_view_center, 0 ) );
 
+    // TODO: move player away
+
+    // Clear items & creatures
+    for( int y = 0; y < size.y; y++ ) {
+        for( int x = 0; x < size.x; x++ ) {
+            tripoint p( x, y, 0 );
+            here.i_clear( p );
+            const Creature *cr = g->critter_at( p, true );
+            if( cr && !cr->is_avatar() ) {
+                g->erase_creature( *cr );
+            }
+        }
+    }
+
     // Set terrain/furniture
-    map &here = get_map();
-    for( int y = 0; y < mgfunc->mapgensize.y; y++ ) {
-        for( int x = 0; x < mgfunc->mapgensize.x; x++ ) {
-            const ter_furn_id &ids = mgfunc->format[ y * mgfunc->mapgensize.x + x];
+    for( int y = 0; y < size.y; y++ ) {
+        for( int x = 0; x < size.x; x++ ) {
+            const ter_furn_id &ids = mgfunc->format[ y * size.x + x];
             here.ter_set( point( x, y ), ids.ter );
             here.furn_set( point( x, y ), ids.furn );
         }

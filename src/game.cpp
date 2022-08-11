@@ -4225,6 +4225,24 @@ void game::cleanup_dead()
     critter_died = false;
 }
 
+void game::erase_creature( const Creature &cr )
+{
+    if( cr.is_npc() ) {
+        for( auto it = active_npc.begin(); it != active_npc.end(); ) {
+            if( ( *it ).get() == &cr ) {
+                remove_npc_follower( ( *it )->getID() );
+                overmap_buffer.remove_npc( ( *it )->getID() );
+                it = active_npc.erase( it );
+                return;
+            } else {
+                it++;
+            }
+        }
+    } else {
+        critter_tracker->remove( *cr.as_monster() );
+    }
+}
+
 void game::monmove()
 {
     cleanup_dead();
