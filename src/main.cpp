@@ -192,6 +192,7 @@ int main( int argc, char *argv[] )
     int seed = time( nullptr );
     bool verifyexit = false;
     bool check_mods = false;
+    bool enter_editor_on_start = false;
     std::string dump;
     dump_mode dmode = dump_mode::TSV;
     std::vector<std::string> opts;
@@ -236,7 +237,7 @@ int main( int argc, char *argv[] )
         const char *section_default = nullptr;
         const char *section_map_sharing = "Map sharing";
         const char *section_user_directory = "User directories";
-        const std::array<arg_handler, 13> first_pass_arguments = {{
+        const std::array<arg_handler, 14> first_pass_arguments = {{
                 {
                     "--seed", "<string of letters and or numbers>",
                     "Sets the random number generator's seed value",
@@ -412,6 +413,15 @@ int main( int argc, char *argv[] )
                     section_default,
                     []( int, const char ** ) -> int {
                         dont_debugmsg = true;
+                        return 0;
+                    }
+                },
+                {
+                    "--editor", nullptr,
+                    "If set, will enter Advanced Map Editor on first world load",
+                    section_default,
+                    [&]( int, const char ** ) -> int {
+                        enter_editor_on_start = true;
                         return 0;
                     }
                 }
@@ -677,6 +687,7 @@ int main( int argc, char *argv[] )
     rng_set_engine_seed( seed );
 
     g = std::make_unique<game>();
+    g->enter_editor_on_start = enter_editor_on_start;
     // First load and initialize everything that does not
     // depend on the mods.
     try {

@@ -993,6 +993,8 @@ class game
         scent_map &scent;
         timed_event_manager &timed_events;
 
+        bool enter_editor_on_start = false;
+
         event_bus &events();
         stats_tracker &stats();
         memorial_logger &memorial();
