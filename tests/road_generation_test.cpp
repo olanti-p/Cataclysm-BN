@@ -26,6 +26,8 @@ static map_helpers::canvas_legend legend = {{
         { U'+', "road_nesw" },
         { U'║', "bridge_north" },
         { U'═', "bridge_east" },
+        { U'╎', "bridge_south" },
+        { U'╌', "bridge_west" },
     }
 };
 
