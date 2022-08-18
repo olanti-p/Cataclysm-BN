@@ -90,9 +90,19 @@ class road_gen_tester
                 0,
                 connection,
                 false,
+                start_dir
+            );
+            /*
+            om->build_connection(
+                point_om_omt( start.x + 1, start.y + 1 ),
+                point_om_omt( dest.x + 1, dest.y + 1 ),
+                0,
+                connection,
+                false,
                 start_dir,
                 dest_dir
             );
+            */
 
             return *this;
         }
