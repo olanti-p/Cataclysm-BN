@@ -65,6 +65,8 @@ class om_connection_piece
         std::vector<omcp_terrain> terrains;
         std::vector<omcp_connection> connections;
 
+        std::vector<om_direction::type> allowed_rotations;
+
         void load( const JsonObject &jo, const std::string &src );
         void check() const;
         void finalize();
@@ -115,6 +117,7 @@ class overmap_connection
         bool was_loaded = false;
 
         oter_type_str_id default_terrain;
+        std::string default_exit_type;
 
         std::vector<string_id<om_connection_piece>> pieces;
 

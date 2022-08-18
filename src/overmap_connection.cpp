@@ -114,6 +114,7 @@ bool overmap_connection::has( const oter_id &oter ) const
 void overmap_connection::load( const JsonObject &jo, const std::string & )
 {
     mandatory( jo, was_loaded, "default_terrain", default_terrain );
+    mandatory( jo, was_loaded, "default_exit_type", default_exit_type );
     mandatory( jo, was_loaded, "subtypes", subtypes );
     optional( jo, was_loaded, "pieces", pieces );
 }
@@ -136,7 +137,7 @@ void overmap_connection::check() const
         }
     }
     for( const auto &piece : pieces ) {
-        if( piece.is_valid() ) {
+        if( !piece.is_valid() ) {
             debugmsg( "Overmap connection \"%s\" refers to non-existent piece \"%s\".", id.c_str(), piece );
         }
     }
@@ -170,26 +171,29 @@ static void deserialize( omcp_placement &obj, JsonIn &jsin )
     }
 }
 
+static om_direction::type read_dir( JsonIn &jsin )
+{
+    static std::map<std::string, om_direction::type> dir_map{
+        { std::string( "n" ), om_direction::type::north },
+        { std::string( "e" ), om_direction::type::east },
+        { std::string( "s" ), om_direction::type::south },
+        { std::string( "w" ), om_direction::type::west }
+    };
+    std::string tmp_dir;
+    jsin.read( tmp_dir );
+    auto it = dir_map.find( tmp_dir );
+    if( it == dir_map.end() ) {
+        jsin.error( string_format( "Unknown direction '%s', valid values are: n, e, s, w", tmp_dir ) );
+    } else {
+        return it->second;
+    }
+}
+
 static void deserialize( omcp_connection_exit &obj, JsonIn &jsin )
 {
     jsin.start_array();
     jsin.read( obj.pos );
-    {
-        static std::map<std::string, om_direction::type> dir_map {
-            { std::string( "n" ), om_direction::type::north },
-            { std::string( "e" ), om_direction::type::east },
-            { std::string( "s" ), om_direction::type::south },
-            { std::string( "w" ), om_direction::type::west }
-        };
-        std::string tmp_dir;
-        jsin.read( tmp_dir );
-        auto it = dir_map.find( tmp_dir );
-        if( it == dir_map.end() ) {
-            jsin.error( string_format( "Unknown direction '%s', valid values are: n, e, s, w", tmp_dir ) );
-        } else {
-            obj.dir = it->second;
-        }
-    }
+    obj.dir = read_dir( jsin );
     jsin.read( obj.conn_type );
     jsin.end_array();
 }
@@ -217,6 +221,16 @@ void om_connection_piece::load( const JsonObject &jo, const std::string & )
     } else {
         mandatory( jo, was_loaded, "terrains", terrains );
         mandatory( jo, was_loaded, "connections", connections );
+
+        if( jo.has_member( "allowed_rotations" ) ) {
+            allowed_rotations.reserve( om_direction::size );
+            JsonIn &jsin = *jo.get_raw( "allowed_rotations" );
+            jsin.start_array();
+            while( !jsin.end_array() ) {
+                om_direction::type dir = read_dir( jsin );
+                allowed_rotations.push_back( dir );
+            }
+        }
     }
     mandatory( jo, was_loaded, "placements", placements );
 }
@@ -226,11 +240,51 @@ void om_connection_piece::check() const
     if( is_linear && ( !linear_terrain || !linear_terrain->is_linear() ) ) {
         debugmsg( "In conn piece %s, terrain must be linear.", id );
     }
+    if( !is_linear ) {
+        if( terrains.empty() ) {
+            debugmsg( "Conn piece %s has no terrains.", id );
+        }
+        for( size_t idx = 0; idx < placements.size(); idx++ ) {
+            const omcp_placement &placement = placements[idx];
+            if( placement.locations.size() != terrains.size() ) {
+                debugmsg( "In conn piece %s, number of locations must match number of terrains at placement_idx=%d",
+                          id, idx );
+            } else {
+                for( size_t loc_idx = 0; loc_idx < placement.locations.size(); loc_idx++ ) {
+                    if( placement.locations[loc_idx].pos != terrains[loc_idx].pos ) {
+                        debugmsg( "In conn piece %s, location pos doesn't match terrain pos at placement_idx=%d loc_idx=%d",
+                                  id, idx, loc_idx );
+                    }
+                }
+            }
+        }
+    }
 }
 
 void om_connection_piece::finalize()
 {
+    if( is_linear ) {
+        // Generate single connection with same exit on all sides
+        omcp_connection pseudo_conn;
+        for( om_direction::type dir : om_direction::all ) {
+            omcp_connection_exit exit;
+            exit.conn_type = linear_conn_type;
+            exit.dir = dir;
+            exit.pos = tripoint_zero;
+            pseudo_conn.exits.push_back( std::move( exit ) );
+        }
+        connections.push_back( std::move( pseudo_conn ) );
 
+        // Can't rotate
+        allowed_rotations.push_back( om_direction::type::north );
+    } else if( allowed_rotations.empty() ) {
+        // Can rotate freely.
+        // TODO: restrict this.
+        allowed_rotations.reserve( om_direction::size );
+        for( om_direction::type dir : om_direction::all ) {
+            allowed_rotations.push_back( dir );
+        }
+    }
 }
 
 namespace overmap_connections
@@ -250,6 +304,9 @@ void finalize()
 {
     conn_pieces.finalize();
     connections.finalize();
+    for( const auto &elem : conn_pieces.get_all() ) {
+        const_cast<om_connection_piece &>( elem ).finalize(); // This cast is ugly, but safe.
+    }
     for( const auto &elem : connections.get_all() ) {
         const_cast<overmap_connection &>( elem ).finalize(); // This cast is ugly, but safe.
     }

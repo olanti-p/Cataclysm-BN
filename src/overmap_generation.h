@@ -6,9 +6,11 @@
 
 #include "coordinates.h"
 #include "om_direction.h"
+#include "type_id.h"
 
 class overmap;
 class overmap_connection;
+class om_connection_piece;
 
 namespace overmap_generation
 {
@@ -23,6 +25,7 @@ struct ConnNode {
     // For non-linear pieces:
     string_id<om_connection_piece> piece;
     om_direction::type rot = om_direction::type::invalid;
+    int conn_idx = -1;
 
     ConnNode() = default;
     ~ConnNode() = default;

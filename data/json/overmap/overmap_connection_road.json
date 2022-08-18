@@ -7,7 +7,7 @@
     "conn_type": "road",
     "placements": [
       {
-        "location": "field_or_oad",
+        "location": "field_or_road",
         "basic_cost": 0
       },
       {
@@ -21,6 +21,30 @@
       {
         "location": "swamp",
         "basic_cost": 40
+      }
+    ]
+  },
+  {
+    "type": "om_connection_piece",
+    "id": "test_road",
+    "terrains": [
+      [ [ 0, 0, 0 ], "railroad_level_crossing" ]
+    ],
+    "connections": [
+      [
+        [ [ 0, 0, 0 ], "e", "road" ],
+        [ [ 0, 0, 0 ], "w", "road" ]
+      ],
+      [
+        [ [ 0, 0, 0 ], "n", "road" ],
+        [ [ 0, 0, 0 ], "s", "road" ]
+      ]
+    ],
+    "allowed_rotations": [ "n", "e" ],
+    "placements": [
+      {
+        "location": "field",
+        "basic_cost": 0
       }
     ]
   },
@@ -79,10 +103,10 @@
     ],
     "placements": [
       {
+        "//": "Check for ground terrain like this: [ [ 0, 1, 0 ], field_or_road ]",
         "locations": [
           [ [ 0, 0, 0 ], "water" ],
-          [ [ 0, 0, 1 ], "open_air" ],
-          [ [ 0, 1, 0 ], "field_or_road" ]
+          [ [ 0, 0, 1 ], "open_air" ]
         ],
         "basic_cost": 120
       }

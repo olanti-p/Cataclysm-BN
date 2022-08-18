@@ -6,6 +6,8 @@
 #include "map_setup_helpers.h"
 #include "overmap_generation.h"
 
+extern bool debug_connection_lay;
+
 static map_helpers::canvas_legend legend = {{
         { U'.', "field" },
         { U'R', "river_center" },
@@ -85,6 +87,11 @@ class road_gen_tester
 
             const overmap_connection &connection = string_id<overmap_connection>( "local_road" ).obj();
 
+            debug_connection_lay = true;
+            auto _restore = on_out_of_scope( [] {
+                debug_connection_lay = false;
+            } );
+
             const auto path = overmap_generation::lay_out_connection(
                                   *om,
                                   connection,
@@ -147,16 +154,17 @@ TEST_CASE( "road_gen_straight", "[mapgen][connects][road]" )
 {
     road_gen_tester( 1, empty_10_11 )
     // Horizontal w->e
-    .run_gen( point( 1, 1 ), om_direction::type::invalid, point( 3, 1 ), om_direction::type::invalid )
+    //.run_gen( point( 1, 1 ), om_direction::type::invalid, point( 3, 1 ), om_direction::type::invalid )
+    .run_gen( point( 1, 1 ), om_direction::type::north, point( 3, 1 ), om_direction::type::south )
     // Horizontal e->w
-    .run_gen( point( 3, 3 ), om_direction::type::invalid, point( 1, 3 ), om_direction::type::invalid )
+    //.run_gen( point( 3, 3 ), om_direction::type::invalid, point( 1, 3 ), om_direction::type::invalid )
     // Vertical n->s
-    .run_gen( point( 8, 1 ), om_direction::type::invalid, point( 8, 3 ), om_direction::type::invalid )
+    //.run_gen( point( 8, 1 ), om_direction::type::invalid, point( 8, 3 ), om_direction::type::invalid )
     // Vertical s->n
-    .run_gen( point( 8, 8 ), om_direction::type::invalid, point( 8, 6 ), om_direction::type::invalid )
+    //.run_gen( point( 8, 8 ), om_direction::type::invalid, point( 8, 6 ), om_direction::type::invalid )
     // Crossing
-    .run_gen( point( 3, 5 ), om_direction::type::invalid, point( 3, 9 ), om_direction::type::invalid )
-    .run_gen( point( 1, 7 ), om_direction::type::invalid, point( 5, 7 ), om_direction::type::invalid )
+    //.run_gen( point( 3, 5 ), om_direction::type::invalid, point( 3, 9 ), om_direction::type::invalid )
+    //.run_gen( point( 1, 7 ), om_direction::type::invalid, point( 5, 7 ), om_direction::type::invalid )
     .expect( {
         {
             U"..........",
@@ -331,15 +339,8 @@ TEST_CASE( "road_gen_bridges", "[mapgen][connects][road]" )
     } );
 }
 
-extern bool debug_connection_lay;
-
 TEST_CASE( "road_gen_no_bridge_crossing", "[mapgen][connects][road]" )
 {
-    debug_connection_lay = true;
-    auto _restore = on_out_of_scope( [] {
-        debug_connection_lay = false;
-    } );
-
     static map_helpers::canvas lake_4_sides = {{
             U".....#.....",
             U".....#.....",
