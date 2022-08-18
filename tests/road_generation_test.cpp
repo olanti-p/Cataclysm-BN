@@ -155,7 +155,8 @@ TEST_CASE( "road_gen_straight", "[mapgen][connects][road]" )
     road_gen_tester( 1, empty_10_11 )
     // Horizontal w->e
     //.run_gen( point( 1, 1 ), om_direction::type::invalid, point( 3, 1 ), om_direction::type::invalid )
-    .run_gen( point( 1, 1 ), om_direction::type::north, point( 3, 1 ), om_direction::type::south )
+    .run_gen( point( 1, 1 ), om_direction::type::west, point( 1, 1 ), om_direction::type::east )
+    //.run_gen( point( 3, 3 ), om_direction::type::west, point( 3, 3 ), om_direction::type::south )
     // Horizontal e->w
     //.run_gen( point( 3, 3 ), om_direction::type::invalid, point( 1, 3 ), om_direction::type::invalid )
     // Vertical n->s

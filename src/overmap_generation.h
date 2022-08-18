@@ -20,9 +20,6 @@ struct ConnNode {
     // Piece position
     tripoint_om_omt pos;
 
-    // For linear pieces:
-    om_direction::type from = om_direction::type::invalid;
-
     // For non-linear pieces:
     string_id<om_connection_piece> piece;
     om_direction::type rot = om_direction::type::invalid;
