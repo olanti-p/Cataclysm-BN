@@ -27,11 +27,15 @@ struct ConnNode {
 
     ConnNode() = default;
     ~ConnNode() = default;
-    explicit ConnNode( const tripoint_om_omt &pos ) : pos( pos ) {}
 };
 
 struct ConnPath {
     std::vector<ConnNode> nodes;
+
+    tripoint_om_omt source;
+    om_direction::type source_dir = om_direction::type::invalid;
+    tripoint_om_omt dest;
+    om_direction::type dest_dir = om_direction::type::invalid;
 };
 
 ConnPath lay_out_connection(

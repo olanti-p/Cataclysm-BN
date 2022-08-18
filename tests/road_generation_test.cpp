@@ -92,36 +92,18 @@ class road_gen_tester
                 overmap_generation::set_debug_output( false );
             } );
 
-            const auto path = overmap_generation::lay_out_connection(
-                                  *om,
-                                  connection,
-                                  tripoint_om_omt( start.x + 1, start.y + 1, 0 ),
-                                  start_dir,
-                                  tripoint_om_omt( dest.x + 1, dest.y + 1, 0 ),
-                                  dest_dir,
-                                  false
-                              );
-            /*
-            om->build_connection(
-                point_om_omt( start.x + 1, start.y + 1 ),
-                point_om_omt( dest.x + 1, dest.y + 1 ),
-                0,
-                connection,
-                false,
-                start_dir
-            );
-            */
-            /*
-            om->build_connection(
-                point_om_omt( start.x + 1, start.y + 1 ),
-                point_om_omt( dest.x + 1, dest.y + 1 ),
-                0,
-                connection,
-                false,
-                start_dir,
-                dest_dir
-            );
-            */
+            const overmap_generation::ConnPath path =
+                overmap_generation::lay_out_connection(
+                    *om,
+                    connection,
+                    tripoint_om_omt( start.x + 1, start.y + 1, 0 ),
+                    start_dir,
+                    tripoint_om_omt( dest.x + 1, dest.y + 1, 0 ),
+                    dest_dir,
+                    false
+                );
+
+            overmap_generation::build_connection( *om, connection, path );
 
             return *this;
         }
@@ -155,7 +137,7 @@ TEST_CASE( "road_gen_straight", "[mapgen][connects][road]" )
     road_gen_tester( 1, empty_10_11 )
     // Horizontal w->e
     //.run_gen( point( 1, 1 ), om_direction::type::invalid, point( 3, 1 ), om_direction::type::invalid )
-    .run_gen( point( 1, 1 ), om_direction::type::west, point( 1, 1 ), om_direction::type::east )
+    .run_gen( point( 1, 1 ), om_direction::type::west, point( 3, 1 ), om_direction::type::east )
     //.run_gen( point( 3, 3 ), om_direction::type::west, point( 3, 3 ), om_direction::type::south )
     // Horizontal e->w
     //.run_gen( point( 3, 3 ), om_direction::type::invalid, point( 1, 3 ), om_direction::type::invalid )

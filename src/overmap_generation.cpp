@@ -1,8 +1,10 @@
 #include "overmap_generation.h"
 
-#include "overmap.h"
+#include "hash_utils.h"
+#include "om_lines.h"
 #include "overmap_connection.h"
 #include "overmap_location.h"
+#include "overmap.h"
 
 static bool debug_connection_lay = false;
 
@@ -237,7 +239,7 @@ static std::unique_ptr<piece_placements> gen_piece_placements(
 
 struct pfnode {
     int piece_idx = -1;
-    tripoint pos;
+    point pos;
     om_direction::type rot;
     int conn_idx = -1;
 };
@@ -246,6 +248,18 @@ bool operator==( const pfnode &l, const pfnode &r )
 {
     return l.pos == r.pos && l.piece_idx == r.piece_idx && l.rot == r.rot && l.conn_idx == r.conn_idx;
 }
+
+template<>
+struct std::hash<pfnode> {
+    std::size_t operator()( const pfnode &n ) const noexcept {
+        std::size_t seed = 0xD7E9FC1AB649C981; // Random number
+        cata::hash_combine( seed, n.pos );
+        cata::hash_combine( seed, n.rot );
+        cata::hash_combine( seed, n.piece_idx );
+        cata::hash_combine( seed, n.conn_idx );
+        return seed;
+    }
+};
 
 std::vector<pfnode>
 find_matching_nodes(
@@ -283,7 +297,7 @@ find_matching_nodes(
 
     iter_matching_candidates( candidates, exit_pseudo_pos, placements, [&]( piece_link && link ) {
         pfnode n;
-        n.pos = link.tgt_pos;
+        n.pos = link.tgt_pos.xy();
         n.piece_idx = link.tgt_piece_idx;
         n.rot = link.tgt_dir;
         n.conn_idx = link.tgt_conn_idx;
@@ -295,16 +309,17 @@ find_matching_nodes(
 
 static void debug_print_node( const pfnode &node, const overmap_connection &connection )
 {
-    std::cout << string_format( "  pos:%s  piece:%s  dir:%s  conn:%d\n",
+    std::cout << string_format( "  pos:%s  piece:%s  dir:%s  conn:%d  HASH:%ud\n",
                                 connection.pieces[node.piece_idx],
                                 node.pos.to_string(),
                                 om_direction::name( node.rot ),
-                                node.conn_idx
+                                node.conn_idx,
+                                std::hash<pfnode> {}( node )
                               );
 }
 
 static std::vector<pfnode>
-find_path_a_star(
+find_path_breadth_first(
     const std::vector<pfnode> &start_nodes,
     const std::vector<pfnode> &end_nodes,
     const piece_placements &placements,
@@ -362,10 +377,62 @@ find_path_a_star(
         }
     }
 
+    // TODO: all start nodes must be viable
+    pfnode start = start_nodes[0];
 
+    // TODO: all end nodes must be viable
+    pfnode goal = end_nodes[0];
 
-    // TODO
-    return {};
+    std::queue<pfnode> frontier;
+    frontier.push( start );
+
+    std::unordered_map<pfnode, pfnode> came_from;
+    came_from[start] = start;
+
+    while( !frontier.empty() ) {
+        pfnode current = frontier.front();
+        frontier.pop();
+
+        if( current == goal ) {
+            break;
+        }
+
+        std::cout << "Visiting  ";
+        debug_print_node( current, connection );
+
+        const single_piece_placement &current_pl =
+            placements.get( current.piece_idx, current.pos, current.rot );
+        for( const piece_link &link : current_pl.links ) {
+            if( link.src_conn_idx != current.conn_idx ) {
+                // Can't connect from this connection
+                continue;
+            }
+            pfnode next;
+            next.pos = link.tgt_pos.xy();
+            next.conn_idx = link.tgt_conn_idx;
+            next.rot = link.tgt_dir;
+            next.piece_idx = link.tgt_piece_idx;
+
+            if( came_from.find( next ) == came_from.end() ) {
+                frontier.push( next );
+                came_from[next] = current;
+            }
+        }
+    }
+
+    std::vector<pfnode> ret;
+
+    pfnode cursor = goal;
+    while( true ) {
+        pfnode prev = came_from[cursor];
+        ret.push_back( cursor );
+        if( prev == cursor ) {
+            break;
+        }
+        cursor = prev;
+    }
+
+    return ret;
 }
 
 overmap_generation::ConnPath
@@ -379,19 +446,25 @@ overmap_generation::lay_out_connection(
     bool /*must_be_unexplored*/
 )
 {
+    ConnPath ret;
+    ret.source = source;
+    ret.source_dir = source_dir;
+    ret.dest = dest;
+    ret.dest_dir = dest_dir;
+
     if( connection.pieces.empty() ) {
         // Legacy connections
-        return ConnPath{};
+        return ret;
     }
 
     if( source.z() != dest.z() ) {
         // TODO: connections between z levels
-        return ConnPath{};
+        return ret;
     }
 
     if( !debug_connection_lay ) {
         // TODO: remove this
-        return ConnPath{};
+        return ret;
     }
 
     std::cout << string_format( "LAYING OUT CONNECTION\nconn: %s\nsrc: %s %s\ndst: %s %s\n\n",
@@ -403,8 +476,8 @@ overmap_generation::lay_out_connection(
                               );
 
     // Possible placements for pieces in the overmap
-    std::unique_ptr<piece_placements> placements_container = gen_piece_placements( om, connection,
-            source.z() );
+    std::unique_ptr<piece_placements> placements_container =
+        gen_piece_placements( om, connection, source.z() );
     // Alias for ease of use
     piece_placements &placements = *placements_container;
 
@@ -415,29 +488,35 @@ overmap_generation::lay_out_connection(
 
     std::vector<pfnode> nodes;
 
-    // Cheap case: one of the nodes is both start and end node
-    // TODO: decide which one is cheaper
+    // Shortcut: either start or exit is blocked
     bool found_cheap_path = false;
-    for( const pfnode &snode : start_nodes ) {
-        for( const pfnode &enode : end_nodes ) {
-            if( snode == enode ) {
-                nodes.push_back( snode );
-                found_cheap_path = true;
+    if( start_nodes.empty() || end_nodes.empty() ) {
+        found_cheap_path = true;
+    } else {
+        // Shortcut: one of the nodes is both start and end node
+        // TODO: decide which one is cheaper
+        for( const pfnode &snode : start_nodes ) {
+            for( const pfnode &enode : end_nodes ) {
+                if( snode == enode ) {
+                    nodes.push_back( snode );
+                    found_cheap_path = true;
+                    break;
+                }
+            }
+            if( found_cheap_path ) {
                 break;
             }
-        }
-        if( found_cheap_path ) {
-            break;
         }
     }
 
     if( !found_cheap_path ) {
         // Find a path from any start node to any end node
-        nodes = find_path_a_star( start_nodes, end_nodes, placements,
-                                  connection );
+        nodes = find_path_breadth_first( start_nodes, end_nodes, placements,
+                                         connection );
     }
 
-    overmap_generation::ConnPath ret;
+    std::reverse( nodes.begin(), nodes.end() );
+
     std::cout << "FINAL_PATH:\n";
     for( const pfnode &node : nodes ) {
         debug_print_node( node, connection );
@@ -445,7 +524,7 @@ overmap_generation::lay_out_connection(
         overmap_generation::ConnNode n;
         n.conn_idx = node.conn_idx;
         n.piece = connection.pieces[node.piece_idx];
-        n.pos = tripoint_om_omt( node.pos );
+        n.pos = tripoint_om_omt( node.pos.x, node.pos.y, source.z() );
         n.rot = node.rot;
 
         ret.nodes.push_back( std::move( n ) );
@@ -456,7 +535,12 @@ overmap_generation::lay_out_connection(
 }
 
 overmap_generation::ConnPath
-straight_path( const tripoint_om_omt &source, om_direction::type dir, int len )
+straight_path(
+    const overmap_connection &connection,
+    const tripoint_om_omt &source,
+    om_direction::type dir,
+    int len
+)
 {
     overmap_generation::ConnPath res;
     if( len == 0 ) {
@@ -465,10 +549,15 @@ straight_path( const tripoint_om_omt &source, om_direction::type dir, int len )
     tripoint_om_omt p = source;
     res.nodes.reserve( len );
     for( int i = 0; i + 1 < len; i++ ) {
-        res.nodes.emplace_back( p );
-        p += om_direction::displace( dir );
+        overmap_generation::ConnNode node;
+        node.pos = p + om_direction::displace( dir ) * i;
+        node.rot = om_direction::type::north;
+        node.conn_idx = 0;
+        // TODO: this should assume 0
+        node.piece = connection.pieces[0];
+
+        res.nodes.emplace_back( std::move( node ) );
     }
-    res.nodes.emplace_back( p );
     return res;
 }
 
@@ -537,14 +626,31 @@ overmap_generation::lay_out_street(
         }
     }
 
-    return straight_path( from, dir, actual_len );
+    return straight_path( connection, from, dir, actual_len );
 }
 
 void overmap_generation::build_connection(
-    overmap &/*om*/,
-    const overmap_connection &/*connection*/,
-    const ConnPath &/*path*/
+    overmap &om,
+    const overmap_connection &connection,
+    const ConnPath &path
 )
 {
-    // TODO
+    const size_t line_all = 0b1111;
+
+    for( const ConnNode &node : path.nodes ) {
+        const om_connection_piece &piece = node.piece.obj();
+
+        if( piece.is_linear ) {
+            // TODO: linear terrain connections
+            oter_id tid = piece.linear_terrain->get_linear( line_all );
+            om.ter_set( node.pos, tid );
+        } else {
+            for( const omcp_terrain &ter : piece.terrains ) {
+                tripoint_om_omt ter_pos =
+                    tripoint_om_omt( om_direction::rotate( ter.pos, node.rot ) + node.pos.raw() );
+                oter_id tid = ter.terrain->get_rotated( node.rot );
+                om.ter_set( ter_pos, tid );
+            }
+        }
+    }
 }
