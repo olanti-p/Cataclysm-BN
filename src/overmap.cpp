@@ -3718,18 +3718,41 @@ void overmap::build_mine( const tripoint_om_omt &origin, int s )
     ter_set( p, mine_finale_or_down );
 }
 
+extern bool debug_connection_lay = false;
+
 pf::directed_path<point_om_omt> overmap::lay_out_connection(
     const overmap_connection &connection, const point_om_omt &source, const point_om_omt &dest,
     int z, const bool must_be_unexplored ) const
 {
     const pf::two_node_scoring_fn<point_om_omt> estimate =
     [&]( pf::directed_node<point_om_omt> cur, cata::optional<pf::directed_node<point_om_omt>> prev ) {
-        const auto &id( ter( tripoint_om_omt( cur.pos, z ) ) );
+        if( debug_connection_lay ) {
+            std::cout << string_format(
+                          "\nNode %s %s <= %s %s",
+                          cur.pos.to_string(),
+                          om_direction::name( cur.dir ),
+                          prev ? prev->pos.to_string() : "?",
+                          prev ? om_direction::name( prev->dir ) : "?"
+                      );
+        }
+
+        const oter_id &id( ter( tripoint_om_omt( cur.pos, z ) ) );
+
+        if( debug_connection_lay ) {
+            std::cout << string_format( "  ter: %s", id.id().str() );
+        }
 
         const overmap_connection::subtype *subtype = connection.pick_subtype_for( id );
 
         if( !subtype ) {
+            if( debug_connection_lay ) {
+                std::cout << "\n  Rejected: terrain not supported";
+            }
             return pf::node_score::rejected;  // No option for this terrain.
+        }
+
+        if( debug_connection_lay ) {
+            std::cout << string_format( "  subtype: %s", subtype->terrain.str() );
         }
 
         const bool existing_connection = connection.has( id );
@@ -3748,6 +3771,9 @@ pf::directed_path<point_om_omt> overmap::lay_out_connection(
 
         if( existing_connection && id->is_rotatable() && cur.dir != om_direction::type::invalid &&
             !om_direction::are_parallel( id->get_dir(), cur.dir ) ) {
+            if( debug_connection_lay ) {
+                std::cout << "\n  Rejected: can't intersect existing terrain";
+            }
             return pf::node_score::rejected; // Can't intersect.
         }
 
@@ -3756,7 +3782,17 @@ pf::directed_path<point_om_omt> overmap::lay_out_connection(
             const oter_id &prev_id = ter( tripoint_om_omt( prev->pos, z ) );
             const overmap_connection::subtype *prev_subtype = connection.pick_subtype_for( prev_id );
 
+            if( debug_connection_lay ) {
+                std::cout << string_format(
+                              "  prev_subtype: %s ",
+                              prev_subtype ? prev_subtype->terrain.str() : "?"
+                          );
+            }
+
             if( !prev_subtype || !prev_subtype->allows_turns() ) {
+                if( debug_connection_lay ) {
+                    std::cout << "\n  Rejected: can't make a turn";
+                }
                 return pf::node_score::rejected;
             }
         }
@@ -3766,10 +3802,31 @@ pf::directed_path<point_om_omt> overmap::lay_out_connection(
                          trig_dist( dest, cur.pos );
         const int existency_mult = existing_connection ? 1 : 5; // Prefer existing connections.
 
-        return pf::node_score( subtype->basic_cost, existency_mult * dist );
+        const int node_score = subtype->basic_cost;
+        const int dist_score = existency_mult * dist;
+
+        if( debug_connection_lay ) {
+            std::cout << string_format(
+                          "\n  Allowed with node_score %s  dist_score %s",
+                          node_score,
+                          dist_score
+                      );
+        }
+
+        return pf::node_score( node_score, dist_score );
     };
 
-    return pf::greedy_path( source, dest, point_om_omt( OMAPX, OMAPY ), estimate );
+    if( debug_connection_lay ) {
+        std::cout << string_format( "SEARCHING PATH %s => %s\n", source.to_string(), dest.to_string() );
+    }
+
+    auto ret = pf::greedy_path( source, dest, point_om_omt( OMAPX, OMAPY ), estimate );
+
+    if( debug_connection_lay ) {
+        std::cout << string_format( "\n\nDONE nodes_total: %d\n\n", ret.nodes.size() );
+    }
+
+    return ret;
 }
 
 static pf::directed_path<point_om_omt> straight_path( const point_om_omt &source,
