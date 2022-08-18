@@ -274,13 +274,12 @@ find_matching_nodes(
     pseudo_piece.connections.push_back( std::move( pseudo_conn ) );
     pseudo_piece.allowed_rotations.push_back( om_direction::type::north );
 
-    std::vector<piece_link> candidates = resolve_candidates( pseudo_piece, exit_dir, connection );
+    std::vector<piece_link> candidates =
+        resolve_candidates( pseudo_piece, om_direction::type::north, connection );
 
-    const tripoint exit_pseudo_pos( exit_pos - om_direction::rotate( point_north, exit_dir ), 0 );
+    const tripoint exit_pseudo_pos( exit_pos + om_direction::rotate( point_north, exit_dir ), 0 );
 
     std::vector<pfnode> ret;
-
-    std::cout << string_format( "\nexit_pseudo_pos:%s\n", exit_pseudo_pos.to_string() );
 
     iter_matching_candidates( candidates, exit_pseudo_pos, placements, [&]( piece_link && link ) {
         pfnode n;
@@ -418,16 +417,21 @@ overmap_generation::lay_out_connection(
 
     // Cheap case: one of the nodes is both start and end node
     // TODO: decide which one is cheaper
+    bool found_cheap_path = false;
     for( const pfnode &snode : start_nodes ) {
         for( const pfnode &enode : end_nodes ) {
             if( snode == enode ) {
                 nodes.push_back( snode );
+                found_cheap_path = true;
                 break;
             }
         }
+        if( found_cheap_path ) {
+            break;
+        }
     }
 
-    if( nodes.empty() ) {
+    if( !found_cheap_path ) {
         // Find a path from any start node to any end node
         nodes = find_path_a_star( start_nodes, end_nodes, placements,
                                   connection );
