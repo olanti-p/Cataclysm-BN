@@ -127,7 +127,7 @@ const std::array < type, 1 + om_direction::bits > all = {{
 };
 
 const size_t size = all.size();
-const size_t invalid = 0;
+//const size_t invalid = 0;
 
 constexpr size_t rotate( size_t line, om_direction::type dir )
 {

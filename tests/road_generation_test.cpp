@@ -87,9 +87,9 @@ class road_gen_tester
 
             const overmap_connection &connection = string_id<overmap_connection>( "local_road" ).obj();
 
-            debug_connection_lay = true;
+            overmap_generation::set_debug_output( true );
             auto _restore = on_out_of_scope( [] {
-                debug_connection_lay = false;
+                overmap_generation::set_debug_output( false );
             } );
 
             const auto path = overmap_generation::lay_out_connection(

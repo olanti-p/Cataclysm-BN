@@ -158,7 +158,7 @@ static void deserialize( omcp_location &obj, JsonIn &jsin )
 
 static void deserialize( omcp_placement &obj, JsonIn &jsin )
 {
-    JsonObject &jso = jsin.get_object();
+    JsonObject jso = jsin.get_object();
 
     jso.read( "basic_cost", obj.basic_cost );
     if( jso.has_member( "location" ) ) {

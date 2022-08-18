@@ -5,7 +5,12 @@
 #include "overmap_connection.h"
 #include "overmap_location.h"
 
-extern bool debug_connection_lay = false;
+static bool debug_connection_lay = false;
+
+void overmap_generation::set_debug_output( bool val )
+{
+    debug_connection_lay = val;
+}
 
 /*
 pf::directed_path<point_om_omt> overmap::lay_out_connection(
@@ -646,7 +651,7 @@ overmap_generation::lay_out_connection(
     om_direction::type source_dir,
     const tripoint_om_omt &dest,
     om_direction::type dest_dir,
-    bool must_be_unexplored
+    bool /*must_be_unexplored*/
 )
 {
     if( connection.pieces.empty() ) {
@@ -711,7 +716,7 @@ overmap_generation::lay_out_street(
         len++;
     }
 
-    size_t actual_len = 0;
+    int actual_len = 0;
 
     while( actual_len < len ) {
         const tripoint_om_omt pos = from + om_direction::displace( dir, actual_len );
@@ -765,9 +770,9 @@ overmap_generation::lay_out_street(
 }
 
 void overmap_generation::build_connection(
-    overmap &om,
-    const overmap_connection &connection,
-    const ConnPath &path
+    overmap &/*om*/,
+    const overmap_connection &/*connection*/,
+    const ConnPath &/*path*/
 )
 {
     // TODO

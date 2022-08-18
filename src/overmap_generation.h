@@ -15,6 +15,7 @@ class om_connection_piece;
 namespace overmap_generation
 {
 
+void set_debug_output( bool val );
 struct ConnNode {
     // Piece position
     tripoint_om_omt pos;
