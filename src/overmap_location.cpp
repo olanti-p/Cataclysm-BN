@@ -48,7 +48,7 @@ void overmap_location::load( const JsonObject &jo, const std::string & )
 {
     optional( jo, was_loaded, "flags", flags );
     optional( jo, was_loaded, "terrains", terrains );
-    optional( jo, was_loaded, "loctions", locations );
+    optional( jo, was_loaded, "locations", locations );
     if( flags.empty() && terrains.empty() && locations.empty() ) {
         jo.throw_error( "At least one flag, terrain or location must be specified." );
     }

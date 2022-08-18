@@ -4,6 +4,7 @@
 #include "point.h"
 #include "string_formatter.h"
 #include "map_setup_helpers.h"
+#include "overmap_generation.h"
 
 static map_helpers::canvas_legend legend = {{
         { U'.', "field" },
@@ -84,6 +85,16 @@ class road_gen_tester
 
             const overmap_connection &connection = string_id<overmap_connection>( "local_road" ).obj();
 
+            const auto path = overmap_generation::lay_out_connection(
+                                  *om,
+                                  connection,
+                                  tripoint_om_omt( start.x + 1, start.y + 1, 0 ),
+                                  start_dir,
+                                  tripoint_om_omt( dest.x + 1, dest.y + 1, 0 ),
+                                  dest_dir,
+                                  false
+                              );
+            /*
             om->build_connection(
                 point_om_omt( start.x + 1, start.y + 1 ),
                 point_om_omt( dest.x + 1, dest.y + 1 ),
@@ -92,6 +103,7 @@ class road_gen_tester
                 false,
                 start_dir
             );
+            */
             /*
             om->build_connection(
                 point_om_omt( start.x + 1, start.y + 1 ),

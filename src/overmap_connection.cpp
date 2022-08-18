@@ -14,6 +14,7 @@
 namespace
 {
 
+generic_factory<om_connection_piece> conn_pieces( "overmap connection piece" );
 generic_factory<overmap_connection> connections( "overmap connection" );
 
 } // namespace
@@ -33,6 +34,18 @@ template<>
 const overmap_connection &string_id<overmap_connection>::obj() const
 {
     return connections.obj( *this );
+}
+
+template<>
+bool string_id<om_connection_piece>::is_valid() const
+{
+    return conn_pieces.is_valid( *this );
+}
+
+template<>
+const om_connection_piece &string_id<om_connection_piece>::obj() const
+{
+    return conn_pieces.obj( *this );
 }
 
 bool overmap_connection::subtype::allows_terrain( const oter_id &oter ) const
@@ -102,6 +115,7 @@ void overmap_connection::load( const JsonObject &jo, const std::string & )
 {
     mandatory( jo, was_loaded, "default_terrain", default_terrain );
     mandatory( jo, was_loaded, "subtypes", subtypes );
+    optional( jo, was_loaded, "pieces", pieces );
 }
 
 void overmap_connection::check() const
@@ -121,11 +135,102 @@ void overmap_connection::check() const
             }
         }
     }
+    for( const auto &piece : pieces ) {
+        if( piece.is_valid() ) {
+            debugmsg( "Overmap connection \"%s\" refers to non-existent piece \"%s\".", id.c_str(), piece );
+        }
+    }
 }
 
 void overmap_connection::finalize()
 {
     cached_subtypes.resize( overmap_terrains::get_all().size() );
+}
+
+static void deserialize( omcp_location &obj, JsonIn &jsin )
+{
+    jsin.start_array();
+    jsin.read( obj.pos );
+    jsin.read( obj.loc );
+    jsin.end_array();
+}
+
+static void deserialize( omcp_placement &obj, JsonIn &jsin )
+{
+    JsonObject &jso = jsin.get_object();
+
+    jso.read( "basic_cost", obj.basic_cost );
+    if( jso.has_member( "location" ) ) {
+        omcp_location loc;
+        loc.pos = tripoint_zero;
+        jso.read( "location", loc.loc );
+        obj.locations.push_back( std::move( loc ) );
+    } else {
+        jso.read( "locations", obj.locations );
+    }
+}
+
+static void deserialize( omcp_connection_exit &obj, JsonIn &jsin )
+{
+    jsin.start_array();
+    jsin.read( obj.pos );
+    {
+        static std::map<std::string, om_direction::type> dir_map {
+            { std::string( "n" ), om_direction::type::north },
+            { std::string( "e" ), om_direction::type::east },
+            { std::string( "s" ), om_direction::type::south },
+            { std::string( "w" ), om_direction::type::west }
+        };
+        std::string tmp_dir;
+        jsin.read( tmp_dir );
+        auto it = dir_map.find( tmp_dir );
+        if( it == dir_map.end() ) {
+            jsin.error( string_format( "Unknown direction '%s', valid values are: n, e, s, w", tmp_dir ) );
+        } else {
+            obj.dir = it->second;
+        }
+    }
+    jsin.read( obj.conn_type );
+    jsin.end_array();
+}
+
+static void deserialize( omcp_connection &obj, JsonIn &jsin )
+{
+    jsin.read( obj.exits );
+}
+
+static void deserialize( omcp_terrain &obj, JsonIn &jsin )
+{
+    jsin.start_array();
+    jsin.read( obj.pos );
+    jsin.read( obj.terrain );
+    jsin.end_array();
+}
+
+void om_connection_piece::load( const JsonObject &jo, const std::string & )
+{
+    optional( jo, was_loaded, "is_linear", is_linear );
+    optional( jo, was_loaded, "piece_cost", piece_cost );
+    if( is_linear ) {
+        mandatory( jo, was_loaded, "terrain", linear_terrain );
+        mandatory( jo, was_loaded, "conn_type", linear_conn_type );
+    } else {
+        mandatory( jo, was_loaded, "terrains", terrains );
+        mandatory( jo, was_loaded, "connections", connections );
+    }
+    mandatory( jo, was_loaded, "placements", placements );
+}
+
+void om_connection_piece::check() const
+{
+    if( is_linear && ( !linear_terrain || !linear_terrain->is_linear() ) ) {
+        debugmsg( "In conn piece %s, terrain must be linear.", id );
+    }
+}
+
+void om_connection_piece::finalize()
+{
+
 }
 
 namespace overmap_connections
@@ -136,8 +241,14 @@ void load( const JsonObject &jo, const std::string &src )
     connections.load( jo, src );
 }
 
+void load_piece( const JsonObject &jo, const std::string &src )
+{
+    conn_pieces.load( jo, src );
+}
+
 void finalize()
 {
+    conn_pieces.finalize();
     connections.finalize();
     for( const auto &elem : connections.get_all() ) {
         const_cast<overmap_connection &>( elem ).finalize(); // This cast is ugly, but safe.
@@ -146,11 +257,13 @@ void finalize()
 
 void check_consistency()
 {
+    conn_pieces.check();
     connections.check();
 }
 
 void reset()
 {
+    conn_pieces.reset();
     connections.reset();
 }
 

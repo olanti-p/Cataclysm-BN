@@ -392,6 +392,7 @@ void DynamicDataLoader::initialize()
     add( "mapgen", &load_mapgen );
     add( "overmap_land_use_code", &overmap_land_use_codes::load );
     add( "overmap_connection", &overmap_connections::load );
+    add( "om_connection_piece", &overmap_connections::load_piece );
     add( "overmap_location", &overmap_locations::load );
     add( "overmap_special", &overmap_specials::load );
     add( "city_building", &city_buildings::load );

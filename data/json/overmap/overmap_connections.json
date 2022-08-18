@@ -3,6 +3,12 @@
     "type": "overmap_connection",
     "id": "local_road",
     "default_terrain": "road",
+    "pieces": [
+      "basic_road",
+      "road_with_manhole",
+      "basic_bridge",
+      "bridge_ramp"
+    ],
     "subtypes": [
       { "terrain": "road", "locations": [ "field", "road" ] },
       { "terrain": "road", "locations": [ "forest_without_trail" ], "basic_cost": 20 },

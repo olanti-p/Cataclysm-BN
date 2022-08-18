@@ -14,6 +14,62 @@ class JsonObject;
 class JsonIn;
 struct overmap_location;
 
+class omcp_location
+{
+    public:
+        tripoint pos;
+        overmap_location_id loc;
+};
+
+class omcp_placement
+{
+    public:
+        int basic_cost = 0;
+        std::vector<omcp_location> locations;
+};
+
+class omcp_connection_exit
+{
+    public:
+        tripoint pos;
+        om_direction::type dir = om_direction::type::invalid;
+        std::string conn_type;
+};
+
+class omcp_connection
+{
+    public:
+        std::vector<omcp_connection_exit> exits;
+};
+
+class omcp_terrain
+{
+    public:
+        tripoint pos;
+        oter_str_id terrain;
+};
+
+class om_connection_piece
+{
+    public:
+        string_id<om_connection_piece> id;
+        bool was_loaded = false;
+
+        bool is_linear = false;
+        int piece_cost = 0;
+
+        oter_type_str_id linear_terrain;
+        std::string linear_conn_type;
+
+        std::vector<omcp_placement> placements;
+        std::vector<omcp_terrain> terrains;
+        std::vector<omcp_connection> connections;
+
+        void load( const JsonObject &jo, const std::string &src );
+        void check() const;
+        void finalize();
+};
+
 class overmap_connection
 {
     public:
@@ -60,6 +116,8 @@ class overmap_connection
 
         oter_type_str_id default_terrain;
 
+        std::vector<string_id<om_connection_piece>> pieces;
+
     private:
         struct cache {
             const subtype *value = nullptr;
@@ -77,6 +135,7 @@ namespace overmap_connections
 {
 
 void load( const JsonObject &jo, const std::string &src );
+void load_piece( const JsonObject &jo, const std::string &src );
 void finalize();
 void check_consistency();
 void reset();
