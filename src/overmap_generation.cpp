@@ -1,4 +1,3 @@
-#pragma optimize("", off)
 #include "overmap_generation.h"
 
 #include "overmap.h"
