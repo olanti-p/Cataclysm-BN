@@ -1,5 +1,7 @@
 #include "overmap_generation.h"
 
+#include <queue>
+
 #include "hash_utils.h"
 #include "om_lines.h"
 #include "overmap_connection.h"
@@ -631,7 +633,7 @@ overmap_generation::lay_out_street(
 
 void overmap_generation::build_connection(
     overmap &om,
-    const overmap_connection &connection,
+    const overmap_connection &/*connection*/,
     const ConnPath &path
 )
 {
