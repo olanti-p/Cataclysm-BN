@@ -115,15 +115,15 @@ void overmap_connection::load( const JsonObject &jo, const std::string & )
 {
     mandatory( jo, was_loaded, "default_terrain", default_terrain );
     mandatory( jo, was_loaded, "default_exit_type", default_exit_type );
-    mandatory( jo, was_loaded, "subtypes", subtypes );
+    optional( jo, was_loaded, "subtypes", subtypes );
     optional( jo, was_loaded, "pieces", pieces );
     optional( jo, was_loaded, "default_piece", default_piece );
 }
 
 void overmap_connection::check() const
 {
-    if( subtypes.empty() ) {
-        debugmsg( "Overmap connection \"%s\" doesn't have subtypes.", id.c_str() );
+    if( subtypes.empty() && pieces.empty() ) {
+        debugmsg( "Overmap connection \"%s\" doesn't have subtypes or pieces.", id.c_str() );
     }
     for( const auto &subtype : subtypes ) {
         if( !subtype.terrain.is_valid() ) {
@@ -274,6 +274,23 @@ void om_connection_piece::check() const
                 }
             }
         }
+    } else {
+        for( const omcp_terrain &ter : terrains ) {
+            if( !ter.terrain.is_valid() ) {
+                debugmsg( "Conn piece %s refers to invalid overmap terrain '%s'.  Did you forget rotation suffix?",
+                          id, ter.terrain );
+            } else {
+                const oter_t &t = ter.terrain.obj();
+                std::cout << "ter is" << t.get_name() << std::endl;
+            }
+        }
+        for( const omcp_placement &place : placements ) {
+            for( const omcp_location &loc : place.locations ) {
+                if( !loc.loc.is_valid() ) {
+                    debugmsg( "Conn piece %s refers to invalid overmap location '%s'.", id, loc.loc );
+                }
+            }
+        }
     }
 }
 
@@ -357,3 +374,62 @@ overmap_connection_id guess_for( const oter_type_id &oter )
 }
 
 } // namespace overmap_connections
+
+
+/*
+    if( subtype->terrain->is_linear() ) {
+        size_t new_line = connection.has( ter_id ) ? ter_id->get_line() : 0;
+
+        if( new_dir != om_direction::type::invalid ) {
+            new_line = om_lines::set_segment( new_line, new_dir );
+        }
+
+        if( prev_dir != om_direction::type::invalid ) {
+            new_line = om_lines::set_segment( new_line, om_direction::opposite( prev_dir ) );
+        }
+
+        for( const om_direction::type dir : om_direction::all ) {
+            const tripoint_om_omt np( pos + om_direction::displace( dir ) );
+
+            if( inbounds( np ) ) {
+                const oter_id &near_id = ter( np );
+
+                if( connection.has( near_id ) ) {
+                    if( near_id->is_linear() ) {
+                        const size_t near_line = near_id->get_line();
+
+                        if( om_lines::is_straight( near_line ) || om_lines::has_segment( near_line, new_dir ) ) {
+                            // Mutual connection.
+                            const size_t new_near_line = om_lines::set_segment( near_line, om_direction::opposite( dir ) );
+                            ter_set( np, near_id->get_type_id()->get_linear( new_near_line ) );
+                            new_line = om_lines::set_segment( new_line, dir );
+                        }
+                    } else if( near_id->is_rotatable() && om_direction::are_parallel( dir, near_id->get_dir() ) ) {
+                        new_line = om_lines::set_segment( new_line, dir );
+                    }
+                }
+            } else if( pos.xy() == start.pos || pos.xy() == end.pos ) {
+                // Only automatically connect to out of bounds locations if we're the start or end of this path.
+                new_line = om_lines::set_segment( new_line, dir );
+
+                // Add this connection point to our connections out.
+                std::vector<tripoint_om_omt> &outs = connections_out[connection.id];
+                const auto existing_out = std::find_if( outs.begin(),
+                outs.end(), [pos]( const tripoint_om_omt & c ) {
+                    return c == pos;
+                } );
+                if( existing_out == outs.end() ) {
+                    outs.emplace_back( pos );
+                }
+            }
+        }
+
+        if( new_line == om_lines::invalid ) {
+            debugmsg( "Invalid path for connection \"%s\".", connection.id.c_str() );
+            return;
+        }
+
+        ter_set( pos, subtype->terrain->get_linear( new_line ) );
+    }
+*/
+

@@ -1,5 +1,19 @@
 [
   {
+    "type": "overmap_connection",
+    "id": "local_road",
+    "default_terrain": "road",
+    "default_exit_type": "road",
+    "default_piece": "basic_road",
+    "pieces": [
+      "basic_road",
+      "test_road",
+      "road_with_manhole",
+      "basic_bridge",
+      "bridge_ramp"
+    ]
+  },
+  {
     "type": "om_connection_piece",
     "id": "basic_road",
     "is_linear": true,
@@ -7,7 +21,7 @@
     "conn_type": "road",
     "placements": [
       {
-        "location": "field_or_road",
+        "location": "field",
         "basic_cost": 0
       },
       {
@@ -28,7 +42,7 @@
     "type": "om_connection_piece",
     "id": "test_road",
     "terrains": [
-      [ [ 0, 0, 0 ], "railroad_level_crossing" ]
+      [ [ 0, 0, 0 ], "railroad_level_crossing_north" ]
     ],
     "connections": [
       [
@@ -52,7 +66,7 @@
     "type": "om_connection_piece",
     "id": "road_with_manhole",
     "terrains": [
-      [ [ 0, 0, 0 ], "road_nesw_manhole" ]
+      [ [ 0, 0, 0 ], "road_nesw_manhole_north" ]
     ],
     "connections": [
       [
@@ -69,8 +83,8 @@
     "type": "om_connection_piece",
     "id": "basic_bridge",
     "terrains": [
-      [ [ 0, 0, 0 ], "bridge_under" ],
-      [ [ 0, 0, 1 ], "bridge_road" ]
+      [ [ 0, 0, 0 ], "bridge_under_north" ],
+      [ [ 0, 0, 1 ], "bridge_road_north" ]
     ],
     "connections": [
       [
@@ -92,8 +106,8 @@
     "type": "om_connection_piece",
     "id": "bridge_ramp",
     "terrains": [
-      [ [ 0, 0, 0 ], "bridgehead_ground" ],
-      [ [ 0, 0, 1 ], "bridgehead_ramp" ]
+      [ [ 0, 0, 0 ], "bridgehead_ground_north" ],
+      [ [ 0, 0, 1 ], "bridgehead_ramp_north" ]
     ],
     "connections": [
       [

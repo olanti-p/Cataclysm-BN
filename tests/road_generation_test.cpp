@@ -103,7 +103,7 @@ class road_gen_tester
                     false
                 );
 
-            overmap_generation::build_connection( *om, connection, path );
+            overmap_generation::build_connection( *om, path );
 
             return *this;
         }
@@ -136,18 +136,16 @@ TEST_CASE( "road_gen_straight", "[mapgen][connects][road]" )
 {
     road_gen_tester( 1, empty_10_11 )
     // Horizontal w->e
-    //.run_gen( point( 1, 1 ), om_direction::type::invalid, point( 3, 1 ), om_direction::type::invalid )
-    .run_gen( point( 1, 1 ), om_direction::type::west, point( 3, 1 ), om_direction::type::east )
-    //.run_gen( point( 3, 3 ), om_direction::type::west, point( 3, 3 ), om_direction::type::south )
+    .run_gen( point( 1, 1 ), om_direction::type::invalid, point( 3, 1 ), om_direction::type::invalid )
     // Horizontal e->w
-    //.run_gen( point( 3, 3 ), om_direction::type::invalid, point( 1, 3 ), om_direction::type::invalid )
+    .run_gen( point( 3, 3 ), om_direction::type::invalid, point( 1, 3 ), om_direction::type::invalid )
     // Vertical n->s
-    //.run_gen( point( 8, 1 ), om_direction::type::invalid, point( 8, 3 ), om_direction::type::invalid )
+    .run_gen( point( 8, 1 ), om_direction::type::invalid, point( 8, 3 ), om_direction::type::invalid )
     // Vertical s->n
-    //.run_gen( point( 8, 8 ), om_direction::type::invalid, point( 8, 6 ), om_direction::type::invalid )
+    .run_gen( point( 8, 8 ), om_direction::type::invalid, point( 8, 6 ), om_direction::type::invalid )
     // Crossing
-    //.run_gen( point( 3, 5 ), om_direction::type::invalid, point( 3, 9 ), om_direction::type::invalid )
-    //.run_gen( point( 1, 7 ), om_direction::type::invalid, point( 5, 7 ), om_direction::type::invalid )
+    .run_gen( point( 3, 5 ), om_direction::type::invalid, point( 3, 9 ), om_direction::type::invalid )
+    .run_gen( point( 1, 7 ), om_direction::type::invalid, point( 5, 7 ), om_direction::type::invalid )
     .expect( {
         {
             U"..........",

@@ -66,7 +66,7 @@ struct piece_placements {
  * Check whether piece can be placed at given position with given rotation.
  * Returns cata::nullopt if placement is impossible, placement cost otherwise.
  */
-static cata::optional<int> test_placement_at(
+static cata::optional<int> test_can_place_at(
     const overmap &om,
     const om_connection_piece &piece,
     const tripoint &pos,
@@ -99,6 +99,35 @@ static cata::optional<int> test_placement_at(
         }
     }
     return cata::nullopt;
+}
+
+static bool test_already_placed_at(
+    const overmap &om,
+    const om_connection_piece &piece,
+    const tripoint &pos,
+    om_direction::type dir
+)
+{
+    const int num_ters = static_cast<int>( piece.terrains.size() );
+
+    if( piece.is_linear ) {
+        const oter_id &ter = om.ter( tripoint_om_omt( pos ) );
+        if( ter->get_type_id() != piece.linear_terrain ) {
+            return false;
+        }
+    } else {
+        for( int i = 0; i < num_ters; i++ ) {
+            const omcp_terrain &terrain = piece.terrains[i];
+            tripoint_om_omt ter_pos( pos + om_direction::rotate( terrain.pos, dir ) );
+            oter_id desired_oter = terrain.terrain->get_rotated( dir );
+            const oter_id &ter = om.ter( ter_pos );
+            if( ter != desired_oter ) {
+                return false;
+            }
+        }
+    }
+
+    return true;
 }
 
 static omcp_connection_exit conn_exit_rotated( const omcp_connection_exit &exit,
@@ -200,13 +229,19 @@ static std::unique_ptr<piece_placements> gen_piece_placements(
     tripoint pos;
     pos.z = zlev;
 
-    // Find where it's possible to place the pieces
+    // Find where it's possible to place the pieces, or where pieces are already placed
     for( int piece_idx = 0; piece_idx < num_pieces; piece_idx++ ) {
         const om_connection_piece &piece = connection.pieces[piece_idx].obj();
         for( pos.x = 0; pos.x < OMAPX; pos.x++ ) {
             for( pos.y = 0; pos.y < OMAPY; pos.y++ ) {
                 for( om_direction::type dir : piece.allowed_rotations ) {
-                    const cata::optional<int> place_cost = test_placement_at( om, piece, pos, dir );
+                    cata::optional<int> place_cost;
+                    if( test_already_placed_at( om, piece, pos, dir ) ) {
+                        place_cost = 0;
+                    }
+                    if( !place_cost ) {
+                        place_cost = test_can_place_at( om, piece, pos, dir );
+                    }
                     ret->get( piece_idx, pos.xy(), dir ).cost = place_cost ? *place_cost : -1;
                 }
             }
@@ -272,9 +307,24 @@ find_matching_nodes(
 )
 {
     if( exit_dir == om_direction::type::invalid ) {
-        // TODO: get rid of this
-        std::abort();
+        for( om_direction::type dir : om_direction::all ) {
+            const single_piece_placement &spp =
+                placements.get( connection.default_piece_idx, exit_pos, dir );
+            if( spp.is_valid() ) {
+                // TODO: properly implement this
+                pfnode n;
+                n.piece_idx = connection.default_piece_idx;
+                n.pos = exit_pos;
+                n.rot = dir;
+                n.conn_idx = 0;
+
+                return {{ n }};
+            }
+        }
+        // Can't place default node there
+        return {};
     }
+
     // Act like we're a piece with single connection
 
     omcp_connection_exit pseudo_exit;
@@ -312,8 +362,8 @@ find_matching_nodes(
 static void debug_print_node( const pfnode &node, const overmap_connection &connection )
 {
     std::cout << string_format( "  pos:%s  piece:%s  dir:%s  conn:%d  HASH:%ud\n",
-                                connection.pieces[node.piece_idx],
                                 node.pos.to_string(),
+                                connection.pieces[node.piece_idx],
                                 om_direction::name( node.rot ),
                                 node.conn_idx,
                                 std::hash<pfnode> {}( node )
@@ -391,7 +441,11 @@ find_path_breadth_first(
     std::unordered_map<pfnode, pfnode> came_from;
     came_from[start] = start;
 
+    int num_iters = 0;
+
     while( !frontier.empty() ) {
+        num_iters++;
+
         pfnode current = frontier.front();
         frontier.pop();
 
@@ -399,8 +453,10 @@ find_path_breadth_first(
             break;
         }
 
-        std::cout << "Visiting  ";
-        debug_print_node( current, connection );
+        if( false ) {
+            std::cout << "Visiting  ";
+            debug_print_node( current, connection );
+        }
 
         const single_piece_placement &current_pl =
             placements.get( current.piece_idx, current.pos, current.rot );
@@ -433,6 +489,8 @@ find_path_breadth_first(
         }
         cursor = prev;
     }
+
+    std::cout << string_format( "Path finding done in %d iterations.\n", num_iters );
 
     return ret;
 }
@@ -638,22 +696,59 @@ void overmap_generation::build_connection(
     const ConnPath &path
 )
 {
-    const size_t line_all = 0b1111;
+    if( !debug_connection_lay ) {
+        // TODO: remove this
+        return;
+    }
 
-    for( const ConnNode &node : path.nodes ) {
+    const size_t line_none = 0;
+
+    for( size_t node_idx = 0; node_idx < path.nodes.size(); node_idx++ ) {
+        const ConnNode &node = path.nodes[node_idx];
+        const ConnNode *node_prev = node_idx > 0 ? &path.nodes[node_idx - 1] : nullptr;
+        const ConnNode *node_next = node_idx < path.nodes.size() - 1 ? &path.nodes[node_idx + 1] : nullptr;
         const om_connection_piece &piece = node.piece.obj();
 
-        if( piece.is_linear ) {
-            // TODO: linear terrain connections
-            oter_id tid = piece.linear_terrain->get_linear( line_all );
-            om.ter_set( node.pos, tid );
-        } else {
+        std::cout << string_format( "placing tile at %s\n", node.pos.to_string() );
+
+        if( !piece.is_linear ) {
             for( const omcp_terrain &ter : piece.terrains ) {
                 tripoint_om_omt ter_pos =
                     tripoint_om_omt( om_direction::rotate( ter.pos, node.rot ) + node.pos.raw() );
                 oter_id tid = ter.terrain->get_rotated( node.rot );
                 om.ter_set( ter_pos, tid );
             }
+        } else {
+            // TODO: connect to nearby unconnected roads
+            size_t line = line_none;
+            if( om.ter( node.pos )->get_type_id() == piece.linear_terrain ) {
+                //line = om.ter( node.pos )->get_line();
+            }
+            if( node_prev ) {
+                if( node_prev->piece->is_linear ) {
+                    std::cout << "  has linear node_prev\n";
+                    point v = node_prev->pos.raw().xy() - node.pos.raw().xy();
+                    line = om_lines::set_segment( line, om_direction::from_vec( v ) );
+                } else {
+                    // TODO: implement this
+                }
+            } else if( path.source_dir != om_direction::type::invalid ) {
+                line = om_lines::set_segment( line, path.source_dir );
+            }
+            if( node_next ) {
+                if( node_next->piece->is_linear ) {
+                    std::cout << "  has linear node_next\n";
+                    point v = node_next->pos.raw().xy() - node.pos.raw().xy();
+                    line = om_lines::set_segment( line, om_direction::from_vec( v ) );
+                } else {
+                    // TODO: implement this
+                }
+            } else if( path.dest_dir != om_direction::type::invalid ) {
+                line = om_lines::set_segment( line, path.dest_dir );
+            }
+            oter_id tid = piece.linear_terrain->get_linear( line );
+
+            om.ter_set( node.pos, tid );
         }
     }
 }
