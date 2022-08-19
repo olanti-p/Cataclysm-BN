@@ -4,6 +4,7 @@
     "id": "local_road",
     "default_terrain": "road",
     "default_exit_type": "road",
+    "default_piece": "basic_road",
     "pieces": [
       "basic_road",
       "test_road",

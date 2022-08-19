@@ -120,6 +120,8 @@ class overmap_connection
         std::string default_exit_type;
 
         std::vector<string_id<om_connection_piece>> pieces;
+        string_id<om_connection_piece> default_piece;
+        int default_piece_idx = -1;
 
     private:
         struct cache {

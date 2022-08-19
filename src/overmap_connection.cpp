@@ -117,6 +117,7 @@ void overmap_connection::load( const JsonObject &jo, const std::string & )
     mandatory( jo, was_loaded, "default_exit_type", default_exit_type );
     mandatory( jo, was_loaded, "subtypes", subtypes );
     optional( jo, was_loaded, "pieces", pieces );
+    optional( jo, was_loaded, "default_piece", default_piece );
 }
 
 void overmap_connection::check() const
@@ -146,6 +147,21 @@ void overmap_connection::check() const
 void overmap_connection::finalize()
 {
     cached_subtypes.resize( overmap_terrains::get_all().size() );
+
+    if( !pieces.empty() ) {
+        if( default_piece.is_empty() ) {
+            debugmsg( "Overmap connection \"%s\" must define a default piece.", id );
+        } else {
+            auto it = std::find( pieces.cbegin(), pieces.cend(), default_piece );
+            if( it == pieces.end() ) {
+                debugmsg( "Overmap connection \"%s\" refers to default piece \"%s\" which is absent from 'pieces' array.",
+                          id, default_piece );
+                default_piece_idx = 0;
+            } else {
+                default_piece_idx = std::distance( pieces.cbegin(), it );
+            }
+        }
+    }
 }
 
 static void deserialize( omcp_location &obj, JsonIn &jsin )
