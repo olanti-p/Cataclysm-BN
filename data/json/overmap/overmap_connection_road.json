@@ -9,6 +9,12 @@
       "basic_road",
       "test_road",
       "road_with_manhole",
+      "basic_bridge"
+    ],
+    "//pieces": [
+      "basic_road",
+      "test_road",
+      "road_with_manhole",
       "basic_bridge",
       "bridge_ramp"
     ]
@@ -82,6 +88,28 @@
   {
     "type": "om_connection_piece",
     "id": "basic_bridge",
+    "terrains": [
+      [ [ 0, 0, 0 ], "bridge_north" ]
+    ],
+    "connections": [
+      [
+        [ [ 0, 0, 0 ], "n", "road" ],
+        [ [ 0, 0, 0 ], "s", "road" ]
+      ]
+    ],
+    "placements": [
+      {
+        "locations": [
+          [ [ 0, 0, 0 ], "water" ]
+        ],
+        "basic_cost": 120
+      }
+    ],
+    "allowed_rotations": [ "n", "e" ]
+  },
+  {
+    "type": "om_connection_piece",
+    "id": "basic_bridge_elevated",
     "terrains": [
       [ [ 0, 0, 0 ], "bridge_under_north" ],
       [ [ 0, 0, 1 ], "bridge_road_north" ]
