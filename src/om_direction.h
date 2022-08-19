@@ -101,6 +101,9 @@ type random();
 /** Whether these directions are parallel. */
 bool are_parallel( type dir1, type dir2 );
 
+/** Get direction from unit vector. */
+om_direction::type from_vec( point v );
+
 } // namespace om_direction
 
 #endif // CATA_SRC_OM_DIRECTION_H

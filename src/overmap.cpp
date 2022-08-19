@@ -3930,6 +3930,16 @@ bool om_direction::are_parallel( type dir1, type dir2 )
     return dir1 == dir2 || dir1 == opposite( dir2 );
 }
 
+om_direction::type om_direction::from_vec( point v )
+{
+    for( type dir : all ) {
+        if( v == displace( dir ) ) {
+            return dir;
+        }
+    }
+    return type::invalid;
+}
+
 om_direction::type overmap::random_special_rotation( const overmap_special &special,
         const tripoint_om_omt &p, const bool must_be_unexplored ) const
 {
