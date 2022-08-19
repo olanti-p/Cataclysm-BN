@@ -691,6 +691,34 @@ overmap_generation::lay_out_street(
     return straight_path( connection, from, dir, actual_len );
 }
 
+static std::vector<om_direction::type> find_exits_for_linear(
+    const overmap_generation::ConnNode &node,
+    const overmap_generation::ConnNode &other
+)
+{
+    std::vector<om_direction::type> ret;
+
+    tripoint_om_omt node_pos = node.pos;
+    const std::string &exit_type = node.piece->linear_conn_type;
+
+    const om_connection_piece &piece = other.piece.obj();
+    const omcp_connection &piece_conn = piece.connections[other.conn_idx];
+    for( const omcp_connection_exit &exit_base : piece_conn.exits ) {
+        if( exit_base.conn_type != exit_type ) {
+            // Exit type mismatch
+            continue;
+        }
+        omcp_connection_exit exit = conn_exit_rotated( exit_base, other.rot );
+        tripoint_om_omt exit_on_map( other.pos + exit.pos );
+        tripoint_om_omt exit_to = exit_on_map + om_direction::displace( exit.dir );
+        if( node_pos == exit_to ) {
+            ret.push_back( om_direction::opposite( exit.dir ) );
+        }
+    }
+
+    return ret;
+}
+
 void overmap_generation::build_connection(
     overmap &om,
     const ConnPath &path
@@ -730,7 +758,10 @@ void overmap_generation::build_connection(
                     point v = node_prev->pos.raw().xy() - node.pos.raw().xy();
                     line = om_lines::set_segment( line, om_direction::from_vec( v ) );
                 } else {
-                    // TODO: implement this
+                    std::vector<om_direction::type> dirs = find_exits_for_linear( node, *node_prev );
+                    for( om_direction::type dir : dirs ) {
+                        line = om_lines::set_segment( line, dir );
+                    }
                 }
             } else if( path.source_dir != om_direction::type::invalid ) {
                 line = om_lines::set_segment( line, path.source_dir );
@@ -741,7 +772,10 @@ void overmap_generation::build_connection(
                     point v = node_next->pos.raw().xy() - node.pos.raw().xy();
                     line = om_lines::set_segment( line, om_direction::from_vec( v ) );
                 } else {
-                    // TODO: implement this
+                    std::vector<om_direction::type> dirs = find_exits_for_linear( node, *node_next );
+                    for( om_direction::type dir : dirs ) {
+                        line = om_lines::set_segment( line, dir );
+                    }
                 }
             } else if( path.dest_dir != om_direction::type::invalid ) {
                 line = om_lines::set_segment( line, path.dest_dir );
