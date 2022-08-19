@@ -260,6 +260,12 @@ void om_connection_piece::check() const
         if( terrains.empty() ) {
             debugmsg( "Conn piece %s has no terrains.", id );
         }
+        for( const omcp_terrain &ter : terrains ) {
+            if( !ter.terrain.is_valid() ) {
+                debugmsg( "Conn piece %s refers to invalid overmap terrain '%s'.  Did you specify wrong rotation suffix?",
+                          id, ter.terrain );
+            }
+        }
         for( size_t idx = 0; idx < placements.size(); idx++ ) {
             const omcp_placement &placement = placements[idx];
             if( placement.locations.size() != terrains.size() ) {
@@ -267,27 +273,15 @@ void om_connection_piece::check() const
                           id, idx );
             } else {
                 for( size_t loc_idx = 0; loc_idx < placement.locations.size(); loc_idx++ ) {
-                    if( placement.locations[loc_idx].pos != terrains[loc_idx].pos ) {
+                    const omcp_location &loc = placement.locations[loc_idx];
+                    const omcp_terrain &ter = terrains[loc_idx];
+                    if( loc.pos != ter.pos ) {
                         debugmsg( "In conn piece %s, location pos doesn't match terrain pos at placement_idx=%d loc_idx=%d",
                                   id, idx, loc_idx );
                     }
-                }
-            }
-        }
-    } else {
-        for( const omcp_terrain &ter : terrains ) {
-            if( !ter.terrain.is_valid() ) {
-                debugmsg( "Conn piece %s refers to invalid overmap terrain '%s'.  Did you forget rotation suffix?",
-                          id, ter.terrain );
-            } else {
-                const oter_t &t = ter.terrain.obj();
-                std::cout << "ter is" << t.get_name() << std::endl;
-            }
-        }
-        for( const omcp_placement &place : placements ) {
-            for( const omcp_location &loc : place.locations ) {
-                if( !loc.loc.is_valid() ) {
-                    debugmsg( "Conn piece %s refers to invalid overmap location '%s'.", id, loc.loc );
+                    if( !loc.loc.is_valid() ) {
+                        debugmsg( "Conn piece %s refers to invalid overmap location '%s'.", id, loc.loc );
+                    }
                 }
             }
         }
