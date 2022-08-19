@@ -32,6 +32,7 @@ struct ConnNode {
 struct ConnPath {
     std::vector<ConnNode> nodes;
 
+    const overmap_connection *connection = nullptr;
     tripoint_om_omt source;
     om_direction::type source_dir = om_direction::type::invalid;
     tripoint_om_omt dest;
@@ -58,7 +59,6 @@ ConnPath lay_out_street(
 
 void build_connection(
     overmap &om,
-    const overmap_connection &connection,
     const ConnPath &path
 );
 

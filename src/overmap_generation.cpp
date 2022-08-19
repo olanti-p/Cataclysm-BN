@@ -449,6 +449,7 @@ overmap_generation::lay_out_connection(
 )
 {
     ConnPath ret;
+    ret.connection = &connection;
     ret.source = source;
     ret.source_dir = source_dir;
     ret.dest = dest;
@@ -545,6 +546,7 @@ straight_path(
 )
 {
     overmap_generation::ConnPath res;
+    res.connection = &connection;
     if( len == 0 ) {
         return res;
     }
@@ -633,7 +635,6 @@ overmap_generation::lay_out_street(
 
 void overmap_generation::build_connection(
     overmap &om,
-    const overmap_connection &/*connection*/,
     const ConnPath &path
 )
 {

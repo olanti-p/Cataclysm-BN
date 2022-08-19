@@ -3207,7 +3207,7 @@ void overmap::build_city_street(
         return; // Don't bother.
     }
     // Build the actual street.
-    overmap_generation::build_connection( *this, connection, street_path );
+    overmap_generation::build_connection( *this, street_path );
     // Grow in the stated direction, sprouting off sub-roads and placing buildings as we go.
     const auto from = std::next( street_path.nodes.begin() );
     const auto to = street_path.nodes.end();
@@ -4125,7 +4125,7 @@ void overmap::place_special(
                                       initial_dir,
                                       must_be_unexplored
                                   );
-                overmap_generation::build_connection( *this, *elem.connection, path );
+                overmap_generation::build_connection( *this, path );
             }
         }
     }
