@@ -722,7 +722,7 @@ void overmap_generation::build_connection(
             // TODO: connect to nearby unconnected roads
             size_t line = line_none;
             if( om.ter( node.pos )->get_type_id() == piece.linear_terrain ) {
-                //line = om.ter( node.pos )->get_line();
+                line = om.ter( node.pos )->get_line();
             }
             if( node_prev ) {
                 if( node_prev->piece->is_linear ) {
