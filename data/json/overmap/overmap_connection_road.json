@@ -66,7 +66,7 @@
     "type": "om_connection_piece",
     "id": "road_with_manhole",
     "terrains": [
-      [ [ 0, 0, 0 ], "road_nesw_manhole_north" ]
+      [ [ 0, 0, 0 ], "road_nesw_manhole" ]
     ],
     "connections": [
       [
