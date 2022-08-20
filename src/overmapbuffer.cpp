@@ -1697,6 +1697,8 @@ bool overmapbuffer::place_connection( const overmap_connection &connection,
 
     overmap &om = *om_loc_src.om;
 
+    overmap_generation::set_debug_output( true );
+
     const overmap_generation::ConnPath path =
         overmap_generation::lay_out_connection(
             om,
@@ -1709,6 +1711,8 @@ bool overmapbuffer::place_connection( const overmap_connection &connection,
         );
 
     overmap_generation::build_connection( om, path );
+
+    overmap_generation::set_debug_output( false );
     return true;
 }
 
