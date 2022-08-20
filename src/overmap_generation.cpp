@@ -576,6 +576,110 @@ find_path_dijkstra(
     return ret;
 }
 
+constexpr double a_star_heuristic( const pfnode &node, const pfnode &goal )
+{
+    return octile_dist( node.pos, goal.pos );
+}
+
+static std::vector<pfnode>
+find_path_a_star(
+    const std::vector<pfnode> &start_nodes,
+    const std::vector<pfnode> &end_nodes,
+    const piece_placements &placements,
+    const overmap_connection &connection
+)
+{
+    // TODO: all start nodes must be viable
+    pfnode start = start_nodes[0];
+
+    // TODO: all end nodes must be viable
+    pfnode goal = end_nodes[0];
+
+    priority_queue<pfnode, double> frontier;
+    frontier.put( pfnode( start ), 0.0 );
+
+    std::unordered_map<pfnode, pfnode> came_from;
+    came_from[start] = start;
+
+    std::unordered_map<pfnode, double> cost_so_far;
+    cost_so_far[start] = 0.0;
+
+    int num_iters = 0;
+    int iters_until_limit = 10000;
+    bool path_found = false;
+
+    while( !frontier.empty() ) {
+        num_iters++;
+        iters_until_limit--;
+        if( iters_until_limit == 0 ) {
+            break;
+        }
+
+        pfnode current = frontier.get();
+
+        if( current == goal ) {
+            path_found = true;
+            std::cout << "Found goal node  ";
+            debug_print_node( current, connection );
+            break;
+        }
+
+        if( true ) {
+            std::cout << "Visiting  ";
+            debug_print_node( current, connection );
+        }
+
+        const single_piece_placement &current_pl =
+            placements.get( current.piece_idx, current.pos, current.rot );
+        int cost_this = cost_so_far[current];
+        for( const piece_link &link : current_pl.links ) {
+            if( link.src_conn_idx != current.conn_idx ) {
+                // Can't connect from this connection
+                continue;
+            }
+
+            const int placement_cost = placements.get( link.tgt_piece_idx, link.tgt_pos.xy(),
+                                       link.tgt_dir ).cost;
+            const double new_cost = cost_this + placement_cost;
+
+            pfnode next;
+            next.pos = link.tgt_pos.xy();
+            next.conn_idx = link.tgt_conn_idx;
+            next.rot = link.tgt_dir;
+            next.piece_idx = link.tgt_piece_idx;
+
+            if( cost_so_far.find( next ) == cost_so_far.end() || new_cost < cost_so_far[next] ) {
+                const double heuristic = a_star_heuristic( next, goal );
+                const double new_priority = new_cost + heuristic;
+                cost_so_far[next] = new_priority;
+                came_from[next] = current;
+                frontier.put( std::move( next ), new_cost );
+            }
+        }
+    }
+
+    std::vector<pfnode> ret;
+
+    if( path_found ) {
+        std::cout << "Collecting path...\n";
+        pfnode cursor = goal;
+        while( true ) {
+            pfnode prev = came_from[cursor];
+            ret.push_back( cursor );
+            //std::cout << "Added node  ";
+            //debug_print_node( cursor, connection );
+            if( cursor == start ) {
+                break;
+            }
+            cursor = prev;
+        }
+    }
+
+    std::cout << string_format( "Path finding done in %d iterations.\n", num_iters );
+
+    return ret;
+}
+
 overmap_generation::ConnPath
 overmap_generation::lay_out_connection(
     const overmap &om,
@@ -705,6 +809,9 @@ overmap_generation::lay_out_connection(
     if( !found_cheap_path ) {
         // Find a path from any start node to any end node
         if( true ) {
+            nodes = find_path_a_star( start_nodes, end_nodes, placements,
+                                      connection );
+        } else if( false ) {
             nodes = find_path_dijkstra( start_nodes, end_nodes, placements,
                                         connection );
         } else {
