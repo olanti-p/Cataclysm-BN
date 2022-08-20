@@ -163,6 +163,29 @@ TEST_CASE( "road_gen_straight", "[mapgen][connects][road]" )
     } );
 }
 
+TEST_CASE( "road_gen_no_path", "[mapgen][connects][road]" )
+{
+    static map_helpers::canvas two_rooms = {{
+            U"#########",
+            U"#.......#",
+            U"#.......#",
+            U"#.......#",
+            U"#########",
+            U"#.......#",
+            U"#.......#",
+            U"#.......#",
+            U"#########"
+        }
+    };
+
+    road_gen_tester( 0, two_rooms )
+    // Can't path from top part into bottom part
+    .run_gen( point( 2, 2 ), om_direction::type::invalid, point( 6, 6 ), om_direction::type::invalid )
+    // Can't path from bottom part into top part
+    .run_gen( point( 2, 6 ), om_direction::type::invalid, point( 6, 2 ), om_direction::type::invalid )
+    .expect( two_rooms );
+}
+
 static map_helpers::canvas empty_10_10 = {{
         U"..........",
         U"..........",
