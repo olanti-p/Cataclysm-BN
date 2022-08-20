@@ -1951,6 +1951,8 @@ static void elevate_bridges(
 
 bool overmap::generate_over( const int z )
 {
+    return false; // TODO: remove this completely
+
     bool requires_over = false;
     std::vector<point_om_omt> bridge_points;
 
