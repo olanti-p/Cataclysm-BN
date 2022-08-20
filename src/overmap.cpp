@@ -4118,17 +4118,19 @@ void overmap::place_special(
 
                 if( initial_dir != om_direction::type::invalid ) {
                     initial_dir = om_direction::add( initial_dir, dir );
+                    initial_dir = om_direction::opposite( initial_dir );
                 }
 
-                const auto path = overmap_generation::lay_out_connection(
-                                      *this,
-                                      *elem.connection,
-                                      tripoint_om_omt( cit.pos, 0 ),
-                                      om_direction::type::invalid,
-                                      rp,
-                                      initial_dir,
-                                      must_be_unexplored
-                                  );
+                const overmap_generation::ConnPath path =
+                    overmap_generation::lay_out_connection(
+                        *this,
+                        *elem.connection,
+                        tripoint_om_omt( cit.pos, 0 ),
+                        om_direction::type::invalid,
+                        rp,
+                        initial_dir,
+                        must_be_unexplored
+                    );
                 overmap_generation::build_connection( *this, path );
             }
         }
