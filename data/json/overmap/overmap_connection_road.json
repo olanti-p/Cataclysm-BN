@@ -5,17 +5,17 @@
     "default_terrain": "road",
     "default_exit_type": "road",
     "default_piece": "basic_road",
-    "pieces": [
+    "//pieces": [
       "basic_road",
       "test_road",
       "road_with_manhole",
       "basic_bridge"
     ],
-    "//pieces": [
+    "pieces": [
       "basic_road",
       "test_road",
       "road_with_manhole",
-      "basic_bridge",
+      "bridge_elevated",
       "bridge_ramp"
     ]
   },
@@ -109,7 +109,7 @@
   },
   {
     "type": "om_connection_piece",
-    "id": "basic_bridge_elevated",
+    "id": "bridge_elevated",
     "terrains": [
       [ [ 0, 0, 0 ], "bridge_under_north" ],
       [ [ 0, 0, 1 ], "bridge_road_north" ]
