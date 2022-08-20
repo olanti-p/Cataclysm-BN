@@ -286,6 +286,26 @@ bool operator==( const pfnode &l, const pfnode &r )
     return l.pos == r.pos && l.piece_idx == r.piece_idx && l.rot == r.rot && l.conn_idx == r.conn_idx;
 }
 
+bool operator<( const pfnode &l, const pfnode &r )
+{
+    if( l.pos < r.pos ) {
+        return true;
+    } else if( l.pos != r.pos ) {
+        return false;
+    }
+    if( l.piece_idx < r.piece_idx ) {
+        return true;
+    } else if( l.piece_idx != r.piece_idx ) {
+        return false;
+    }
+    if( l.rot < r.rot ) {
+        return true;
+    } else if( l.rot != r.rot ) {
+        return false;
+    }
+    return l.conn_idx < r.conn_idx;
+}
+
 template<>
 struct std::hash<pfnode> {
     std::size_t operator()( const pfnode &n ) const noexcept {
@@ -448,6 +468,114 @@ find_path_breadth_first(
     return ret;
 }
 
+template<typename T, typename Priority>
+struct priority_queue {
+    private:
+        typedef std::pair<Priority, T> Elem;
+        std::priority_queue<Elem, std::vector<Elem>, std::greater<Elem>> elements;
+
+    public:
+        inline bool empty() {
+            return elements.empty();
+        }
+
+        inline void put( T &&item, Priority priority ) {
+            elements.emplace( priority, std::move( item ) );
+        }
+
+        T get() {
+            T best_item = elements.top().second;
+            elements.pop();
+            return best_item;
+        }
+};
+
+static std::vector<pfnode>
+find_path_dijkstra(
+    const std::vector<pfnode> &start_nodes,
+    const std::vector<pfnode> &end_nodes,
+    const piece_placements &placements,
+    const overmap_connection &connection
+)
+{
+    // TODO: all start nodes must be viable
+    pfnode start = start_nodes[0];
+
+    // TODO: all end nodes must be viable
+    pfnode goal = end_nodes[0];
+
+    priority_queue<pfnode, int> frontier;
+    frontier.put( pfnode( start ), 0 );
+
+    std::unordered_map<pfnode, pfnode> came_from;
+    came_from[start] = start;
+
+    std::unordered_map<pfnode, int> cost_so_far;
+    cost_so_far[start] = 0;
+
+    int num_iters = 0;
+    bool path_found = false;
+
+    while( !frontier.empty() ) {
+        num_iters++;
+
+        pfnode current = frontier.get();
+
+        if( current == goal ) {
+            path_found = true;
+            break;
+        }
+
+        if( false ) {
+            std::cout << "Visiting  ";
+            debug_print_node( current, connection );
+        }
+
+        const single_piece_placement &current_pl =
+            placements.get( current.piece_idx, current.pos, current.rot );
+        int cost_this = cost_so_far[current];
+        for( const piece_link &link : current_pl.links ) {
+            if( link.src_conn_idx != current.conn_idx ) {
+                // Can't connect from this connection
+                continue;
+            }
+
+            int new_cost = cost_this + placements.get( link.tgt_piece_idx, link.tgt_pos.xy(),
+                           link.tgt_dir ).cost;
+
+            pfnode next;
+            next.pos = link.tgt_pos.xy();
+            next.conn_idx = link.tgt_conn_idx;
+            next.rot = link.tgt_dir;
+            next.piece_idx = link.tgt_piece_idx;
+
+            if( cost_so_far.find( next ) == cost_so_far.end() || new_cost < cost_so_far[next] ) {
+                cost_so_far[next] = new_cost;
+                came_from[next] = current;
+                frontier.put( std::move( next ), new_cost );
+            }
+        }
+    }
+
+    std::vector<pfnode> ret;
+
+    if( path_found ) {
+        pfnode cursor = goal;
+        while( true ) {
+            pfnode prev = came_from[cursor];
+            ret.push_back( cursor );
+            if( prev == cursor ) {
+                break;
+            }
+            cursor = prev;
+        }
+    }
+
+    std::cout << string_format( "Path finding done in %d iterations.\n", num_iters );
+
+    return ret;
+}
+
 overmap_generation::ConnPath
 overmap_generation::lay_out_connection(
     const overmap &om,
@@ -576,8 +704,13 @@ overmap_generation::lay_out_connection(
 
     if( !found_cheap_path ) {
         // Find a path from any start node to any end node
-        nodes = find_path_breadth_first( start_nodes, end_nodes, placements,
-                                         connection );
+        if( true ) {
+            nodes = find_path_dijkstra( start_nodes, end_nodes, placements,
+                                        connection );
+        } else {
+            nodes = find_path_breadth_first( start_nodes, end_nodes, placements,
+                                             connection );
+        }
     }
 
     std::reverse( nodes.begin(), nodes.end() );
