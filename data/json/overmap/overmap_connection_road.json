@@ -64,7 +64,7 @@
     "placements": [
       {
         "location": "field",
-        "basic_cost": 1
+        "basic_cost": 100
       }
     ]
   },
