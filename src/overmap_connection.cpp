@@ -124,6 +124,34 @@ bool overmap_connection::has( const oter_id &oter ) const
     } ) != subtypes.cend();
 }
 
+bool overmap_connection::has_linear_piece( const oter_id &t ) const
+{
+    for( const string_id<om_connection_piece> &piece : pieces ) {
+        if( piece->is_linear && piece->linear_terrain == t->get_type_id() ) {
+            return true;
+        }
+    }
+    return false;
+}
+
+const om_connection_piece *overmap_connection::pick_linear_piece_for( const oter_id &t ) const
+{
+    for( const string_id<om_connection_piece> &piece : pieces ) {
+        if( !piece->is_linear ) {
+            continue;
+        }
+        if( piece->linear_terrain == t->get_type_id() ) {
+            return &piece.obj();
+        }
+        for( const omcp_placement &place : piece->placements ) {
+            if( place.locations.front().loc->test( t ) ) {
+                return &piece.obj();
+            }
+        }
+    }
+    return nullptr;
+}
+
 void overmap_connection::load( const JsonObject &jo, const std::string & )
 {
     mandatory( jo, was_loaded, "default_terrain", default_terrain );

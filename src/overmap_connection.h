@@ -108,6 +108,9 @@ class overmap_connection
         const subtype *pick_subtype_for( const oter_id &ground ) const;
         bool has( const oter_id &oter ) const;
 
+        bool has_linear_piece( const oter_id &t ) const;
+        const om_connection_piece *pick_linear_piece_for( const oter_id &t ) const;
+
         void load( const JsonObject &jo, const std::string &src );
         void check() const;
         void finalize();

@@ -597,6 +597,7 @@ overmap_generation::lay_out_connection(
 
 overmap_generation::ConnPath
 straight_path(
+    const overmap &om,
     const overmap_connection &connection,
     const tripoint_om_omt &source,
     om_direction::type dir,
@@ -605,18 +606,23 @@ straight_path(
 {
     overmap_generation::ConnPath res;
     res.connection = &connection;
+    res.source = source;
+    res.source_dir = om_direction::type::invalid;
+    res.dest_dir = om_direction::type::invalid;
+    res.dest = source + om_direction::displace( dir ) * len;
     if( len == 0 ) {
         return res;
     }
-    tripoint_om_omt p = source;
     res.nodes.reserve( len );
-    for( int i = 0; i + 1 < len; i++ ) {
+    for( int i = 0; i < len; i++ ) {
+        tripoint_om_omt p = source + om_direction::displace( dir ) * i;
+        const oter_id &ter = om.ter( p );
+
         overmap_generation::ConnNode node;
-        node.pos = p + om_direction::displace( dir ) * i;
+        node.pos = p;
         node.rot = om_direction::type::north;
         node.conn_idx = 0;
-        // TODO: this should assume 0
-        node.piece = connection.pieces[0];
+        node.piece = connection.pick_linear_piece_for( ter )->id;
 
         res.nodes.emplace_back( std::move( node ) );
     }
@@ -632,9 +638,12 @@ overmap_generation::lay_out_street(
     int len
 )
 {
+    std::cout << string_format( "laying street %s -> %d %s\n", from.to_string(), len,
+                                om_direction::name( dir ) );
+
     // See if we need to make another one "step" further.
     const tripoint_om_omt en_pos = from + om_direction::displace( dir, len + 1 );
-    if( overmap::inbounds( en_pos, 1 ) && connection.has( om.ter( en_pos ) ) ) {
+    if( overmap::inbounds( en_pos, 1 ) && connection.has_linear_piece( om.ter( en_pos ) ) ) {
         len++;
     }
 
@@ -642,14 +651,18 @@ overmap_generation::lay_out_street(
 
     while( actual_len < len ) {
         const tripoint_om_omt pos = from + om_direction::displace( dir, actual_len );
+        std::cout << string_format( "  scanning %s ", pos.to_string() );
 
         if( !overmap::inbounds( pos, 1 ) ) {
+            std::cout << "too close to bounds.\n";
             break;  // Don't approach overmap bounds.
         }
 
         const oter_id &ter_id = om.ter( pos );
+        std::cout << string_format( "%s ", ter_id.id() );
 
-        if( ter_id->is_river() || !connection.pick_subtype_for( ter_id ) ) {
+        if( !connection.pick_linear_piece_for( ter_id ) ) {
+            std::cout << "no linear piece for terrain.\n";
             break;
         }
 
@@ -665,30 +678,39 @@ overmap_generation::lay_out_street(
                 if( checkp != pos + om_direction::displace( dir, 1 ) &&
                     checkp != pos + om_direction::displace( om_direction::opposite( dir ), 1 ) &&
                     checkp != pos ) {
-                    if( is_ot_match( "road", om.ter( checkp ), ot_match_type::type ) ) {
+                    if( connection.has_linear_piece( om.ter( checkp ) ) ) {
                         collisions++;
                     }
                 }
             }
 
-            //Stop roads from running right next to eachother
+            // Stop roads from running right next to eachother
             if( collisions >= 3 ) {
                 collided = true;
                 break;
             }
         }
         if( collided ) {
+            std::cout << "too many nearby streets.\n";
             break;
         }
 
         actual_len++;
+        std::cout << "ok\n";
 
-        if( actual_len > 1 && connection.has( ter_id ) ) {
-            break;  // Stop here.
+        if( actual_len > 1 && connection.has_linear_piece( ter_id ) ) {
+            std::cout << "  collides with existing street, ending here.\n";
+            break; // Stop here.
         }
     }
 
-    return straight_path( connection, from, dir, actual_len );
+    std::cout << string_format( "deferring to straight path, len:%d actual_len:%d\n", len, actual_len );
+
+    auto ret = straight_path( om, connection, from, dir, actual_len );
+
+    std::cout << string_format( "done laying street, %d steps.\n", ret.nodes.size() );
+
+    return ret;
 }
 
 static std::vector<om_direction::type> find_exits_for_linear(
@@ -724,10 +746,7 @@ void overmap_generation::build_connection(
     const ConnPath &path
 )
 {
-    if( !debug_connection_lay ) {
-        // TODO: remove this
-        return;
-    }
+    std::cout << string_format( "building connection, %d steps\n", path.nodes.size() );
 
     const size_t line_none = 0;
 
@@ -737,7 +756,7 @@ void overmap_generation::build_connection(
         const ConnNode *node_next = node_idx < path.nodes.size() - 1 ? &path.nodes[node_idx + 1] : nullptr;
         const om_connection_piece &piece = node.piece.obj();
 
-        std::cout << string_format( "placing tile at %s\n", node.pos.to_string() );
+        std::cout << string_format( "  placing piece %s at %s\n", node.piece, node.pos.to_string() );
 
         if( !piece.is_linear ) {
             for( const omcp_terrain &ter : piece.terrains ) {
@@ -754,7 +773,7 @@ void overmap_generation::build_connection(
             }
             if( node_prev ) {
                 if( node_prev->piece->is_linear ) {
-                    std::cout << "  has linear node_prev\n";
+                    std::cout << "    has linear node_prev\n";
                     point v = node_prev->pos.raw().xy() - node.pos.raw().xy();
                     line = om_lines::set_segment( line, om_direction::from_vec( v ) );
                 } else {
@@ -768,7 +787,7 @@ void overmap_generation::build_connection(
             }
             if( node_next ) {
                 if( node_next->piece->is_linear ) {
-                    std::cout << "  has linear node_next\n";
+                    std::cout << "    has linear node_next\n";
                     point v = node_next->pos.raw().xy() - node.pos.raw().xy();
                     line = om_lines::set_segment( line, om_direction::from_vec( v ) );
                 } else {
@@ -785,4 +804,6 @@ void overmap_generation::build_connection(
             om.ter_set( node.pos, tid );
         }
     }
+
+    std::cout << "done building connection.\n";
 }
