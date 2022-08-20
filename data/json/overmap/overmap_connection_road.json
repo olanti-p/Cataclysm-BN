@@ -28,7 +28,7 @@
     "placements": [
       {
         "location": "field",
-        "basic_cost": 0
+        "basic_cost": 1
       },
       {
         "location": "forest_without_trail",
@@ -64,7 +64,7 @@
     "placements": [
       {
         "location": "field",
-        "basic_cost": 0
+        "basic_cost": 1
       }
     ]
   },

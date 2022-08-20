@@ -309,6 +309,10 @@ void om_connection_piece::check() const
         }
         for( size_t idx = 0; idx < placements.size(); idx++ ) {
             const omcp_placement &placement = placements[idx];
+            if( placement.basic_cost <= 0 ) {
+                debugmsg( "In conn piece %s, basic_cost must be >= 1 at placement_idx=%d (got %d)",
+                          id, idx, placement.basic_cost );
+            }
             if( placement.locations.size() != terrains.size() ) {
                 debugmsg( "In conn piece %s, number of locations must match number of terrains at placement_idx=%d",
                           id, idx );
