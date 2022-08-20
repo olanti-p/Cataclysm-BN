@@ -523,12 +523,10 @@ overmap_generation::lay_out_connection(
         return ret;
     }
 
-    /*
     if( !debug_connection_lay ) {
         // TODO: remove this
         return ret;
     }
-    */
 
     std::cout << string_format( "LAYING OUT CONNECTION\nconn: %s\nsrc: %s %s\ndst: %s %s\n\n",
                                 connection.id,
@@ -748,6 +746,11 @@ void overmap_generation::build_connection(
     const ConnPath &path
 )
 {
+    if( !debug_connection_lay ) {
+        // TODO: remove this
+        return;
+    }
+
     std::cout << string_format( "building connection, %d steps\n", path.nodes.size() );
 
     const size_t line_none = 0;
