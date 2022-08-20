@@ -391,6 +391,7 @@ find_path_breadth_first(
     came_from[start] = start;
 
     int num_iters = 0;
+    bool path_found = false;
 
     while( !frontier.empty() ) {
         num_iters++;
@@ -399,6 +400,7 @@ find_path_breadth_first(
         frontier.pop();
 
         if( current == goal ) {
+            path_found = true;
             break;
         }
 
@@ -429,14 +431,16 @@ find_path_breadth_first(
 
     std::vector<pfnode> ret;
 
-    pfnode cursor = goal;
-    while( true ) {
-        pfnode prev = came_from[cursor];
-        ret.push_back( cursor );
-        if( prev == cursor ) {
-            break;
+    if( path_found ) {
+        pfnode cursor = goal;
+        while( true ) {
+            pfnode prev = came_from[cursor];
+            ret.push_back( cursor );
+            if( prev == cursor ) {
+                break;
+            }
+            cursor = prev;
         }
-        cursor = prev;
     }
 
     std::cout << string_format( "Path finding done in %d iterations.\n", num_iters );
