@@ -3665,12 +3665,14 @@ void overmap::connect_closest_points( const std::vector<point_om_omt> &points, i
         if( closest > 0 ) {
             tripoint_om_omt src( points[i], z );
             tripoint_om_omt dst( points[k], z );
-            overmap_generation::lay_out_connection(
-                *this, connection,
-                src, om_direction::type::invalid,
-                dst, om_direction::type::invalid,
-                false
-            );
+            const overmap_generation::ConnPath path =
+                overmap_generation::lay_out_connection(
+                    *this, connection,
+                    src, om_direction::type::invalid,
+                    dst, om_direction::type::invalid,
+                    false
+                );
+            overmap_generation::build_connection( *this, path );
         }
     }
 }
