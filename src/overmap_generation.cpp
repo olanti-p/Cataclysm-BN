@@ -378,57 +378,6 @@ find_path_breadth_first(
     const overmap_connection &connection
 )
 {
-    if( true ) {
-        std::cout << "START_NODES:\n";
-        for( const pfnode &node : start_nodes ) {
-            debug_print_node( node, connection );
-        }
-        std::cout << "\n";
-
-        std::cout << "END_NODES:\n";
-        for( const pfnode &node : end_nodes ) {
-            debug_print_node( node, connection );
-        }
-        std::cout << "\n";
-
-        if( false ) {
-            std::cout << "\nPLACEMENT_CACHE:\n";
-            const int num_pieces = static_cast<int>( connection.pieces.size() );
-            point pos;
-            for( pos.x = 0; pos.x < 12; pos.x++ ) {
-                for( pos.y = 0; pos.y < 13; pos.y++ ) {
-                    std::cout << pos.to_string() << ":\n";
-                    for( int piece_idx = 0; piece_idx < num_pieces; piece_idx++ ) {
-                        const om_connection_piece &piece = connection.pieces[piece_idx].obj();
-                        for( om_direction::type dir : om_direction::all ) {
-                            const single_piece_placement &spp = placements.get( piece_idx, pos, dir );
-                            if( !spp.is_valid() ) {
-                                continue;
-                            }
-                            std::cout << string_format( "   piece:%s  dir:%s  cost:%d  links:%d\n",
-                                                        piece.id,
-                                                        om_direction::name( dir ),
-                                                        spp.cost,
-                                                        spp.links.size()
-                                                      );
-                            for( const piece_link &link : spp.links ) {
-                                const om_connection_piece &tgt_piece = connection.pieces[link.tgt_piece_idx].obj();
-                                std::cout << string_format( "    - link pos:%s dir:%s piece:%s conn:%d src_conn:%d\n",
-                                                            link.tgt_pos.to_string(),
-                                                            om_direction::name( link.tgt_dir ),
-                                                            tgt_piece.id,
-                                                            link.tgt_conn_idx,
-                                                            link.src_conn_idx
-                                                          );
-                            }
-                        }
-                    }
-                }
-            }
-            std::cout << "\n";
-        }
-    }
-
     // TODO: all start nodes must be viable
     pfnode start = start_nodes[0];
 
@@ -567,6 +516,57 @@ overmap_generation::lay_out_connection(
             if( found_cheap_path ) {
                 break;
             }
+        }
+    }
+
+    if( true ) {
+        std::cout << "START_NODES:\n";
+        for( const pfnode &node : start_nodes ) {
+            debug_print_node( node, connection );
+        }
+        std::cout << "\n";
+
+        std::cout << "END_NODES:\n";
+        for( const pfnode &node : end_nodes ) {
+            debug_print_node( node, connection );
+        }
+        std::cout << "\n";
+
+        if( false ) {
+            std::cout << "\nPLACEMENT_CACHE:\n";
+            const int num_pieces = static_cast<int>( connection.pieces.size() );
+            point pos;
+            for( pos.x = 0; pos.x < 12; pos.x++ ) {
+                for( pos.y = 0; pos.y < 13; pos.y++ ) {
+                    std::cout << pos.to_string() << ":\n";
+                    for( int piece_idx = 0; piece_idx < num_pieces; piece_idx++ ) {
+                        const om_connection_piece &piece = connection.pieces[piece_idx].obj();
+                        for( om_direction::type dir : om_direction::all ) {
+                            const single_piece_placement &spp = placements.get( piece_idx, pos, dir );
+                            if( !spp.is_valid() ) {
+                                continue;
+                            }
+                            std::cout << string_format( "   piece:%s  dir:%s  cost:%d  links:%d\n",
+                                                        piece.id,
+                                                        om_direction::name( dir ),
+                                                        spp.cost,
+                                                        spp.links.size()
+                                                      );
+                            for( const piece_link &link : spp.links ) {
+                                const om_connection_piece &tgt_piece = connection.pieces[link.tgt_piece_idx].obj();
+                                std::cout << string_format( "    - link pos:%s dir:%s piece:%s conn:%d src_conn:%d\n",
+                                                            link.tgt_pos.to_string(),
+                                                            om_direction::name( link.tgt_dir ),
+                                                            tgt_piece.id,
+                                                            link.tgt_conn_idx,
+                                                            link.src_conn_idx
+                                                          );
+                            }
+                        }
+                    }
+                }
+            }
+            std::cout << "\n";
         }
     }
 
