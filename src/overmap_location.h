@@ -25,9 +25,11 @@ struct overmap_location {
         overmap_location_id id;
         bool was_loaded = false;
 
-    private:
         std::vector<oter_type_str_id> terrains;
+        std::vector<overmap_location_id> locations;
         std::vector<std::string> flags;
+
+        bool locs_finalized = false;
 };
 
 namespace overmap_locations

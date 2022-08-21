@@ -14,6 +14,64 @@ class JsonObject;
 class JsonIn;
 struct overmap_location;
 
+class omcp_location
+{
+    public:
+        tripoint pos;
+        overmap_location_id loc;
+};
+
+class omcp_placement
+{
+    public:
+        int basic_cost = 0;
+        std::vector<omcp_location> locations;
+};
+
+class omcp_connection_exit
+{
+    public:
+        tripoint pos;
+        om_direction::type dir = om_direction::type::invalid;
+        std::string conn_type;
+};
+
+class omcp_connection
+{
+    public:
+        std::vector<omcp_connection_exit> exits;
+};
+
+class omcp_terrain
+{
+    public:
+        tripoint pos;
+        oter_str_id terrain;
+};
+
+class om_connection_piece
+{
+    public:
+        string_id<om_connection_piece> id;
+        bool was_loaded = false;
+
+        bool is_linear = false;
+        int piece_cost = 0;
+
+        oter_type_str_id linear_terrain;
+        std::string linear_conn_type;
+
+        std::vector<omcp_placement> placements;
+        std::vector<omcp_terrain> terrains;
+        std::vector<omcp_connection> connections;
+
+        std::vector<om_direction::type> allowed_rotations;
+
+        void load( const JsonObject &jo, const std::string &src );
+        void check() const;
+        void finalize();
+};
+
 class overmap_connection
 {
     public:
@@ -50,6 +108,9 @@ class overmap_connection
         const subtype *pick_subtype_for( const oter_id &ground ) const;
         bool has( const oter_id &oter ) const;
 
+        bool has_linear_piece( const oter_id &t ) const;
+        const om_connection_piece *pick_linear_piece_for( const oter_id &t ) const;
+
         void load( const JsonObject &jo, const std::string &src );
         void check() const;
         void finalize();
@@ -59,6 +120,11 @@ class overmap_connection
         bool was_loaded = false;
 
         oter_type_str_id default_terrain;
+        std::string default_exit_type;
+
+        std::vector<string_id<om_connection_piece>> pieces;
+        string_id<om_connection_piece> default_piece;
+        int default_piece_idx = -1;
 
     private:
         struct cache {
@@ -77,9 +143,12 @@ namespace overmap_connections
 {
 
 void load( const JsonObject &jo, const std::string &src );
+void load_piece( const JsonObject &jo, const std::string &src );
 void finalize();
 void check_consistency();
 void reset();
+
+const std::vector<overmap_connection> &get_all();
 
 overmap_connection_id guess_for( const oter_type_id &oter );
 overmap_connection_id guess_for( const oter_id &oter );

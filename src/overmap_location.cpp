@@ -48,15 +48,16 @@ void overmap_location::load( const JsonObject &jo, const std::string & )
 {
     optional( jo, was_loaded, "flags", flags );
     optional( jo, was_loaded, "terrains", terrains );
-    if( flags.empty() && terrains.empty() ) {
-        jo.throw_error( "At least one flag or terrain must be specified." );
+    optional( jo, was_loaded, "locations", locations );
+    if( flags.empty() && terrains.empty() && locations.empty() ) {
+        jo.throw_error( "At least one flag, terrain or location must be specified." );
     }
 }
 
 std::vector<oter_type_id> overmap_location::get_all_terrains() const
 {
     std::vector<oter_type_id> ret;
-    for( oter_type_str_id elem : terrains ) {
+    for( const oter_type_str_id &elem : terrains ) {
         ret.push_back( elem );
     }
     return ret;
@@ -107,5 +108,48 @@ void overmap_locations::finalize()
     locations.finalize();
     for( const overmap_location &elem : locations.get_all() ) {
         const_cast<overmap_location &>( elem ).finalize(); // This cast is ugly, but safe.
+    }
+
+    bool did_something = true;
+    while( did_something ) {
+        did_something = false;
+
+        for( const overmap_location &elem : locations.get_all() ) {
+            overmap_location &loc = const_cast<overmap_location &>( elem ); // This cast is ugly, but safe.
+            if( loc.locs_finalized ) {
+                // Our job here is done
+                continue;
+            }
+            if( loc.locations.empty() ) {
+                // Nothing to expand here
+                loc.locs_finalized = true;
+                did_something = true;
+                continue;
+            }
+            bool can_proceed = true;
+            for( const auto &other_loc : loc.locations ) {
+                if( !other_loc->locs_finalized ) {
+                    // Must finalize prerequisites first
+                    can_proceed = false;
+                    break;
+                }
+            }
+            if( !can_proceed ) {
+                continue;
+            }
+            for( const auto &other_loc : loc.locations ) {
+                for( const auto &ter : other_loc->terrains ) {
+                    loc.terrains.push_back( ter );
+                }
+            }
+            loc.locs_finalized = true;
+            did_something = true;
+        }
+    }
+
+    for( const auto &loc : locations.get_all() ) {
+        if( !loc.locs_finalized ) {
+            debugmsg( "Circular dependency in overmap_location %s", loc.id );
+        }
     }
 }

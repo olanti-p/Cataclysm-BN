@@ -1,0 +1,156 @@
+[
+  {
+    "type": "overmap_connection",
+    "id": "local_road",
+    "default_terrain": "road",
+    "default_exit_type": "road",
+    "default_piece": "basic_road",
+    "pieces": [
+      "basic_road",
+      "road_with_manhole",
+      "basic_bridge"
+    ],
+    "//pieces": [
+      "basic_road",
+      "railroad_level_crossing",
+      "road_with_manhole",
+      "basic_bridge",
+      "bridge_ramp"
+    ]
+  },
+  {
+    "type": "om_connection_piece",
+    "id": "basic_road",
+    "is_linear": true,
+    "terrain": "road",
+    "conn_type": "road",
+    "placements": [
+      {
+        "location": "field",
+        "basic_cost": 5
+      },
+      {
+        "location": "forest_without_trail",
+        "basic_cost": 20
+      },
+      {
+        "location": "forest_trail",
+        "basic_cost": 25
+      },
+      {
+        "location": "swamp",
+        "basic_cost": 45
+      }
+    ]
+  },
+  {
+    "type": "om_connection_piece",
+    "id": "railroad_level_crossing",
+    "terrains": [
+      [ [ 0, 0, 0 ], "railroad_level_crossing_north" ]
+    ],
+    "connections": [
+      [
+        [ [ 0, 0, 0 ], "e", "road" ],
+        [ [ 0, 0, 0 ], "w", "road" ]
+      ],
+      [
+        [ [ 0, 0, 0 ], "n", "railroad" ],
+        [ [ 0, 0, 0 ], "s", "railroad" ]
+      ]
+    ],
+    "allowed_rotations": [ "n", "e" ],
+    "placements": [
+      {
+        "location": "field",
+        "basic_cost": 100
+      }
+    ]
+  },
+  {
+    "type": "om_connection_piece",
+    "id": "road_with_manhole",
+    "terrains": [
+      [ [ 0, 0, 0 ], "road_nesw_manhole" ]
+    ],
+    "connections": [
+      [
+        [ [ 0, 0, 0 ], "n", "road" ],
+        [ [ 0, 0, 0 ], "e", "road" ],
+        [ [ 0, 0, 0 ], "s", "road" ],
+        [ [ 0, 0, 0 ], "w", "road" ]
+      ]
+    ],
+    "//": "manhole mapgen is hardcoded at the moment",
+    "placements": [ ]
+  },
+  {
+    "type": "om_connection_piece",
+    "id": "basic_bridge",
+    "terrains": [
+      [ [ 0, 0, 0 ], "bridge_north" ]
+    ],
+    "connections": [
+      [
+        [ [ 0, 0, 0 ], "n", "road" ],
+        [ [ 0, 0, 0 ], "s", "road" ]
+      ]
+    ],
+    "placements": [
+      {
+        "locations": [
+          [ [ 0, 0, 0 ], "water" ]
+        ],
+        "basic_cost": 120
+      }
+    ],
+    "allowed_rotations": [ "n", "e" ]
+  },
+  {
+    "type": "om_connection_piece",
+    "id": "basic_bridge_elevated",
+    "terrains": [
+      [ [ 0, 0, 0 ], "bridge_under_north" ],
+      [ [ 0, 0, 1 ], "bridge_road_north" ]
+    ],
+    "connections": [
+      [
+        [ [ 0, 0, 0 ], "n", "bridge_overhead" ],
+        [ [ 0, 0, 0 ], "s", "bridge_overhead" ]
+      ]
+    ],
+    "placements": [
+      {
+        "locations": [
+          [ [ 0, 0, 0 ], "water" ],
+          [ [ 0, 0, 1 ], "open_air" ]
+        ],
+        "basic_cost": 120
+      }
+    ]
+  },
+  {
+    "type": "om_connection_piece",
+    "id": "bridge_ramp",
+    "terrains": [
+      [ [ 0, 0, 0 ], "bridgehead_ground_north" ],
+      [ [ 0, 0, 1 ], "bridgehead_ramp_north" ]
+    ],
+    "connections": [
+      [
+        [ [ 0, 0, 0 ], "n", "road" ],
+        [ [ 0, 0, 0 ], "s", "bridge_overhead" ]
+      ]
+    ],
+    "placements": [
+      {
+        "//": "Check for ground terrain like this: [ [ 0, 1, 0 ], field_or_road ]",
+        "locations": [
+          [ [ 0, 0, 0 ], "water" ],
+          [ [ 0, 0, 1 ], "open_air" ]
+        ],
+        "basic_cost": 120
+      }
+    ]
+  }
+]

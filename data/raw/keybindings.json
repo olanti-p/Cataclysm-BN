@@ -880,6 +880,13 @@
   },
   {
     "type": "keybinding",
+    "id": "PLACE_CONNECTION",
+    "category": "OVERMAP",
+    "name": "Place Overmap Connection",
+    "bindings": [ { "input_method": "keyboard", "key": "c" } ]
+  },
+  {
+    "type": "keybinding",
     "name": "View Missions",
     "category": "OVERMAP",
     "id": "MISSIONS",

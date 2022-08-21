@@ -37,7 +37,7 @@ struct regional_settings;
 
 namespace om_direction
 {
-enum class type;
+enum class type : int8_t;
 }
 
 struct overmap_path_params {
@@ -519,6 +519,14 @@ class overmapbuffer
          */
         bool place_special( const overmap_special_id &special_id, const tripoint_abs_omt &center,
                             int radius );
+
+        bool place_connection( const overmap_connection &connection,
+                               const tripoint_abs_omt &src,
+                               om_direction::type src_dir,
+                               const tripoint_abs_omt &dst,
+                               om_direction::type dst_dir,
+                               bool must_be_unexplored
+                             );
 
     private:
         /**

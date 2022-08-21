@@ -416,7 +416,7 @@ class overmap
         void place_cities();
         void place_building( const tripoint_om_omt &p, om_direction::type dir, const city &town );
 
-        void build_city_street( const overmap_connection &connection, const point_om_omt &p, int cs,
+        void build_city_street( const overmap_connection &connection, const tripoint_om_omt &p, int cs,
                                 om_direction::type dir, const city &town, int block_width = 2 );
         bool build_lab( const tripoint_om_omt &p, lab &l, int size,
                         std::vector<point_om_omt> &lab_train_points,
@@ -426,20 +426,6 @@ class overmap
         bool build_slimepit( const tripoint_om_omt &origin, int s );
         void build_mine( const tripoint_om_omt &origin, int s );
 
-        // Connection laying
-        pf::directed_path<point_om_omt> lay_out_connection(
-            const overmap_connection &connection, const point_om_omt &source,
-            const point_om_omt &dest, int z, bool must_be_unexplored ) const;
-        pf::directed_path<point_om_omt> lay_out_street(
-            const overmap_connection &connection, const point_om_omt &source,
-            om_direction::type dir, size_t len ) const;
-
-        void build_connection(
-            const overmap_connection &connection, const pf::directed_path<point_om_omt> &path, int z,
-            const om_direction::type &initial_dir = om_direction::type::invalid );
-        void build_connection( const point_om_omt &source, const point_om_omt &dest, int z,
-                               const overmap_connection &connection, bool must_be_unexplored,
-                               const om_direction::type &initial_dir = om_direction::type::invalid );
         void connect_closest_points( const std::vector<point_om_omt> &points, int z,
                                      const overmap_connection &connection );
         // Polishing

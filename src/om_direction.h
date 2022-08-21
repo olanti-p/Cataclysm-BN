@@ -13,7 +13,7 @@ struct tripoint;
 namespace om_direction
 {
 /** Basic enum for directions. */
-enum class type : int {
+enum class type : int8_t {
     invalid = -1,
     none,
     north = none,
@@ -100,6 +100,9 @@ type random();
 
 /** Whether these directions are parallel. */
 bool are_parallel( type dir1, type dir2 );
+
+/** Get direction from unit vector. */
+om_direction::type from_vec( point v );
 
 } // namespace om_direction
 
