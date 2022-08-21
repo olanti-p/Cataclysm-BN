@@ -1,0 +1,33 @@
+[
+  {
+    "type": "overmap_connection",
+    "id": "forest_trail",
+    "default_terrain": "forest_trail",
+    "default_exit_type": "forest_trail",
+    "default_piece": "basic_forest_trail",
+    "pieces": [
+      "basic_forest_trail"
+    ]
+  },
+  {
+    "type": "om_connection_piece",
+    "id": "basic_forest_trail",
+    "is_linear": true,
+    "terrain": "forest_trail",
+    "conn_type": "forest_trail",
+    "placements": [
+      {
+        "location": "forest_center",
+        "basic_cost": 1
+      },
+      {
+        "location": "forest_edge",
+        "basic_cost": 100
+      },
+      {
+        "location": "swamp",
+        "basic_cost": 40
+      }
+    ]
+  }
+]

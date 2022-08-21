@@ -12,7 +12,7 @@
     ],
     "//pieces": [
       "basic_road",
-      "test_road",
+      "railroad_level_crossing",
       "road_with_manhole",
       "basic_bridge",
       "bridge_ramp"
@@ -27,25 +27,25 @@
     "placements": [
       {
         "location": "field",
-        "basic_cost": 1
-      },
-      {
-        "location": "forest_without_trail",
-        "basic_cost": 4
-      },
-      {
-        "location": "forest_trail",
         "basic_cost": 5
       },
       {
+        "location": "forest_without_trail",
+        "basic_cost": 20
+      },
+      {
+        "location": "forest_trail",
+        "basic_cost": 25
+      },
+      {
         "location": "swamp",
-        "basic_cost": 8
+        "basic_cost": 45
       }
     ]
   },
   {
     "type": "om_connection_piece",
-    "id": "test_road",
+    "id": "railroad_level_crossing",
     "terrains": [
       [ [ 0, 0, 0 ], "railroad_level_crossing_north" ]
     ],
@@ -55,8 +55,8 @@
         [ [ 0, 0, 0 ], "w", "road" ]
       ],
       [
-        [ [ 0, 0, 0 ], "n", "road" ],
-        [ [ 0, 0, 0 ], "s", "road" ]
+        [ [ 0, 0, 0 ], "n", "railroad" ],
+        [ [ 0, 0, 0 ], "s", "railroad" ]
       ]
     ],
     "allowed_rotations": [ "n", "e" ],
@@ -101,7 +101,7 @@
         "locations": [
           [ [ 0, 0, 0 ], "water" ]
         ],
-        "basic_cost": 20
+        "basic_cost": 120
       }
     ],
     "allowed_rotations": [ "n", "e" ]
