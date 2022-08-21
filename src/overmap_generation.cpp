@@ -584,7 +584,7 @@ find_path_dijkstra(
 
 constexpr double a_star_heuristic( const pfnode &node, const pfnode &goal )
 {
-    return trig_dist( node.pos, goal.pos );
+    return trig_dist( node.pos, goal.pos ) * 5.0;
 }
 
 static std::ofstream make_pf_log( const pfnode &start, const pfnode &goal )
@@ -631,7 +631,7 @@ find_path_a_star(
     cost_so_far[start] = 0.0;
 
     int num_iters = 0;
-    int iters_until_limit = 5000000;
+    int iters_until_limit = 300000;
     bool path_found = false;
 
     while( !frontier.empty() ) {
@@ -753,10 +753,12 @@ overmap_generation::lay_out_connection(
         return ret;
     }
 
+    /*
     if( !debug_connection_lay ) {
         // TODO: remove this
         return ret;
     }
+    */
 
     if( dprint ) {
         std::cout << string_format( "LAYING OUT CONNECTION\nconn: %s\nsrc: %s %s\ndst: %s %s\n\n",
@@ -1065,10 +1067,12 @@ void overmap_generation::build_connection(
     const ConnPath &path
 )
 {
+    /*
     if( !debug_connection_lay ) {
         // TODO: remove this
         return;
     }
+    */
 
     constexpr bool dprint = false;
 
