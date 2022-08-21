@@ -13,7 +13,7 @@ struct tripoint;
 namespace om_direction
 {
 /** Basic enum for directions. */
-enum class type : int {
+enum class type : int8_t {
     invalid = -1,
     none,
     north = none,

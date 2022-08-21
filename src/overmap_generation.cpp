@@ -275,10 +275,10 @@ static std::unique_ptr<piece_placements> gen_piece_placements(
 }
 
 struct pfnode {
-    int piece_idx = -1;
     point pos;
+    int8_t piece_idx = -1;
     om_direction::type rot;
-    int conn_idx = -1;
+    int8_t conn_idx = -1;
 };
 
 bool operator==( const pfnode &l, const pfnode &r )

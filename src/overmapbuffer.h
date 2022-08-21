@@ -37,7 +37,7 @@ struct regional_settings;
 
 namespace om_direction
 {
-enum class type;
+enum class type : int8_t;
 }
 
 struct overmap_path_params {

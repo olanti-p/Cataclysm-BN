@@ -14,7 +14,7 @@ struct regional_settings;
 class map;
 namespace om_direction
 {
-enum class type : int;
+enum class type : int8_t;
 } // namespace om_direction
 
 /**
