@@ -14,6 +14,8 @@ imgui_dep = subproject('imgui').get_variable('imgui_dep')
 
 cpp_args = [ '-DTILES' ]
 
+cpp_args += [ '-Wno-shadow' ]
+
 version_dep = declare_dependency(
     sources : [version_h],
 )
