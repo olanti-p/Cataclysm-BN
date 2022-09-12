@@ -510,12 +510,12 @@ class jmapgen_zone : public jmapgen_piece
 
 class neighborhood_check
 {
-    private:
+    public:
         // To speed up the most common case: no checks
         bool has_any = false;
         std::array<std::set<oter_str_id>, om_direction::size> neighbors;
         std::set<oter_str_id> above;
-    public:
+
         neighborhood_check( const JsonObject &jsi );
 
         bool test( mapgendata &dat ) const;
