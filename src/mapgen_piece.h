@@ -6,6 +6,9 @@
 #include "field_type.h"
 #include "item_group.h"
 #include "mapgen.h"
+#include "mapgendata.h"
+#include "map.h"
+#include "vpart_position.h"
 #include "om_direction.h"
 
 class npc_template;
@@ -36,6 +39,9 @@ enum class JmPieceType : int {
     Translate,
     Zone,
     Nested,
+    AltTrap,
+    AltFurniture,
+    AltTerrain,
 
     NumJmTypes
 };
@@ -534,5 +540,34 @@ class jmapgen_nested : public jmapgen_piece
             return JmPieceType::Nested;
         }
 };
+
+/**
+ * This is a generic mapgen piece, the template parameter PieceType should be another specific
+ * type of jmapgen_piece. This class contains a vector of those objects and will chose one of
+ * it at random.
+ */
+template<typename PieceType>
+class jmapgen_alternativly : public jmapgen_piece
+{
+    public:
+        // Note: this bypasses virtual function system, all items in this vector are of type
+        // PieceType, they *can not* be of any other type.
+        std::vector<PieceType> alternatives;
+        jmapgen_alternativly() = default;
+        void apply( mapgendata &dat, const jmapgen_int &x, const jmapgen_int &y ) const override {
+            if( const auto chosen = random_entry_opt( alternatives ) ) {
+                chosen->get().apply( dat, x, y );
+            }
+        }
+        bool has_vehicle_collision( mapgendata &dat, const point &p ) const override {
+            return dat.m.veh_at( tripoint( p, dat.zlevel() ) ).has_value();
+        }
+        void show_details() const override;
+        JmPieceType get_type() const override;
+};
+
+using jmapgen_alternativly_trap = jmapgen_alternativly<jmapgen_trap>;
+using jmapgen_alternativly_furniture = jmapgen_alternativly<jmapgen_furniture>;
+using jmapgen_alternativly_terrain = jmapgen_alternativly<jmapgen_terrain>;
 
 #endif // CATA_SRC_MAPGEN_PIECE_H

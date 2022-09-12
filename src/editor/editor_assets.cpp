@@ -397,6 +397,24 @@ void jmapgen_nested::show_details() const
     ImGui::Text( "TODO" );
 }
 
+template<>
+void jmapgen_alternativly_trap::show_details() const
+{
+    ImGui::Text( "TODO" );
+}
+
+template<>
+void jmapgen_alternativly_furniture::show_details() const
+{
+    ImGui::Text( "TODO" );
+}
+
+template<>
+void jmapgen_alternativly_terrain::show_details() const
+{
+    ImGui::Text( "TODO" );
+}
+
 namespace editor
 {
 

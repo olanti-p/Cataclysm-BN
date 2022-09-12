@@ -72,6 +72,12 @@ const char *get_piece_type_name( JmPieceType pt )
             return "Zone";
         case JmPieceType::Nested:
             return "Nested";
+        case JmPieceType::AltTrap:
+            return "AltTrap";
+        case JmPieceType::AltFurniture:
+            return "AltFurniture";
+        case JmPieceType::AltTerrain:
+            return "AltTerrain";
         default:
             std::abort();
     }
@@ -962,4 +968,22 @@ bool jmapgen_nested::has_vehicle_collision( mapgendata &dat, const point &p ) co
     }
 
     return false;
+}
+
+template<>
+JmPieceType jmapgen_alternativly_trap::get_type() const
+{
+    return JmPieceType::AltTrap;
+}
+
+template<>
+JmPieceType jmapgen_alternativly_furniture::get_type() const
+{
+    return JmPieceType::AltFurniture;
+}
+
+template<>
+JmPieceType jmapgen_alternativly_terrain::get_type() const
+{
+    return JmPieceType::AltTerrain;
 }
