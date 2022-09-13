@@ -1,6 +1,7 @@
 #include "editor_main.h"
 #include "editor_assets.h"
 #include "editor_widgets.h"
+#include "editor_me_state.h"
 
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
@@ -55,6 +56,8 @@ struct editor_state {
     const asset_lib_entry *copied_entry = nullptr;
 
     cata::optional<tripoint> examine_selection;
+
+    cata::optional<me_state> mapgenedit_state;
 };
 
 static int get_current_z( const editor_state & /*state*/ )
@@ -593,6 +596,11 @@ static void show_tool_bar( editor_state &state )
 
 static void show_editor_ui( editor_state &state )
 {
+    if( state.mapgenedit_state ) {
+        show_me_ui( *state.mapgenedit_state );
+        return;
+    }
+
     show_canvas_overlay_window( state );
     show_control_window( state );
     if( state.current_tool == EditorTool::Examine && state.examine_selection ) {
@@ -620,6 +628,9 @@ void advanced_editor_run()
         editor_state state;
         init_assets( state.assets );
         current_state = &state;
+
+        state.mapgenedit_state = me_state();
+        state.show_cata_ui = false;
 
         bool old_submap_grid = g->debug_submap_grid_overlay;
         tripoint old_view = get_avatar().view_offset;
@@ -653,6 +664,9 @@ void advanced_editor_run()
                 std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
             }
             refresh_display();
+            if( state.mapgenedit_state && !state.mapgenedit_state->do_loop ) {
+                state.do_loop = false;
+            }
         }
     }
 
