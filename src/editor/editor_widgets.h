@@ -3,7 +3,9 @@
 
 #include <string>
 
-struct ImVec4;
+#include "imgui.h"
+#include "misc/cpp/imgui_stdlib.h"
+
 class nc_color;
 struct jmapgen_int;
 class jmapgen_place;
@@ -23,6 +25,19 @@ void JmapgenPlace( const std::string &label, const jmapgen_place &jmp );
 
 bool InputAssetId( editor::editor_state &state, const std::string &label, std::string &buf,
                    editor::AssetType atype );
+
+template<typename Point>
+bool DragPoint( const char *label, Point *p, float v_speed = 1.0f, int v_min = 0,
+                int v_max = 0, const char *format = "%d", ImGuiSliderFlags flags = 0 )
+{
+    int v[2];
+    v[0] = p->x();
+    v[1] = p->y();
+    bool ret = DragScalarN( label, ImGuiDataType_S32, v, 2, v_speed, &v_min, &v_max, format, flags );
+    p->x() = v[0];
+    p->y() = v[1];
+    return ret;
+}
 } // namespace ImGui
 
 #endif // CATA_SRC_EDITOR_EDITOR_WIDGETS_H

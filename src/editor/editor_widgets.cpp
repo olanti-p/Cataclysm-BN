@@ -3,9 +3,6 @@
 
 #include <string>
 
-#include "imgui.h"
-#include "misc/cpp/imgui_stdlib.h"
-
 #include "../color.h"
 #include "../catacharset.h"
 #include "../mapgen.h"
