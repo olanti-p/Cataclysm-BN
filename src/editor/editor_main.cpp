@@ -739,6 +739,17 @@ point get_visible_map_area()
 
 } // namespace editor
 
+point::point( ImVec2 v )
+{
+    x = v.x;
+    y = v.y;
+}
+
+point::operator ImVec2()
+{
+    return ImVec2( x, y );
+}
+
 namespace ImGui
 {
 bool InputAssetId( editor::editor_state &state, const std::string &label, std::string &buf,
