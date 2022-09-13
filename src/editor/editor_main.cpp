@@ -22,6 +22,8 @@
 #include "../trap.h"
 #include "../ui_manager.h"
 
+#include <thread>
+
 namespace editor
 {
 
@@ -39,6 +41,7 @@ struct editor_state {
     bool do_loop = true;
     bool show_demo_wnd = false;
     bool show_asset_lib = true;
+    bool show_cata_ui = true;
     int loops = 0;
     int frames = 0;
     const mapgen_function_json *selected_oter_mapgen = nullptr;
@@ -118,6 +121,9 @@ static void show_control_window( editor_state &state )
     ImGui::SameLine();
     if( ImGui::Button( "Toggle Submap Grid" ) ) {
         g->debug_submap_grid_overlay = !g->debug_submap_grid_overlay;
+    }
+    if( ImGui::Button( "Toggle Cata UI (Debug)" ) ) {
+        state.show_cata_ui = !state.show_cata_ui;
     }
 
     avatar &u = get_avatar();
@@ -640,8 +646,12 @@ void advanced_editor_run()
             state.loops++;
 
             inp_mngr.get_input_event();
-            g->invalidate_main_ui_adaptor();
-            ui_manager::redraw();
+            if( state.show_cata_ui ) {
+                g->invalidate_main_ui_adaptor();
+                ui_manager::redraw();
+            } else {
+                std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
+            }
             refresh_display();
         }
     }
@@ -653,6 +663,11 @@ void advanced_editor_run()
 bool ui_exists()
 {
     return current_state != nullptr;
+}
+
+bool show_cata_ui()
+{
+    return !current_state || current_state->show_cata_ui;
 }
 
 void show_ui()

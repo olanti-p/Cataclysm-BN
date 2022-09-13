@@ -9,6 +9,7 @@ bool init_ui( SDL_Window &window_ref, SDL_Renderer &renderer_ref );
 void shutdown_ui();
 void render_ui();
 bool process_event( SDL_Event &event );
+bool show_cata_ui();
 bool ui_exists();
 }
 
