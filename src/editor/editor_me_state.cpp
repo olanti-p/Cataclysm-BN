@@ -108,9 +108,6 @@ void show_canvas( me_state &state )
 
     const ImVec4 col_cursor = ImVec4( 0.8f, 0.8f, 0.4f, 1.0f );
 
-    point_abs_etile tile_pos = get_mouse_tile_pos( state.camera );
-    highlight_tile( draw_list, state.camera, tile_pos, col_cursor );
-
     highlight_tile( draw_list, state.camera, point_abs_etile( 1, 1 ), col_cursor );
     highlight_tile( draw_list, state.camera, point_abs_etile( 3, 1 ), col_cursor );
     highlight_tile( draw_list, state.camera, point_abs_etile( 1, 3 ), col_cursor );
@@ -118,6 +115,9 @@ void show_canvas( me_state &state )
     ImGuiIO &io = ImGui::GetIO();
     bool canvas_hovered = ImGui::IsWindowHovered();
     if( canvas_hovered ) {
+        point_abs_etile tile_pos = get_mouse_tile_pos( state.camera );
+        highlight_tile( draw_list, state.camera, tile_pos, col_cursor );
+
         if( ImGui::IsMouseDragging( ImGuiMouseButton_Right ) ) {
             point_rel_screen drag_delta( ImGui::GetMouseDragDelta( ImGuiMouseButton_Right ) );
             state.camera.drag_delta = -state.camera.screen_to_world( drag_delta );
