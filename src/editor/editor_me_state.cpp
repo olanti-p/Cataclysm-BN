@@ -4,6 +4,8 @@
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
 
+#include "../string_utils.h"
+
 namespace editor
 {
 point_abs_epos me_camera::screen_to_world( const point_abs_screen &p ) const
@@ -155,6 +157,11 @@ void show_control_window( me_state &state )
         state.show_demo_wnd = !state.show_demo_wnd;
     }
 
+    // Contols
+    if( ImGui::Button( "Toggle Asset Library" ) ) {
+        state.show_asset_lib = !state.show_asset_lib;
+    }
+
     // Camera
     {
         ImGui::DragInt( "Zoom", &state.camera.scale, 0.2f, MIN_SCALE, MAX_SCALE );
@@ -172,6 +179,61 @@ void show_control_window( me_state &state )
     ImGui::End();
 }
 
+static bool filter_matches( const std::string &s, const std::string &filter )
+{
+    return lcmatch( s, filter );
+}
+
+static void show_assetlib_tab( asset_library_cat &cat, asset_library &assets )
+{
+    const char *cat_name = get_asset_type_name( cat.atype );
+    if( !ImGui::BeginTabItem( cat_name ) ) {
+        cat.is_active_tab = false;
+        return;
+    }
+    cat.is_active_tab = true;
+
+    ImGui::Text( "%s - %d entries", cat_name, cat.get_num() );
+
+    ImGui::InputText( "##filter", &cat.filter );
+    std::string lb_name = string_format( "##lb-%s", cat_name );
+    if( ImGui::BeginListBox( lb_name.c_str(), ImVec2( -1.0f, -1.0f ) ) ) {
+        for( int i = 0; i < cat.get_num(); i++ ) {
+            const asset_lib_entry &entry = cat.get( i );
+            const char *id = entry.get_id();
+            if( !filter_matches( id, cat.filter ) ) {
+                continue;
+            }
+            const bool is_selected = i == cat.selected;
+            if( ImGui::Selectable( id, is_selected ) ) {
+                cat.selected = i;
+            }
+            // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+            if( is_selected ) {
+                ImGui::SetItemDefaultFocus();
+            }
+        }
+        ImGui::EndListBox();
+    }
+
+    ImGui::EndTabItem();
+}
+
+void show_asset_lib( asset_library &assets, bool &show )
+{
+    if( ImGui::Begin( "Asset Library", &show ) ) {
+        ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_FittingPolicyResizeDown;
+        if( ImGui::BeginTabBar( "Asset Types", tab_bar_flags ) ) {
+            for( asset_library_cat &cat : assets.categories ) {
+                show_assetlib_tab( cat, assets );
+            }
+
+            ImGui::EndTabBar();
+        }
+    }
+    ImGui::End();
+}
+
 void show_me_ui( me_state &state )
 {
     show_canvas( state );
@@ -179,6 +241,16 @@ void show_me_ui( me_state &state )
     if( state.show_demo_wnd ) {
         ImGui::ShowDemoWindow( &state.show_demo_wnd );
     }
+    if( state.show_asset_lib ) {
+        show_asset_lib( state.assets, state.show_asset_lib );
+    }
 }
+
+me_state::me_state()
+{
+    init_assets( assets );
+}
+
+me_state::~me_state() = default;
 
 } // namespace editor

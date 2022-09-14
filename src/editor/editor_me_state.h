@@ -4,6 +4,8 @@
 #include "../options.h"
 #include "../coordinates.h"
 
+#include "editor_assets.h"
+
 struct ImDrawList;
 struct ImVec4;
 
@@ -26,9 +28,19 @@ struct me_camera {
 };
 
 struct me_state {
+    me_state();
+    me_state( const me_state & ) = delete;
+    me_state( me_state && ) = default;
+    ~me_state();
+
+    me_state &operator=( const me_state & ) = delete;
+    me_state &operator=( me_state && ) = default;
+
     me_camera camera;
     bool do_loop = true; // Setting this to false will quit the editor
     bool show_demo_wnd = false; // Whether to show ImGui Demo window
+    bool show_asset_lib = false; // Whether to show asset library
+    asset_library assets;
 };
 
 /**
@@ -68,6 +80,7 @@ void highlight_region(
  */
 void show_canvas( me_state &state );
 void show_control_window( me_state &state );
+void show_asset_lib( asset_library &assets, bool &show );
 
 /**
  * ============= Entry point =============
