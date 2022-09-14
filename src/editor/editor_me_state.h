@@ -16,10 +16,13 @@ constexpr int DEFAULT_SCALE = 32;
 
 struct me_camera {
     point_abs_epos pos;
+    point_rel_epos drag_delta;
     int scale = DEFAULT_SCALE;
 
     point_abs_epos screen_to_world( const point_abs_screen &p ) const;
     point_abs_screen world_to_screen( const point_abs_epos &p ) const;
+    point_rel_epos screen_to_world( const point_rel_screen &p ) const;
+    point_rel_screen world_to_screen( const point_rel_epos &p ) const;
 };
 
 struct me_state {

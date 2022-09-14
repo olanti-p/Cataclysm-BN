@@ -9,13 +9,25 @@ namespace editor
 point_abs_epos me_camera::screen_to_world( const point_abs_screen &p ) const
 {
     point disp_size = ImGui::GetIO().DisplaySize;
-    return point_abs_epos( ( p.raw() - disp_size / 2 ) * ETILE_SIZE / scale + pos.raw() );
+    return point_abs_epos( ( p.raw() - disp_size / 2 ) * ETILE_SIZE / scale + pos.raw() +
+                           drag_delta.raw() );
 }
 
 point_abs_screen me_camera::world_to_screen( const point_abs_epos &p ) const
 {
     point disp_size = ImGui::GetIO().DisplaySize;
-    return point_abs_screen( ( p.raw() - pos.raw() ) * scale / ETILE_SIZE + disp_size / 2 );
+    return point_abs_screen( ( p.raw() - pos.raw() - drag_delta.raw() ) * scale / ETILE_SIZE +
+                             disp_size / 2 );
+}
+
+point_rel_epos me_camera::screen_to_world( const point_rel_screen &p ) const
+{
+    return point_rel_epos( p.raw() * ETILE_SIZE / scale );
+}
+
+point_rel_screen me_camera::world_to_screen( const point_rel_epos &p ) const
+{
+    return point_rel_screen( p.raw() * scale / ETILE_SIZE );
 }
 
 point_abs_screen get_mouse_pos()
@@ -102,6 +114,17 @@ void show_canvas( me_state &state )
     highlight_tile( draw_list, state.camera, point_abs_etile( 1, 1 ), col_cursor );
     highlight_tile( draw_list, state.camera, point_abs_etile( 3, 1 ), col_cursor );
     highlight_tile( draw_list, state.camera, point_abs_etile( 1, 3 ), col_cursor );
+
+    bool canvas_hovered = ImGui::IsWindowHovered();
+    if( canvas_hovered ) {
+        if( ImGui::IsMouseDragging( ImGuiMouseButton_Right ) ) {
+            point_rel_screen drag_delta( ImGui::GetMouseDragDelta( ImGuiMouseButton_Right ) );
+            state.camera.drag_delta = -state.camera.screen_to_world( drag_delta );
+        } else {
+            state.camera.pos += state.camera.drag_delta;
+            state.camera.drag_delta = point_rel_epos();
+        }
+    }
 
     ImGui::End();
 }
