@@ -194,6 +194,11 @@ class coord_point
             return *this;
         }
 
+        coord_point &operator-() {
+            raw_ = -raw_;
+            return *this;
+        }
+
         friend inline coord_point operator+( const coord_point &l, const point &r ) {
             return coord_point( l.raw() + r );
         }
