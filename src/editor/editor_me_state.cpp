@@ -115,6 +115,7 @@ void show_canvas( me_state &state )
     highlight_tile( draw_list, state.camera, point_abs_etile( 3, 1 ), col_cursor );
     highlight_tile( draw_list, state.camera, point_abs_etile( 1, 3 ), col_cursor );
 
+    ImGuiIO &io = ImGui::GetIO();
     bool canvas_hovered = ImGui::IsWindowHovered();
     if( canvas_hovered ) {
         if( ImGui::IsMouseDragging( ImGuiMouseButton_Right ) ) {
@@ -123,6 +124,21 @@ void show_canvas( me_state &state )
         } else {
             state.camera.pos += state.camera.drag_delta;
             state.camera.drag_delta = point_rel_epos();
+        }
+        if( std::abs( io.MouseWheel ) > 0.5f ) {
+            int zoom_speed;
+            if( state.camera.scale >= 64 ) {
+                zoom_speed = 16;
+            } else if( state.camera.scale >= 32 ) {
+                zoom_speed = 8;
+            } else if( state.camera.scale >= 16 ) {
+                zoom_speed = 4;
+            } else {
+                zoom_speed = 2;
+            }
+            int delta_wheel = static_cast<int>( std::round( io.MouseWheel ) );
+            int delta = delta_wheel * zoom_speed;
+            state.camera.scale = clamp( state.camera.scale + delta, MIN_SCALE, MAX_SCALE );
         }
     }
 
