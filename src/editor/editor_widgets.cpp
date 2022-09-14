@@ -34,4 +34,31 @@ void JmapgenPlace( const std::string &label, const jmapgen_place &jmp )
     JmapgenInt( "repeat", jmp.repeat );
 }
 
+bool detail::InputId( const char *label, std::string &data, bool is_valid,
+                      ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void *user_data )
+{
+    if( !is_valid ) {
+        ImGui::PushStyleColor( ImGuiCol_FrameBg, ImVec4( 0.8f, 0.3f, 0.3f, 1.0f ) );
+    }
+    bool ret = ImGui::InputText( label, &data, flags, callback, user_data );
+    if( !is_valid ) {
+        ImGui::PopStyleColor();
+    }
+    return ret;
+}
+
+bool InputJmapgenInt( const char *label, jmapgen_int &jmi )
+{
+    ImGui::Text( "%s", label );
+    ImGui::SameLine();
+    ImGui::PushID( label );
+    ImGui::SetNextItemWidth( GetFrameHeight() * 1.5f );
+    bool ret1 = ImGui::InputInt( "##min", &jmi.val, -1, -1, ImGuiInputTextFlags_AutoSelectAll );
+    ImGui::SameLine();
+    ImGui::SetNextItemWidth( GetFrameHeight() * 1.5f );
+    bool ret2 = ImGui::InputInt( "##max", &jmi.valmax, -1, -1, ImGuiInputTextFlags_AutoSelectAll );
+    ImGui::PopID();
+    return ret1 || ret2;
+}
+
 } // namespace ImGui

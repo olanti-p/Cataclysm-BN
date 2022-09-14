@@ -6,6 +6,8 @@
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
 
+#include "editor_me_state.h"
+
 class nc_color;
 struct jmapgen_int;
 class jmapgen_place;
@@ -38,6 +40,22 @@ bool DragPoint( const char *label, Point *p, float v_speed = 1.0f, int v_min = 0
     p->y() = v[1];
     return ret;
 }
+
+namespace detail
+{
+bool InputId( const char *label, std::string &data, bool is_valid, ImGuiInputTextFlags flags,
+              ImGuiInputTextCallback callback, void *user_data );
+}
+
+template<typename T>
+bool InputId( const char *label, editor::editable_id<T> &id, ImGuiInputTextFlags flags = 0,
+              ImGuiInputTextCallback callback = NULL, void *user_data = NULL )
+{
+    return detail::InputId( label, id.data, id.is_valid(), flags, callback, user_data );
+}
+
+bool InputJmapgenInt( const char *label, jmapgen_int &jmi );
+
 } // namespace ImGui
 
 #endif // CATA_SRC_EDITOR_EDITOR_WIDGETS_H

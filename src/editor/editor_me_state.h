@@ -3,6 +3,8 @@
 
 #include "../options.h"
 #include "../coordinates.h"
+#include "../type_id.h"
+#include "../mapgen.h"
 
 #include "editor_assets.h"
 
@@ -27,6 +29,55 @@ struct me_camera {
     point_rel_screen world_to_screen( const point_rel_epos &p ) const;
 };
 
+template<typename T>
+struct editable_id {
+    std::string data;
+
+    bool is_valid() const {
+        return string_id<T>( data ).is_valid();
+    }
+
+    const T &obj() const {
+        return string_id<T>( data ).obj();
+    }
+};
+
+using ter_eid = editable_id<ter_t>;
+using oter_eid = editable_id<oter_t>;
+
+enum class MapgenType {
+    Oter,
+    Update,
+    Nested
+};
+
+struct me_mapgen_base {
+    // TODO
+};
+
+struct me_mapgen_oter {
+    ter_eid fill_ter;
+    oter_eid predecessor_mapgen;
+    jmapgen_int rotation = jmapgen_int( 0 );
+};
+
+struct me_mapgen_update {
+    ter_eid fill_ter;
+};
+
+struct me_mapgen_nested {
+    point size = point( 1, 1 );
+    jmapgen_int rotation = jmapgen_int( 0 );
+};
+
+struct me_file {
+    MapgenType mtype = MapgenType::Oter;
+    me_mapgen_base base;
+    me_mapgen_oter oter;
+    me_mapgen_update update;
+    me_mapgen_nested nested;
+};
+
 struct me_state {
     me_state();
     me_state( const me_state & ) = delete;
@@ -40,7 +91,9 @@ struct me_state {
     bool do_loop = true; // Setting this to false will quit the editor
     bool show_demo_wnd = false; // Whether to show ImGui Demo window
     bool show_asset_lib = false; // Whether to show asset library
+    bool show_file_info = false; // Whether to show file info
     asset_library assets;
+    me_file file;
 };
 
 /**
@@ -81,6 +134,7 @@ void highlight_region(
 void show_canvas( me_state &state );
 void show_control_window( me_state &state );
 void show_asset_lib( asset_library &assets, bool &show );
+void show_file_info( me_file &file, bool &show );
 
 /**
  * ============= Entry point =============

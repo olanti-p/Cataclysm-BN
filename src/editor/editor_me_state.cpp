@@ -4,6 +4,7 @@
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
 
+#include "../game_constants.h"
 #include "../string_utils.h"
 
 namespace editor
@@ -161,6 +162,9 @@ void show_control_window( me_state &state )
     if( ImGui::Button( "Toggle Asset Library" ) ) {
         state.show_asset_lib = !state.show_asset_lib;
     }
+    if( ImGui::Button( "Toggle File Info" ) ) {
+        state.show_file_info = !state.show_file_info;
+    }
 
     // Camera
     {
@@ -234,6 +238,46 @@ void show_asset_lib( asset_library &assets, bool &show )
     ImGui::End();
 }
 
+void show_file_info( me_file &file, bool &show )
+{
+    if( !ImGui::Begin( "File Info", &show ) ) {
+        ImGui::End();
+        return;
+    }
+
+    ImGui::Text( "Mapgen type:" );
+    if( ImGui::RadioButton( "Oter", file.mtype == MapgenType::Oter ) ) {
+        file.mtype = MapgenType::Oter;
+    }
+    ImGui::SameLine();
+    if( ImGui::RadioButton( "Update", file.mtype == MapgenType::Update ) ) {
+        file.mtype = MapgenType::Update;
+    }
+    ImGui::SameLine();
+    if( ImGui::RadioButton( "Nested", file.mtype == MapgenType::Nested ) ) {
+        file.mtype = MapgenType::Nested;
+    }
+    ImGui::Separator();
+
+    if( file.mtype == MapgenType::Oter ) {
+        ImGui::InputId( "fill_ter", file.oter.fill_ter );
+        ImGui::InputId( "predecessor_mapgen", file.oter.predecessor_mapgen );
+        ImGui::InputJmapgenInt( "rotation", file.oter.rotation );
+    } else if( file.mtype == MapgenType::Update ) {
+        ImGui::InputId( "fill_ter", file.update.fill_ter );
+    } else { // MapgenType::Nested
+        ImGui::InputJmapgenInt( "rotation", file.nested.rotation );
+        // Only square nested mapgens are possible
+        if( ImGui::InputInt( "size", &file.nested.size.x, -1, -1 ) ) {
+            int size = clamp( file.nested.size.x, 1, SEEX * 2 );
+            file.nested.size.x = size;
+            file.nested.size.y = size;
+        }
+    }
+
+    ImGui::End();
+}
+
 void show_me_ui( me_state &state )
 {
     show_canvas( state );
@@ -243,6 +287,9 @@ void show_me_ui( me_state &state )
     }
     if( state.show_asset_lib ) {
         show_asset_lib( state.assets, state.show_asset_lib );
+    }
+    if( state.show_file_info ) {
+        show_file_info( state.file, state.show_file_info );
     }
 }
 
