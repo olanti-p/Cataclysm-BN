@@ -76,6 +76,8 @@ struct me_file {
     me_mapgen_oter oter;
     me_mapgen_update update;
     me_mapgen_nested nested;
+
+    point_rel_etile mapgensize();
 };
 
 struct me_state {

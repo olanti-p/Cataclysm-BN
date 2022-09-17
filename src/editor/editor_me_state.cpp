@@ -110,10 +110,14 @@ void show_canvas( me_state &state )
     ImDrawList *draw_list = ImGui::GetWindowDrawList();
 
     const ImVec4 col_cursor = ImVec4( 0.8f, 0.8f, 0.4f, 1.0f );
+    const ImVec4 col_mapgensize_bg = ImVec4( 0.7f, 0.7f, 0.7f, 0.1f );
+    const ImVec4 col_mapgensize_border = ImVec4( 0.7f, 0.7f, 0.7f, 1.0f );
 
     highlight_tile( draw_list, state.camera, point_abs_etile( 1, 1 ), col_cursor );
     highlight_tile( draw_list, state.camera, point_abs_etile( 3, 1 ), col_cursor );
     highlight_tile( draw_list, state.camera, point_abs_etile( 1, 3 ), col_cursor );
+
+    highlight_region( draw_list, state.camera, point_abs_etile( 0, 0 ), point_abs_etile( -1, -1 ) + state.file.mapgensize(), col_mapgensize_bg, col_mapgensize_border );
 
     ImGuiIO &io = ImGui::GetIO();
     bool canvas_hovered = ImGui::IsWindowHovered();
@@ -290,6 +294,15 @@ void show_me_ui( me_state &state )
     }
     if( state.show_file_info ) {
         show_file_info( state.file, state.show_file_info );
+    }
+}
+
+point_rel_etile me_file::mapgensize()
+{
+    if ( mtype == MapgenType::Nested ) {
+        return point_rel_etile( nested.size );
+    } else {
+        return point_rel_etile( SEEX * 2, SEEY * 2 );
     }
 }
 
