@@ -31,30 +31,40 @@ struct me_camera {
 
 template<typename T>
 struct editable_id {
-    std::string data;
+    public:
+        std::string data;
 
-    editable_id() = default;
-    editable_id( const editable_id<T> & ) = default;
-    editable_id( editable_id<T> && ) = default;
-    editable_id( const std::string &s ) : data( s ) {}
-    editable_id( const string_id<T> &id ) : data( id.str() ) {}
-    ~editable_id() = default;
+        editable_id() = default;
+        editable_id( const editable_id<T> & ) = default;
+        editable_id( editable_id<T> && ) = default;
+        editable_id( const std::string &s ) : data( s ) {}
+        editable_id( const string_id<T> &id ) : data( id.str() ) {}
+        ~editable_id() = default;
 
-    editable_id &operator= ( const editable_id<T> & ) = default;
-    editable_id &operator= ( editable_id<T> && ) = default;
+        editable_id &operator= ( const editable_id<T> & ) = default;
+        editable_id &operator= ( editable_id<T> && ) = default;
 
-    bool is_valid() const {
-        return string_id<T>( data ).is_valid();
-    }
+        bool is_valid() const {
+            return string_id<T>( data ).is_valid();
+        }
 
-    const T &obj() const {
-        return string_id<T>( data ).obj();
-    }
+        const T &obj() const {
+            return string_id<T>( data ).obj();
+        }
 
-    static const editable_id<T> NULL_ID() {
-        return string_id<T>::NULL_ID();
-    }
+        static const editable_id<T> NULL_ID() {
+            return string_id<T>::NULL_ID();
+        }
+
+        static const std::vector<std::string> &get_all_opts();
+
+    private:
+        // TODO: invalidate on data change
+        static std::vector<std::string> all_opts;
 };
+
+template<typename T>
+std::vector<std::string> editable_id<T>::all_opts;
 
 using ter_eid = editable_id<ter_t>;
 using furn_eid = editable_id<furn_t>;

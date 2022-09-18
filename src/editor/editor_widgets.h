@@ -68,15 +68,23 @@ bool InputTextCompleting( const char *label, std::string &input,
 
 namespace detail
 {
-bool InputId( const char *label, std::string &data, bool is_valid, ImGuiInputTextFlags flags,
-              ImGuiInputTextCallback callback, void *user_data );
+bool InputId(
+    const char *label,
+    std::string &data,
+    const std::vector<std::string> &opts,
+    bool is_valid,
+    ImGuiInputTextFlags flags,
+    ImGuiInputTextCallback callback,
+    void *user_data
+);
 }
 
 template<typename T>
 bool InputId( const char *label, editor::editable_id<T> &id, ImGuiInputTextFlags flags = 0,
               ImGuiInputTextCallback callback = NULL, void *user_data = NULL )
 {
-    return detail::InputId( label, id.data, id.is_valid(), flags, callback, user_data );
+    return detail::InputId( label, id.data, editor::editable_id<T>::get_all_opts(), id.is_valid(),
+                            flags, callback, user_data );
 }
 
 bool InputJmapgenInt( const char *label, jmapgen_int &jmi );

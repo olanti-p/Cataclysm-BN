@@ -89,13 +89,19 @@ void JmapgenPlace( const std::string &label, const jmapgen_place &jmp )
     JmapgenInt( "repeat", jmp.repeat );
 }
 
-bool detail::InputId( const char *label, std::string &data, bool is_valid,
-                      ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void *user_data )
+bool detail::InputId( const char *label,
+                      std::string &data,
+                      const std::vector<std::string> &opts,
+                      bool is_valid,
+                      ImGuiInputTextFlags /*flags*/,
+                      ImGuiInputTextCallback /*callback*/,
+                      void * /*user_data*/ )
 {
+    // TODO: implement or remove args
     if( !is_valid ) {
         ImGui::PushStyleColor( ImGuiCol_FrameBg, ImVec4( 0.8f, 0.3f, 0.3f, 1.0f ) );
     }
-    bool ret = ImGui::InputText( label, &data, flags, callback, user_data );
+    bool ret = ImGui::InputTextCompleting( label, data, opts );
     if( !is_valid ) {
         ImGui::PopStyleColor();
     }
