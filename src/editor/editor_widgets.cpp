@@ -1,3 +1,5 @@
+#include "imgui_internal.h"
+
 #include "editor_widgets.h"
 #include "editor_main.h"
 
@@ -8,6 +10,7 @@
 #include "../mapgen.h"
 #include "../sdltiles.h"
 #include "../cata_tiles.h"
+#include "../string_utils.h"
 
 SpriteRef::SpriteRef( const std::string &id )
 {
@@ -142,6 +145,64 @@ bool ImageButton( const char *wid, const std::string &tile_id )
 bool ImageButton( const char *wid, const std::string &tile_id, const ImVec2 &size )
 {
     return ImageButton( wid, SpriteRef( tile_id ), size );
+}
+
+bool InputTextCompleting( const char *label, std::string &input,
+                          const std::vector<std::string> &opts )
+{
+    // Code
+    const bool is_input_text_enter_pressed = ImGui::InputText( label, &input,
+            ImGuiInputTextFlags_EnterReturnsTrue );
+    const bool is_input_text_active = ImGui::IsItemActive();
+    const bool is_input_text_activated = ImGui::IsItemActivated();
+
+    if( is_input_text_activated ) {
+        ImGui::OpenPopup( "##popup" );
+    }
+
+    bool ret = false;
+
+    ImGui::SetNextWindowPos( ImVec2( ImGui::GetItemRectMin().x, ImGui::GetItemRectMax().y ) );
+    ImGui::SetNextWindowSize( { ImGui::GetItemRectSize().x, 0 } );
+    ImGui::SetNextWindowSizeConstraints( { ImGui::GetItemRectSize().x, 0 }, { ImGui::GetItemRectSize().x, ImGui::GetFrameHeight() * 15.0f } );
+    if( ImGui::BeginPopup( "##popup",
+                           ImGuiWindowFlags_NoTitleBar |
+                           ImGuiWindowFlags_NoMove |
+                           ImGuiWindowFlags_NoResize |
+                           ImGuiWindowFlags_ChildWindow ) ) {
+
+        if( input.size() < 1 ) {
+            ImGui::PushStyleColor( ImGuiCol_Text, ImVec4( 0.3, 0.3f, 0.3f, 1.0f ) );
+            ImGui::Text( "> Type more" );
+            ImGui::PopStyleColor();
+        } else {
+            bool has_matches = false;
+            for( const std::string &opt : opts ) {
+                if( !lcmatch( opt, input ) ) {
+                    continue;
+                }
+                has_matches = true;
+                if( ImGui::Selectable( opt.c_str() ) ) {
+                    ImGui::ClearActiveID();
+                    input = opt;
+                }
+            }
+            if( !has_matches ) {
+                ImGui::PushStyleColor( ImGuiCol_Text, ImVec4( 0.3, 0.3f, 0.3f, 1.0f ) );
+                ImGui::Text( "> Not found" );
+                ImGui::PopStyleColor();
+            }
+        }
+
+        if( is_input_text_enter_pressed || ( !is_input_text_active && !ImGui::IsWindowFocused() ) ) {
+            ImGui::CloseCurrentPopup();
+            ret = true;
+        }
+
+        ImGui::EndPopup();
+    }
+
+    return ret;
 }
 
 } // namespace ImGui
