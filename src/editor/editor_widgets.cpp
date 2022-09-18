@@ -211,4 +211,24 @@ bool InputTextCompleting( const char *label, std::string &input,
     return ret;
 }
 
+bool InputSymbol( const char *label, std::string &input, const char *fallback )
+{
+    if( input.empty() ) {
+        input = fallback;
+    }
+    if( ImGui::InputText( label, &input, ImGuiInputTextFlags_AutoSelectAll ) ) {
+        if( input.empty() ) {
+            input = fallback;
+        } else {
+            // TODO: optionally forbid wide characters
+            // TODO: accept combining characters
+            std::u32string s32 = utf8_to_utf32( input );
+            input = utf32_to_utf8( s32[0] );
+        }
+        return true;
+    } else {
+        return false;
+    }
+}
+
 } // namespace ImGui

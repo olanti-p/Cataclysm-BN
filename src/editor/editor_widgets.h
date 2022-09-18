@@ -66,6 +66,8 @@ bool ImageButton( const char *wid, const std::string &tile_id, const ImVec2 &siz
 bool InputTextCompleting( const char *label, std::string &input,
                           const std::vector<std::string> &opts );
 
+bool InputSymbol( const char *label, std::string &input, const char *fallback = "." );
+
 namespace detail
 {
 bool InputId(
