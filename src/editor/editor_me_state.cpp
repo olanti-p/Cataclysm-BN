@@ -317,7 +317,7 @@ void show_palette_map( const char *label, std::vector<std::pair<map_key, T>> &li
     cata::optional<size_t> move_dn;
     for( size_t i = 0; i < list.size(); i++ ) {
         ImGui::PushID( i );
-        if( ImGui::Button( "DEL" ) ) {
+        if( ImGui::ImageButton( "del", "me_delete" ) ) {
             del = i;
         }
         ImGui::SameLine();
@@ -325,7 +325,7 @@ void show_palette_map( const char *label, std::vector<std::pair<map_key, T>> &li
         if( i == 0 ) {
             ImGui::BeginDisabled();
         }
-        if( ImGui::Button( "^" ) ) {
+        if( ImGui::ImageButton( "up", "me_move_up" ) ) {
             move_up = i;
         }
         if( i == 0 ) {
@@ -336,7 +336,7 @@ void show_palette_map( const char *label, std::vector<std::pair<map_key, T>> &li
         if( i == list.size() - 1 ) {
             ImGui::BeginDisabled();
         }
-        if( ImGui::Button( "v" ) ) {
+        if( ImGui::ImageButton( "down", "me_move_down" ) ) {
             move_dn = i;
         }
         if( i == list.size() - 1 ) {
@@ -364,7 +364,7 @@ void show_palette_map( const char *label, std::vector<std::pair<map_key, T>> &li
     if( move_dn ) {
         std::swap( list[*move_dn], list[*move_dn + 1] );
     }
-    if( ImGui::Button( "Add" ) ) {
+    if( ImGui::ImageButton( "add", "me_add" ) ) {
         list.emplace_back();
     }
     ImGui::PopID();
