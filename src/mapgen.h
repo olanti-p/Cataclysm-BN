@@ -194,8 +194,15 @@ class jmapgen_place
 class map_key
 {
     public:
+        map_key() = default;
+        map_key( const map_key & ) = default;
+        map_key( map_key && ) = default;
         map_key( const std::string & );
         map_key( const JsonMember & );
+        ~map_key() = default;
+
+        map_key &operator= ( const map_key & ) = default;
+        map_key &operator= ( map_key && ) = default;
 
         friend bool operator==( const map_key &l, const map_key &r ) {
             return l.str == r.str;

@@ -33,6 +33,16 @@ template<typename T>
 struct editable_id {
     std::string data;
 
+    editable_id() = default;
+    editable_id( const editable_id<T> & ) = default;
+    editable_id( editable_id<T> && ) = default;
+    editable_id( const std::string &s ) : data( s ) {}
+    editable_id( const string_id<T> &id ) : data( id.str() ) {}
+    ~editable_id() = default;
+
+    editable_id &operator= ( const editable_id<T> & ) = default;
+    editable_id &operator= ( editable_id<T> && ) = default;
+
     bool is_valid() const {
         return string_id<T>( data ).is_valid();
     }
@@ -40,34 +50,67 @@ struct editable_id {
     const T &obj() const {
         return string_id<T>( data ).obj();
     }
+
+    static const editable_id<T> NULL_ID() {
+        return string_id<T>::NULL_ID();
+    }
 };
 
 using ter_eid = editable_id<ter_t>;
+using furn_eid = editable_id<furn_t>;
 using oter_eid = editable_id<oter_t>;
+using palette_eid = editable_id<mapgen_palette>;
 
-enum class MapgenType {
-    Oter,
-    Update,
-    Nested
+struct me_placing {
+    // TODO
+    std::string dummy;
+};
+
+struct me_palette {
+    static me_palette make_inline() {
+        me_palette ret;
+        ret.is_inline = true;
+        return ret;
+    }
+
+    bool is_inline = false;
+    palette_eid id;
+    std::vector<std::pair<map_key, ter_eid>> terrain;
+    std::vector<std::pair<map_key, furn_eid>> furniture;
+    std::vector<std::pair<map_key, me_placing>> placings;
 };
 
 struct me_mapgen_base {
-    // TODO
+    std::vector<map_key> rows;
+    me_palette inline_palette = me_palette::make_inline();
+};
+
+enum class OterMapgenBase {
+    FillTer,
+    PredecessorMapgen,
+    Rows,
 };
 
 struct me_mapgen_oter {
-    ter_eid fill_ter;
+    OterMapgenBase mapgen_base = OterMapgenBase::FillTer;
+    ter_eid fill_ter = ter_eid::NULL_ID();
     oter_eid predecessor_mapgen;
     jmapgen_int rotation = jmapgen_int( 0 );
 };
 
 struct me_mapgen_update {
-    ter_eid fill_ter;
+    ter_eid fill_ter = ter_eid::NULL_ID();
 };
 
 struct me_mapgen_nested {
     point size = point( 1, 1 );
     jmapgen_int rotation = jmapgen_int( 0 );
+};
+
+enum class MapgenType {
+    Oter,
+    Update,
+    Nested,
 };
 
 struct me_file {
@@ -93,7 +136,8 @@ struct me_state {
     bool do_loop = true; // Setting this to false will quit the editor
     bool show_demo_wnd = false; // Whether to show ImGui Demo window
     bool show_asset_lib = false; // Whether to show asset library
-    bool show_file_info = false; // Whether to show file info
+    bool show_file_info = true; // Whether to show file info
+    bool show_base_inline_palette = false; // Whether to show base mapgen's palette
     asset_library assets;
     me_file file;
 };
@@ -136,7 +180,8 @@ void highlight_region(
 void show_canvas( me_state &state );
 void show_control_window( me_state &state );
 void show_asset_lib( asset_library &assets, bool &show );
-void show_file_info( me_file &file, bool &show );
+void show_file_info( me_state &state, me_file &file, bool &show );
+void show_palette( me_palette &p, bool &show );
 
 /**
  * ============= Entry point =============

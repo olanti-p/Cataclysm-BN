@@ -117,7 +117,8 @@ void show_canvas( me_state &state )
     highlight_tile( draw_list, state.camera, point_abs_etile( 3, 1 ), col_cursor );
     highlight_tile( draw_list, state.camera, point_abs_etile( 1, 3 ), col_cursor );
 
-    highlight_region( draw_list, state.camera, point_abs_etile( 0, 0 ), point_abs_etile( -1, -1 ) + state.file.mapgensize(), col_mapgensize_bg, col_mapgensize_border );
+    highlight_region( draw_list, state.camera, point_abs_etile( 0, 0 ), point_abs_etile( -1,
+                      -1 ) + state.file.mapgensize(), col_mapgensize_bg, col_mapgensize_border );
 
     ImGuiIO &io = ImGui::GetIO();
     bool canvas_hovered = ImGui::IsWindowHovered();
@@ -242,7 +243,7 @@ void show_asset_lib( asset_library &assets, bool &show )
     ImGui::End();
 }
 
-void show_file_info( me_file &file, bool &show )
+void show_file_info( me_state &state, me_file &file, bool &show )
 {
     if( !ImGui::Begin( "File Info", &show ) ) {
         ImGui::End();
@@ -264,9 +265,31 @@ void show_file_info( me_file &file, bool &show )
     ImGui::Separator();
 
     if( file.mtype == MapgenType::Oter ) {
-        ImGui::InputId( "fill_ter", file.oter.fill_ter );
-        ImGui::InputId( "predecessor_mapgen", file.oter.predecessor_mapgen );
         ImGui::InputJmapgenInt( "rotation", file.oter.rotation );
+        ImGui::Text( "Oter mapgen base:" );
+
+        if( ImGui::RadioButton( "Fill terrain", file.oter.mapgen_base == OterMapgenBase::FillTer ) ) {
+            file.oter.mapgen_base = OterMapgenBase::FillTer;
+        }
+        ImGui::SameLine();
+        if( ImGui::RadioButton( "Predecessor mapgen",
+                                file.oter.mapgen_base == OterMapgenBase::PredecessorMapgen ) ) {
+            file.oter.mapgen_base = OterMapgenBase::PredecessorMapgen;
+        }
+        ImGui::SameLine();
+        if( ImGui::RadioButton( "Rows", file.oter.mapgen_base == OterMapgenBase::Rows ) ) {
+            file.oter.mapgen_base = OterMapgenBase::Rows;
+        }
+
+        if( file.oter.mapgen_base == OterMapgenBase::FillTer ) {
+            ImGui::InputId( "fill_ter", file.oter.fill_ter );
+        }
+        if( file.oter.mapgen_base == OterMapgenBase::PredecessorMapgen ) {
+            ImGui::InputId( "predecessor_mapgen", file.oter.predecessor_mapgen );
+        }
+        if( file.oter.mapgen_base == OterMapgenBase::Rows ) {
+            ImGui::Text( "TODO: rows" );
+        }
     } else if( file.mtype == MapgenType::Update ) {
         ImGui::InputId( "fill_ter", file.update.fill_ter );
     } else { // MapgenType::Nested
@@ -279,7 +302,104 @@ void show_file_info( me_file &file, bool &show )
         }
     }
 
+    show_palette( file.base.inline_palette, state.show_base_inline_palette );
+
     ImGui::End();
+}
+
+template<typename T, typename F>
+void show_palette_map( const char *label, std::vector<std::pair<map_key, T>> &list, F payload_f )
+{
+    ImGui::PushID( label );
+    ImGui::Text( "%s", label );
+    cata::optional<size_t> del;
+    cata::optional<size_t> move_up;
+    cata::optional<size_t> move_dn;
+    for( size_t i = 0; i < list.size(); i++ ) {
+        ImGui::PushID( i );
+        if( ImGui::Button( "DEL" ) ) {
+            del = i;
+        }
+        ImGui::SameLine();
+
+        if( i == 0 ) {
+            ImGui::BeginDisabled();
+        }
+        if( ImGui::Button( "^" ) ) {
+            move_up = i;
+        }
+        if( i == 0 ) {
+            ImGui::EndDisabled();
+        }
+        ImGui::SameLine();
+
+        if( i == list.size() - 1 ) {
+            ImGui::BeginDisabled();
+        }
+        if( ImGui::Button( "v" ) ) {
+            move_dn = i;
+        }
+        if( i == list.size() - 1 ) {
+            ImGui::EndDisabled();
+        }
+        ImGui::SameLine();
+
+        ImGui::SetNextItemWidth( ImGui::GetFrameHeight() );
+        if( ImGui::InputText( "##key", &list[i].first.str, ImGuiInputTextFlags_AutoSelectAll ) ) {
+            std::u32string s32 = utf8_to_utf32( list[i].first.str );
+            list[i].first.str = utf32_to_utf8( s32[0] );
+        }
+        ImGui::SameLine();
+        ImGui::PushID( "payload" );
+        payload_f( list[i].second );
+        ImGui::PopID();
+        ImGui::PopID();
+    }
+    if( del ) {
+        list.erase( list.begin() + *del );
+    }
+    if( move_up ) {
+        std::swap( list[*move_up], list[*move_up - 1] );
+    }
+    if( move_dn ) {
+        std::swap( list[*move_dn], list[*move_dn + 1] );
+    }
+    if( ImGui::Button( "Add" ) ) {
+        list.emplace_back();
+    }
+    ImGui::PopID();
+}
+
+void show_palette( me_palette &p, bool &show )
+{
+    ImGui::PushID( &p );
+
+    if( !ImGui::Begin( "Palette", &show ) ) {
+        ImGui::End();
+        ImGui::PopID();
+        return;
+    }
+
+    if( p.is_inline ) {
+        ImGui::Text( "<inline palette>" );
+    } else {
+        ImGui::InputId( "id", p.id );
+    }
+
+    show_palette_map( "Terrains:", p.terrain, []( ter_eid & id ) {
+        ImGui::InputId( "##", id );
+    } );
+
+    show_palette_map( "Furniture:", p.furniture, []( furn_eid & id ) {
+        ImGui::InputId( "##", id );
+    } );
+
+    show_palette_map( "Placings:", p.placings, []( me_placing & pl ) {
+        ImGui::InputText( "##", &pl.dummy );
+    } );
+
+    ImGui::End();
+    ImGui::PopID();
 }
 
 void show_me_ui( me_state &state )
@@ -293,13 +413,13 @@ void show_me_ui( me_state &state )
         show_asset_lib( state.assets, state.show_asset_lib );
     }
     if( state.show_file_info ) {
-        show_file_info( state.file, state.show_file_info );
+        show_file_info( state, state.file, state.show_file_info );
     }
 }
 
 point_rel_etile me_file::mapgensize()
 {
-    if ( mtype == MapgenType::Nested ) {
+    if( mtype == MapgenType::Nested ) {
         return point_rel_etile( nested.size );
     } else {
         return point_rel_etile( SEEX * 2, SEEY * 2 );
