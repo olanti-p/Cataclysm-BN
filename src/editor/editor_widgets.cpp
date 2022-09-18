@@ -6,6 +6,58 @@
 #include "../color.h"
 #include "../catacharset.h"
 #include "../mapgen.h"
+#include "../sdltiles.h"
+#include "../cata_tiles.h"
+
+SpriteRef::SpriteRef( const std::string &id )
+{
+    const tileset &tset = tilecontext->get_tileset();
+    const tile_type *t = tset.find_tile_type( id );
+    if( t ) {
+        tile_idx = t->fg.begin()->obj[0];
+    }
+}
+
+std::pair<ImVec2, ImVec2> SpriteRef::make_uvs() const
+{
+    if( tile_idx < 0 ) {
+        return std::make_pair( ImVec2( 0, 0 ), ImVec2( 1, 1 ) );
+    }
+
+    const tileset &tset = tilecontext->get_tileset();
+
+    const texture *tex = tset.get_tile( tile_idx );
+
+    auto rect = tex->rect();
+
+    auto fullsize = tex->getsize();
+
+    float w = rect.w;
+    float h = rect.h;
+    float x = rect.x;
+    float y = rect.y;
+
+    float fw = fullsize.x;
+    float fh = fullsize.y;
+
+    ImVec2 uv0( x / fw, y / fh );
+    ImVec2 uv1( ( x + w ) / fw, ( y + h ) / fh );
+
+    return std::make_pair( uv0, uv1 );
+}
+
+ImTextureID SpriteRef::get_tex_id() const
+{
+    if( tile_idx < 0 ) {
+        return nullptr;
+    }
+
+    const tileset &tset = tilecontext->get_tileset();
+
+    const texture *tex = tset.get_tile( tile_idx );
+
+    return static_cast<void *>( tex->get_ptr() );
+}
 
 namespace ImGui
 {
@@ -59,6 +111,37 @@ bool InputJmapgenInt( const char *label, jmapgen_int &jmi )
     bool ret2 = ImGui::InputInt( "##max", &jmi.valmax, -1, -1, ImGuiInputTextFlags_AutoSelectAll );
     ImGui::PopID();
     return ret1 || ret2;
+}
+
+void Image( const SpriteRef &img, const ImVec2 &size )
+{
+    auto uvs = img.make_uvs();
+    ImGui::Image( img.get_tex_id(), size, uvs.first, uvs.second );
+}
+
+bool ImageButton( const char *wid, const SpriteRef &img )
+{
+    ImVec2 sz( ImGui::GetTextLineHeight(), ImGui::GetTextLineHeight() );
+    return ImageButton( wid, img, sz );
+}
+
+bool ImageButton( const char *wid, const SpriteRef &img, const ImVec2 &size )
+{
+    auto uvs = img.make_uvs();
+    ImGui::PushID( wid );
+    bool ret = ImGui::ImageButton( img.get_tex_id(), size, uvs.first, uvs.second );
+    ImGui::PopID();
+    return ret;
+}
+
+bool ImageButton( const char *wid, const std::string &tile_id )
+{
+    return ImageButton( wid, SpriteRef( tile_id ) );
+}
+
+bool ImageButton( const char *wid, const std::string &tile_id, const ImVec2 &size )
+{
+    return ImageButton( wid, SpriteRef( tile_id ), size );
 }
 
 } // namespace ImGui

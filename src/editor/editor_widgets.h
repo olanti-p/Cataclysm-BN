@@ -18,6 +18,22 @@ enum class AssetType : int;
 struct editor_state;
 } // namespace editor
 
+struct SpriteRef {
+    int tile_idx = -1;
+
+    SpriteRef() = default;
+    SpriteRef( SpriteRef && ) = default;
+    SpriteRef( const SpriteRef & ) = default;
+
+    SpriteRef( int tile_idx ) : tile_idx( tile_idx ) {};
+    SpriteRef( const std::string &id );
+
+    ~SpriteRef() = default;
+
+    ImTextureID get_tex_id() const;
+    std::pair<ImVec2, ImVec2> make_uvs() const;
+};
+
 namespace ImGui
 {
 void SymbolColored( const std::string &sym, nc_color col );
@@ -40,6 +56,12 @@ bool DragPoint( const char *label, Point *p, float v_speed = 1.0f, int v_min = 0
     p->y() = v[1];
     return ret;
 }
+
+void Image( const SpriteRef &img, const ImVec2 &size );
+bool ImageButton( const char *wid, const SpriteRef &img );
+bool ImageButton( const char *wid, const SpriteRef &img, const ImVec2 &size );
+bool ImageButton( const char *wid, const std::string &tile_id );
+bool ImageButton( const char *wid, const std::string &tile_id, const ImVec2 &size );
 
 namespace detail
 {
