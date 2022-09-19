@@ -151,13 +151,13 @@ bool ComboWithFilter( const char *label, int *current_item, const std::vector<st
     ImGui::PopStyleColor( 2 );
 
     int move_delta = 0;
-    if( IsKeyPressedEx( ImGuiKey_UpArrow ) ) {
+    if( IsKeyPressed( ImGuiKey_UpArrow, true ) ) {
         --move_delta;
-    } else if( IsKeyPressedEx( ImGuiKey_DownArrow ) ) {
+    } else if( IsKeyPressed( ImGuiKey_DownArrow, true ) ) {
         ++move_delta;
-    } else if( IsKeyPressedEx( ImGuiKey_PageUp ) ) {
+    } else if( IsKeyPressed( ImGuiKey_PageUp, true ) ) {
         move_delta -= popup_max_height_in_items;
-    } else if( IsKeyPressedEx( ImGuiKey_PageDown ) ) {
+    } else if( IsKeyPressed( ImGuiKey_PageDown, true ) ) {
         move_delta += popup_max_height_in_items;
     }
 
