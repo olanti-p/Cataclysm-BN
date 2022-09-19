@@ -65,6 +65,7 @@ bool ImageButton( const char *wid, const SpriteRef &img, const ImVec2 &size );
 bool ImageButton( const char *wid, const std::string &tile_id );
 bool ImageButton( const char *wid, const std::string &tile_id, const ImVec2 &size );
 
+/** WARNING: crashes when closing parent window! */
 bool InputTextCompleting( const char *label, std::string &input,
                           const std::vector<std::string> &opts );
 

@@ -151,6 +151,13 @@ bool ImageButton( const char *wid, const std::string &tile_id, const ImVec2 &siz
     return ImageButton( wid, SpriteRef( tile_id ), size );
 }
 
+/**
+ * Text input with autocomplete suggestions.
+ *
+ * Authors: EricStancliff & ocornut
+ *
+ * Source: https://github.com/ocornut/imgui/issues/718#issuecomment-1249822993
+ */
 bool InputTextCompleting( const char *label, std::string &input,
                           const std::vector<std::string> &opts )
 {
