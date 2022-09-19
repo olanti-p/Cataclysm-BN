@@ -7,6 +7,7 @@
 #include "../game_constants.h"
 #include "../string_utils.h"
 #include "../omdata.h"
+#include "../text_snippets.h"
 
 namespace editor
 {
@@ -105,7 +106,8 @@ void show_canvas( me_state &state )
                   ImGuiWindowFlags_NoDecoration |
                   ImGuiWindowFlags_NoFocusOnAppearing |
                   ImGuiWindowFlags_NoBackground |
-                  ImGuiWindowFlags_NoBringToFrontOnFocus
+                  ImGuiWindowFlags_NoBringToFrontOnFocus |
+                  ImGuiWindowFlags_NoScrollWithMouse
                 );
 
     ImDrawList *draw_list = ImGui::GetWindowDrawList();
@@ -144,6 +146,32 @@ void show_canvas( me_state &state )
             int delta_wheel = static_cast<int>( std::round( io.MouseWheel ) );
             int delta = delta_wheel * zoom_speed;
             state.camera.scale = clamp( state.camera.scale + delta, MIN_SCALE, MAX_SCALE );
+        }
+        if( ImGui::IsMouseDown( ImGuiMouseButton_Left ) ) {
+            point_rel_etile mapgensize = state.file.mapgensize();
+            if( tile_pos.x() >= 0 && tile_pos.y() >= 0 && tile_pos.x() < mapgensize.x() &&
+                tile_pos.y() < mapgensize.y() ) {
+                const uuid_t &uuid = state.file.base.get_uuid_at( tile_pos.raw() );
+                if( state.rows_brush != UUID_INVALID && uuid != state.rows_brush ) {
+                    state.file.base.set_uuid_at( tile_pos.raw(), state.rows_brush );
+                } else if( state.rows_brush == UUID_INVALID && uuid != UUID_INVALID ) {
+                    state.file.base.set_uuid_at( tile_pos.raw(), state.rows_brush );
+                }
+            }
+        }
+    }
+
+    state.file.base.set_size( state.file.mapgensize().raw() );
+    for( int x = 0; x < state.file.mapgensize().x(); x++ ) {
+        for( int y = 0; y < state.file.mapgensize().y(); y++ ) {
+            const map_key &mk = state.file.base.get_key_at( point( x, y ) );
+            point_abs_epos center = coords::project_combine( point_abs_etile( x, y ),
+                                    point_etile_epos( ETILE_SIZE / 2, ETILE_SIZE / 2 ) );
+            point_abs_screen text_center = state.camera.world_to_screen( center );
+            point_rel_screen text_size( ImGui::CalcTextSize( mk.str.c_str() ) );
+            point_abs_screen text_pos = text_center - text_size.raw() / 2;
+            ImGui::SetCursorPos( text_pos.raw() );
+            ImGui::Text( "%s", mk.str.c_str() );
         }
     }
 
@@ -299,13 +327,14 @@ void show_file_info( me_state &state, me_file &file, bool &show )
         }
     }
 
-    show_palette( file.base.inline_palette, state.show_base_inline_palette );
+    show_palette( state, file.base.inline_palette, state.show_base_inline_palette );
 
     ImGui::End();
 }
 
-template<typename T, typename F>
-void show_palette_map( const char *label, std::vector<std::pair<map_key, T>> &list, F payload_f )
+template<typename T, typename F, typename F_NEW>
+void show_palette_map( me_state &state, const char *label, std::vector<T> &list, F payload_f,
+                       F_NEW new_f )
 {
     ImGui::PushID( label );
     ImGui::Text( "%s", label );
@@ -322,7 +351,7 @@ void show_palette_map( const char *label, std::vector<std::pair<map_key, T>> &li
         if( i == 0 ) {
             ImGui::BeginDisabled();
         }
-        if( ImGui::ImageButton( "up", "me_move_up" ) ) {
+        if( ImGui::ArrowButton( "up", ImGuiDir_Up ) ) {
             move_up = i;
         }
         if( i == 0 ) {
@@ -333,7 +362,7 @@ void show_palette_map( const char *label, std::vector<std::pair<map_key, T>> &li
         if( i == list.size() - 1 ) {
             ImGui::BeginDisabled();
         }
-        if( ImGui::ImageButton( "down", "me_move_down" ) ) {
+        if( ImGui::ArrowButton( "down", ImGuiDir_Down ) ) {
             move_dn = i;
         }
         if( i == list.size() - 1 ) {
@@ -341,18 +370,31 @@ void show_palette_map( const char *label, std::vector<std::pair<map_key, T>> &li
         }
         ImGui::SameLine();
 
-        ImGui::SetNextItemWidth( ImGui::GetFrameHeight() );
-        if( ImGui::InputText( "##key", &list[i].first.str, ImGuiInputTextFlags_AutoSelectAll ) ) {
-            std::u32string s32 = utf8_to_utf32( list[i].first.str );
-            list[i].first.str = utf32_to_utf8( s32[0] );
+        if( list[i].uuid == state.rows_brush ) {
+            if( ImGui::ImageButton( "unpick", "me_clear_rows_brush" ) ) {
+                state.rows_brush = UUID_INVALID;
+            }
+        } else {
+            if( ImGui::ImageButton( "pick", "me_set_rows_brush" ) ) {
+                state.rows_brush = list[i].uuid;
+            }
         }
         ImGui::SameLine();
+
+        ImGui::SetNextItemWidth( ImGui::GetFrameHeight() );
+        ImGui::InputSymbol( "##key", list[i].key.str, default_map_key.str.c_str() );
+        ImGui::SameLine();
         ImGui::PushID( "payload" );
-        payload_f( list[i].second );
+        payload_f( list[i].data );
         ImGui::PopID();
         ImGui::PopID();
     }
     if( del ) {
+        const uuid_t &uuid = list[ *del ].uuid;
+        state.file.base.remove_usages( uuid );
+        if( state.rows_brush == uuid ) {
+            state.rows_brush = UUID_INVALID;
+        }
         list.erase( list.begin() + *del );
     }
     if( move_up ) {
@@ -362,12 +404,12 @@ void show_palette_map( const char *label, std::vector<std::pair<map_key, T>> &li
         std::swap( list[*move_dn], list[*move_dn + 1] );
     }
     if( ImGui::ImageButton( "add", "me_add" ) ) {
-        list.emplace_back();
+        list.emplace_back( new_f() );
     }
     ImGui::PopID();
 }
 
-void show_palette( me_palette &p, bool &show )
+void show_palette( me_state &state, me_palette &p, bool &show )
 {
     ImGui::PushID( &p );
 
@@ -383,16 +425,25 @@ void show_palette( me_palette &p, bool &show )
         ImGui::InputId( "id", p.id );
     }
 
-    show_palette_map( "Terrains:", p.terrain, []( ter_eid & id ) {
+    show_palette_map( state, "Terrains:", p.terrain, []( ter_eid & id ) {
         ImGui::InputId( "##", id );
+    },
+    [&]() {
+        return me_palette_entry_terrain{ state.file.base.pick_available_key(), state.file.uuid_gen(), ter_eid::NULL_ID() };
     } );
 
-    show_palette_map( "Furniture:", p.furniture, []( furn_eid & id ) {
+    show_palette_map( state, "Furniture:", p.furniture, []( furn_eid & id ) {
         ImGui::InputId( "##", id );
+    },
+    [&]() {
+        return me_palette_entry_furniture{ state.file.base.pick_available_key(), state.file.uuid_gen(), furn_eid::NULL_ID() };
     } );
 
-    show_palette_map( "Placings:", p.placings, []( me_placing & pl ) {
+    show_palette_map( state, "Placings:", p.placings, []( me_placing & pl ) {
         ImGui::InputText( "##", &pl.dummy );
+    },
+    [&]() {
+        return me_palette_entry_placing{ state.file.base.pick_available_key(), state.file.uuid_gen(), me_placing() };
     } );
 
     ImGui::End();
@@ -423,12 +474,90 @@ point_rel_etile me_file::mapgensize()
     }
 }
 
+me_map_key_generator::me_map_key_generator()
+{
+    const translation &trans = SNIPPET.get_snippet_ref_by_id( snippet_id( "me_auto_map_keys" ) );
+    std::u32string s_u32 = utf8_to_utf32( trans.raw );
+    // TODO: support combining characters
+    opts.reserve( s_u32.size() );
+    for( const char32_t &ch32 : s_u32 ) {
+        opts.emplace_back( utf32_to_utf8( ch32 ) );
+    }
+}
+
+void me_map_key_generator::blacklist( const map_key &opt )
+{
+    std::remove( opts.begin(), opts.end(), opt );
+}
+
 me_state::me_state()
 {
     init_assets( assets );
 }
 
 me_state::~me_state() = default;
+
+const map_key &me_palette::key_from_uuid( const uuid_t &uuid ) const
+{
+    if( uuid == UUID_INVALID ) {
+        return default_map_key;
+    }
+    for( const auto &it : terrain ) {
+        if( it.uuid == uuid ) {
+            return it.key;
+        }
+    }
+    for( const auto &it : furniture ) {
+        if( it.uuid == uuid ) {
+            return it.key;
+        }
+    }
+    for( const auto &it : placings ) {
+        if( it.uuid == uuid ) {
+            return it.key;
+        }
+    }
+
+    std::cerr << "Tried to find palette key, but uuid was not found " << uuid << std::endl;
+    std::abort();
+}
+
+void me_mapgen_base::set_size( const point &s )
+{
+    if( size == s ) {
+        return;
+    }
+    // TODO: graciously transfer entries from old size
+    size = s;
+    rows.clear();
+    rows.resize( s.x * s.y, UUID_INVALID );
+}
+
+me_mapgen_base::~me_mapgen_base() = default;
+
+map_key me_mapgen_base::pick_available_key() const
+{
+    me_map_key_generator gen;
+    for( const auto &it : inline_palette.terrain ) {
+        gen.blacklist( it.key );
+    }
+    for( const auto &it : inline_palette.furniture ) {
+        gen.blacklist( it.key );
+    }
+    for( const auto &it : inline_palette.placings ) {
+        gen.blacklist( it.key );
+    }
+    return gen();
+}
+
+void me_mapgen_base::remove_usages( const uuid_t &uuid )
+{
+    for( uuid_t &cell : rows ) {
+        if( cell == uuid ) {
+            cell = UUID_INVALID;
+        }
+    }
+}
 
 template<>
 const std::vector<std::string> &editable_id<ter_t>::get_all_opts()

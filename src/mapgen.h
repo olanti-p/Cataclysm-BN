@@ -211,6 +211,8 @@ class map_key
         std::string str;
 };
 
+const map_key default_map_key( "." );
+
 namespace std
 {
 template<>

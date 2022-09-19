@@ -71,9 +71,60 @@ using furn_eid = editable_id<furn_t>;
 using oter_eid = editable_id<oter_t>;
 using palette_eid = editable_id<mapgen_palette>;
 
+using uuid_t = uint64_t;
+constexpr uuid_t UUID_INVALID = 0;
+
+struct uuid_generator {
+    private:
+        uuid_t counter = UUID_INVALID;
+
+    public:
+        inline uuid_t operator()() {
+            counter++;
+            return counter;
+        }
+};
+
+struct me_map_key_generator {
+    private:
+        std::vector<map_key> opts;
+
+    public:
+        me_map_key_generator();
+        ~me_map_key_generator() = default;
+
+        void blacklist( const map_key &opt );
+
+        inline map_key operator()() {
+            if( opts.empty() ) {
+                return default_map_key;
+            } else {
+                return opts[0];
+            }
+        }
+};
+
 struct me_placing {
     // TODO
     std::string dummy;
+};
+
+struct me_palette_entry_terrain {
+    map_key key;
+    uuid_t uuid;
+    ter_eid data;
+};
+
+struct me_palette_entry_furniture {
+    map_key key;
+    uuid_t uuid;
+    furn_eid data;
+};
+
+struct me_palette_entry_placing {
+    map_key key;
+    uuid_t uuid;
+    me_placing data;
 };
 
 struct me_palette {
@@ -85,14 +136,36 @@ struct me_palette {
 
     bool is_inline = false;
     palette_eid id;
-    std::vector<std::pair<map_key, ter_eid>> terrain;
-    std::vector<std::pair<map_key, furn_eid>> furniture;
-    std::vector<std::pair<map_key, me_placing>> placings;
+    std::vector<me_palette_entry_terrain> terrain;
+    std::vector<me_palette_entry_furniture> furniture;
+    std::vector<me_palette_entry_placing> placings;
+
+    const map_key &key_from_uuid( const uuid_t &uuid ) const;
 };
 
 struct me_mapgen_base {
-    std::vector<map_key> rows;
+    me_mapgen_base() {
+        set_size( point( SEEX * 2, SEEY * 2 ) );
+    }
+    ~me_mapgen_base();
+
+    point size;
+    // TODO: refer to palette entries by their ids
+    std::vector<uuid_t> rows;
     me_palette inline_palette = me_palette::make_inline();
+
+    void set_size( const point &s );
+    inline void set_uuid_at( const point &pos, const uuid_t &uuid ) {
+        rows[ pos.y * size.x + pos.x ] = uuid;
+    }
+    inline const uuid_t &get_uuid_at( const point &pos ) {
+        return rows[ pos.y * size.x + pos.x ];
+    }
+    inline const map_key &get_key_at( const point &pos ) {
+        return inline_palette.key_from_uuid( get_uuid_at( pos ) );
+    }
+    map_key pick_available_key() const;
+    void remove_usages( const uuid_t &uuid );
 };
 
 enum class OterMapgenBase {
@@ -124,6 +197,8 @@ enum class MapgenType {
 };
 
 struct me_file {
+    uuid_generator uuid_gen;
+
     MapgenType mtype = MapgenType::Oter;
     me_mapgen_base base;
     me_mapgen_oter oter;
@@ -150,6 +225,7 @@ struct me_state {
     bool show_base_inline_palette = false; // Whether to show base mapgen's palette
     asset_library assets;
     me_file file;
+    uuid_t rows_brush = UUID_INVALID;
 };
 
 /**
@@ -191,7 +267,7 @@ void show_canvas( me_state &state );
 void show_control_window( me_state &state );
 void show_asset_lib( asset_library &assets, bool &show );
 void show_file_info( me_state &state, me_file &file, bool &show );
-void show_palette( me_palette &p, bool &show );
+void show_palette( me_state &state, me_palette &p, bool &show );
 
 /**
  * ============= Entry point =============
