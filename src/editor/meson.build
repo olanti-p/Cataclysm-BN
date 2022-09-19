@@ -6,5 +6,7 @@ editor_sources = files(
     'editor_mapgen_func.cpp',
     'editor_mapgen_piece.cpp',
     'editor_me_state.cpp',
+    'editor_widget_combofilter.cpp',
     'editor_widgets.cpp',
+    'fts_fuzzy_match.cpp',
 )

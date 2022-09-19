@@ -3,8 +3,6 @@
 #include "editor_widgets.h"
 #include "editor_main.h"
 
-#include <string>
-
 #include "../color.h"
 #include "../catacharset.h"
 #include "../mapgen.h"

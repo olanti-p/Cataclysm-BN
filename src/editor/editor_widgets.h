@@ -2,11 +2,13 @@
 #define CATA_SRC_EDITOR_EDITOR_WIDGETS_H
 
 #include <string>
+#include <vector>
 
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
 
 #include "editor_me_state.h"
+#include "editor_widget_combofilter.h"
 
 class nc_color;
 struct jmapgen_int;
