@@ -168,7 +168,7 @@ bool InputTextCompleting( const char *label, std::string &input,
     const bool is_input_text_activated = ImGui::IsItemActivated();
 
     if( is_input_text_activated ) {
-        ImGui::OpenPopup( "##popup" );
+        ImGui::OpenPopup( "##popup_text_completion" );
     }
 
     bool ret = false;
@@ -176,7 +176,7 @@ bool InputTextCompleting( const char *label, std::string &input,
     ImGui::SetNextWindowPos( ImVec2( ImGui::GetItemRectMin().x, ImGui::GetItemRectMax().y ) );
     ImGui::SetNextWindowSize( { ImGui::GetItemRectSize().x, 0 } );
     ImGui::SetNextWindowSizeConstraints( { ImGui::GetItemRectSize().x, 0 }, { ImGui::GetItemRectSize().x, ImGui::GetFrameHeight() * 15.0f } );
-    if( ImGui::BeginPopup( "##popup",
+    if( ImGui::BeginPopup( "##popup_text_completion",
                            ImGuiWindowFlags_NoTitleBar |
                            ImGuiWindowFlags_NoMove |
                            ImGuiWindowFlags_NoResize |
