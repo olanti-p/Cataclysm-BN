@@ -99,7 +99,15 @@ bool detail::InputId( const char *label,
     if( !is_valid ) {
         ImGui::PushStyleColor( ImGuiCol_FrameBg, ImVec4( 0.8f, 0.3f, 0.3f, 1.0f ) );
     }
-    bool ret = ImGui::InputTextCompleting( label, data, opts );
+    int current_item = -1;
+    for( size_t i = 0; i < opts.size(); i++ ) {
+        if( opts[i] == data ) {
+            current_item = static_cast<int>( i );
+            break;
+        }
+    }
+    bool ret = ImGui::ComboWithFilter( label, &current_item, opts, 15 );
+    data = opts[ current_item ];
     if( !is_valid ) {
         ImGui::PopStyleColor();
     }
