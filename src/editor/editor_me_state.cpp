@@ -114,10 +114,6 @@ void show_canvas( me_state &state )
     const ImVec4 col_mapgensize_bg = ImVec4( 0.7f, 0.7f, 0.7f, 0.1f );
     const ImVec4 col_mapgensize_border = ImVec4( 0.7f, 0.7f, 0.7f, 1.0f );
 
-    highlight_tile( draw_list, state.camera, point_abs_etile( 1, 1 ), col_cursor );
-    highlight_tile( draw_list, state.camera, point_abs_etile( 3, 1 ), col_cursor );
-    highlight_tile( draw_list, state.camera, point_abs_etile( 1, 3 ), col_cursor );
-
     highlight_region( draw_list, state.camera, point_abs_etile( 0, 0 ), point_abs_etile( -1,
                       -1 ) + state.file.mapgensize(), col_mapgensize_bg, col_mapgensize_border );
 
