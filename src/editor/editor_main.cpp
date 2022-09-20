@@ -73,11 +73,6 @@ static void set_current_z( const editor_state &state, int z )
     }
 }
 
-static tripoint get_view_center( const editor_state & /*state*/ )
-{
-    return get_avatar().pos() + get_avatar().view_offset;
-}
-
 static void set_view_center( const editor_state & /*state*/, const tripoint &pos )
 {
     get_avatar().view_offset = pos - get_avatar().pos();
@@ -774,7 +769,6 @@ bool InputAssetId( editor::editor_state &state, const std::string &label, std::s
     std::string widget_id = string_format( "##ass-id-in-%s", label );
     bool ret = ImGui::InputText( widget_id.c_str(), &buf );
     ImGui::SameLine();
-    ImGuiID curr_id = ImGui::GetID( widget_id.c_str() );
     ImGui::BeginDisabled( !state.copied_entry || state.copied_entry->get_type() != atype );
     if( ImGui::Button( "Paste" ) ) {
         buf = state.copied_entry->get_id();
