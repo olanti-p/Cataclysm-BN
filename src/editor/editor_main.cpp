@@ -26,8 +26,10 @@ namespace editor
 struct editor_state {
     bool do_loop = true;
     bool show_demo_wnd = false;
+    bool show_asset_lib = true;
     int loops = 0;
     int frames = 0;
+    const mapgen_function_json *selected_oter_mapgen = nullptr;
 
     asset_library assets;
 
@@ -91,6 +93,11 @@ static void show_control_window( editor_state &state )
     if( ImGui::Button( "Toggle Demo Window" ) ) {
         state.show_demo_wnd = !state.show_demo_wnd;
     }
+    ImGui::SameLine();
+    if( ImGui::Button( "Toggle Asset Library" ) ) {
+        state.show_asset_lib = !state.show_asset_lib;
+    }
+    ImGui::SameLine();
     if( ImGui::Button( "Toggle Submap Grid" ) ) {
         g->debug_submap_grid_overlay = !g->debug_submap_grid_overlay;
     }
@@ -196,7 +203,24 @@ static void show_tile_properties_window( editor_state &state,
     // Items
     map_stack items = here.i_at( p );
     if( !items.empty() ) {
-        ImGui::Text( "%d Item(s)", static_cast<int>( items.size() ) );
+        int num_items = static_cast<int>( items.size() );
+        if( ImGui::TreeNode( "items_list", "%d Item(s)", num_items ) ) {
+            int i = 0;
+            for( const item &itm : items ) {
+                std::string name = itm.display_name( 1 );
+                const void *node_id = ( const void * )( intptr_t )i;
+                if( ImGui::TreeNode( node_id, "[%d] %s", i, name.c_str() ) ) {
+                    ImGui::Separator();
+                    ImGui::Text( "TODO: more info" );
+                    ImGui::Separator();
+
+                    ImGui::TreePop();
+                }
+                i++;
+            }
+
+            ImGui::TreePop();
+        }
     } else {
         ImGui::Text( "< No items here >" );
     }
@@ -208,12 +232,43 @@ static void show_tile_properties_window( editor_state &state,
     ImGui::End();
 }
 
-static void highlight_tile( ImDrawList *draw_list, point tile, ImU32 col )
+static void draw_frame( ImDrawList *draw_list, const point &p1, const point &p2, ImVec4 col,
+                        bool filled )
 {
-    std::pair<point, point> rect = editor::tile_to_screen( tile );
-    ImVec2 p_min( rect.first.x, rect.first.y );
-    ImVec2 p_max( rect.second.x, rect.second.y );
-    draw_list->AddRect( p_min, p_max, col, 0.0f, ImDrawFlags_None, 1.0f );
+    ImVec2 p_min;
+    ImVec2 p_max;
+    if( p1 == p2 ) {
+        std::pair<point, point> rect = editor::tile_to_screen( p1 );
+        p_min = ImVec2( rect.first.x, rect.first.y );
+        p_max = ImVec2( rect.second.x, rect.second.y );
+    } else {
+        point r1 = editor::tile_to_screen( p1 ).first;
+        p_min = ImVec2( r1.x, r1.y );
+        point r2 = editor::tile_to_screen( p2 ).second;
+        p_max = ImVec2( r2.x, r2.y );
+    }
+    if( filled ) {
+        draw_list->AddRectFilled( p_min, p_max, ImColor( col ), 0.0f, ImDrawFlags_None );
+    } else {
+        draw_list->AddRect( p_min, p_max, ImColor( col ), 0.0f, ImDrawFlags_None, 1.0f );
+    }
+}
+
+static void highlight_tile( ImDrawList *draw_list, point tile, ImVec4 col )
+{
+    draw_frame( draw_list, tile, tile, col, false );
+}
+
+static void highlight_region( ImDrawList *draw_list, point p1, point p2, ImVec4 col_bg,
+                              ImVec4 col_border )
+{
+    draw_frame( draw_list, p1, p2, col_bg, true );
+    draw_frame( draw_list, p1, p2, col_border, false );
+}
+
+static bool pos_in_rect( point p, point p1, point p2 )
+{
+    return p.x >= p1.x && p.y >= p1.y && p.x <= p2.x && p.y <= p2.y;
 }
 
 static void show_canvas_overlay_window( editor_state &state )
@@ -232,8 +287,14 @@ static void show_canvas_overlay_window( editor_state &state )
 
     ImDrawList *draw_list = ImGui::GetWindowDrawList();
 
-    const ImU32 col_cursor = ImColor( 0.8f, 0.8f, 0.4f, 1.0f );
-    const ImU32 col_selected = ImColor( 1.0f, 1.0f, 0.0f, 1.0f );
+    const ImVec4 col_cursor = ImVec4( 0.8f, 0.8f, 0.4f, 1.0f );
+    const ImVec4 col_selected = ImVec4( 1.0f, 1.0f, 0.0f, 1.0f );
+    const ImVec4 col_obj_bg = ImVec4( 0.0f, 1.0f, 0.0f, 0.2f );
+    const ImVec4 col_obj_border = ImVec4( 0.0f, 1.0f, 0.0f, 0.8f );
+    const ImVec4 col_obj_hilite_bg = ImVec4( 0.4f, 1.0f, 0.4f, 0.3f );
+    const ImVec4 col_obj_hilite_border = ImVec4( 0.4f, 1.0f, 0.4f, 0.8f );
+    const ImVec4 col_mapgensize_bg = ImVec4( 0.7f, 0.7f, 0.7f, 0.1f );
+    const ImVec4 col_mapgensize_border = ImVec4( 0.7f, 0.7f, 0.7f, 1.0f );
 
     cata::optional<tripoint> tile_pos = get_mouse_tile_pos( state );
     if( tile_pos ) {
@@ -245,7 +306,8 @@ static void show_canvas_overlay_window( editor_state &state )
     }
 
     ImGuiIO &io = ImGui::GetIO();
-    if( ImGui::IsWindowHovered() ) {
+    bool canvas_hovered = ImGui::IsWindowHovered();
+    if( canvas_hovered ) {
         if( tile_pos ) {
             if( ImGui::IsMouseClicked( ImGuiMouseButton_Left ) ) {
                 if( tile_pos == state.single_selection ) {
@@ -264,6 +326,41 @@ static void show_canvas_overlay_window( editor_state &state )
             } else if( ImGui::IsKeyDown( ImGuiKey_ModShift ) ) {
                 set_current_z( state, get_current_z( state ) - io.MouseWheel );
             }
+        }
+    }
+
+    if( state.selected_oter_mapgen ) {
+        const mapgen_function_json &func = *state.selected_oter_mapgen;
+
+        highlight_region( draw_list, point_zero, func.mapgensize - point( 1, 1 ), col_mapgensize_bg,
+                          col_mapgensize_border );
+
+        std::vector<std::pair<int, const jmapgen_piece *>> hovered;
+
+        int i = 0;
+        for( const jmapgen_objects::jmapgen_obj &obj : func.objects.objects ) {
+            ImVec4 col_bg, col_border;
+            point p1 = point( obj.first.x.val, obj.first.y.val );
+            point p2 = point( obj.first.x.valmax, obj.first.y.valmax );
+            if( canvas_hovered && tile_pos && pos_in_rect( tile_pos->xy(), p1, p2 ) ) {
+                hovered.push_back( std::make_pair( i, obj.second.get() ) );
+                col_bg = col_obj_hilite_bg;
+                col_border = col_obj_hilite_border;
+            } else {
+                col_bg = col_obj_bg;
+                col_border = col_obj_border;
+            }
+            highlight_region( draw_list, p1, p2, col_bg, col_border );
+
+            i++;
+        }
+        if( !hovered.empty() ) {
+            ImGui::BeginTooltip();
+            ImGui::Text( "Pieces here:" );
+            for( const auto &piece : hovered ) {
+                ImGui::Text( "%d: %p", piece.first, piece.second );
+            }
+            ImGui::EndTooltip();
         }
     }
 
@@ -347,8 +444,10 @@ static void show_editor_ui( editor_state &state )
     } else {
         show_tile_properties_window( state, get_mouse_tile_pos( state ) );
     }
-    show_asset_library_window( state.assets );
-    show_asset_details_window( state );
+    if( state.show_asset_lib ) {
+        show_asset_library_window( state.assets );
+        show_asset_details_window( state );
+    }
     if( state.show_demo_wnd ) {
         ImGui::ShowDemoWindow( &state.show_demo_wnd );
     }
@@ -358,37 +457,42 @@ static editor::editor_state *current_state = nullptr;
 
 void advanced_editor_run()
 {
-    editor_state state;
-    init_assets( state.assets );
-    current_state = &state;
+    {
+        editor_state state;
+        init_assets( state.assets );
+        current_state = &state;
 
-    bool old_submap_grid = g->debug_submap_grid_overlay;
-    tripoint old_view = get_avatar().view_offset;
-    int old_zoom = g->get_zoom();
-    on_out_of_scope _close_ui( [&]() {
-        current_state = nullptr;
-        g->debug_submap_grid_overlay = old_submap_grid;
-        get_avatar().view_offset = old_view;
-        g->set_zoom( old_zoom );
-        g->mark_main_ui_adaptor_resize();
-    } );
+        bool old_submap_grid = g->debug_submap_grid_overlay;
+        tripoint old_view = get_avatar().view_offset;
+        int old_zoom = g->get_zoom();
+        on_out_of_scope _close_ui( [&]() {
+            current_state = nullptr;
+            g->debug_submap_grid_overlay = old_submap_grid;
+            get_avatar().view_offset = old_view;
+            g->set_zoom( old_zoom );
+            g->mark_main_ui_adaptor_resize();
+            g->invalidate_main_ui_adaptor();
+            editor::set_draw_view_center_mark( true );
+        } );
 
-    g->debug_submap_grid_overlay = true;
+        editor::set_draw_view_center_mark( false );
+        g->debug_submap_grid_overlay = true;
 
-    g->invalidate_main_ui_adaptor();
-    ui_manager::redraw();
-    refresh_display();
-
-    while( state.do_loop ) {
-        state.loops++;
-
-        inp_mngr.get_input_event();
         g->invalidate_main_ui_adaptor();
+        invalidate_map_cache();
         ui_manager::redraw();
         refresh_display();
+
+        while( state.do_loop ) {
+            state.loops++;
+
+            inp_mngr.get_input_event();
+            g->invalidate_main_ui_adaptor();
+            ui_manager::redraw();
+            refresh_display();
+        }
     }
 
-    g->invalidate_main_ui_adaptor();
     ui_manager::redraw();
     refresh_display();
 }
@@ -403,10 +507,49 @@ void show_ui()
     show_editor_ui( *current_state );
 }
 
+void invalidate_map_cache()
+{
+    for( int z = -OVERMAP_DEPTH; z < OVERMAP_HEIGHT; z++ ) {
+        get_map().invalidate_map_cache( z );
+    }
+}
+
+void set_as_active( const mapgen_function_json *mgfunc )
+{
+    current_state->selected_oter_mapgen = mgfunc;
+    if( !mgfunc ) {
+        return;
+    }
+    // Set view center
+    point new_view_center = mgfunc->mapgensize / 2;
+    set_view_center( *current_state, tripoint( new_view_center, 0 ) );
+
+    // Set terrain/furniture
+    map &here = get_map();
+    for( int y = 0; y < mgfunc->mapgensize.y; y++ ) {
+        for( int x = 0; x < mgfunc->mapgensize.x; x++ ) {
+            const ter_furn_id &ids = mgfunc->format[ y * mgfunc->mapgensize.x + x];
+            here.ter_set( point( x, y ), ids.ter );
+            here.furn_set( point( x, y ), ids.furn );
+        }
+    }
+
+    invalidate_map_cache();
+}
+
 ImVec4 curses_color_to_imgui( nc_color nc )
 {
     SDL_Color col = curses_color_to_SDL( nc );
     return ImVec4( col.r, col.g, col.b, col.a );
+}
+
+point get_visible_map_area()
+{
+    if( current_state && current_state->selected_oter_mapgen ) {
+        return current_state->selected_oter_mapgen->mapgensize;
+    } else {
+        return point( MAPSIZE_X, MAPSIZE_Y );
+    }
 }
 
 } // namespace editor

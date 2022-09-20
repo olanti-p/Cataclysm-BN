@@ -77,6 +77,8 @@
 #include "weather.h"
 #include "weighted_list.h"
 
+#include "editor/editor_main.h"
+
 #define dbg(x) DebugLogFL((x),DC::SDL)
 
 static const efftype_id effect_ridden( "ridden" );
@@ -117,6 +119,8 @@ static const std::array<std::string, 13> TILE_CATEGORY_IDS = {{
         "overmap_terrain"
     }
 };
+
+static bool draw_view_center_mark = true;
 
 namespace
 {
@@ -1657,7 +1661,7 @@ void cata_tiles::draw( const point &dest, const tripoint &center, int width, int
         if( do_draw_cone_aoe ) {
             draw_cone_aoe_frame();
         }
-    } else if( g->u.view_offset != tripoint_zero && !g->u.in_vehicle ) {
+    } else if( g->u.view_offset != tripoint_zero && !g->u.in_vehicle && draw_view_center_mark ) {
         // check to see if player is located at ter
         draw_from_id_string( "cursor", C_NONE, empty_string,
                              tripoint( g->ter_view_p.xy(), center.z ), 0, 0, lit_level::LIT,
@@ -3993,3 +3997,13 @@ std::vector<options_manager::id_and_option> cata_tiles::build_display_list()
 }
 
 #endif // SDL_TILES
+
+namespace editor
+{
+
+void set_draw_view_center_mark( bool value )
+{
+    draw_view_center_mark = value;
+}
+
+} // namespace editor

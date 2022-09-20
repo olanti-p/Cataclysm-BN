@@ -234,6 +234,10 @@ void mapgen_function_json::editor_show_details() const
     mapgen_function::editor_show_details();
     ImGui::Separator();
     ImGui::Text( "OTER_MAPGEN" );
+    ImGui::SameLine();
+    if( ImGui::Button( "Set as active" ) ) {
+        editor::set_as_active( this );
+    }
     ImGui::Text( "fill_ter: %s", fill_ter.id().c_str() );
     ImGui::Text( "predecessor_mapgen: %s", predecessor_mapgen.id().c_str() );
     ImGui::JmapgenInt( "rotation", rotation );

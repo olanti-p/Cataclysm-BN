@@ -19,6 +19,11 @@ cata::optional<tripoint> screen_to_tile( point mouse_pos );
  */
 std::pair<point, point> tile_to_screen( point pos );
 
+/**
+ * @brief Set view center draw mark state
+ */
+void set_draw_view_center_mark( bool value );
+
 } // namespace editor
 
 #endif // CATA_SRC_SDLTILES_EDITOR_H
