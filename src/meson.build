@@ -313,5 +313,5 @@ version_h = custom_target(
     'version.h',
     output: 'version.h',
     input: 'version_static.h',
-    command: [ find_program('cp'), '@INPUT@', '@OUTPUT@']
+    command: [ find_program('../build-scripts/copy-file.py'), '@INPUT@', '@OUTPUT@']
 )
