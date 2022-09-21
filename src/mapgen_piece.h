@@ -10,6 +10,7 @@
 #include "map.h"
 #include "vpart_position.h"
 #include "om_direction.h"
+#include "rng.h"
 
 class npc_template;
 
