@@ -279,6 +279,8 @@ struct me_file_revision {
 
 struct me_state {
     me_state();
+    explicit me_state( std::unique_ptr<me_file> &&file );
+    me_state( std::unique_ptr<me_file> &&file, const std::string *loaded_from_path );
     me_state( const me_state & ) = delete;
     me_state( me_state && ) = default;
     ~me_state();

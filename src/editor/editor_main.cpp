@@ -1,7 +1,8 @@
-#include "editor_main.h"
 #include "editor_assets.h"
-#include "editor_widgets.h"
+#include "editor_main.h"
 #include "editor_me_state.h"
+#include "editor_projects.h"
+#include "editor_widgets.h"
 
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
@@ -9,6 +10,7 @@
 #include "../avatar.h"
 #include "../creature_tracker.h"
 #include "../field.h"
+#include "../fstream_utils.h"
 #include "../game.h"
 #include "../input.h"
 #include "../map.h"
@@ -57,6 +59,7 @@ struct editor_state {
 
     cata::optional<tripoint> examine_selection;
 
+    cata::optional<me_projects_state> projects_state;
     cata::optional<me_state> mapgenedit_state;
 };
 
@@ -594,6 +597,9 @@ static void show_editor_ui( editor_state &state )
     if( state.mapgenedit_state ) {
         show_me_ui( *state.mapgenedit_state );
         return;
+    } else if( state.projects_state ) {
+        show_projects_ui( *state.projects_state );
+        return;
     }
 
     show_canvas_overlay_window( state );
@@ -624,7 +630,7 @@ void advanced_editor_run()
         init_assets( state.assets );
         current_state = &state;
 
-        state.mapgenedit_state = me_state();
+        state.projects_state = me_projects_state();
         state.show_cata_ui = false;
 
         bool old_submap_grid = g->debug_submap_grid_overlay;
@@ -659,8 +665,27 @@ void advanced_editor_run()
                 std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
             }
             refresh_display();
-            if( state.mapgenedit_state && !state.mapgenedit_state->do_loop ) {
-                state.do_loop = false;
+            if( state.projects_state && state.projects_state->ret ) {
+                const editor::projects_ui_retval &retval = *state.projects_state->ret;
+                if( retval.exit ) {
+                    state.do_loop = false;
+                } else if( retval.make_new ) {
+                    state.mapgenedit_state = me_state();
+                } else if( retval.load_existing ) {
+                    std::unique_ptr<me_file> f = std::make_unique<me_file>();
+                    auto reader = [&]( JsonIn & jsin ) {
+                        f->deserialize( jsin );
+                    };
+                    if( read_from_file_json( retval.load_path, reader ) ) {
+                        state.mapgenedit_state = me_state( std::move( f ), &retval.load_path );
+                    } else {
+                        state.projects_state->popup_prompt =
+                            string_format( "Failed to load file:\n%s\nSee debug.log for details.", retval.load_path );
+                    }
+                }
+                state.projects_state->ret.reset();
+            } else if( state.mapgenedit_state && !state.mapgenedit_state->do_loop ) {
+                state.mapgenedit_state.reset();
             }
         }
     }

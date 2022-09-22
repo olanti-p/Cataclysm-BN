@@ -266,7 +266,7 @@ static void handle_file_saving( me_state &state )
 void show_control_window( me_state &state )
 {
     ImGui::Begin( "Advanced Map Editor", &state.do_loop );
-    ImGui::Text( "Close this window to exit the editor." );
+    ImGui::Text( "Close this window to close the project." );
 
     // Controls
     if( ImGui::Button( "Toggle Demo Window" ) ) {
@@ -687,12 +687,22 @@ void me_map_key_generator::blacklist( const map_key &opt )
     std::remove( opts.begin(), opts.end(), opt );
 }
 
-me_state::me_state()
+me_state::me_state() : me_state( std::make_unique<me_file>() ) { }
+
+me_state::me_state( std::unique_ptr<me_file> &&file ) : me_state( std::move( file ), nullptr ) { }
+
+me_state::me_state( std::unique_ptr<me_file> &&file,
+                    const std::string *loaded_from_path )
 {
+    if( loaded_from_path ) {
+        file_save_path = *loaded_from_path;
+    }
+
     current_revision = me_file_revision();
 
-    me_file &f = *current_revision.file;
-    f.base.set_size( f.mapgensize().raw() );
+    if( file ) {
+        current_revision.file = std::move( file );
+    }
 
     file_history.reserve( history_capacity + 1 );
     file_history.emplace_back( current_revision.make_copy() );
