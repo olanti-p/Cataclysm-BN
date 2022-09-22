@@ -82,6 +82,16 @@ void highlight_tile(
     draw_frame( draw_list, cam, tile, tile, col, false );
 }
 
+void fill_tile(
+    ImDrawList *draw_list,
+    const me_camera &cam,
+    point_abs_etile tile,
+    ImVec4 col
+)
+{
+    draw_frame( draw_list, cam, tile, tile, col, true );
+}
+
 void highlight_region(
     ImDrawList *draw_list,
     const me_camera &cam,
@@ -93,6 +103,17 @@ void highlight_region(
 {
     draw_frame( draw_list, cam, p1, p2, col_bg, true );
     draw_frame( draw_list, cam, p1, p2, col_border, false );
+}
+
+void fill_region(
+    ImDrawList *draw_list,
+    const me_camera &cam,
+    point_abs_etile p1,
+    point_abs_etile p2,
+    ImVec4 col
+)
+{
+    draw_frame( draw_list, cam, p1, p2, col, true );
 }
 
 void show_canvas( me_state &state )
@@ -162,10 +183,19 @@ void show_canvas( me_state &state )
     }
 
     state.file.base.set_size( state.file.mapgensize().raw() );
+
     for( int x = 0; x < state.file.mapgensize().x(); x++ ) {
         for( int y = 0; y < state.file.mapgensize().y(); y++ ) {
-            const map_key &mk = state.file.base.get_key_at( point( x, y ) );
-            point_abs_epos center = coords::project_combine( point_abs_etile( x, y ),
+            point_abs_etile p( x, y );
+            fill_tile( draw_list, state.camera, p, state.file.base.get_color_at( p.raw() ) ) ;
+        }
+    }
+
+    for( int x = 0; x < state.file.mapgensize().x(); x++ ) {
+        for( int y = 0; y < state.file.mapgensize().y(); y++ ) {
+            point_abs_etile p( x, y );
+            const map_key &mk = state.file.base.get_key_at( p.raw() );
+            point_abs_epos center = coords::project_combine( p,
                                     point_etile_epos( ETILE_SIZE / 2, ETILE_SIZE / 2 ) );
             point_abs_screen text_center = state.camera.world_to_screen( center );
             point_rel_screen text_size( ImGui::CalcTextSize( mk.str.c_str() ) );
@@ -381,6 +411,10 @@ void show_palette_map( me_state &state, const char *label, std::vector<T> &list,
         }
         ImGui::SameLine();
 
+        ImGui::ColorEdit4( "MyColor##3", ( float * )&list[i].color,
+                           ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel );
+        ImGui::SameLine();
+
         ImGui::SetNextItemWidth( ImGui::GetFrameHeight() );
         ImGui::InputSymbol( "##key", list[i].key.str, default_map_key.str.c_str() );
         ImGui::SameLine();
@@ -429,21 +463,21 @@ void show_palette( me_state &state, me_palette &p, bool &show )
         ImGui::InputId( "##", id );
     },
     [&]() {
-        return me_palette_entry_terrain{ state.file.base.pick_available_key(), state.file.uuid_gen(), ter_eid::NULL_ID() };
+        return me_palette_entry_terrain{ state.file.base.pick_available_key(), state.file.uuid_gen(), ImVec4(), ter_eid::NULL_ID() };
     } );
 
     show_palette_map( state, "Furniture:", p.furniture, []( furn_eid & id ) {
         ImGui::InputId( "##", id );
     },
     [&]() {
-        return me_palette_entry_furniture{ state.file.base.pick_available_key(), state.file.uuid_gen(), furn_eid::NULL_ID() };
+        return me_palette_entry_furniture{ state.file.base.pick_available_key(), state.file.uuid_gen(), ImVec4(), furn_eid::NULL_ID() };
     } );
 
     show_palette_map( state, "Placings:", p.placings, []( me_placing & pl ) {
         ImGui::InputText( "##", &pl.dummy );
     },
     [&]() {
-        return me_palette_entry_placing{ state.file.base.pick_available_key(), state.file.uuid_gen(), me_placing() };
+        return me_palette_entry_placing{ state.file.base.pick_available_key(), state.file.uuid_gen(), ImVec4(), me_placing() };
     } );
 
     ImGui::End();
@@ -519,6 +553,32 @@ const map_key &me_palette::key_from_uuid( const uuid_t &uuid ) const
     }
 
     std::cerr << "Tried to find palette key, but uuid was not found " << uuid << std::endl;
+    std::abort();
+}
+
+const ImVec4 &me_palette::color_from_uuid( const uuid_t &uuid ) const
+{
+    if( uuid == UUID_INVALID ) {
+        static ImVec4 default_color = ImVec4();
+        return default_color;
+    }
+    for( const auto &it : terrain ) {
+        if( it.uuid == uuid ) {
+            return it.color;
+        }
+    }
+    for( const auto &it : furniture ) {
+        if( it.uuid == uuid ) {
+            return it.color;
+        }
+    }
+    for( const auto &it : placings ) {
+        if( it.uuid == uuid ) {
+            return it.color;
+        }
+    }
+
+    std::cerr << "Tried to find palette color, but uuid was not found " << uuid << std::endl;
     std::abort();
 }
 

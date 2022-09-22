@@ -7,6 +7,7 @@
 #include "../mapgen.h"
 
 #include "editor_assets.h"
+#include "imgui.h"
 
 struct ImDrawList;
 struct ImVec4;
@@ -112,18 +113,21 @@ struct me_placing {
 struct me_palette_entry_terrain {
     map_key key;
     uuid_t uuid;
+    ImVec4 color;
     ter_eid data;
 };
 
 struct me_palette_entry_furniture {
     map_key key;
     uuid_t uuid;
+    ImVec4 color;
     furn_eid data;
 };
 
 struct me_palette_entry_placing {
     map_key key;
     uuid_t uuid;
+    ImVec4 color;
     me_placing data;
 };
 
@@ -141,6 +145,7 @@ struct me_palette {
     std::vector<me_palette_entry_placing> placings;
 
     const map_key &key_from_uuid( const uuid_t &uuid ) const;
+    const ImVec4 &color_from_uuid( const uuid_t &uuid ) const;
 };
 
 struct me_mapgen_base {
@@ -158,11 +163,14 @@ struct me_mapgen_base {
     inline void set_uuid_at( const point &pos, const uuid_t &uuid ) {
         rows[ pos.y * size.x + pos.x ] = uuid;
     }
-    inline const uuid_t &get_uuid_at( const point &pos ) {
+    inline const uuid_t &get_uuid_at( const point &pos ) const {
         return rows[ pos.y * size.x + pos.x ];
     }
-    inline const map_key &get_key_at( const point &pos ) {
+    inline const map_key &get_key_at( const point &pos ) const {
         return inline_palette.key_from_uuid( get_uuid_at( pos ) );
+    }
+    inline const ImVec4 &get_color_at( const point &pos ) const {
+        return inline_palette.color_from_uuid( get_uuid_at( pos ) );
     }
     map_key pick_available_key() const;
     void remove_usages( const uuid_t &uuid );
@@ -251,6 +259,12 @@ void highlight_tile(
     point_abs_etile tile,
     ImVec4 col
 );
+void fill_tile(
+    ImDrawList *draw_list,
+    const me_camera &cam,
+    point_abs_etile tile,
+    ImVec4 col
+);
 void highlight_region(
     ImDrawList *draw_list,
     const me_camera &cam,
@@ -258,6 +272,13 @@ void highlight_region(
     point_abs_etile p2,
     ImVec4 col_bg,
     ImVec4 col_border
+);
+void fill_region(
+    ImDrawList *draw_list,
+    const me_camera &cam,
+    point_abs_etile p1,
+    point_abs_etile p2,
+    ImVec4 col
 );
 
 /**
