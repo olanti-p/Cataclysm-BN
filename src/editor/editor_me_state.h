@@ -11,6 +11,9 @@
 
 struct ImDrawList;
 struct ImVec4;
+class JsonOut;
+class JsonIn;
+template<typename T> struct enum_traits;
 
 namespace editor
 {
@@ -29,6 +32,12 @@ struct me_camera {
     point_rel_epos screen_to_world( const point_rel_screen &p ) const;
     point_rel_screen world_to_screen( const point_rel_epos &p ) const;
 };
+
+namespace detail
+{
+void serialize_eid( JsonOut &jsout, const std::string &data );
+void deserialize_eid( JsonIn &jsin, std::string &data );
+} // namespace detail
 
 template<typename T>
 struct editable_id {
@@ -59,6 +68,13 @@ struct editable_id {
 
         static const std::vector<std::string> &get_all_opts();
 
+        void serialize( JsonOut &jsout ) const {
+            detail::serialize_eid( jsout, data );
+        }
+        void deserialize( JsonIn &jsin ) {
+            detail::deserialize_eid( jsin, data );
+        }
+
     private:
         // TODO: invalidate on data change
         static std::vector<std::string> all_opts;
@@ -84,6 +100,9 @@ struct uuid_generator {
             counter++;
             return counter;
         }
+
+        void serialize( JsonOut &jsout ) const;
+        void deserialize( JsonIn &jsin );
 };
 
 struct me_map_key_generator {
@@ -108,11 +127,17 @@ struct me_map_key_generator {
 struct me_int_range {
     int min = 0;
     int max = 0;
+
+    void serialize( JsonOut &jsout ) const;
+    void deserialize( JsonIn &jsin );
 };
 
 struct me_placing {
     // TODO
     std::string dummy;
+
+    void serialize( JsonOut &jsout ) const;
+    void deserialize( JsonIn &jsin );
 };
 
 struct me_palette_entry {
@@ -122,6 +147,9 @@ struct me_palette_entry {
     ter_eid ter;
     furn_eid furn;
     me_placing placing;
+
+    void serialize( JsonOut &jsout ) const;
+    void deserialize( JsonIn &jsin );
 };
 
 struct me_palette {
@@ -137,6 +165,9 @@ struct me_palette {
 
     const map_key &key_from_uuid( const uuid_t &uuid ) const;
     const ImVec4 &color_from_uuid( const uuid_t &uuid ) const;
+
+    void serialize( JsonOut &jsout ) const;
+    void deserialize( JsonIn &jsin );
 };
 
 struct me_mapgen_base {
@@ -165,12 +196,16 @@ struct me_mapgen_base {
     }
     map_key pick_available_key() const;
     void remove_usages( const uuid_t &uuid );
+
+    void serialize( JsonOut &jsout ) const;
+    void deserialize( JsonIn &jsin );
 };
 
 enum class OterMapgenBase {
     FillTer,
     PredecessorMapgen,
     Rows,
+    _Num,
 };
 
 struct me_mapgen_oter {
@@ -178,21 +213,31 @@ struct me_mapgen_oter {
     ter_eid fill_ter = ter_eid::NULL_ID();
     oter_eid predecessor_mapgen;
     me_int_range rotation;
+
+    void serialize( JsonOut &jsout ) const;
+    void deserialize( JsonIn &jsin );
 };
 
 struct me_mapgen_update {
     ter_eid fill_ter = ter_eid::NULL_ID();
+
+    void serialize( JsonOut &jsout ) const;
+    void deserialize( JsonIn &jsin );
 };
 
 struct me_mapgen_nested {
     point size = point( 1, 1 );
     me_int_range rotation;
+
+    void serialize( JsonOut &jsout ) const;
+    void deserialize( JsonIn &jsin );
 };
 
 enum class MapgenType {
     Oter,
     Update,
     Nested,
+    _Num,
 };
 
 struct me_file {
@@ -203,6 +248,9 @@ struct me_file {
     me_mapgen_oter oter;
     me_mapgen_update update;
     me_mapgen_nested nested;
+
+    void serialize( JsonOut &jsout ) const;
+    void deserialize( JsonIn &jsin );
 
     point_rel_etile mapgensize();
 };
@@ -344,5 +392,15 @@ void show_palette( me_state &state, me_palette &p, bool &show );
 void show_me_ui( me_state &state );
 
 } // namespace editor
+
+template<>
+struct enum_traits<editor::OterMapgenBase> {
+    static constexpr editor::OterMapgenBase last = editor::OterMapgenBase::_Num;
+};
+
+template<>
+struct enum_traits<editor::MapgenType> {
+    static constexpr editor::MapgenType last = editor::MapgenType::_Num;
+};
 
 #endif // CATA_SRC_EDITOR_EDITOR_ME_STATE_H
