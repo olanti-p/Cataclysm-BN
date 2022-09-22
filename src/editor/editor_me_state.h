@@ -298,6 +298,10 @@ struct me_state {
     bool ongoing_brush_stroke = false;
     bool brush_stroke_changed_data = false;
 
+    bool open_save_as = false;
+    bool do_save = false;
+    cata::optional<std::string> file_save_path;
+
     inline me_file &file() {
         return *current_revision.file;
     }

@@ -3,6 +3,7 @@
 
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
+#include "ImGuiFileDialog.h"
 
 #include "../fstream_utils.h"
 #include "../game_constants.h"
@@ -236,6 +237,32 @@ void show_canvas( me_state &state )
     ImGui::End();
 }
 
+static void handle_file_saving( me_state &state )
+{
+    if( state.open_save_as ) {
+        state.open_save_as = false;
+        ImGuiFileDialog::Instance()->OpenDialog( "SaveToFile",
+                "Choose a File", ".json",
+                state.file_save_path ? *state.file_save_path : ".",
+                1, nullptr, ImGuiFileDialogFlags_ConfirmOverwrite );
+    }
+
+    if( ImGuiFileDialog::Instance()->Display( "SaveToFile" ) ) {
+        if( ImGuiFileDialog::Instance()->IsOk() ) {
+            state.file_save_path = ImGuiFileDialog::Instance()->GetFilePathName();
+        }
+        ImGuiFileDialog::Instance()->Close();
+    }
+
+    if( state.do_save ) {
+        state.do_save = false;
+        assert( state.file_save_path );
+        write_to_file( *state.file_save_path, [&]( std::ostream & oss ) {
+            oss << serialize( state.file() );
+        } );
+    }
+}
+
 void show_control_window( me_state &state )
 {
     ImGui::Begin( "Advanced Map Editor", &state.do_loop );
@@ -258,10 +285,19 @@ void show_control_window( me_state &state )
         state.show_file_history = !state.show_file_history;
     }
 
-    if( ImGui::Button( "Export (clipboard)" ) ) {
-        std::string s = serialize( state.file() );
-        ImGui::SetClipboardText( s.c_str() );
+    if( ImGui::Button( "Save" ) ) {
+        if( !state.file_save_path ) {
+            state.open_save_as = true;
+        } else {
+            state.do_save = true;
+        }
     }
+    ImGui::SameLine();
+    if( ImGui::Button( "Save As..." ) ) {
+        state.open_save_as = true;
+    }
+
+    handle_file_saving( state );
 
     // Camera
     {
