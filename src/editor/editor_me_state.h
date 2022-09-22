@@ -328,11 +328,14 @@ struct me_state {
         switch_to_revision = current_revision.num + 1;
     }
 
+    bool has_unsaved_changes() const;
+
     bool file_has_changes = false;
     cata::optional<int> switch_to_revision;
     me_file_revision current_revision;
     std::vector<me_file_revision> file_history;
     int history_capacity = 200;
+    cata::optional<int> last_saved_revision;
 
     uuid_t rows_brush = UUID_INVALID;
 };

@@ -260,6 +260,7 @@ static void handle_file_saving( me_state &state )
         write_to_file( *state.file_save_path, [&]( std::ostream & oss ) {
             oss << serialize( state.file() );
         } );
+        state.last_saved_revision = state.current_revision.num;
     }
 }
 
@@ -285,7 +286,9 @@ void show_control_window( me_state &state )
         state.show_file_history = !state.show_file_history;
     }
 
-    if( ImGui::Button( "Save" ) ) {
+    std::string save_btn = string_format( "%sSave###save-button",
+                                          state.has_unsaved_changes() ? "* " : "" );
+    if( ImGui::Button( save_btn.c_str() ) ) {
         if( !state.file_save_path ) {
             state.open_save_as = true;
         } else {
@@ -330,7 +333,8 @@ void show_file_history( me_state &state, bool &show )
     }
 
     for( const me_file_revision &entry : state.file_history ) {
-        std::string fname = string_format( "Version %d", entry.num );
+        bool is_saved = state.last_saved_revision && *state.last_saved_revision == entry.num;
+        std::string fname = string_format( "Version %d%s", entry.num, is_saved ? " [S]" : "" );
         if( ImGui::Selectable( fname.c_str(), entry.num == state.current_revision.num ) ) {
             state.switch_to_revision = entry.num;
         }
@@ -694,11 +698,12 @@ me_state::me_state( std::unique_ptr<me_file> &&file ) : me_state( std::move( fil
 me_state::me_state( std::unique_ptr<me_file> &&file,
                     const std::string *loaded_from_path )
 {
+    current_revision = me_file_revision();
+
     if( loaded_from_path ) {
         file_save_path = *loaded_from_path;
+        last_saved_revision = current_revision.num;
     }
-
-    current_revision = me_file_revision();
 
     if( file ) {
         current_revision.file = std::move( file );
@@ -711,6 +716,11 @@ me_state::me_state( std::unique_ptr<me_file> &&file,
 }
 
 me_state::~me_state() = default;
+
+bool me_state::has_unsaved_changes() const
+{
+    return !last_saved_revision || current_revision.num != *last_saved_revision;
+}
 
 const map_key &me_palette::key_from_uuid( const uuid_t &uuid ) const
 {
