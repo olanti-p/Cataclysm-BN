@@ -110,25 +110,13 @@ struct me_placing {
     std::string dummy;
 };
 
-struct me_palette_entry_terrain {
-    map_key key;
+struct me_palette_entry {
     uuid_t uuid;
-    ImVec4 color;
-    ter_eid data;
-};
-
-struct me_palette_entry_furniture {
     map_key key;
-    uuid_t uuid;
     ImVec4 color;
-    furn_eid data;
-};
-
-struct me_palette_entry_placing {
-    map_key key;
-    uuid_t uuid;
-    ImVec4 color;
-    me_placing data;
+    ter_eid ter;
+    furn_eid furn;
+    me_placing placing;
 };
 
 struct me_palette {
@@ -140,9 +128,7 @@ struct me_palette {
 
     bool is_inline = false;
     palette_eid id;
-    std::vector<me_palette_entry_terrain> terrain;
-    std::vector<me_palette_entry_furniture> furniture;
-    std::vector<me_palette_entry_placing> placings;
+    std::vector<me_palette_entry> entries;
 
     const map_key &key_from_uuid( const uuid_t &uuid ) const;
     const ImVec4 &color_from_uuid( const uuid_t &uuid ) const;

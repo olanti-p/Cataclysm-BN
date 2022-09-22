@@ -180,7 +180,7 @@ void show_canvas( me_state &state )
                 }
             }
         }
-        if ( ImGui::IsMouseClicked( ImGuiMouseButton_Middle ) ) {
+        if( ImGui::IsMouseClicked( ImGuiMouseButton_Middle ) ) {
             point_rel_etile mapgensize = state.file.mapgensize();
             if( tile_pos.x() >= 0 && tile_pos.y() >= 0 && tile_pos.x() < mapgensize.x() &&
                 tile_pos.y() < mapgensize.y() ) {
@@ -372,12 +372,8 @@ void show_file_info( me_state &state, me_file &file, bool &show )
     ImGui::End();
 }
 
-template<typename T, typename F, typename F_NEW>
-void show_palette_map( me_state &state, const char *label, std::vector<T> &list, F payload_f,
-                       F_NEW new_f )
+static void show_palette_entries( me_state &state, std::vector<me_palette_entry> &list )
 {
-    ImGui::PushID( label );
-    ImGui::Text( "%s", label );
     cata::optional<size_t> del;
     cata::optional<size_t> move_up;
     cata::optional<size_t> move_dn;
@@ -428,9 +424,15 @@ void show_palette_map( me_state &state, const char *label, std::vector<T> &list,
         ImGui::SetNextItemWidth( ImGui::GetFrameHeight() );
         ImGui::InputSymbol( "##key", list[i].key.str, default_map_key.str.c_str() );
         ImGui::SameLine();
-        ImGui::PushID( "payload" );
-        payload_f( list[i].data );
-        ImGui::PopID();
+        ImGui::SetNextItemWidth( ImGui::GetFrameHeight() * 15.0f );
+        ImGui::InputId( "##furn", list[i].furn );
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth( ImGui::GetFrameHeight() * 15.0f );
+        ImGui::InputId( "##ter", list[i].ter );
+        ImGui::SameLine();
+        if( ImGui::ArrowButton( "##placing", ImGuiDir_Right ) ) {
+            // TODO: edit placing
+        }
         ImGui::PopID();
     }
     if( del ) {
@@ -448,9 +450,15 @@ void show_palette_map( me_state &state, const char *label, std::vector<T> &list,
         std::swap( list[*move_dn], list[*move_dn + 1] );
     }
     if( ImGui::ImageButton( "add", "me_add" ) ) {
-        list.emplace_back( new_f() );
+        list.emplace_back( me_palette_entry{
+            state.file.uuid_gen(),
+            state.file.base.pick_available_key(),
+            ImVec4(),
+            ter_eid::NULL_ID(),
+            furn_eid::NULL_ID(),
+            me_placing()
+        } );
     }
-    ImGui::PopID();
 }
 
 void show_palette( me_state &state, me_palette &p, bool &show )
@@ -469,26 +477,7 @@ void show_palette( me_state &state, me_palette &p, bool &show )
         ImGui::InputId( "id", p.id );
     }
 
-    show_palette_map( state, "Terrains:", p.terrain, []( ter_eid & id ) {
-        ImGui::InputId( "##", id );
-    },
-    [&]() {
-        return me_palette_entry_terrain{ state.file.base.pick_available_key(), state.file.uuid_gen(), ImVec4(), ter_eid::NULL_ID() };
-    } );
-
-    show_palette_map( state, "Furniture:", p.furniture, []( furn_eid & id ) {
-        ImGui::InputId( "##", id );
-    },
-    [&]() {
-        return me_palette_entry_furniture{ state.file.base.pick_available_key(), state.file.uuid_gen(), ImVec4(), furn_eid::NULL_ID() };
-    } );
-
-    show_palette_map( state, "Placings:", p.placings, []( me_placing & pl ) {
-        ImGui::InputText( "##", &pl.dummy );
-    },
-    [&]() {
-        return me_palette_entry_placing{ state.file.base.pick_available_key(), state.file.uuid_gen(), ImVec4(), me_placing() };
-    } );
+    show_palette_entries( state, p.entries );
 
     ImGui::End();
     ImGui::PopID();
@@ -546,17 +535,7 @@ const map_key &me_palette::key_from_uuid( const uuid_t &uuid ) const
     if( uuid == UUID_INVALID ) {
         return default_map_key;
     }
-    for( const auto &it : terrain ) {
-        if( it.uuid == uuid ) {
-            return it.key;
-        }
-    }
-    for( const auto &it : furniture ) {
-        if( it.uuid == uuid ) {
-            return it.key;
-        }
-    }
-    for( const auto &it : placings ) {
+    for( const auto &it : entries ) {
         if( it.uuid == uuid ) {
             return it.key;
         }
@@ -572,17 +551,7 @@ const ImVec4 &me_palette::color_from_uuid( const uuid_t &uuid ) const
         static ImVec4 default_color = ImVec4();
         return default_color;
     }
-    for( const auto &it : terrain ) {
-        if( it.uuid == uuid ) {
-            return it.color;
-        }
-    }
-    for( const auto &it : furniture ) {
-        if( it.uuid == uuid ) {
-            return it.color;
-        }
-    }
-    for( const auto &it : placings ) {
+    for( const auto &it : entries ) {
         if( it.uuid == uuid ) {
             return it.color;
         }
@@ -608,13 +577,7 @@ me_mapgen_base::~me_mapgen_base() = default;
 map_key me_mapgen_base::pick_available_key() const
 {
     me_map_key_generator gen;
-    for( const auto &it : inline_palette.terrain ) {
-        gen.blacklist( it.key );
-    }
-    for( const auto &it : inline_palette.furniture ) {
-        gen.blacklist( it.key );
-    }
-    for( const auto &it : inline_palette.placings ) {
+    for( const auto &it : inline_palette.entries ) {
         gen.blacklist( it.key );
     }
     return gen();
