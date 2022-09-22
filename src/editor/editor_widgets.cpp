@@ -244,4 +244,12 @@ bool InputSymbol( const char *label, std::string &input, const char *fallback )
     }
 }
 
+void TextCentered( const std::string &text )
+{
+    float wnd_w = ImGui::GetWindowSize().x;
+    float text_w = ImGui::CalcTextSize( text.c_str() ).x;
+    ImGui::SetCursorPosX( wnd_w / 2.0f - text_w / 2.0f );
+    ImGui::Text( "%s", text.c_str() );
+}
+
 } // namespace ImGui

@@ -94,6 +94,8 @@ bool InputId( const char *label, editor::editable_id<T> &id, ImGuiInputTextFlags
 
 bool InputIntRange( const char *label, editor::me_int_range &r );
 
+void TextCentered( const std::string &text );
+
 } // namespace ImGui
 
 #endif // CATA_SRC_EDITOR_EDITOR_WIDGETS_H
