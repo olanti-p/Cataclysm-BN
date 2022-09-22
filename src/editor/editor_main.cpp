@@ -667,6 +667,7 @@ void advanced_editor_run()
             refresh_display();
             if( state.projects_state && state.projects_state->ret ) {
                 const editor::projects_ui_retval &retval = *state.projects_state->ret;
+                bool legacy_editor = false;
                 if( retval.exit ) {
                     state.do_loop = false;
                 } else if( retval.make_new ) {
@@ -682,8 +683,13 @@ void advanced_editor_run()
                         state.projects_state->popup_prompt =
                             string_format( "Failed to load file:\n%s\nSee debug.log for details.", retval.load_path );
                     }
+                } else if( retval.legacy_editor ) {
+                    legacy_editor = true;
                 }
                 state.projects_state->ret.reset();
+                if( legacy_editor ) {
+                    state.projects_state.reset();
+                }
             } else if( state.mapgenedit_state && !state.mapgenedit_state->do_loop ) {
                 state.mapgenedit_state.reset();
             }

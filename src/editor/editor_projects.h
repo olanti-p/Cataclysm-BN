@@ -10,6 +10,7 @@ namespace editor
 
 struct projects_ui_retval {
     bool exit = false;
+    bool legacy_editor = false;
     bool make_new = false;
     bool load_existing = false;
     std::string load_path;

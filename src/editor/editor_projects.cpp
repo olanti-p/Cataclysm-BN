@@ -33,6 +33,10 @@ void show_projects_window( me_projects_state &state )
     if( ImGui::Button( "Load Project", btn_size ) ) {
         state.open_file_dialog = true;
     }
+    if( ImGui::Button( "Legacy Editor", btn_size ) ) {
+        state.ret = projects_ui_retval();
+        state.ret->legacy_editor = true;
+    }
     if( ImGui::Button( "Exit Editor", btn_size ) ) {
         state.ret = projects_ui_retval();
         state.ret->exit = true;
