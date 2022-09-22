@@ -180,6 +180,16 @@ void show_canvas( me_state &state )
                 }
             }
         }
+        if ( ImGui::IsMouseClicked( ImGuiMouseButton_Middle ) ) {
+            point_rel_etile mapgensize = state.file.mapgensize();
+            if( tile_pos.x() >= 0 && tile_pos.y() >= 0 && tile_pos.x() < mapgensize.x() &&
+                tile_pos.y() < mapgensize.y() ) {
+                const uuid_t &uuid = state.file.base.get_uuid_at( tile_pos.raw() );
+                state.rows_brush = uuid;
+            } else {
+                state.rows_brush = UUID_INVALID;
+            }
+        }
     }
 
     state.file.base.set_size( state.file.mapgensize().raw() );
