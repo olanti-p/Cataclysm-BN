@@ -239,10 +239,19 @@ void show_canvas( me_state &state )
 
 static void handle_file_saving( me_state &state )
 {
+    if( !state.ongoing_brush_stroke && ImGui::IsKeyDown( ImGuiKey_LeftCtrl ) &&
+        ImGui::IsKeyPressed( ImGuiKey_S ) ) {
+        if( ImGui::IsKeyDown( ImGuiKey_LeftShift ) || !state.file_save_path ) {
+            state.open_save_as = true;
+        } else {
+            state.do_save = true;
+        }
+    }
+
     if( state.open_save_as ) {
         state.open_save_as = false;
         ImGuiFileDialog::Instance()->OpenDialog( "SaveToFile",
-                "Choose a File", ".json",
+                "Save As...", ".json",
                 state.file_save_path ? *state.file_save_path : ".",
                 1, nullptr, ImGuiFileDialogFlags_ConfirmOverwrite );
     }
