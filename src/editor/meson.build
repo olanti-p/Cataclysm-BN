@@ -10,4 +10,5 @@ editor_sources = files(
     'editor_widget_combofilter.cpp',
     'editor_widgets.cpp',
     'fts_fuzzy_match.cpp',
+    'ImGuiFileDialog.cpp',
 )
