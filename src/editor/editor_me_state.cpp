@@ -137,8 +137,14 @@ void show_canvas( me_state &state )
     const ImVec4 col_mapgensize_bg = ImVec4( 0.7f, 0.7f, 0.7f, 0.1f );
     const ImVec4 col_mapgensize_border = ImVec4( 0.7f, 0.7f, 0.7f, 1.0f );
 
-    highlight_region( draw_list, state.camera, point_abs_etile( 0, 0 ), point_abs_etile( -1,
-                      -1 ) + state.file.mapgensize(), col_mapgensize_bg, col_mapgensize_border );
+    highlight_region(
+        draw_list,
+        state.camera,
+        point_abs_etile( 0, 0 ),
+        point_abs_etile( -1, -1 ) + state.file().mapgensize(),
+        col_mapgensize_bg,
+        col_mapgensize_border
+    );
 
     ImGuiIO &io = ImGui::GetIO();
     bool canvas_hovered = ImGui::IsWindowHovered();
@@ -169,22 +175,25 @@ void show_canvas( me_state &state )
             state.camera.scale = clamp( state.camera.scale + delta, MIN_SCALE, MAX_SCALE );
         }
         if( ImGui::IsMouseDown( ImGuiMouseButton_Left ) ) {
-            point_rel_etile mapgensize = state.file.mapgensize();
+            point_rel_etile mapgensize = state.file().mapgensize();
             if( tile_pos.x() >= 0 && tile_pos.y() >= 0 && tile_pos.x() < mapgensize.x() &&
                 tile_pos.y() < mapgensize.y() ) {
-                const uuid_t &uuid = state.file.base.get_uuid_at( tile_pos.raw() );
+                const uuid_t &uuid = state.file().base.get_uuid_at( tile_pos.raw() );
+                // TODO: undo/redo support for entire strokes of the brush
                 if( state.rows_brush != UUID_INVALID && uuid != state.rows_brush ) {
-                    state.file.base.set_uuid_at( tile_pos.raw(), state.rows_brush );
+                    state.file().base.set_uuid_at( tile_pos.raw(), state.rows_brush );
+                    state.mark_changed();
                 } else if( state.rows_brush == UUID_INVALID && uuid != UUID_INVALID ) {
-                    state.file.base.set_uuid_at( tile_pos.raw(), state.rows_brush );
+                    state.file().base.set_uuid_at( tile_pos.raw(), state.rows_brush );
+                    state.mark_changed();
                 }
             }
         }
         if( ImGui::IsMouseClicked( ImGuiMouseButton_Middle ) ) {
-            point_rel_etile mapgensize = state.file.mapgensize();
+            point_rel_etile mapgensize = state.file().mapgensize();
             if( tile_pos.x() >= 0 && tile_pos.y() >= 0 && tile_pos.x() < mapgensize.x() &&
                 tile_pos.y() < mapgensize.y() ) {
-                const uuid_t &uuid = state.file.base.get_uuid_at( tile_pos.raw() );
+                const uuid_t &uuid = state.file().base.get_uuid_at( tile_pos.raw() );
                 state.rows_brush = uuid;
             } else {
                 state.rows_brush = UUID_INVALID;
@@ -192,19 +201,17 @@ void show_canvas( me_state &state )
         }
     }
 
-    state.file.base.set_size( state.file.mapgensize().raw() );
-
-    for( int x = 0; x < state.file.mapgensize().x(); x++ ) {
-        for( int y = 0; y < state.file.mapgensize().y(); y++ ) {
+    for( int x = 0; x < state.file().mapgensize().x(); x++ ) {
+        for( int y = 0; y < state.file().mapgensize().y(); y++ ) {
             point_abs_etile p( x, y );
-            fill_tile( draw_list, state.camera, p, state.file.base.get_color_at( p.raw() ) ) ;
+            fill_tile( draw_list, state.camera, p, state.file().base.get_color_at( p.raw() ) ) ;
         }
     }
 
-    for( int x = 0; x < state.file.mapgensize().x(); x++ ) {
-        for( int y = 0; y < state.file.mapgensize().y(); y++ ) {
+    for( int x = 0; x < state.file().mapgensize().x(); x++ ) {
+        for( int y = 0; y < state.file().mapgensize().y(); y++ ) {
             point_abs_etile p( x, y );
-            const map_key &mk = state.file.base.get_key_at( p.raw() );
+            const map_key &mk = state.file().base.get_key_at( p.raw() );
             point_abs_epos center = coords::project_combine( p,
                                     point_etile_epos( ETILE_SIZE / 2, ETILE_SIZE / 2 ) );
             point_abs_screen text_center = state.camera.world_to_screen( center );
@@ -228,12 +235,16 @@ void show_control_window( me_state &state )
         state.show_demo_wnd = !state.show_demo_wnd;
     }
 
-    // Contols
+    // Controls
     if( ImGui::Button( "Toggle Asset Library" ) ) {
         state.show_asset_lib = !state.show_asset_lib;
     }
     if( ImGui::Button( "Toggle File Info" ) ) {
         state.show_file_info = !state.show_file_info;
+    }
+    ImGui::SameLine();
+    if( ImGui::Button( "Toggle History" ) ) {
+        state.show_file_history = !state.show_file_history;
     }
 
     // Camera
@@ -248,6 +259,29 @@ void show_control_window( me_state &state )
         point_abs_etile etile_pos = get_mouse_tile_pos( state.camera );
         ImGui::Text( "Mouse pos, px: %s", screen_pos.to_string().c_str() );
         ImGui::Text( "Mouse pos, tile: %s", etile_pos.to_string().c_str() );
+    }
+
+    ImGui::End();
+}
+
+void show_file_history( me_state &state, bool &show )
+{
+    if( !ImGui::Begin( "File history", &show ) ) {
+        ImGui::End();
+        return;
+    }
+
+    ImGui::SetNextItemWidth( ImGui::GetFrameHeight() * 4.0f );
+    if( ImGui::InputInt( "History limit", &state.history_capacity, -1, -1,
+                         ImGuiInputTextFlags_AutoSelectAll ) ) {
+        state.history_capacity = clamp( state.history_capacity, 10, 10000 );
+    }
+
+    for( const me_file_revision &entry : state.file_history ) {
+        std::string fname = string_format( "Version %d", entry.num );
+        if( ImGui::Selectable( fname.c_str(), entry.num == state.current_revision.num ) ) {
+            state.switch_to_revision = entry.num;
+        }
     }
 
     ImGui::End();
@@ -318,52 +352,72 @@ void show_file_info( me_state &state, me_file &file, bool &show )
     ImGui::Text( "Mapgen type:" );
     if( ImGui::RadioButton( "Oter", file.mtype == MapgenType::Oter ) ) {
         file.mtype = MapgenType::Oter;
+        state.mark_changed();
     }
     ImGui::SameLine();
     if( ImGui::RadioButton( "Update", file.mtype == MapgenType::Update ) ) {
         file.mtype = MapgenType::Update;
+        state.mark_changed();
     }
     ImGui::SameLine();
     if( ImGui::RadioButton( "Nested", file.mtype == MapgenType::Nested ) ) {
         file.mtype = MapgenType::Nested;
+        state.mark_changed();
     }
     ImGui::Separator();
 
     if( file.mtype == MapgenType::Oter ) {
-        ImGui::InputJmapgenInt( "rotation", file.oter.rotation );
+        if( ImGui::InputJmapgenInt( "rotation", file.oter.rotation ) ) {
+            state.mark_changed();
+        }
         ImGui::Text( "Oter mapgen base:" );
 
         if( ImGui::RadioButton( "Fill terrain", file.oter.mapgen_base == OterMapgenBase::FillTer ) ) {
             file.oter.mapgen_base = OterMapgenBase::FillTer;
+            state.mark_changed();
         }
         ImGui::SameLine();
         if( ImGui::RadioButton( "Predecessor mapgen",
                                 file.oter.mapgen_base == OterMapgenBase::PredecessorMapgen ) ) {
             file.oter.mapgen_base = OterMapgenBase::PredecessorMapgen;
+            state.mark_changed();
         }
         ImGui::SameLine();
         if( ImGui::RadioButton( "Rows", file.oter.mapgen_base == OterMapgenBase::Rows ) ) {
             file.oter.mapgen_base = OterMapgenBase::Rows;
+            state.mark_changed();
         }
 
         if( file.oter.mapgen_base == OterMapgenBase::FillTer ) {
-            ImGui::InputId( "fill_ter", file.oter.fill_ter );
+            if( ImGui::InputId( "fill_ter", file.oter.fill_ter ) ) {
+                state.mark_changed();
+            }
         }
         if( file.oter.mapgen_base == OterMapgenBase::PredecessorMapgen ) {
-            ImGui::InputId( "predecessor_mapgen", file.oter.predecessor_mapgen );
+            if( ImGui::InputId( "predecessor_mapgen", file.oter.predecessor_mapgen ) ) {
+                state.mark_changed();
+            }
         }
         if( file.oter.mapgen_base == OterMapgenBase::Rows ) {
             ImGui::Text( "TODO: rows" );
         }
     } else if( file.mtype == MapgenType::Update ) {
-        ImGui::InputId( "fill_ter", file.update.fill_ter );
+        if( ImGui::InputId( "fill_ter", file.update.fill_ter ) ) {
+            state.mark_changed();
+        }
     } else { // MapgenType::Nested
-        ImGui::InputJmapgenInt( "rotation", file.nested.rotation );
+        if( ImGui::InputJmapgenInt( "rotation", file.nested.rotation ) ) {
+            state.mark_changed();
+        }
         // Only square nested mapgens are possible
         if( ImGui::InputInt( "size", &file.nested.size.x, -1, -1 ) ) {
             int size = clamp( file.nested.size.x, 1, SEEX * 2 );
-            file.nested.size.x = size;
-            file.nested.size.y = size;
+            if( file.nested.size.x != size ) {
+                file.nested.size.x = size;
+                file.nested.size.y = size;
+                file.base.set_size( file.mapgensize().raw() );
+                state.mark_changed();
+            }
         }
     }
 
@@ -417,18 +471,25 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
         }
         ImGui::SameLine();
 
+        // TODO: undo/redo support for color selector
         ImGui::ColorEdit4( "MyColor##3", ( float * )&list[i].color,
                            ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel );
         ImGui::SameLine();
 
         ImGui::SetNextItemWidth( ImGui::GetFrameHeight() );
-        ImGui::InputSymbol( "##key", list[i].key.str, default_map_key.str.c_str() );
+        if( ImGui::InputSymbol( "##key", list[i].key.str, default_map_key.str.c_str() ) ) {
+            state.mark_changed();
+        }
         ImGui::SameLine();
         ImGui::SetNextItemWidth( ImGui::GetFrameHeight() * 15.0f );
-        ImGui::InputId( "##furn", list[i].furn );
+        if( ImGui::InputId( "##furn", list[i].furn ) ) {
+            state.mark_changed();
+        }
         ImGui::SameLine();
         ImGui::SetNextItemWidth( ImGui::GetFrameHeight() * 15.0f );
-        ImGui::InputId( "##ter", list[i].ter );
+        if( ImGui::InputId( "##ter", list[i].ter ) ) {
+            state.mark_changed();
+        }
         ImGui::SameLine();
         if( ImGui::ArrowButton( "##placing", ImGuiDir_Right ) ) {
             // TODO: edit placing
@@ -437,27 +498,31 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
     }
     if( del ) {
         const uuid_t &uuid = list[ *del ].uuid;
-        state.file.base.remove_usages( uuid );
+        state.file().base.remove_usages( uuid );
         if( state.rows_brush == uuid ) {
             state.rows_brush = UUID_INVALID;
         }
         list.erase( list.begin() + *del );
+        state.mark_changed();
     }
     if( move_up ) {
         std::swap( list[*move_up], list[*move_up - 1] );
+        state.mark_changed();
     }
     if( move_dn ) {
         std::swap( list[*move_dn], list[*move_dn + 1] );
+        state.mark_changed();
     }
     if( ImGui::ImageButton( "add", "me_add" ) ) {
         list.emplace_back( me_palette_entry{
-            state.file.uuid_gen(),
-            state.file.base.pick_available_key(),
+            state.file().uuid_gen(),
+            state.file().base.pick_available_key(),
             ImVec4(),
             ter_eid::NULL_ID(),
             furn_eid::NULL_ID(),
             me_placing()
         } );
+        state.mark_changed();
     }
 }
 
@@ -474,13 +539,52 @@ void show_palette( me_state &state, me_palette &p, bool &show )
     if( p.is_inline ) {
         ImGui::Text( "<inline palette>" );
     } else {
-        ImGui::InputId( "id", p.id );
+        ImGui::Text( "id: %s", p.id.data.c_str() );
     }
 
     show_palette_entries( state, p.entries );
 
     ImGui::End();
     ImGui::PopID();
+}
+
+static void handle_revision_change( me_state &state )
+{
+    if( ImGui::IsKeyDown( ImGuiKey_LeftCtrl ) && ImGui::IsKeyPressed( ImGuiKey_Z ) ) {
+        if( ImGui::IsKeyDown( ImGuiKey_LeftShift ) ) {
+            if( state.can_redo() ) {
+                state.queue_redo();
+            }
+        } else {
+            if( state.can_undo() ) {
+                state.queue_undo();
+            }
+        }
+    }
+    if( state.switch_to_revision ) {
+        auto it = std::find_if( state.file_history.cbegin(),
+        state.file_history.cend(), [&]( const me_file_revision & rev ) {
+            return rev.num == *state.switch_to_revision;
+        } );
+        assert( it != state.file_history.cend() );
+        state.current_revision = it->make_copy();
+        state.switch_to_revision.reset();
+    } else if( state.file_has_changes ) {
+        state.file_has_changes = false;
+
+        // Erase alternative history
+        while( state.file_history[0].num != state.current_revision.num ) {
+            state.file_history.erase( state.file_history.cbegin() );
+        }
+
+        state.current_revision.num++;
+        state.file_history.insert( state.file_history.cbegin(), state.current_revision.make_copy() );
+
+        // Erase old entries
+        if( static_cast<int>( state.file_history.size() ) > state.history_capacity ) {
+            state.file_history.resize( state.history_capacity );
+        }
+    }
 }
 
 void show_me_ui( me_state &state )
@@ -494,8 +598,13 @@ void show_me_ui( me_state &state )
         show_asset_lib( state.assets, state.show_asset_lib );
     }
     if( state.show_file_info ) {
-        show_file_info( state, state.file, state.show_file_info );
+        show_file_info( state, state.file(), state.show_file_info );
     }
+    if( state.show_file_history ) {
+        show_file_history( state, state.show_file_history );
+    }
+
+    handle_revision_change( state );
 }
 
 point_rel_etile me_file::mapgensize()
@@ -525,6 +634,14 @@ void me_map_key_generator::blacklist( const map_key &opt )
 
 me_state::me_state()
 {
+    current_revision = me_file_revision();
+
+    me_file &f = *current_revision.file;
+    f.base.set_size( f.mapgensize().raw() );
+
+    file_history.reserve( history_capacity + 1 );
+    file_history.emplace_back( current_revision.make_copy() );
+
     init_assets( assets );
 }
 

@@ -202,6 +202,28 @@ struct me_file {
     point_rel_etile mapgensize();
 };
 
+struct me_file_revision {
+    std::unique_ptr<me_file> file;
+    int num = 0;
+
+    me_file_revision() {
+        file = std::make_unique<me_file>();
+    }
+    me_file_revision( const me_file_revision & ) = delete;
+    me_file_revision( me_file_revision && ) = default;
+    ~me_file_revision() {};
+
+    me_file_revision &operator=( const me_file_revision & ) = delete;
+    me_file_revision &operator=( me_file_revision && ) = default;
+
+    me_file_revision make_copy() const {
+        me_file_revision ret;
+        ret.file = std::make_unique<me_file>( *file );
+        ret.num = num;
+        return ret;
+    }
+};
+
 struct me_state {
     me_state();
     me_state( const me_state & ) = delete;
@@ -217,8 +239,39 @@ struct me_state {
     bool show_asset_lib = false; // Whether to show asset library
     bool show_file_info = true; // Whether to show file info
     bool show_base_inline_palette = false; // Whether to show base mapgen's palette
+    bool show_file_history = true; // Whether to show undo/redo history
     asset_library assets;
-    me_file file;
+
+    inline me_file &file() {
+        return *current_revision.file;
+    }
+
+    inline void mark_changed() {
+        file_has_changes = true;
+    }
+
+    inline bool can_undo() const {
+        return current_revision.num != file_history[file_history.size() - 1].num;
+    }
+
+    inline void queue_undo() {
+        switch_to_revision = current_revision.num - 1;
+    }
+
+    inline bool can_redo() const {
+        return current_revision.num != file_history[0].num;
+    }
+
+    inline void queue_redo() {
+        switch_to_revision = current_revision.num + 1;
+    }
+
+    bool file_has_changes = false;
+    cata::optional<int> switch_to_revision;
+    me_file_revision current_revision;
+    std::vector<me_file_revision> file_history;
+    int history_capacity = 200;
+
     uuid_t rows_brush = UUID_INVALID;
 };
 
@@ -272,6 +325,7 @@ void fill_region(
  */
 void show_canvas( me_state &state );
 void show_control_window( me_state &state );
+void show_file_history( me_state &state, bool &show );
 void show_asset_lib( asset_library &assets, bool &show );
 void show_file_info( me_state &state, me_file &file, bool &show );
 void show_palette( me_state &state, me_palette &p, bool &show );
