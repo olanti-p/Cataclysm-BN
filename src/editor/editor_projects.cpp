@@ -8,6 +8,7 @@
 #include "../fstream_utils.h"
 #include "../string_utils.h"
 #include "../point.h"
+#include "../game.h"
 
 namespace editor
 {
@@ -60,6 +61,13 @@ void show_projects_window( me_projects_state &state )
             }
         }
         ImGuiFileDialog::Instance()->Close();
+    }
+
+    if( g->load_editor_project_on_start ) {
+        state.ret = projects_ui_retval();
+        state.ret->load_existing = true;
+        state.ret->load_path = *g->load_editor_project_on_start;
+        g->load_editor_project_on_start.reset();
     }
 
     if( state.popup_prompt && !ImGui::IsPopupOpen( "Error" ) ) {

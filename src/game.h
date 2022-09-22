@@ -994,6 +994,7 @@ class game
         timed_event_manager &timed_events;
 
         bool enter_editor_on_start = false;
+        cata::optional<std::string> load_editor_project_on_start;
 
         event_bus &events();
         stats_tracker &stats();
