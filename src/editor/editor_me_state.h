@@ -302,6 +302,7 @@ struct me_state {
 
     bool open_save_as = false;
     bool do_save = false;
+    bool do_exit_after_save = false;
     cata::optional<std::string> file_save_path;
 
     inline me_file &file() {

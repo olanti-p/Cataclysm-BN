@@ -259,6 +259,9 @@ static void handle_file_saving( me_state &state )
     if( ImGuiFileDialog::Instance()->Display( "SaveToFile" ) ) {
         if( ImGuiFileDialog::Instance()->IsOk() ) {
             state.file_save_path = ImGuiFileDialog::Instance()->GetFilePathName();
+            state.do_save = true;
+        } else {
+            state.do_exit_after_save = false;
         }
         ImGuiFileDialog::Instance()->Close();
     }
@@ -270,13 +273,51 @@ static void handle_file_saving( me_state &state )
             oss << serialize( state.file() );
         } );
         state.last_saved_revision = state.current_revision.num;
+        if( state.do_exit_after_save ) {
+            state.do_loop = false;
+        }
     }
 }
 
 void show_control_window( me_state &state )
 {
-    ImGui::Begin( "Advanced Map Editor", &state.do_loop );
+    bool keep_open = true;
+    ImGui::Begin( "Advanced Map Editor", &keep_open );
     ImGui::Text( "Close this window to close the project." );
+
+    if( !keep_open ) {
+        if( state.has_unsaved_changes() ) {
+            ImGui::OpenPopup( "###warn-unsaved-on-close" );
+        } else {
+            state.do_loop = false;
+        }
+    }
+
+    if( ImGui::BeginPopupModal( "###warn-unsaved-on-close", nullptr,
+                                ImGuiWindowFlags_AlwaysAutoResize ) ) {
+        ImGui::TextCentered( "Do you want to save the changes?" );
+        ImGui::Text( " " );
+        ImVec2 btn_sz( ImGui::GetFrameHeight() * 5.0f, ImGui::GetFrameHeight() );
+        if( ImGui::Button( "Don't Save", btn_sz ) ) {
+            ImGui::CloseCurrentPopup();
+            state.do_loop = false;
+        }
+        ImGui::SameLine();
+        if( ImGui::Button( "Cancel", btn_sz ) ) {
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::SameLine();
+        if( ImGui::Button( "Save", btn_sz ) ) {
+            ImGui::CloseCurrentPopup();
+            state.do_exit_after_save = true;
+            if( state.file_save_path ) {
+                state.do_save = true;
+            } else {
+                state.open_save_as = true;
+            }
+        }
+        ImGui::EndPopup();
+    }
 
     // Controls
     if( ImGui::Button( "Toggle Demo Window" ) ) {
