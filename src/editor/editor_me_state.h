@@ -105,6 +105,11 @@ struct me_map_key_generator {
         }
 };
 
+struct me_int_range {
+    int min = 0;
+    int max = 0;
+};
+
 struct me_placing {
     // TODO
     std::string dummy;
@@ -172,7 +177,7 @@ struct me_mapgen_oter {
     OterMapgenBase mapgen_base = OterMapgenBase::FillTer;
     ter_eid fill_ter = ter_eid::NULL_ID();
     oter_eid predecessor_mapgen;
-    jmapgen_int rotation = jmapgen_int( 0 );
+    me_int_range rotation;
 };
 
 struct me_mapgen_update {
@@ -181,7 +186,7 @@ struct me_mapgen_update {
 
 struct me_mapgen_nested {
     point size = point( 1, 1 );
-    jmapgen_int rotation = jmapgen_int( 0 );
+    me_int_range rotation;
 };
 
 enum class MapgenType {

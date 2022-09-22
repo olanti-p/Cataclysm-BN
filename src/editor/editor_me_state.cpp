@@ -377,7 +377,7 @@ void show_file_info( me_state &state, me_file &file, bool &show )
     ImGui::Separator();
 
     if( file.mtype == MapgenType::Oter ) {
-        if( ImGui::InputJmapgenInt( "rotation", file.oter.rotation ) ) {
+        if( ImGui::InputIntRange( "rotation", file.oter.rotation ) ) {
             state.mark_changed();
         }
         ImGui::Text( "Oter mapgen base:" );
@@ -416,7 +416,7 @@ void show_file_info( me_state &state, me_file &file, bool &show )
             state.mark_changed();
         }
     } else { // MapgenType::Nested
-        if( ImGui::InputJmapgenInt( "rotation", file.nested.rotation ) ) {
+        if( ImGui::InputIntRange( "rotation", file.nested.rotation ) ) {
             state.mark_changed();
         }
         // Only square nested mapgens are possible

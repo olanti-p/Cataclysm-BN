@@ -114,16 +114,16 @@ bool detail::InputId( const char *label,
     return ret;
 }
 
-bool InputJmapgenInt( const char *label, jmapgen_int &jmi )
+bool InputIntRange( const char *label, editor::me_int_range &r )
 {
     ImGui::Text( "%s", label );
     ImGui::SameLine();
     ImGui::PushID( label );
     ImGui::SetNextItemWidth( GetFrameHeight() * 1.5f );
-    bool ret1 = ImGui::InputInt( "##min", &jmi.val, -1, -1, ImGuiInputTextFlags_AutoSelectAll );
+    bool ret1 = ImGui::InputInt( "##min", &r.min, -1, -1, ImGuiInputTextFlags_AutoSelectAll );
     ImGui::SameLine();
     ImGui::SetNextItemWidth( GetFrameHeight() * 1.5f );
-    bool ret2 = ImGui::InputInt( "##max", &jmi.valmax, -1, -1, ImGuiInputTextFlags_AutoSelectAll );
+    bool ret2 = ImGui::InputInt( "##max", &r.max, -1, -1, ImGuiInputTextFlags_AutoSelectAll );
     ImGui::PopID();
     return ret1 || ret2;
 }

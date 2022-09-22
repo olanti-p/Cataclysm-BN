@@ -92,7 +92,7 @@ bool InputId( const char *label, editor::editable_id<T> &id, ImGuiInputTextFlags
                             flags, callback, user_data );
 }
 
-bool InputJmapgenInt( const char *label, jmapgen_int &jmi );
+bool InputIntRange( const char *label, editor::me_int_range &r );
 
 } // namespace ImGui
 
