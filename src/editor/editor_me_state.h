@@ -242,6 +242,9 @@ struct me_state {
     bool show_file_history = true; // Whether to show undo/redo history
     asset_library assets;
 
+    bool ongoing_brush_stroke = false;
+    bool brush_stroke_changed_data = false;
+
     inline me_file &file() {
         return *current_revision.file;
     }

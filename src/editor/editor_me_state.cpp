@@ -148,6 +148,7 @@ void show_canvas( me_state &state )
 
     ImGuiIO &io = ImGui::GetIO();
     bool canvas_hovered = ImGui::IsWindowHovered();
+    bool brush_stroke_active = false;
     if( canvas_hovered ) {
         point_abs_etile tile_pos = get_mouse_tile_pos( state.camera );
         highlight_tile( draw_list, state.camera, tile_pos, col_cursor );
@@ -175,17 +176,18 @@ void show_canvas( me_state &state )
             state.camera.scale = clamp( state.camera.scale + delta, MIN_SCALE, MAX_SCALE );
         }
         if( ImGui::IsMouseDown( ImGuiMouseButton_Left ) ) {
+            brush_stroke_active = true;
+            state.ongoing_brush_stroke = true;
             point_rel_etile mapgensize = state.file().mapgensize();
             if( tile_pos.x() >= 0 && tile_pos.y() >= 0 && tile_pos.x() < mapgensize.x() &&
                 tile_pos.y() < mapgensize.y() ) {
                 const uuid_t &uuid = state.file().base.get_uuid_at( tile_pos.raw() );
-                // TODO: undo/redo support for entire strokes of the brush
                 if( state.rows_brush != UUID_INVALID && uuid != state.rows_brush ) {
                     state.file().base.set_uuid_at( tile_pos.raw(), state.rows_brush );
-                    state.mark_changed();
+                    state.brush_stroke_changed_data = true;
                 } else if( state.rows_brush == UUID_INVALID && uuid != UUID_INVALID ) {
                     state.file().base.set_uuid_at( tile_pos.raw(), state.rows_brush );
-                    state.mark_changed();
+                    state.brush_stroke_changed_data = true;
                 }
             }
         }
@@ -199,6 +201,14 @@ void show_canvas( me_state &state )
                 state.rows_brush = UUID_INVALID;
             }
         }
+    }
+    if( state.ongoing_brush_stroke && !brush_stroke_active ) {
+        // Brush stroke ended, queue changes as a single operation
+        if( state.brush_stroke_changed_data ) {
+            state.mark_changed();
+        }
+        state.ongoing_brush_stroke = false;
+        state.brush_stroke_changed_data = false;
     }
 
     for( int x = 0; x < state.file().mapgensize().x(); x++ ) {
@@ -550,6 +560,9 @@ void show_palette( me_state &state, me_palette &p, bool &show )
 
 static void handle_revision_change( me_state &state )
 {
+    if( state.ongoing_brush_stroke ) {
+        return;
+    }
     if( ImGui::IsKeyDown( ImGuiKey_LeftCtrl ) && ImGui::IsKeyPressed( ImGuiKey_Z ) ) {
         if( ImGui::IsKeyDown( ImGuiKey_LeftShift ) ) {
             if( state.can_redo() ) {
