@@ -4,9 +4,10 @@
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
 
+#include "../fstream_utils.h"
 #include "../game_constants.h"
-#include "../string_utils.h"
 #include "../omdata.h"
+#include "../string_utils.h"
 #include "../text_snippets.h"
 
 namespace editor
@@ -240,21 +241,26 @@ void show_control_window( me_state &state )
     ImGui::Begin( "Advanced Map Editor", &state.do_loop );
     ImGui::Text( "Close this window to exit the editor." );
 
-    // Debugging
+    // Controls
     if( ImGui::Button( "Toggle Demo Window" ) ) {
         state.show_demo_wnd = !state.show_demo_wnd;
     }
-
-    // Controls
+    ImGui::SameLine();
     if( ImGui::Button( "Toggle Asset Library" ) ) {
         state.show_asset_lib = !state.show_asset_lib;
     }
+
     if( ImGui::Button( "Toggle File Info" ) ) {
         state.show_file_info = !state.show_file_info;
     }
     ImGui::SameLine();
     if( ImGui::Button( "Toggle History" ) ) {
         state.show_file_history = !state.show_file_history;
+    }
+
+    if( ImGui::Button( "Export (clipboard)" ) ) {
+        std::string s = serialize( state.file() );
+        ImGui::SetClipboardText( s.c_str() );
     }
 
     // Camera
