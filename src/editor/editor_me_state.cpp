@@ -558,13 +558,12 @@ void show_file_info( me_state &state, me_file &file, bool &show )
             state.mark_changed();
         }
 
-        if( file.oter.mapgen_base == OterMapgenBase::FillTer ) {
-            if( ImGui::InputId( "fill_ter", file.oter.fill_ter ) ) {
-                state.mark_changed();
-            }
-        }
         if( file.oter.mapgen_base == OterMapgenBase::PredecessorMapgen ) {
             if( ImGui::InputId( "predecessor_mapgen", file.oter.predecessor_mapgen ) ) {
+                state.mark_changed();
+            }
+        } else {
+            if( ImGui::InputId( "fill_ter", file.oter.fill_ter ) ) {
                 state.mark_changed();
             }
         }
