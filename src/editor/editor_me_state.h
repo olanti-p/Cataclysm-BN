@@ -217,6 +217,8 @@ enum class OterMapgenBase {
 };
 
 struct me_mapgen_oter {
+    oter_eid om_terrain;
+    int weight = 100;
     OterMapgenBase mapgen_base = OterMapgenBase::FillTer;
     ter_eid fill_ter = ter_eid::NULL_ID();
     oter_eid predecessor_mapgen;
@@ -227,6 +229,7 @@ struct me_mapgen_oter {
 };
 
 struct me_mapgen_update {
+    std::string update_mapgen_id;
     ter_eid fill_ter = ter_eid::NULL_ID();
 
     void serialize( JsonOut &jsout ) const;
@@ -234,6 +237,7 @@ struct me_mapgen_update {
 };
 
 struct me_mapgen_nested {
+    std::string nested_mapgen_id;
     point size = point( 1, 1 );
     me_int_range rotation;
 

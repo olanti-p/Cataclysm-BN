@@ -118,12 +118,12 @@ void emit_file_contents( JsonOut &jo, const editor::me_file &file )
     emit( jo, "method", "json" );
 
     if( file.mtype == editor::MapgenType::Oter ) {
-        emit( jo, "om_terrain", "field_oter" ); // TODO
-        emit( jo, "weight", 100 ); // TODO
+        emit( jo, "om_terrain", file.oter.om_terrain );
+        emit( jo, "weight", file.oter.weight );
     } else if( file.mtype == editor::MapgenType::Nested ) {
-        emit( jo, "nested_mapgen_id", "field_nested" ); // TODO
+        emit( jo, "nested_mapgen_id", file.nested.nested_mapgen_id );
     } else { // editor::MapgenType::Update
-        emit( jo, "update_mapgen_id", "field_update" ); // TODO
+        emit( jo, "update_mapgen_id", file.update.update_mapgen_id );
     }
 
     emit_object( jo, "object", [&]() {

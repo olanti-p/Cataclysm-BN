@@ -537,6 +537,12 @@ void show_file_info( me_state &state, me_file &file, bool &show )
     ImGui::Separator();
 
     if( file.mtype == MapgenType::Oter ) {
+        if( ImGui::InputId( "om_terrain", file.oter.om_terrain ) ) {
+            state.mark_changed();
+        }
+        if( ImGui::InputInt( "weight", &file.oter.weight ) ) {
+            state.mark_changed();
+        }
         if( ImGui::InputIntRange( "rotation", file.oter.rotation ) ) {
             state.mark_changed();
         }
@@ -571,10 +577,16 @@ void show_file_info( me_state &state, me_file &file, bool &show )
             show_canvas_hint();
         }
     } else if( file.mtype == MapgenType::Update ) {
+        if( ImGui::InputText( "update_mapgen_id", &file.update.update_mapgen_id ) ) {
+            state.mark_changed();
+        }
         if( ImGui::InputId( "fill_ter", file.update.fill_ter ) ) {
             state.mark_changed();
         }
     } else { // MapgenType::Nested
+        if( ImGui::InputText( "nested_mapgen_id", &file.nested.nested_mapgen_id ) ) {
+            state.mark_changed();
+        }
         if( ImGui::InputIntRange( "rotation", file.nested.rotation ) ) {
             state.mark_changed();
         }

@@ -203,6 +203,8 @@ void me_mapgen_base::deserialize( JsonIn &jsin )
 void me_mapgen_oter::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
+    jsout.member( "om_terrain", om_terrain );
+    jsout.member( "weight", weight );
     jsout.member( "mapgen_base", mapgen_base );
     jsout.member( "fill_ter", fill_ter );
     jsout.member( "predecessor_mapgen", predecessor_mapgen );
@@ -214,6 +216,8 @@ void me_mapgen_oter::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
+    jo.read( "om_terrain", om_terrain );
+    jo.read( "weight", weight );
     jo.read( "mapgen_base", mapgen_base );
     jo.read( "fill_ter", fill_ter );
     jo.read( "predecessor_mapgen", predecessor_mapgen );
@@ -223,6 +227,7 @@ void me_mapgen_oter::deserialize( JsonIn &jsin )
 void me_mapgen_update::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
+    jsout.member( "update_mapgen_id", update_mapgen_id );
     jsout.member( "fill_ter", fill_ter );
     jsout.end_object();
 }
@@ -231,12 +236,14 @@ void me_mapgen_update::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
+    jo.read( "update_mapgen_id", update_mapgen_id );
     jo.read( "fill_ter", fill_ter );
 }
 
 void me_mapgen_nested::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
+    jsout.member( "nested_mapgen_id", nested_mapgen_id );
     jsout.member( "size", size );
     jsout.member( "rotation", rotation );
     jsout.end_object();
@@ -246,6 +253,7 @@ void me_mapgen_nested::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
+    jo.read( "nested_mapgen_id", nested_mapgen_id );
     jo.read( "size", size );
     jo.read( "rotation", rotation );
 }
