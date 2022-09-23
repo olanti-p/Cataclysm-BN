@@ -107,7 +107,9 @@ bool detail::InputId( const char *label,
         }
     }
     bool ret = ImGui::ComboWithFilter( label, &current_item, opts, 15 );
-    data = opts[ current_item ];
+    if( current_item >= 0 ) {
+        data = opts[ current_item ];
+    }
     if( !is_valid ) {
         EndErrorArea();
     }
@@ -242,6 +244,90 @@ bool InputSymbol( const char *label, std::string &input, const char *fallback )
     } else {
         return false;
     }
+}
+
+bool InputDuration( const char *label, time_duration &dur, ImGuiInputTextFlags flags )
+{
+    bool ret = false;
+    ImGui::PushID( label );
+
+    static bool show_decomposed = false;
+    float checkbox_x_start = GetCursorPosX();
+    ImGui::Checkbox( "###show-decomposed", &show_decomposed );
+    ImGui::SameLine();
+    float checkbox_x_size = GetCursorPosX() - checkbox_x_start;
+    if( show_decomposed ) {
+        int d = to_days<int>( dur );
+        int h = to_hours<int>( dur % 1_days );
+        int m = to_minutes<int>( dur % 1_hours );
+        int s = to_seconds<int>( dur % 1_minutes );
+
+        int d_max = to_days<int>( calendar::INDEFINITELY_LONG_DURATION ) - 1;
+        int h_max = to_hours<int>( 1_days ) - 1;
+        int m_max = to_minutes<int>( 1_hours ) - 1;
+        int s_max = to_seconds<int>( 1_minutes ) - 1;
+
+        float w_total = CalcItemWidth() -
+                        checkbox_x_size -
+                        ImGui::CalcTextSize( "d" ).x -
+                        ImGui::CalcTextSize( "h" ).x -
+                        ImGui::CalcTextSize( "m" ).x -
+                        ImGui::CalcTextSize( "s" ).x -
+                        ImGui::GetStyle().ItemSpacing.x * 7.0f;
+
+        float w = w_total / 5.0f;
+
+        ImGui::Text( "d" );
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth( w * 2.0f );
+        ret = ImGui::InputIntClamped( "###d", d, 0, d_max ) || ret;
+        ImGui::SameLine();
+
+        ImGui::Text( "h" );
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth( w );
+        ret = ImGui::InputIntClamped( "###h", h, 0, h_max ) || ret;
+        ImGui::SameLine();
+
+        ImGui::Text( "m" );
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth( w );
+        ret = ImGui::InputIntClamped( "###m", m, 0, m_max ) || ret;
+        ImGui::SameLine();
+
+        ImGui::Text( "s" );
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth( w );
+        ret = ImGui::InputIntClamped( "###s", s, 0, s_max ) || ret;
+        ImGui::SameLine();
+
+        ImGui::Text( "%s", label );
+
+        dur = time_duration::from_days( d ) +
+              time_duration::from_hours( h ) +
+              time_duration::from_minutes( m ) +
+              time_duration::from_seconds( s );
+    } else {
+        int t = to_turns<int>( dur );
+        int t_max = to_turns<int>( calendar::INDEFINITELY_LONG_DURATION );
+
+        float w = CalcItemWidth() -
+                  checkbox_x_size -
+                  ImGui::CalcTextSize( "turns" ).x -
+                  ImGui::GetStyle().ItemSpacing.x;
+
+        ImGui::Text( "turns" );
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth( w );
+        ret = ImGui::InputIntClamped( "###t", t, 0, t_max, flags );
+        ImGui::SameLine();
+
+        ImGui::Text( "%s",  label );
+
+        dur = time_duration::from_turns( t );
+    }
+    ImGui::PopID();
+    return ret;
 }
 
 void TextCentered( const std::string &text )
