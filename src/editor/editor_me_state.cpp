@@ -570,14 +570,12 @@ void show_file_info( me_state &state, me_file &file, bool &show )
             state.mark_changed();
         }
         // Only square nested mapgens are possible
-        if( ImGui::InputInt( "size", &file.nested.size.x, -1, -1 ) ) {
+        if( ImGui::InputInt( "mapgensize", &file.nested.size.x, -1, -1 ) ) {
             int size = clamp( file.nested.size.x, 1, SEEX * 2 );
-            if( file.nested.size.x != size ) {
-                file.nested.size.x = size;
-                file.nested.size.y = size;
-                file.base.set_size( file.mapgensize().raw() );
-                state.mark_changed();
-            }
+            file.nested.size.x = size;
+            file.nested.size.y = size;
+            file.base.set_size( file.mapgensize().raw() );
+            state.mark_changed();
         }
     }
 
