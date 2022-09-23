@@ -12,6 +12,8 @@
 #include "../string_utils.h"
 #include "../text_snippets.h"
 
+#include <unordered_set>
+
 namespace editor
 {
 point_abs_epos me_camera::screen_to_world( const point_abs_screen &p ) const
@@ -586,6 +588,17 @@ void show_file_info( me_state &state, me_file &file, bool &show )
 
 static void show_palette_entries( me_state &state, std::vector<me_palette_entry> &list )
 {
+    std::unordered_set<map_key> checked;
+    std::unordered_set<map_key> dupe_symbols;
+
+    for( const editor::me_palette_entry &entry : list ) {
+        if( checked.count( entry.key ) > 0 ) {
+            dupe_symbols.insert( entry.key );
+        } else {
+            checked.insert( entry.key );
+        }
+    }
+
     cata::optional<size_t> del;
     cata::optional<size_t> move_up;
     cata::optional<size_t> move_dn;
@@ -635,8 +648,15 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
         ImGui::SameLine();
 
         ImGui::SetNextItemWidth( ImGui::GetFrameHeight() );
+        bool is_dupe_symbol = dupe_symbols.count( list[i].key ) > 0;
+        if( is_dupe_symbol ) {
+            ImGui::BeginErrorArea();
+        }
         if( ImGui::InputSymbol( "##key", list[i].key.str, default_map_key.str.c_str() ) ) {
             state.mark_changed();
+        }
+        if( is_dupe_symbol ) {
+            ImGui::EndErrorArea();
         }
         ImGui::SameLine();
         ImGui::SetNextItemWidth( ImGui::GetFrameHeight() * 15.0f );
