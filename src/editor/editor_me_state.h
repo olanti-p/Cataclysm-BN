@@ -256,6 +256,14 @@ struct me_file {
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
 
+    inline bool uses_rows() const {
+        return mtype == editor::MapgenType::Nested ||
+               (
+                   mtype == editor::MapgenType::Oter &&
+                   oter.mapgen_base == editor::OterMapgenBase::Rows
+               );
+    }
+
     point_rel_etile mapgensize() const;
 };
 

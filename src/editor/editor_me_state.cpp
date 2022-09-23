@@ -180,60 +180,65 @@ void show_canvas( me_state &state )
             int delta = delta_wheel * zoom_speed;
             state.camera.scale = clamp( state.camera.scale + delta, MIN_SCALE, MAX_SCALE );
         }
-        if( ImGui::IsMouseDown( ImGuiMouseButton_Left ) ) {
-            brush_stroke_active = true;
-            state.ongoing_brush_stroke = true;
-            point_rel_etile mapgensize = state.file().mapgensize();
-            if( tile_pos.x() >= 0 && tile_pos.y() >= 0 && tile_pos.x() < mapgensize.x() &&
-                tile_pos.y() < mapgensize.y() ) {
-                const uuid_t &uuid = state.file().base.get_uuid_at( tile_pos.raw() );
-                if( state.rows_brush != UUID_INVALID && uuid != state.rows_brush ) {
-                    state.file().base.set_uuid_at( tile_pos.raw(), state.rows_brush );
-                    state.brush_stroke_changed_data = true;
-                } else if( state.rows_brush == UUID_INVALID && uuid != UUID_INVALID ) {
-                    state.file().base.set_uuid_at( tile_pos.raw(), state.rows_brush );
-                    state.brush_stroke_changed_data = true;
+        if( state.file().uses_rows() ) {
+            if( ImGui::IsMouseDown( ImGuiMouseButton_Left ) ) {
+                brush_stroke_active = true;
+                state.ongoing_brush_stroke = true;
+                point_rel_etile mapgensize = state.file().mapgensize();
+                if( tile_pos.x() >= 0 && tile_pos.y() >= 0 && tile_pos.x() < mapgensize.x() &&
+                    tile_pos.y() < mapgensize.y() ) {
+                    const uuid_t &uuid = state.file().base.get_uuid_at( tile_pos.raw() );
+                    if( state.rows_brush != UUID_INVALID && uuid != state.rows_brush ) {
+                        state.file().base.set_uuid_at( tile_pos.raw(), state.rows_brush );
+                        state.brush_stroke_changed_data = true;
+                    } else if( state.rows_brush == UUID_INVALID && uuid != UUID_INVALID ) {
+                        state.file().base.set_uuid_at( tile_pos.raw(), state.rows_brush );
+                        state.brush_stroke_changed_data = true;
+                    }
+                }
+            }
+            if( ImGui::IsMouseClicked( ImGuiMouseButton_Middle ) ) {
+                point_rel_etile mapgensize = state.file().mapgensize();
+                if( tile_pos.x() >= 0 && tile_pos.y() >= 0 && tile_pos.x() < mapgensize.x() &&
+                    tile_pos.y() < mapgensize.y() ) {
+                    const uuid_t &uuid = state.file().base.get_uuid_at( tile_pos.raw() );
+                    state.rows_brush = uuid;
+                } else {
+                    state.rows_brush = UUID_INVALID;
                 }
             }
         }
-        if( ImGui::IsMouseClicked( ImGuiMouseButton_Middle ) ) {
-            point_rel_etile mapgensize = state.file().mapgensize();
-            if( tile_pos.x() >= 0 && tile_pos.y() >= 0 && tile_pos.x() < mapgensize.x() &&
-                tile_pos.y() < mapgensize.y() ) {
-                const uuid_t &uuid = state.file().base.get_uuid_at( tile_pos.raw() );
-                state.rows_brush = uuid;
-            } else {
-                state.rows_brush = UUID_INVALID;
+    }
+
+    if( state.file().uses_rows() ) {
+        if( state.ongoing_brush_stroke && !brush_stroke_active ) {
+            // Brush stroke ended, queue changes as a single operation
+            if( state.brush_stroke_changed_data ) {
+                state.mark_changed();
+            }
+            state.ongoing_brush_stroke = false;
+            state.brush_stroke_changed_data = false;
+        }
+
+        for( int x = 0; x < state.file().mapgensize().x(); x++ ) {
+            for( int y = 0; y < state.file().mapgensize().y(); y++ ) {
+                point_abs_etile p( x, y );
+                fill_tile( draw_list, state.camera, p, state.file().base.get_color_at( p.raw() ) ) ;
             }
         }
-    }
-    if( state.ongoing_brush_stroke && !brush_stroke_active ) {
-        // Brush stroke ended, queue changes as a single operation
-        if( state.brush_stroke_changed_data ) {
-            state.mark_changed();
-        }
-        state.ongoing_brush_stroke = false;
-        state.brush_stroke_changed_data = false;
-    }
 
-    for( int x = 0; x < state.file().mapgensize().x(); x++ ) {
-        for( int y = 0; y < state.file().mapgensize().y(); y++ ) {
-            point_abs_etile p( x, y );
-            fill_tile( draw_list, state.camera, p, state.file().base.get_color_at( p.raw() ) ) ;
-        }
-    }
-
-    for( int x = 0; x < state.file().mapgensize().x(); x++ ) {
-        for( int y = 0; y < state.file().mapgensize().y(); y++ ) {
-            point_abs_etile p( x, y );
-            const map_key &mk = state.file().base.get_key_at( p.raw() );
-            point_abs_epos center = coords::project_combine( p,
-                                    point_etile_epos( ETILE_SIZE / 2, ETILE_SIZE / 2 ) );
-            point_abs_screen text_center = state.camera.world_to_screen( center );
-            point_rel_screen text_size( ImGui::CalcTextSize( mk.str.c_str() ) );
-            point_abs_screen text_pos = text_center - text_size.raw() / 2;
-            ImGui::SetCursorPos( text_pos.raw() );
-            ImGui::Text( "%s", mk.str.c_str() );
+        for( int x = 0; x < state.file().mapgensize().x(); x++ ) {
+            for( int y = 0; y < state.file().mapgensize().y(); y++ ) {
+                point_abs_etile p( x, y );
+                const map_key &mk = state.file().base.get_key_at( p.raw() );
+                point_abs_epos center = coords::project_combine( p,
+                                        point_etile_epos( ETILE_SIZE / 2, ETILE_SIZE / 2 ) );
+                point_abs_screen text_center = state.camera.world_to_screen( center );
+                point_rel_screen text_size( ImGui::CalcTextSize( mk.str.c_str() ) );
+                point_abs_screen text_pos = text_center - text_size.raw() / 2;
+                ImGui::SetCursorPos( text_pos.raw() );
+                ImGui::Text( "%s", mk.str.c_str() );
+            }
         }
     }
 
