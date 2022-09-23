@@ -502,6 +502,11 @@ void show_asset_lib( asset_library &assets, bool &show )
     ImGui::End();
 }
 
+static void show_canvas_hint()
+{
+    ImGui::Text( "Use mouse to paint canvas with palette entries." );
+}
+
 void show_file_info( me_state &state, me_file &file, bool &show )
 {
     if( !ImGui::Begin( "File Info", &show ) ) {
@@ -559,7 +564,7 @@ void show_file_info( me_state &state, me_file &file, bool &show )
             }
         }
         if( file.oter.mapgen_base == OterMapgenBase::Rows ) {
-            ImGui::Text( "TODO: rows" );
+            show_canvas_hint();
         }
     } else if( file.mtype == MapgenType::Update ) {
         if( ImGui::InputId( "fill_ter", file.update.fill_ter ) ) {
@@ -577,6 +582,7 @@ void show_file_info( me_state &state, me_file &file, bool &show )
             file.base.set_size( file.mapgensize().raw() );
             state.mark_changed();
         }
+        show_canvas_hint();
     }
 
     show_palette( state, file.base.inline_palette, state.show_base_inline_palette );
