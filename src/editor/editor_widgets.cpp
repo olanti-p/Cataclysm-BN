@@ -246,6 +246,19 @@ bool InputSymbol( const char *label, std::string &input, const char *fallback )
     }
 }
 
+bool InputIntClamped( const char *label, int &val, int min, int max, ImGuiInputTextFlags flags )
+{
+    int val_new = val;
+    if( InputInt( label, &val_new, -1, -1, flags ) ) {
+        int clamped = clamp( val_new, min, max );
+        if( clamped != val ) {
+            val = clamped;
+            return true;
+        }
+    }
+    return false;
+}
+
 bool InputDuration( const char *label, time_duration &dur, ImGuiInputTextFlags flags )
 {
     bool ret = false;

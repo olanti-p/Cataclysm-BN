@@ -430,10 +430,8 @@ void show_file_history( me_state &state, bool &show )
     }
 
     ImGui::SetNextItemWidth( ImGui::GetFrameHeight() * 4.0f );
-    if( ImGui::InputInt( "History limit", &state.history_capacity, -1, -1,
-                         ImGuiInputTextFlags_AutoSelectAll ) ) {
-        state.history_capacity = clamp( state.history_capacity, 10, 10000 );
-    }
+    ImGui::InputIntClamped( "History limit", state.history_capacity, 10, 10000,
+                            ImGuiInputTextFlags_AutoSelectAll );
 
     for( const me_file_revision &entry : state.file_history ) {
         bool is_saved = state.last_saved_revision && *state.last_saved_revision == entry.num;
@@ -540,7 +538,7 @@ void show_file_info( me_state &state, me_file &file, bool &show )
         if( ImGui::InputId( "om_terrain", file.oter.om_terrain ) ) {
             state.mark_changed();
         }
-        if( ImGui::InputInt( "weight", &file.oter.weight ) ) {
+        if( ImGui::InputIntClamped( "weight", file.oter.weight, 0, 10000 ) ) {
             state.mark_changed();
         }
         if( ImGui::InputIntRange( "rotation", file.oter.rotation ) ) {
@@ -591,10 +589,8 @@ void show_file_info( me_state &state, me_file &file, bool &show )
             state.mark_changed();
         }
         // Only square nested mapgens are possible
-        if( ImGui::InputInt( "mapgensize", &file.nested.size.x, -1, -1 ) ) {
-            int size = clamp( file.nested.size.x, 1, SEEX * 2 );
-            file.nested.size.x = size;
-            file.nested.size.y = size;
+        if( ImGui::InputIntClamped( "mapgensize", file.nested.size.x, 1, SEEX * 2 ) ) {
+            file.nested.size.y = file.nested.size.x;
             file.base.set_size( file.mapgensize().raw() );
             state.mark_changed();
         }

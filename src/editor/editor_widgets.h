@@ -94,6 +94,9 @@ bool InputId( const char *label, editor::editable_id<T> &id, ImGuiInputTextFlags
 
 bool InputIntRange( const char *label, editor::me_int_range &r );
 
+bool InputIntClamped( const char *label, int &val, int min, int max,
+                      ImGuiInputTextFlags flags = 0 );
+
 bool InputDuration( const char *label, time_duration &dur, ImGuiInputTextFlags flags = 0 );
 
 void TextCentered( const std::string &text );
