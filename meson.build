@@ -1,6 +1,9 @@
 project('cataclysm-bn', 'cpp', default_options: ['default_library=static', 'cpp_std=c++14'])
 
+cpp_args = [ '-DTILES' ]
+
 subdir('src/')
+subdir('tools/format')
 
 precompiled_hdr = 'pch/main-pch.hpp'
 
@@ -11,8 +14,6 @@ sdl2_dep = subproject('sdl2').get_variable('sdl2_dep')
 sdl2_image_dep = subproject('sdl2_image').get_variable('sdl2_image_dep')
 sdl2_ttf_dep = subproject('sdl2_ttf').get_variable('sdl2_ttf_dep')
 imgui_dep = subproject('imgui').get_variable('imgui_dep')
-
-cpp_args = [ '-DTILES' ]
 
 if meson.get_compiler('cpp').has_argument('-Wno-shadow')
     cpp_args += [ '-Wno-shadow' ]
@@ -32,9 +33,12 @@ lib_dependencies = [
     imgui_dep,
 ]
 
+lib_include_dir = include_directories( 'src/' )
+
 libcata = static_library(
     'cata-lib',
     sources: editor_sources + lib_sources,
+    include_directories: lib_include_dir,
     dependencies : lib_dependencies,
     cpp_pch : precompiled_hdr,
     cpp_args : cpp_args,
@@ -42,7 +46,7 @@ libcata = static_library(
 
 libcata_dep = declare_dependency(
     link_with : libcata,
-    include_directories : include_directories( 'src/' ),
+    include_directories: lib_include_dir,
     dependencies : lib_dependencies,
 )
 
