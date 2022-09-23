@@ -8,7 +8,6 @@
 
 #include "../fstream_utils.h"
 #include "../game_constants.h"
-#include "../omdata.h"
 #include "../string_utils.h"
 #include "../text_snippets.h"
 
@@ -925,54 +924,6 @@ void me_mapgen_base::remove_usages( const uuid_t &uuid )
             cell = UUID_INVALID;
         }
     }
-}
-
-template<>
-const std::vector<std::string> &editable_id<ter_t>::get_all_opts()
-{
-    if( all_opts.empty() ) {
-        all_opts.reserve( ter_t::get_all().size() );
-        for( const ter_t &it : ter_t::get_all() ) {
-            all_opts.push_back( it.id.str() );
-        }
-    }
-    return all_opts;
-}
-
-template<>
-const std::vector<std::string> &editable_id<furn_t>::get_all_opts()
-{
-    if( all_opts.empty() ) {
-        all_opts.reserve( furn_t::get_all().size() );
-        for( const furn_t &it : furn_t::get_all() ) {
-            all_opts.push_back( it.id.str() );
-        }
-    }
-    return all_opts;
-}
-
-template<>
-const std::vector<std::string> &editable_id<oter_t>::get_all_opts()
-{
-    if( all_opts.empty() ) {
-        all_opts.reserve( overmap_terrains::get_all().size() );
-        for( const oter_t &it : overmap_terrains::get_all() ) {
-            all_opts.push_back( it.id.str() );
-        }
-    }
-    return all_opts;
-}
-
-template<>
-const std::vector<std::string> &editable_id<mapgen_palette>::get_all_opts()
-{
-    if( all_opts.empty() ) {
-        all_opts.reserve( mapgen_palette::get_all().size() );
-        for( const auto &it : mapgen_palette::get_all() ) {
-            all_opts.push_back( it.first.str() );
-        }
-    }
-    return all_opts;
 }
 
 } // namespace editor
