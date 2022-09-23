@@ -10,7 +10,7 @@
 
 static void JmapgenPieceWidget( const jmapgen_piece &jmp )
 {
-    ImGui::Text( "Type: %s", get_piece_type_name( jmp.get_type() ) );
+    ImGui::Text( "Type: %s", io::enum_to_string<JmPieceType>( jmp.get_type() ).c_str() );
     ImGui::JmapgenInt( "repeat", jmp.repeat );
     jmp.show_details();
 }

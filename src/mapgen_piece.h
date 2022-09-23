@@ -47,8 +47,6 @@ enum class JmPieceType : int {
     NumJmTypes
 };
 
-const char *get_piece_type_name( JmPieceType pt );
-
 /**
  * Places fields on the map.
  * "field": field type ident.

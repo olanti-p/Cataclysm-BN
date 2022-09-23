@@ -7,6 +7,7 @@
 #include "../mapgen.h"
 
 #include "editor_assets.h"
+#include "editor_me_piece.h"
 #include "editor_me_editable_id.h"
 #include "imgui.h"
 
@@ -83,8 +84,15 @@ struct me_int_range {
 };
 
 struct me_placing {
-    // TODO
-    std::string dummy;
+    std::vector<std::unique_ptr<me_piece>> pieces;
+
+    me_placing() = default;
+    me_placing( const me_placing &rhs );
+    me_placing( me_placing && ) = default;
+    ~me_placing() = default;
+
+    me_placing &operator=( const me_placing &rhs );
+    me_placing &operator=( me_placing && ) = default;
 
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
@@ -261,6 +269,8 @@ struct me_state {
     bool show_base_inline_palette = false; // Whether to show base mapgen's palette
     bool show_file_history = true; // Whether to show undo/redo history
     asset_library assets;
+
+    cata::optional<uuid_t> view_placings; // Whether to show placings for given palette entry
 
     bool ongoing_brush_stroke = false;
     bool brush_stroke_changed_data = false;

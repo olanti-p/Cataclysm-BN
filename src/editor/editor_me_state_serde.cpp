@@ -3,6 +3,25 @@
 #include "../json.h"
 #include "../mapgen.h"
 
+void serialize( const std::unique_ptr<editor::me_piece> &ptr, JsonOut &jsout )
+{
+    jsout.start_object();
+    jsout.member( "piece_type", ptr->get_type() );
+    jsout.end_object();
+}
+
+void deserialize( std::unique_ptr<editor::me_piece> &ptr, JsonIn &jsin )
+{
+    JsonObject jo = jsin.get_object();
+
+    editor::PieceType pt;
+    jo.read( "piece_type", pt );
+
+    std::unique_ptr<editor::me_piece> val = editor::make_new_piece( pt );
+    val->deserialize( jo );
+    ptr = std::move( val );
+}
+
 void serialize( const map_key &mk, JsonOut &jsout )
 {
     jsout.start_object();
@@ -72,10 +91,65 @@ std::string enum_to_string<editor::MapgenType>( editor::MapgenType data )
     abort();
 }
 
+template<>
+std::string enum_to_string<editor::PieceType>( editor::PieceType data )
+{
+    switch( data ) {
+        // *INDENT-OFF*
+        case editor::PieceType::Field: return "Field";
+        case editor::PieceType::NPC: return "NPC";
+        case editor::PieceType::Faction: return "Faction";
+        case editor::PieceType::Sign: return "Sign";
+        case editor::PieceType::Graffiti: return "Graffiti";
+        case editor::PieceType::VendingMachine: return "VendingMachine";
+        case editor::PieceType::Toilet: return "Toilet";
+        case editor::PieceType::GasPump: return "GasPump";
+        case editor::PieceType::Liquid: return "Liquid";
+        case editor::PieceType::Igroup: return "Igroup";
+        case editor::PieceType::Loot: return "Loot";
+        case editor::PieceType::Mgroup: return "Mgroup";
+        case editor::PieceType::Monster: return "Monster";
+        case editor::PieceType::Vehicle: return "Vehicle";
+        case editor::PieceType::Item: return "Item";
+        case editor::PieceType::Trap: return "Trap";
+        case editor::PieceType::Furniture: return "Furniture";
+        case editor::PieceType::Terrain: return "Terrain";
+        case editor::PieceType::TerFurnTransform: return "TerFurnTransform";
+        case editor::PieceType::MakeRubble: return "MakeRubble";
+        case editor::PieceType::Computer: return "Computer";
+        case editor::PieceType::SealedItem: return "SealedItem";
+        case editor::PieceType::Translate: return "Translate";
+        case editor::PieceType::Zone: return "Zone";
+        case editor::PieceType::Nested: return "Nested";
+        case editor::PieceType::AltTrap: return "AltTrap";
+        case editor::PieceType::AltFurniture: return "AltFurniture";
+        case editor::PieceType::AltTerrain: return "AltTerrain";
+        // *INDENT-ON*
+        default:
+            break;
+    }
+    debugmsg( "Invalid editor::PieceType" );
+    abort();
+}
+
 } // namespace io
 
 namespace editor
 {
+
+void me_piece_field::serialize( JsonOut &jsout ) const
+{
+    jsout.member( "ftype", ftype );
+    jsout.member( "intensity", intensity );
+    jsout.member( "age", age );
+}
+
+void me_piece_field::deserialize( JsonObject &jsin )
+{
+    jsin.read( "ftype", ftype );
+    jsin.read( "intensity", intensity );
+    jsin.read( "age", age );
+}
 
 namespace detail
 {
@@ -129,7 +203,7 @@ void me_int_range::deserialize( JsonIn &jsin )
 void me_placing::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
-    jsout.member( "dummy", dummy );
+    jsout.member( "pieces", pieces );
     jsout.end_object();
 }
 
@@ -137,7 +211,7 @@ void me_placing::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
-    jo.read( "dummy", dummy );
+    jo.read( "pieces", pieces );
 }
 
 void me_palette_entry::serialize( JsonOut &jsout ) const

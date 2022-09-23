@@ -509,6 +509,104 @@ static void show_canvas_hint()
     ImGui::Text( "Use mouse to paint canvas with palette entries." );
 }
 
+static void show_palette_entry_extended( me_state &state, editor::me_palette &p,
+        editor::me_palette_entry &entry )
+{
+    bool show = true;
+    ImGui::Begin( "Extended Info", &show );
+
+    if( ImGui::InputId( "ter", entry.ter ) ) {
+        state.mark_changed();
+    }
+
+    if( ImGui::InputId( "furn", entry.furn ) ) {
+        state.mark_changed();
+    }
+
+    ImGui::Text( "Pieces:" );
+
+    cata::optional<size_t> del;
+    cata::optional<size_t> move_up;
+    cata::optional<size_t> move_dn;
+    auto &list = entry.placing.pieces;
+    for( size_t i = 0; i < list.size(); i++ ) {
+        ImGui::PushID( i );
+        ImGui::Separator();
+
+        if( ImGui::ImageButton( "del", "me_delete" ) ) {
+            del = i;
+        }
+        ImGui::SameLine();
+
+        if( i == 0 ) {
+            ImGui::BeginDisabled();
+        }
+        if( ImGui::ArrowButton( "up", ImGuiDir_Up ) ) {
+            move_up = i;
+        }
+        if( i == 0 ) {
+            ImGui::EndDisabled();
+        }
+        ImGui::SameLine();
+
+        if( i == list.size() - 1 ) {
+            ImGui::BeginDisabled();
+        }
+        if( ImGui::ArrowButton( "down", ImGuiDir_Down ) ) {
+            move_dn = i;
+        }
+        if( i == list.size() - 1 ) {
+            ImGui::EndDisabled();
+        }
+        ImGui::SameLine();
+
+        ImGui::Text( "Piece %d: %s", static_cast<int>( i ),
+                     io::enum_to_string<PieceType>( list[i]->get_type() ).c_str() );
+
+        list[i]->show_ui( state );
+
+        ImGui::PopID();
+    }
+    if( del ) {
+        list.erase( list.begin() + *del );
+        state.mark_changed();
+    }
+    if( move_up ) {
+        std::swap( list[*move_up], list[*move_up - 1] );
+        state.mark_changed();
+    }
+    if( move_dn ) {
+        std::swap( list[*move_dn], list[*move_dn + 1] );
+        state.mark_changed();
+    }
+
+    static std::string new_piece_str;
+    static std::vector<PieceType> piece_opts;
+    if( piece_opts.empty() ) {
+        new_piece_str += "Add piece...";
+        new_piece_str += '\0';
+        for( const auto &it : editor::get_piece_templates() ) {
+            piece_opts.push_back( it->get_type() );
+            new_piece_str += io::enum_to_string<PieceType>( it->get_type() );
+            new_piece_str += '\0';
+        }
+    }
+
+    int new_piece_type = 0;
+    ImGui::Separator();
+    if( ImGui::Combo( "##pick-new-piece", &new_piece_type, new_piece_str.c_str() ) ) {
+        if( new_piece_type != 0 ) {
+            list.push_back( editor::make_new_piece( piece_opts[new_piece_type - 1] ) );
+            state.mark_changed();
+        }
+    }
+
+    ImGui::End();
+    if( !show ) {
+        state.view_placings.reset();
+    }
+}
+
 void show_file_info( me_state &state, me_file &file, bool &show )
 {
     if( !ImGui::Begin( "File Info", &show ) ) {
@@ -599,6 +697,13 @@ void show_file_info( me_state &state, me_file &file, bool &show )
     show_palette( state, file.base.inline_palette, state.show_base_inline_palette );
 
     ImGui::End();
+
+    if( state.view_placings ) {
+        editor::me_palette_entry *entry = file.base.inline_palette.find_entry( *state.view_placings );
+        if( entry ) {
+            show_palette_entry_extended( state, file.base.inline_palette, *entry );
+        }
+    }
 }
 
 static void show_palette_entries( me_state &state, std::vector<me_palette_entry> &list )
@@ -685,7 +790,7 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
         }
         ImGui::SameLine();
         if( ImGui::ArrowButton( "##placing", ImGuiDir_Right ) ) {
-            // TODO: edit placing
+            state.view_placings = list[i].uuid;
         }
         ImGui::PopID();
     }
@@ -826,6 +931,20 @@ me_map_key_generator::me_map_key_generator()
 void me_map_key_generator::blacklist( const map_key &opt )
 {
     std::remove( opts.begin(), opts.end(), opt );
+}
+
+me_placing::me_placing( const me_placing &rhs )
+{
+    *this = rhs;
+}
+
+me_placing &me_placing::operator=( const me_placing &rhs )
+{
+    pieces.reserve( rhs.pieces.size() );
+    for( const auto &piece : rhs.pieces ) {
+        pieces.emplace_back( piece->clone() );
+    }
+    return *this;
 }
 
 me_state::me_state() : me_state( std::make_unique<me_file>() ) { }

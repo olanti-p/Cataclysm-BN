@@ -1,0 +1,69 @@
+#ifndef CATA_SRC_EDITOR_EDITOR_ME_PIECE_H
+#define CATA_SRC_EDITOR_EDITOR_ME_PIECE_H
+
+#include "../calendar.h"
+#include "../mapgen_piece.h"
+#include "../enum_conversions.h"
+
+#include "editor_me_editable_id.h"
+
+#include <memory>
+#include <string>
+
+class JsonOut;
+class JsonObject;
+
+#define IMPLEMENT_ME_PIECE(piece_class, piece_type)                     \
+    piece_class() = default;                                            \
+    piece_class( const piece_class& ) = default;                        \
+    piece_class( piece_class&&) = default;                              \
+    ~piece_class() = default;                                           \
+    PieceType get_type() const override {                               \
+        return piece_type;                                              \
+    }                                                                   \
+    std::unique_ptr<me_piece> clone() const override {                  \
+        return std::make_unique<piece_class>( *this );                  \
+    };                                                                  \
+    void serialize( JsonOut &jsout ) const override;                    \
+    void deserialize( JsonObject &jsin ) override;                      \
+    void show_ui( me_state& state ) override;
+
+namespace editor
+{
+struct me_state;
+
+using PieceType = JmPieceType;
+
+struct me_piece {
+    me_piece() = default;
+    virtual ~me_piece() = default;
+
+    virtual PieceType get_type() const = 0;
+
+    virtual std::unique_ptr<me_piece> clone() const = 0;
+
+    virtual void serialize( JsonOut &jsout ) const = 0;
+    virtual void deserialize( JsonObject &jsin ) = 0;
+
+    virtual void show_ui( me_state &state ) = 0;
+};
+
+struct me_piece_field : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_field, PieceType::Field );
+
+    field_eid ftype;
+    int intensity = 1;
+    time_duration age = 0_seconds;
+};
+
+const std::vector<std::unique_ptr<me_piece>> &get_piece_templates();
+std::unique_ptr<me_piece> make_new_piece( PieceType pt );
+
+} // namespace editor
+
+template<>
+struct enum_traits<editor::PieceType> {
+    static constexpr editor::PieceType last = editor::PieceType::NumJmTypes;
+};
+
+#endif // CATA_SRC_EDITOR_EDITOR_ME_PIECE_H

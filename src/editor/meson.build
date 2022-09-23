@@ -6,6 +6,7 @@ editor_sources = files(
     'editor_mapgen_func.cpp',
     'editor_mapgen_piece.cpp',
     'editor_me_editable_id.cpp',
+    'editor_me_piece.cpp',
     'editor_me_state_export.cpp',
     'editor_me_state_serde.cpp',
     'editor_me_state.cpp',
