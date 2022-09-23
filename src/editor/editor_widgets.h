@@ -96,6 +96,9 @@ bool InputIntRange( const char *label, editor::me_int_range &r );
 
 void TextCentered( const std::string &text );
 
+void BeginErrorArea();
+void EndErrorArea();
+
 } // namespace ImGui
 
 #endif // CATA_SRC_EDITOR_EDITOR_WIDGETS_H
