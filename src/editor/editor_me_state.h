@@ -116,6 +116,9 @@ struct me_palette {
     const map_key &key_from_uuid( const uuid_t &uuid ) const;
     const ImVec4 &color_from_uuid( const uuid_t &uuid ) const;
 
+    me_palette_entry *find_entry( const uuid_t &uuid );
+    const me_palette_entry *find_entry( const uuid_t &uuid ) const;
+
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
 };

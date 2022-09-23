@@ -869,10 +869,9 @@ const map_key &me_palette::key_from_uuid( const uuid_t &uuid ) const
     if( uuid == UUID_INVALID ) {
         return default_map_key;
     }
-    for( const auto &it : entries ) {
-        if( it.uuid == uuid ) {
-            return it.key;
-        }
+    const me_palette_entry *entry = find_entry( uuid );
+    if( entry ) {
+        return entry->key;
     }
 
     std::cerr << "Tried to find palette key, but uuid was not found " << uuid << std::endl;
@@ -885,14 +884,39 @@ const ImVec4 &me_palette::color_from_uuid( const uuid_t &uuid ) const
         static ImVec4 default_color = ImVec4();
         return default_color;
     }
-    for( const auto &it : entries ) {
-        if( it.uuid == uuid ) {
-            return it.color;
-        }
+    const me_palette_entry *entry = find_entry( uuid );
+    if( entry ) {
+        return entry->color;
     }
 
     std::cerr << "Tried to find palette color, but uuid was not found " << uuid << std::endl;
     std::abort();
+}
+
+me_palette_entry *me_palette::find_entry( const uuid_t &uuid )
+{
+    if( uuid == UUID_INVALID ) {
+        return nullptr;
+    }
+    for( auto &it : entries ) {
+        if( it.uuid == uuid ) {
+            return &it;
+        }
+    }
+    return nullptr;
+}
+
+const me_palette_entry *me_palette::find_entry( const uuid_t &uuid ) const
+{
+    if( uuid == UUID_INVALID ) {
+        return nullptr;
+    }
+    for( const auto &it : entries ) {
+        if( it.uuid == uuid ) {
+            return &it;
+        }
+    }
+    return nullptr;
 }
 
 void me_mapgen_base::set_size( const point &s )
