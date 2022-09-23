@@ -132,6 +132,10 @@ struct me_int_range {
     int min = 0;
     int max = 0;
 
+    inline operator bool() const {
+        return min != 0 || max != 0;
+    }
+
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
 };
