@@ -151,6 +151,277 @@ void me_piece_field::deserialize( JsonObject &jsin )
     jsin.read( "age", age );
 }
 
+void me_piece_npc::serialize( JsonOut &jsout ) const
+{
+    // TODO
+}
+
+void me_piece_npc::deserialize( JsonObject &jsin )
+{
+    // TODO
+}
+
+void me_piece_faction::serialize( JsonOut &jsout ) const
+{
+    // TODO
+}
+
+void me_piece_faction::deserialize( JsonObject &jsin )
+{
+    // TODO
+}
+
+void me_piece_sign::serialize( JsonOut &jsout ) const
+{
+    // TODO
+}
+
+void me_piece_sign::deserialize( JsonObject &jsin )
+{
+    // TODO
+}
+
+void me_piece_graffiti::serialize( JsonOut &jsout ) const
+{
+    // TODO
+}
+
+void me_piece_graffiti::deserialize( JsonObject &jsin )
+{
+    // TODO
+}
+
+void me_piece_vending_machine::serialize( JsonOut &jsout ) const
+{
+    // TODO
+}
+
+void me_piece_vending_machine::deserialize( JsonObject &jsin )
+{
+    // TODO
+}
+
+void me_piece_toilet::serialize( JsonOut &jsout ) const
+{
+    // TODO
+}
+
+void me_piece_toilet::deserialize( JsonObject &jsin )
+{
+    // TODO
+}
+
+void me_piece_gaspump::serialize( JsonOut &jsout ) const
+{
+    // TODO
+}
+
+void me_piece_gaspump::deserialize( JsonObject &jsin )
+{
+    // TODO
+}
+
+void me_piece_liquid::serialize( JsonOut &jsout ) const
+{
+    // TODO
+}
+
+void me_piece_liquid::deserialize( JsonObject &jsin )
+{
+    // TODO
+}
+
+void me_piece_igroup::serialize( JsonOut &jsout ) const
+{
+    // TODO
+}
+
+void me_piece_igroup::deserialize( JsonObject &jsin )
+{
+    // TODO
+}
+
+void me_piece_loot::serialize( JsonOut &jsout ) const
+{
+    // TODO
+}
+
+void me_piece_loot::deserialize( JsonObject &jsin )
+{
+    // TODO
+}
+
+void me_piece_mgroup::serialize( JsonOut &jsout ) const
+{
+    // TODO
+}
+
+void me_piece_mgroup::deserialize( JsonObject &jsin )
+{
+    // TODO
+}
+
+void me_piece_monster::serialize( JsonOut &jsout ) const
+{
+    // TODO
+}
+
+void me_piece_monster::deserialize( JsonObject &jsin )
+{
+    // TODO
+}
+
+void me_piece_vehicle::serialize( JsonOut &jsout ) const
+{
+    // TODO
+}
+
+void me_piece_vehicle::deserialize( JsonObject &jsin )
+{
+    // TODO
+}
+
+void me_piece_item::serialize( JsonOut &jsout ) const
+{
+    // TODO
+}
+
+void me_piece_item::deserialize( JsonObject &jsin )
+{
+    // TODO
+}
+
+void me_piece_trap::serialize( JsonOut &jsout ) const
+{
+    // TODO
+}
+
+void me_piece_trap::deserialize( JsonObject &jsin )
+{
+    // TODO
+}
+
+void me_piece_furniture::serialize( JsonOut &jsout ) const
+{
+    // TODO
+}
+
+void me_piece_furniture::deserialize( JsonObject &jsin )
+{
+    // TODO
+}
+
+void me_piece_terrain::serialize( JsonOut &jsout ) const
+{
+    // TODO
+}
+
+void me_piece_terrain::deserialize( JsonObject &jsin )
+{
+    // TODO
+}
+
+void me_piece_ter_furn_transform::serialize( JsonOut &jsout ) const
+{
+    // TODO
+}
+
+void me_piece_ter_furn_transform::deserialize( JsonObject &jsin )
+{
+    // TODO
+}
+
+void me_piece_make_rubble::serialize( JsonOut &jsout ) const
+{
+    // TODO
+}
+
+void me_piece_make_rubble::deserialize( JsonObject &jsin )
+{
+    // TODO
+}
+
+void me_piece_computer::serialize( JsonOut &jsout ) const
+{
+    // TODO
+}
+
+void me_piece_computer::deserialize( JsonObject &jsin )
+{
+    // TODO
+}
+
+void me_piece_sealed_item::serialize( JsonOut &jsout ) const
+{
+    // TODO
+}
+
+void me_piece_sealed_item::deserialize( JsonObject &jsin )
+{
+    // TODO
+}
+
+void me_piece_translate::serialize( JsonOut &jsout ) const
+{
+    // TODO
+}
+
+void me_piece_translate::deserialize( JsonObject &jsin )
+{
+    // TODO
+}
+
+void me_piece_zone::serialize( JsonOut &jsout ) const
+{
+    // TODO
+}
+
+void me_piece_zone::deserialize( JsonObject &jsin )
+{
+    // TODO
+}
+
+void me_piece_nested::serialize( JsonOut &jsout ) const
+{
+    // TODO
+}
+
+void me_piece_nested::deserialize( JsonObject &jsin )
+{
+    // TODO
+}
+
+void me_piece_alt_trap::serialize( JsonOut &jsout ) const
+{
+    // TODO
+}
+
+void me_piece_alt_trap::deserialize( JsonObject &jsin )
+{
+    // TODO
+}
+
+void me_piece_alt_furniture::serialize( JsonOut &jsout ) const
+{
+    // TODO
+}
+
+void me_piece_alt_furniture::deserialize( JsonObject &jsin )
+{
+    // TODO
+}
+
+void me_piece_alt_terrain::serialize( JsonOut &jsout ) const
+{
+    // TODO
+}
+
+void me_piece_alt_terrain::deserialize( JsonObject &jsin )
+{
+    // TODO
+}
+
+
 namespace detail
 {
 

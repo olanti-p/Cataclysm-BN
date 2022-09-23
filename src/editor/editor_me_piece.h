@@ -56,6 +56,168 @@ struct me_piece_field : public me_piece {
     time_duration age = 0_seconds;
 };
 
+struct me_piece_npc : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_npc, PieceType::NPC );
+
+    // TODO
+};
+
+struct me_piece_faction : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_faction, PieceType::Faction );
+
+    // TODO
+};
+
+struct me_piece_sign : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_sign, PieceType::Sign );
+
+    // TODO
+};
+
+struct me_piece_graffiti : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_graffiti, PieceType::Graffiti );
+
+    // TODO
+};
+
+struct me_piece_vending_machine : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_vending_machine, PieceType::VendingMachine );
+
+    // TODO
+};
+
+struct me_piece_toilet : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_toilet, PieceType::Toilet );
+
+    // TODO
+};
+
+struct me_piece_gaspump : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_gaspump, PieceType::GasPump );
+
+    // TODO
+};
+
+struct me_piece_liquid : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_liquid, PieceType::Liquid );
+
+    // TODO
+};
+
+struct me_piece_igroup : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_igroup, PieceType::Igroup );
+
+    // TODO
+};
+
+struct me_piece_loot : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_loot, PieceType::Loot );
+
+    // TODO
+};
+
+struct me_piece_mgroup : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_mgroup, PieceType::Mgroup );
+
+    // TODO
+};
+
+struct me_piece_monster : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_monster, PieceType::Monster );
+
+    // TODO
+};
+
+struct me_piece_vehicle : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_vehicle, PieceType::Vehicle );
+
+    // TODO
+};
+
+struct me_piece_item : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_item, PieceType::Item );
+
+    // TODO
+};
+
+struct me_piece_trap : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_trap, PieceType::Trap );
+
+    // TODO
+};
+
+struct me_piece_furniture : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_furniture, PieceType::Furniture );
+
+    // TODO
+};
+
+struct me_piece_terrain : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_terrain, PieceType::Terrain );
+
+    // TODO
+};
+
+struct me_piece_ter_furn_transform : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_ter_furn_transform, PieceType::TerFurnTransform );
+
+    // TODO
+};
+
+struct me_piece_make_rubble : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_make_rubble, PieceType::MakeRubble );
+
+    // TODO
+};
+
+struct me_piece_computer : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_computer, PieceType::Computer );
+
+    // TODO
+};
+
+struct me_piece_sealed_item : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_sealed_item, PieceType::SealedItem );
+
+    // TODO
+};
+
+struct me_piece_translate : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_translate, PieceType::Translate );
+
+    // TODO
+};
+
+struct me_piece_zone : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_zone, PieceType::Zone );
+
+    // TODO
+};
+
+struct me_piece_nested : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_nested, PieceType::Nested );
+
+    // TODO
+};
+
+struct me_piece_alt_trap : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_alt_trap, PieceType::AltTrap );
+
+    // TODO
+};
+
+struct me_piece_alt_furniture : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_alt_furniture, PieceType::AltFurniture );
+
+    // TODO
+};
+
+struct me_piece_alt_terrain : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_alt_terrain, PieceType::AltTerrain );
+
+    // TODO
+};
+
 const std::vector<std::unique_ptr<me_piece>> &get_piece_templates();
 std::unique_ptr<me_piece> make_new_piece( PieceType pt );
 

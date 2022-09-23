@@ -21,12 +21,176 @@ void me_piece_field::show_ui( me_state &state )
     }
 }
 
+void me_piece_npc::show_ui( me_state &state )
+{
+    ImGui::Text( "TODO" );
+}
+
+void me_piece_faction::show_ui( me_state &state )
+{
+    ImGui::Text( "TODO" );
+}
+
+void me_piece_sign::show_ui( me_state &state )
+{
+    ImGui::Text( "TODO" );
+}
+
+void me_piece_graffiti::show_ui( me_state &state )
+{
+    ImGui::Text( "TODO" );
+}
+
+void me_piece_vending_machine::show_ui( me_state &state )
+{
+    ImGui::Text( "TODO" );
+}
+
+void me_piece_toilet::show_ui( me_state &state )
+{
+    ImGui::Text( "TODO" );
+}
+
+void me_piece_gaspump::show_ui( me_state &state )
+{
+    ImGui::Text( "TODO" );
+}
+
+void me_piece_liquid::show_ui( me_state &state )
+{
+    ImGui::Text( "TODO" );
+}
+
+void me_piece_igroup::show_ui( me_state &state )
+{
+    ImGui::Text( "TODO" );
+}
+
+void me_piece_loot::show_ui( me_state &state )
+{
+    ImGui::Text( "TODO" );
+}
+
+void me_piece_mgroup::show_ui( me_state &state )
+{
+    ImGui::Text( "TODO" );
+}
+
+void me_piece_monster::show_ui( me_state &state )
+{
+    ImGui::Text( "TODO" );
+}
+
+void me_piece_vehicle::show_ui( me_state &state )
+{
+    ImGui::Text( "TODO" );
+}
+
+void me_piece_item::show_ui( me_state &state )
+{
+    ImGui::Text( "TODO" );
+}
+
+void me_piece_trap::show_ui( me_state &state )
+{
+    ImGui::Text( "TODO" );
+}
+
+void me_piece_furniture::show_ui( me_state &state )
+{
+    ImGui::Text( "TODO" );
+}
+
+void me_piece_terrain::show_ui( me_state &state )
+{
+    ImGui::Text( "TODO" );
+}
+
+void me_piece_ter_furn_transform::show_ui( me_state &state )
+{
+    ImGui::Text( "TODO" );
+}
+
+void me_piece_make_rubble::show_ui( me_state &state )
+{
+    ImGui::Text( "TODO" );
+}
+
+void me_piece_computer::show_ui( me_state &state )
+{
+    ImGui::Text( "TODO" );
+}
+
+void me_piece_sealed_item::show_ui( me_state &state )
+{
+    ImGui::Text( "TODO" );
+}
+
+void me_piece_translate::show_ui( me_state &state )
+{
+    ImGui::Text( "TODO" );
+}
+
+void me_piece_zone::show_ui( me_state &state )
+{
+    ImGui::Text( "TODO" );
+}
+
+void me_piece_nested::show_ui( me_state &state )
+{
+    ImGui::Text( "TODO" );
+}
+
+void me_piece_alt_trap::show_ui( me_state &state )
+{
+    ImGui::Text( "TODO" );
+}
+
+void me_piece_alt_furniture::show_ui( me_state &state )
+{
+    ImGui::Text( "TODO" );
+}
+
+void me_piece_alt_terrain::show_ui( me_state &state )
+{
+    ImGui::Text( "TODO" );
+}
+
 const std::vector<std::unique_ptr<me_piece>> &get_piece_templates()
 {
     static std::vector<std::unique_ptr<me_piece>> ret;
     if( ret.empty() ) {
         ret.reserve( static_cast<int>( PieceType::NumJmTypes ) );
         REG_PIECE( me_piece_field );
+        REG_PIECE( me_piece_npc );
+        REG_PIECE( me_piece_faction );
+        REG_PIECE( me_piece_sign );
+        REG_PIECE( me_piece_graffiti );
+        REG_PIECE( me_piece_sign );
+        REG_PIECE( me_piece_graffiti );
+        REG_PIECE( me_piece_vending_machine );
+        REG_PIECE( me_piece_toilet );
+        REG_PIECE( me_piece_gaspump );
+        REG_PIECE( me_piece_liquid );
+        REG_PIECE( me_piece_igroup );
+        REG_PIECE( me_piece_loot );
+        REG_PIECE( me_piece_mgroup );
+        REG_PIECE( me_piece_monster );
+        REG_PIECE( me_piece_vehicle );
+        REG_PIECE( me_piece_item );
+        REG_PIECE( me_piece_trap );
+        REG_PIECE( me_piece_furniture );
+        REG_PIECE( me_piece_terrain );
+        REG_PIECE( me_piece_ter_furn_transform );
+        REG_PIECE( me_piece_make_rubble );
+        REG_PIECE( me_piece_computer );
+        REG_PIECE( me_piece_sealed_item );
+        REG_PIECE( me_piece_translate );
+        REG_PIECE( me_piece_zone );
+        REG_PIECE( me_piece_nested );
+        REG_PIECE( me_piece_alt_trap );
+        REG_PIECE( me_piece_alt_furniture );
+        REG_PIECE( me_piece_alt_terrain );
     }
     return ret;
 }
