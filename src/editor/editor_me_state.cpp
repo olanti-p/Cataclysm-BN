@@ -1,5 +1,6 @@
 #include "editor_me_state.h"
 #include "editor_widgets.h"
+#include "editor_me_state_export.h"
 
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
@@ -279,6 +280,35 @@ static void handle_file_saving( me_state &state )
     }
 }
 
+static void handle_file_exporting( me_state &state )
+{
+    if( state.open_export_as ) {
+        state.open_export_as = false;
+        ImGuiFileDialog::Instance()->OpenDialog( "ExportToFile",
+                "Export As...", ".json",
+                state.file_export_path ? *state.file_export_path : ".",
+                1, nullptr, ImGuiFileDialogFlags_ConfirmOverwrite );
+    }
+
+    if( ImGuiFileDialog::Instance()->Display( "ExportToFile" ) ) {
+        if( ImGuiFileDialog::Instance()->IsOk() ) {
+            state.file_export_path = ImGuiFileDialog::Instance()->GetFilePathName();
+            state.do_export = true;
+        }
+        ImGuiFileDialog::Instance()->Close();
+    }
+
+    if( state.do_export ) {
+        state.do_export = false;
+        assert( state.file_export_path );
+        write_to_file( *state.file_export_path, [&]( std::ostream & oss ) {
+            std::string s = editor_export::to_string( state.file() );
+            oss << editor_export::format_string( s );
+        } );
+        state.last_exported_revision = state.current_revision.num;
+    }
+}
+
 void show_control_window( me_state &state )
 {
     bool keep_open = true;
@@ -352,6 +382,22 @@ void show_control_window( me_state &state )
 
     handle_file_saving( state );
 
+    std::string export_btn = string_format( "%sExport###export-button",
+                                            state.has_unexported_changes() ? "* " : "" );
+    if( ImGui::Button( export_btn.c_str() ) ) {
+        if( !state.file_export_path ) {
+            state.open_export_as = true;
+        } else {
+            state.do_export = true;
+        }
+    }
+    ImGui::SameLine();
+    if( ImGui::Button( "Export As..." ) ) {
+        state.open_export_as = true;
+    }
+
+    handle_file_exporting( state );
+
     // Camera
     {
         ImGui::DragInt( "Zoom", &state.camera.scale, 0.2f, MIN_SCALE, MAX_SCALE );
@@ -384,7 +430,13 @@ void show_file_history( me_state &state, bool &show )
 
     for( const me_file_revision &entry : state.file_history ) {
         bool is_saved = state.last_saved_revision && *state.last_saved_revision == entry.num;
-        std::string fname = string_format( "Version %d%s", entry.num, is_saved ? " [S]" : "" );
+        bool is_exported = state.last_exported_revision && *state.last_exported_revision == entry.num;
+        std::string fname = string_format(
+                                "Version %d%s%s",
+                                entry.num,
+                                is_saved ? " [S]" : "",
+                                is_exported ? " [E]" : ""
+                            );
         if( ImGui::Selectable( fname.c_str(), entry.num == state.current_revision.num ) ) {
             state.switch_to_revision = entry.num;
         }
@@ -716,7 +768,7 @@ void show_me_ui( me_state &state )
     handle_revision_change( state );
 }
 
-point_rel_etile me_file::mapgensize()
+point_rel_etile me_file::mapgensize() const
 {
     if( mtype == MapgenType::Nested ) {
         return point_rel_etile( nested.size );
@@ -770,6 +822,11 @@ me_state::~me_state() = default;
 bool me_state::has_unsaved_changes() const
 {
     return !last_saved_revision || current_revision.num != *last_saved_revision;
+}
+
+bool me_state::has_unexported_changes() const
+{
+    return !last_exported_revision || current_revision.num != *last_exported_revision;
 }
 
 const map_key &me_palette::key_from_uuid( const uuid_t &uuid ) const

@@ -58,6 +58,10 @@ struct editable_id {
             return string_id<T>( data ).is_valid();
         }
 
+        bool is_null() const {
+            return string_id<T>( data ).is_null();
+        }
+
         const T &obj() const {
             return string_id<T>( data ).obj();
         }
@@ -252,7 +256,7 @@ struct me_file {
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
 
-    point_rel_etile mapgensize();
+    point_rel_etile mapgensize() const;
 };
 
 struct me_file_revision {
@@ -305,6 +309,10 @@ struct me_state {
     bool do_exit_after_save = false;
     cata::optional<std::string> file_save_path;
 
+    bool open_export_as = false;
+    bool do_export = false;
+    cata::optional<std::string> file_export_path;
+
     inline me_file &file() {
         return *current_revision.file;
     }
@@ -330,6 +338,7 @@ struct me_state {
     }
 
     bool has_unsaved_changes() const;
+    bool has_unexported_changes() const;
 
     bool file_has_changes = false;
     cata::optional<int> switch_to_revision;
@@ -337,6 +346,7 @@ struct me_state {
     std::vector<me_file_revision> file_history;
     int history_capacity = 200;
     cata::optional<int> last_saved_revision;
+    cata::optional<int> last_exported_revision;
 
     uuid_t rows_brush = UUID_INVALID;
 };
