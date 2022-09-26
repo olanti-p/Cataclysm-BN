@@ -617,16 +617,19 @@ void show_file_info( me_state &state, me_file &file, bool &show )
     ImGui::Text( "Mapgen type:" );
     if( ImGui::RadioButton( "Oter", file.mtype == MapgenType::Oter ) ) {
         file.mtype = MapgenType::Oter;
+        file.base.set_size( file.mapgensize().raw() );
         state.mark_changed();
     }
     ImGui::SameLine();
     if( ImGui::RadioButton( "Update", file.mtype == MapgenType::Update ) ) {
         file.mtype = MapgenType::Update;
+        file.base.set_size( file.mapgensize().raw() );
         state.mark_changed();
     }
     ImGui::SameLine();
     if( ImGui::RadioButton( "Nested", file.mtype == MapgenType::Nested ) ) {
         file.mtype = MapgenType::Nested;
+        file.base.set_size( file.mapgensize().raw() );
         state.mark_changed();
     }
     ImGui::Separator();
