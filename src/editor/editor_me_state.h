@@ -191,7 +191,7 @@ struct me_mapgen_update {
 
 struct me_mapgen_nested {
     std::string nested_mapgen_id;
-    point size = point( 1, 1 );
+    point size = point( 24, 24 );
     me_int_range rotation;
 
     void serialize( JsonOut &jsout ) const;
