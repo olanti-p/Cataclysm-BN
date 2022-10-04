@@ -875,7 +875,7 @@ $(BUILD_PREFIX)$(TARGET_NAME).a: $(OBJS)
 .PHONY: version
 version:
 	@( VERSION_STRING=$(VERSION) ; \
-            [ -e ".git" ] && GITVERSION=$$( git describe --tags --always --dirty --match "[0-9A-Z]*.[0-9A-Z]*" ) && VERSION_STRING=$$GITVERSION ; \
+            [ -e ".git" ] && GITVERSION=$$( git describe --tags --always --dirty --match "cbn-[0-9A-Z]*.[0-9A-Z]*" ) && VERSION_STRING=$$GITVERSION ; \
             [ -e "$(SRC_DIR)/version.h" ] && OLDVERSION=$$(grep VERSION $(SRC_DIR)/version.h|cut -d '"' -f2) ; \
             if [ "x$$VERSION_STRING" != "x$$OLDVERSION" ]; then printf '// NOLINT(cata-header-guard)\n#define VERSION "%s"\n' "$$VERSION_STRING" | tee $(SRC_DIR)/version.h ; fi \
          )
