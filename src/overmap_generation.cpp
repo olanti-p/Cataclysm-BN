@@ -582,7 +582,7 @@ find_path_dijkstra(
     return ret;
 }
 
-constexpr double a_star_heuristic( const pfnode &node, const pfnode &goal )
+static double a_star_heuristic( const pfnode &node, const pfnode &goal )
 {
     return trig_dist( node.pos, goal.pos ) * 5.0;
 }
