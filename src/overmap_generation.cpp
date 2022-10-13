@@ -281,12 +281,12 @@ struct pfnode {
     int8_t conn_idx = -1;
 };
 
-bool operator==( const pfnode &l, const pfnode &r )
+static bool operator==( const pfnode &l, const pfnode &r )
 {
     return l.pos == r.pos && l.piece_idx == r.piece_idx && l.rot == r.rot && l.conn_idx == r.conn_idx;
 }
 
-bool operator<( const pfnode &l, const pfnode &r )
+static bool operator<( const pfnode &l, const pfnode &r )
 {
     if( l.pos < r.pos ) {
         return true;
@@ -319,7 +319,7 @@ struct std::hash<pfnode> {
 };
 
 std::vector<pfnode>
-find_matching_nodes(
+static find_matching_nodes(
     const overmap_connection &connection,
     const piece_placements &placements,
     const point &exit_pos,
@@ -733,7 +733,7 @@ overmap_generation::lay_out_connection(
 }
 
 overmap_generation::ConnPath
-straight_path(
+static straight_path(
     const overmap &om,
     const overmap_connection &connection,
     const tripoint_om_omt &source,
