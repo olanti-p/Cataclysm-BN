@@ -130,6 +130,39 @@ static bool test_already_placed_at(
     return true;
 }
 
+struct reverse_lookup_res {
+    int piece_idx = -1;
+    point rel_pos;
+    om_direction::type dir;
+};
+
+static std::vector<reverse_lookup_res>
+do_reverse_piece_lookup( const overmap_connection &connection )
+{
+    std::vector<reverse_lookup_res> ret;
+    const int num_pieces = static_cast<int>( connection.pieces.size() );
+    for( int piece_idx = 0; piece_idx < num_pieces; piece_idx++ ) {
+        const om_connection_piece &piece = connection.pieces[piece_idx].obj();
+        for( om_direction::type dir : piece.allowed_rotations ) {
+            reverse_lookup_res rlr;
+            rlr.piece_idx = piece_idx;
+            rlr.dir = dir;
+            if( piece.is_linear ) {
+                rlr.rel_pos = point();
+                ret.push_back( rlr );
+            } else {
+                const int num_ters = static_cast<int>( piece.terrains.size() );
+                for( int i = 0; i < num_ters; i++ ) {
+                    const omcp_terrain &terrain = piece.terrains[i];
+                    rlr.rel_pos = -om_direction::rotate( terrain.pos, dir ).xy();
+                    ret.push_back( rlr );
+                }
+            }
+        }
+    }
+    return ret;
+}
+
 static omcp_connection_exit conn_exit_rotated( const omcp_connection_exit &exit,
         om_direction::type dir )
 {
@@ -327,6 +360,7 @@ static find_matching_nodes(
 )
 {
     if( exit_dir == om_direction::type::invalid ) {
+        // Try placing a new node
         for( om_direction::type dir : om_direction::all ) {
             const single_piece_placement &spp =
                 placements.get( connection.default_piece_idx, exit_pos, dir );
@@ -341,8 +375,28 @@ static find_matching_nodes(
                 return {{ n }};
             }
         }
-        // Can't place default node there
-        return {};
+        // Can't place default node there. Try reusing existing nodes.
+        std::vector<pfnode> ret;
+        std::vector<reverse_lookup_res> rev_lookups = do_reverse_piece_lookup( connection );
+        for( const reverse_lookup_res &lookup : rev_lookups ) {
+            point_om_omt place_pos( exit_pos + lookup.rel_pos );
+            if( !overmap::inbounds( place_pos ) ) {
+                continue;
+            }
+            const single_piece_placement &spp =
+                placements.get( lookup.piece_idx, place_pos.raw(), lookup.dir );
+            if( spp.is_valid() ) {
+                // TODO: properly implement this
+                pfnode n;
+                n.piece_idx = lookup.piece_idx;
+                n.pos = place_pos.raw();
+                n.rot = lookup.dir;
+                n.conn_idx = 0;
+
+                ret.push_back( std::move( n ) );
+            }
+        }
+        return ret;
     }
 
     // Act like we're a piece with single connection
