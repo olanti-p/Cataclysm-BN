@@ -937,10 +937,12 @@ void overmap_generation::build_connection(
     const ConnPath &path
 )
 {
+    /*
     if( !debug_connection_lay ) {
         // TODO: remove this
         return;
     }
+    */
 
     std::cout << string_format( "building connection, %d steps\n", path.nodes.size() );
 
