@@ -237,7 +237,7 @@ static std::unique_ptr<piece_placements> gen_piece_placements(
                 for( om_direction::type dir : piece.allowed_rotations ) {
                     cata::optional<int> place_cost;
                     if( test_already_placed_at( om, piece, pos, dir ) ) {
-                        place_cost = 0;
+                        place_cost = 1;
                     }
                     if( !place_cost ) {
                         place_cost = test_can_place_at( om, piece, pos, dir );
