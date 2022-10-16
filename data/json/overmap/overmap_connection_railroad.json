@@ -1,7 +1,7 @@
 [
   {
     "type": "overmap_connection",
-    "id": "local_railroad",
+    "id": "legacy_railroad",
     "default_terrain": "railroad",
     "default_exit_type": "railroad",
     "subtypes": [
@@ -15,6 +15,7 @@
   {
     "type": "overmap_connection",
     "id": "local_railroad",
+    "is_ortho": true,
     "default_terrain": "railroad",
     "default_exit_type": "railroad",
     "default_piece": "basic_railroad",
