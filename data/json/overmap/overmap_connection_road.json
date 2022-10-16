@@ -6,13 +6,13 @@
     "default_exit_type": "road",
     "default_piece": "basic_road",
     "//1": "Pieces used for flat bridges",
-    "//pieces": [
+    "pieces": [
       "basic_road",
       "road_with_manhole",
       "basic_bridge"
     ],
     "//2": "Pieces used for elevated bridges",
-    "pieces": [
+    "//pieces": [
       "basic_road",
       "railroad_level_crossing",
       "road_with_manhole",
