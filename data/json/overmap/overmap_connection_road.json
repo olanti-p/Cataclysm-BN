@@ -5,16 +5,18 @@
     "default_terrain": "road",
     "default_exit_type": "road",
     "default_piece": "basic_road",
-    "pieces": [
+    "//1": "Pieces used for flat bridges",
+    "//pieces": [
       "basic_road",
       "road_with_manhole",
       "basic_bridge"
     ],
-    "//pieces": [
+    "//2": "Pieces used for elevated bridges",
+    "pieces": [
       "basic_road",
       "railroad_level_crossing",
       "road_with_manhole",
-      "basic_bridge",
+      "basic_bridge_elevated",
       "bridge_ramp"
     ]
   },
