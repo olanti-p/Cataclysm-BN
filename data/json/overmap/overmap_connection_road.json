@@ -27,19 +27,19 @@
     "placements": [
       {
         "location": "field",
-        "basic_cost": 5
+        "basic_cost": 1
       },
       {
         "location": "forest_without_trail",
-        "basic_cost": 20
+        "basic_cost": 4
       },
       {
         "location": "forest_trail",
-        "basic_cost": 25
+        "basic_cost": 5
       },
       {
         "location": "swamp",
-        "basic_cost": 45
+        "basic_cost": 8
       }
     ]
   },
@@ -63,7 +63,7 @@
     "placements": [
       {
         "location": "field",
-        "basic_cost": 100
+        "basic_cost": 15
       }
     ]
   },
@@ -101,7 +101,7 @@
         "locations": [
           [ [ 0, 0, 0 ], "water" ]
         ],
-        "basic_cost": 120
+        "basic_cost": 20
       }
     ],
     "allowed_rotations": [ "n", "e" ]
@@ -125,7 +125,7 @@
           [ [ 0, 0, 0 ], "water" ],
           [ [ 0, 0, 1 ], "open_air" ]
         ],
-        "basic_cost": 120
+        "basic_cost": 20
       }
     ]
   },
@@ -149,7 +149,7 @@
           [ [ 0, 0, 0 ], "water" ],
           [ [ 0, 0, 1 ], "open_air" ]
         ],
-        "basic_cost": 120
+        "basic_cost": 20
       }
     ]
   }

@@ -276,7 +276,7 @@ static std::unique_ptr<piece_placements> gen_piece_placements(
                 for( om_direction::type dir : piece.allowed_rotations ) {
                     cata::optional<int> place_cost;
                     if( test_already_placed_at( om, piece, pos, dir ) ) {
-                        place_cost = 1;
+                        place_cost = 0;
                     }
                     if( !place_cost ) {
                         place_cost = test_can_place_at( om, piece, pos, dir );
@@ -551,6 +551,127 @@ struct priority_queue {
 };
 
 static std::vector<pfnode>
+find_path_greedy(
+    const std::vector<pfnode> &start_nodes,
+    const std::vector<pfnode> &end_nodes,
+    const piece_placements &placements,
+    const overmap_connection &connection
+)
+{
+    bool verbose = false;
+
+    // TODO: all start nodes must be viable
+    pfnode start = start_nodes[0];
+
+    // TODO: all end nodes must be viable
+    pfnode goal = end_nodes[0];
+
+    std::cout << "start  ";
+    debug_print_node( start, connection );
+    std::cout << "goal   ";
+    debug_print_node( goal, connection );
+
+    priority_queue<pfnode, int> frontier;
+    frontier.put( pfnode( start ), 0 );
+
+    std::unordered_map<pfnode, pfnode> came_from;
+    came_from[start] = start;
+
+    std::unordered_map<pfnode, int> cost_so_far;
+    cost_so_far[start] = 0;
+
+    piece_placement_matrix<bool> visited_matrix( connection.pieces.size(), false );
+
+    int num_iters = 0;
+    bool path_found = false;
+
+    while( !frontier.empty() ) {
+        num_iters++;
+
+        pfnode current = frontier.get();
+
+        if( current == goal ) {
+            path_found = true;
+            break;
+        }
+
+        if( verbose ) {
+            std::cout << "Visiting  ";
+            debug_print_node( current, connection );
+        }
+
+        const single_piece_placement &current_pl =
+            placements.get( current.piece_idx, current.pos, current.rot );
+        visited_matrix.get( current.piece_idx, current.pos, current.rot ) = true;
+        for( const piece_link &link : current_pl.links ) {
+            if( link.src_conn_idx != current.conn_idx ) {
+                // Can't connect from this connection
+                continue;
+            }
+
+            bool visited = visited_matrix.get( link.tgt_piece_idx, link.tgt_pos.xy(), link.tgt_dir );
+            if( visited ) {
+                // Already visited
+                continue;
+            }
+
+            int place_cost = placements.get( link.tgt_piece_idx, link.tgt_pos.xy(), link.tgt_dir ).cost;
+            int dist_cost = trig_dist( link.tgt_pos.xy(), goal.pos );
+            int existency_mult;
+            if( place_cost == 0 ) {
+                existency_mult = 1;
+                place_cost = 1;
+            } else {
+                existency_mult = 5;
+            }
+            int new_cost = place_cost + dist_cost * existency_mult;
+
+            std::cout <<
+                      string_format(
+                          "    tgt_piece: %d, tgt_pos: %s, tgt_dir: %s new_cost = %d+%d*%d=%d\n",
+                          link.tgt_piece_idx,
+                          link.tgt_pos.xy().to_string(),
+                          om_direction::name( link.tgt_dir ),
+                          place_cost,
+                          dist_cost,
+                          existency_mult,
+                          new_cost
+                      );
+
+            pfnode next;
+            next.pos = link.tgt_pos.xy();
+            next.conn_idx = link.tgt_conn_idx;
+            next.rot = link.tgt_dir;
+            next.piece_idx = link.tgt_piece_idx;
+
+            if( cost_so_far.find( next ) == cost_so_far.end() || new_cost < cost_so_far[next] ) {
+                cost_so_far[next] = new_cost;
+                came_from[next] = current;
+                frontier.put( std::move( next ), new_cost );
+            }
+        }
+    }
+
+    std::vector<pfnode> ret;
+
+    if( path_found ) {
+        pfnode cursor = goal;
+        while( true ) {
+            pfnode prev = came_from[cursor];
+            ret.push_back( cursor );
+            if( prev == cursor ) {
+                break;
+            }
+            cursor = prev;
+        }
+    }
+
+    std::cout << string_format( "Path finding done in %d iterations.\n", num_iters );
+
+    return ret;
+}
+
+static std::vector<pfnode>
 find_path_dijkstra(
     const std::vector<pfnode> &start_nodes,
     const std::vector<pfnode> &end_nodes,
@@ -765,6 +886,9 @@ overmap_generation::lay_out_connection(
     if( !found_cheap_path ) {
         // Find a path from any start node to any end node
         if( true ) {
+            nodes = find_path_greedy( start_nodes, end_nodes, placements,
+                                      connection );
+        } else if( true ) {
             nodes = find_path_dijkstra( start_nodes, end_nodes, placements,
                                         connection );
         } else {
