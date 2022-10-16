@@ -126,6 +126,8 @@ class overmap_connection
         string_id<om_connection_piece> default_piece;
         int default_piece_idx = -1;
 
+        bool is_ortho = false;
+
     private:
         struct cache {
             const subtype *value = nullptr;

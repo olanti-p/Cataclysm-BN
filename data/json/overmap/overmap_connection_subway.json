@@ -5,6 +5,7 @@
     "default_terrain": "subway",
     "default_exit_type": "subway",
     "default_piece": "basic_subway",
+    "is_ortho": true,
     "pieces": [
       "basic_subway"
     ]

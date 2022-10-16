@@ -5,6 +5,7 @@
     "default_terrain": "sewer",
     "default_exit_type": "sewer",
     "default_piece": "basic_sewer",
+    "is_ortho": true,
     "pieces": [
       "basic_sewer"
     ]

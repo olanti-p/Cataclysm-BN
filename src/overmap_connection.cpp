@@ -159,6 +159,7 @@ void overmap_connection::load( const JsonObject &jo, const std::string & )
     optional( jo, was_loaded, "subtypes", subtypes );
     optional( jo, was_loaded, "pieces", pieces );
     optional( jo, was_loaded, "default_piece", default_piece );
+    optional( jo, was_loaded, "is_ortho", is_ortho );
 }
 
 void overmap_connection::check() const

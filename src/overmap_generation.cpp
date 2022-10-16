@@ -584,6 +584,7 @@ find_path_greedy(
 
     int num_iters = 0;
     bool path_found = false;
+    bool is_ortho = connection.is_ortho;
 
     while( !frontier.empty() ) {
         num_iters++;
@@ -616,7 +617,9 @@ find_path_greedy(
             }
 
             int place_cost = placements.get( link.tgt_piece_idx, link.tgt_pos.xy(), link.tgt_dir ).cost;
-            int dist_cost = trig_dist( link.tgt_pos.xy(), goal.pos );
+            int dist_cost = is_ortho
+                            ? manhattan_dist( link.tgt_pos.xy(), goal.pos )
+                            : trig_dist( link.tgt_pos.xy(), goal.pos );
             int existency_mult;
             if( place_cost == 0 ) {
                 existency_mult = 1;
