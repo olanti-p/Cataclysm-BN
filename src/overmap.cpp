@@ -4113,27 +4113,29 @@ void overmap::place_special(
     // Make connections.
     if( cit ) {
         for( const auto &elem : special.connections ) {
-            if( elem.connection ) {
-                const tripoint_om_omt rp = p + om_direction::rotate( elem.p, dir );
-                om_direction::type initial_dir = elem.initial_dir;
-
-                if( initial_dir != om_direction::type::invalid ) {
-                    initial_dir = om_direction::add( initial_dir, dir );
-                    initial_dir = om_direction::opposite( initial_dir );
-                }
-
-                const overmap_generation::ConnPath path =
-                    overmap_generation::lay_out_connection(
-                        *this,
-                        *elem.connection,
-                        tripoint_om_omt( cit.pos, 0 ),
-                        om_direction::type::invalid,
-                        rp,
-                        initial_dir,
-                        must_be_unexplored
-                    );
-                overmap_generation::build_connection( *this, path );
+            if( !elem.connection ) {
+                debugmsg( "Trying to place special with invalid connection." );
+                break;
             }
+            const tripoint_om_omt rp = p + om_direction::rotate( elem.p, dir );
+            om_direction::type initial_dir = elem.initial_dir;
+
+            if( initial_dir != om_direction::type::invalid ) {
+                initial_dir = om_direction::add( initial_dir, dir );
+                initial_dir = om_direction::opposite( initial_dir );
+            }
+
+            const overmap_generation::ConnPath path =
+                overmap_generation::lay_out_connection(
+                    *this,
+                    *elem.connection,
+                    tripoint_om_omt( cit.pos, 0 ),
+                    om_direction::type::invalid,
+                    rp,
+                    initial_dir,
+                    must_be_unexplored
+                );
+            overmap_generation::build_connection( *this, path );
         }
     }
     // Place spawns.
