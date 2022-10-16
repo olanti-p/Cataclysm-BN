@@ -458,6 +458,8 @@ find_path_breadth_first(
     const overmap_connection &connection
 )
 {
+    bool verbose = false;
+
     // TODO: all start nodes must be viable
     pfnode start = start_nodes[0];
 
@@ -484,7 +486,7 @@ find_path_breadth_first(
             break;
         }
 
-        if( false ) {
+        if( verbose ) {
             std::cout << "Visiting  ";
             debug_print_node( current, connection );
         }
@@ -523,7 +525,9 @@ find_path_breadth_first(
         }
     }
 
-    std::cout << string_format( "Path finding done in %d iterations.\n", num_iters );
+    if( verbose ) {
+        std::cout << string_format( "Path finding done in %d iterations.\n", num_iters );
+    }
 
     return ret;
 }
@@ -566,10 +570,12 @@ find_path_greedy(
     // TODO: all end nodes must be viable
     pfnode goal = end_nodes[0];
 
-    std::cout << "start  ";
-    debug_print_node( start, connection );
-    std::cout << "goal   ";
-    debug_print_node( goal, connection );
+    if( verbose ) {
+        std::cout << "start  ";
+        debug_print_node( start, connection );
+        std::cout << "goal   ";
+        debug_print_node( goal, connection );
+    }
 
     priority_queue<pfnode, int> frontier;
     frontier.put( pfnode( start ), 0 );
@@ -629,17 +635,19 @@ find_path_greedy(
             }
             int new_cost = place_cost + dist_cost * existency_mult;
 
-            std::cout <<
-                      string_format(
-                          "    tgt_piece: %d, tgt_pos: %s, tgt_dir: %s new_cost = %d+%d*%d=%d\n",
-                          link.tgt_piece_idx,
-                          link.tgt_pos.xy().to_string(),
-                          om_direction::name( link.tgt_dir ),
-                          place_cost,
-                          dist_cost,
-                          existency_mult,
-                          new_cost
-                      );
+            if( verbose ) {
+                std::cout <<
+                          string_format(
+                              "    tgt_piece: %d, tgt_pos: %s, tgt_dir: %s new_cost = %d+%d*%d=%d\n",
+                              link.tgt_piece_idx,
+                              link.tgt_pos.xy().to_string(),
+                              om_direction::name( link.tgt_dir ),
+                              place_cost,
+                              dist_cost,
+                              existency_mult,
+                              new_cost
+                          );
+            }
 
             pfnode next;
             next.pos = link.tgt_pos.xy();
@@ -669,7 +677,9 @@ find_path_greedy(
         }
     }
 
-    std::cout << string_format( "Path finding done in %d iterations.\n", num_iters );
+    if( verbose ) {
+        std::cout << string_format( "Path finding done in %d iterations.\n", num_iters );
+    }
 
     return ret;
 }
@@ -682,6 +692,8 @@ find_path_dijkstra(
     const overmap_connection &connection
 )
 {
+    bool verbose = false;
+
     // TODO: all start nodes must be viable
     pfnode start = start_nodes[0];
 
@@ -710,7 +722,7 @@ find_path_dijkstra(
             break;
         }
 
-        if( false ) {
+        if( verbose ) {
             std::cout << "Visiting  ";
             debug_print_node( current, connection );
         }
@@ -755,7 +767,9 @@ find_path_dijkstra(
         }
     }
 
-    std::cout << string_format( "Path finding done in %d iterations.\n", num_iters );
+    if( verbose ) {
+        std::cout << string_format( "Path finding done in %d iterations.\n", num_iters );
+    }
 
     return ret;
 }
@@ -771,6 +785,8 @@ overmap_generation::lay_out_connection(
     bool /*must_be_unexplored*/
 )
 {
+    bool verbose = false;
+
     ConnPath ret;
     ret.connection = &connection;
     ret.source = source;
@@ -788,18 +804,22 @@ overmap_generation::lay_out_connection(
         return ret;
     }
 
+    /*
     if( !debug_connection_lay ) {
         // TODO: remove this
         return ret;
     }
+    */
 
-    std::cout << string_format( "LAYING OUT CONNECTION\nconn: %s\nsrc: %s %s\ndst: %s %s\n\n",
-                                connection.id,
-                                source.to_string(),
-                                om_direction::name( source_dir ),
-                                dest.to_string(),
-                                om_direction::name( dest_dir )
-                              );
+    if( verbose ) {
+        std::cout << string_format( "LAYING OUT CONNECTION\nconn: %s\nsrc: %s %s\ndst: %s %s\n\n",
+                                    connection.id,
+                                    source.to_string(),
+                                    om_direction::name( source_dir ),
+                                    dest.to_string(),
+                                    om_direction::name( dest_dir )
+                                  );
+    }
 
     // Possible placements for pieces in the overmap
     std::unique_ptr<piece_placements> placements_container =
@@ -835,7 +855,7 @@ overmap_generation::lay_out_connection(
         }
     }
 
-    if( true ) {
+    if( verbose ) {
         std::cout << "START_NODES:\n";
         for( const pfnode &node : start_nodes ) {
             debug_print_node( node, connection );
@@ -902,9 +922,13 @@ overmap_generation::lay_out_connection(
 
     std::reverse( nodes.begin(), nodes.end() );
 
-    std::cout << "FINAL_PATH:\n";
+    if( verbose ) {
+        std::cout << "FINAL_PATH:\n";
+    }
     for( const pfnode &node : nodes ) {
-        debug_print_node( node, connection );
+        if( verbose ) {
+            debug_print_node( node, connection );
+        }
 
         overmap_generation::ConnNode n;
         n.conn_idx = node.conn_idx;
@@ -914,7 +938,9 @@ overmap_generation::lay_out_connection(
 
         ret.nodes.push_back( std::move( n ) );
     }
-    std::cout << "\n";
+    if( verbose ) {
+        std::cout << "\n";
+    }
 
     return ret;
 }
@@ -962,8 +988,12 @@ overmap_generation::lay_out_street(
     int len
 )
 {
-    std::cout << string_format( "laying street %s -> %d %s\n", from.to_string(), len,
-                                om_direction::name( dir ) );
+    bool verbose = false;
+
+    if( verbose ) {
+        std::cout << string_format( "laying street %s -> %d %s\n", from.to_string(), len,
+                                    om_direction::name( dir ) );
+    }
 
     // See if we need to make another one "step" further.
     const tripoint_om_omt en_pos = from + om_direction::displace( dir, len + 1 );
@@ -975,18 +1005,26 @@ overmap_generation::lay_out_street(
 
     while( actual_len < len ) {
         const tripoint_om_omt pos = from + om_direction::displace( dir, actual_len );
-        std::cout << string_format( "  scanning %s ", pos.to_string() );
+        if( verbose ) {
+            std::cout << string_format( "  scanning %s ", pos.to_string() );
+        }
 
         if( !overmap::inbounds( pos, 1 ) ) {
-            std::cout << "too close to bounds.\n";
+            if( verbose ) {
+                std::cout << "too close to bounds.\n";
+            }
             break;  // Don't approach overmap bounds.
         }
 
         const oter_id &ter_id = om.ter( pos );
-        std::cout << string_format( "%s ", ter_id.id() );
+        if( verbose ) {
+            std::cout << string_format( "%s ", ter_id.id() );
+        }
 
         if( !connection.pick_linear_piece_for( ter_id ) ) {
-            std::cout << "no linear piece for terrain.\n";
+            if( verbose ) {
+                std::cout << "no linear piece for terrain.\n";
+            }
             break;
         }
 
@@ -1015,24 +1053,34 @@ overmap_generation::lay_out_street(
             }
         }
         if( collided ) {
-            std::cout << "too many nearby streets.\n";
+            if( verbose ) {
+                std::cout << "too many nearby streets.\n";
+            }
             break;
         }
 
         actual_len++;
-        std::cout << "ok\n";
+        if( verbose ) {
+            std::cout << "ok\n";
+        }
 
         if( actual_len > 1 && connection.has_linear_piece( ter_id ) ) {
-            std::cout << "  collides with existing street, ending here.\n";
+            if( verbose ) {
+                std::cout << "  collides with existing street, ending here.\n";
+            }
             break; // Stop here.
         }
     }
 
-    std::cout << string_format( "deferring to straight path, len:%d actual_len:%d\n", len, actual_len );
+    if( verbose ) {
+        std::cout << string_format( "deferring to straight path, len:%d actual_len:%d\n", len, actual_len );
+    }
 
     auto ret = straight_path( om, connection, from, dir, actual_len );
 
-    std::cout << string_format( "done laying street, %d steps.\n", ret.nodes.size() );
+    if( verbose ) {
+        std::cout << string_format( "done laying street, %d steps.\n", ret.nodes.size() );
+    }
 
     return ret;
 }
@@ -1070,6 +1118,8 @@ void overmap_generation::build_connection(
     const ConnPath &path
 )
 {
+    bool verbose = false;
+
     /*
     if( !debug_connection_lay ) {
         // TODO: remove this
@@ -1077,7 +1127,9 @@ void overmap_generation::build_connection(
     }
     */
 
-    std::cout << string_format( "building connection, %d steps\n", path.nodes.size() );
+    if( verbose ) {
+        std::cout << string_format( "building connection, %d steps\n", path.nodes.size() );
+    }
 
     const size_t line_none = 0;
 
@@ -1087,7 +1139,9 @@ void overmap_generation::build_connection(
         const ConnNode *node_next = node_idx < path.nodes.size() - 1 ? &path.nodes[node_idx + 1] : nullptr;
         const om_connection_piece &piece = node.piece.obj();
 
-        std::cout << string_format( "  placing piece %s at %s\n", node.piece, node.pos.to_string() );
+        if( verbose ) {
+            std::cout << string_format( "  placing piece %s at %s\n", node.piece, node.pos.to_string() );
+        }
 
         if( !piece.is_linear ) {
             for( const omcp_terrain &ter : piece.terrains ) {
@@ -1104,7 +1158,9 @@ void overmap_generation::build_connection(
             }
             if( node_prev ) {
                 if( node_prev->piece->is_linear ) {
-                    std::cout << "    has linear node_prev\n";
+                    if( verbose ) {
+                        std::cout << "    has linear node_prev\n";
+                    }
                     point v = node_prev->pos.raw().xy() - node.pos.raw().xy();
                     line = om_lines::set_segment( line, om_direction::from_vec( v ) );
                 } else {
@@ -1118,7 +1174,9 @@ void overmap_generation::build_connection(
             }
             if( node_next ) {
                 if( node_next->piece->is_linear ) {
-                    std::cout << "    has linear node_next\n";
+                    if( verbose ) {
+                        std::cout << "    has linear node_next\n";
+                    }
                     point v = node_next->pos.raw().xy() - node.pos.raw().xy();
                     line = om_lines::set_segment( line, om_direction::from_vec( v ) );
                 } else {
@@ -1136,5 +1194,7 @@ void overmap_generation::build_connection(
         }
     }
 
-    std::cout << "done building connection.\n";
+    if( verbose ) {
+        std::cout << "done building connection.\n";
+    }
 }
