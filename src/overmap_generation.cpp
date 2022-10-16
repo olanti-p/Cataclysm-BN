@@ -804,12 +804,10 @@ overmap_generation::lay_out_connection(
         return ret;
     }
 
-    /*
     if( !debug_connection_lay ) {
         // TODO: remove this
         return ret;
     }
-    */
 
     if( verbose ) {
         std::cout << string_format( "LAYING OUT CONNECTION\nconn: %s\nsrc: %s %s\ndst: %s %s\n\n",
