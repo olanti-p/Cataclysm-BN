@@ -41,26 +41,30 @@ struct single_piece_placement {
 /**
  * Holds possible placements of all pieces at all positions and rotations.
  */
-struct piece_placements {
-    array_2d< std::vector< dir_array<single_piece_placement> > > data;
+template<typename T>
+struct piece_placement_matrix {
+    array_2d< std::vector< dir_array<T> > > data;
 
-    explicit piece_placements( const int num_pieces ) {
+    piece_placement_matrix( const int num_pieces, const T &default_val ) {
+        dir_array<T> default_arr = {{ default_val }};
         for( auto &ref_row : data ) {
             for( auto &ref : ref_row ) {
-                ref.resize( num_pieces );
+                ref.resize( num_pieces, default_arr );
             }
         }
     }
-    ~piece_placements() = default;
+    ~piece_placement_matrix() = default;
 
-    single_piece_placement &get( int piece_idx, point pos, om_direction::type dir ) {
+    T &get( int piece_idx, point pos, om_direction::type dir ) {
         return data[pos.x][pos.y][piece_idx][om_direction::get_num_cw_rotations( dir )];
     }
 
-    const single_piece_placement &get( int piece_idx, point pos, om_direction::type dir ) const {
+    const T &get( int piece_idx, point pos, om_direction::type dir ) const {
         return data[pos.x][pos.y][piece_idx][om_direction::get_num_cw_rotations( dir )];
     }
 };
+
+using piece_placements = piece_placement_matrix<single_piece_placement>;
 
 /**
  * Check whether piece can be placed at given position with given rotation.
@@ -257,7 +261,9 @@ static std::unique_ptr<piece_placements> gen_piece_placements(
 )
 {
     const int num_pieces = static_cast<int>( connection.pieces.size() );
-    std::unique_ptr<piece_placements> ret = std::make_unique<piece_placements>( num_pieces );
+    std::unique_ptr<piece_placements> ret = std::make_unique<piece_placements>(
+            num_pieces, single_piece_placement()
+                                            );
 
     tripoint pos;
     pos.z = zlev;
