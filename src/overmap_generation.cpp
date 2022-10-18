@@ -3,6 +3,7 @@
 #include <queue>
 
 #include "hash_utils.h"
+#include "om_direction.h"
 #include "om_lines.h"
 #include "overmap_connection.h"
 #include "overmap_location.h"
@@ -14,6 +15,9 @@ void overmap_generation::set_debug_output( bool val )
 {
     debug_connection_lay = val;
 }
+
+constexpr int PIECE_IDX_START = -2;
+constexpr int PIECE_IDX_GOAL = -3;
 
 template<typename T>
 using array_2d = std::array<std::array<T, OMAPY>, OMAPX>;
@@ -45,7 +49,12 @@ template<typename T>
 struct piece_placement_matrix {
     array_2d< std::vector< dir_array<T> > > data;
 
+    T data_start;
+    T data_goal;
+
     piece_placement_matrix( const int num_pieces, const T &default_val ) {
+        data_start = default_val;
+        data_goal = default_val;
         dir_array<T> default_arr = {{ default_val }};
         for( auto &ref_row : data ) {
             for( auto &ref : ref_row ) {
@@ -56,11 +65,27 @@ struct piece_placement_matrix {
     ~piece_placement_matrix() = default;
 
     T &get( int piece_idx, point pos, om_direction::type dir ) {
-        return data[pos.x][pos.y][piece_idx][om_direction::get_num_cw_rotations( dir )];
+        if( piece_idx < 0 ) {
+            if( piece_idx == PIECE_IDX_GOAL ) {
+                return data_goal;
+            } else {
+                return data_start;
+            }
+        } else {
+            return data[pos.x][pos.y][piece_idx][om_direction::get_num_cw_rotations( dir )];
+        }
     }
 
     const T &get( int piece_idx, point pos, om_direction::type dir ) const {
-        return data[pos.x][pos.y][piece_idx][om_direction::get_num_cw_rotations( dir )];
+        if( piece_idx < 0 ) {
+            if( piece_idx == PIECE_IDX_GOAL ) {
+                return data_goal;
+            } else {
+                return data_start;
+            }
+        } else {
+            return data[pos.x][pos.y][piece_idx][om_direction::get_num_cw_rotations( dir )];
+        }
     }
 };
 
@@ -365,8 +390,10 @@ static find_matching_nodes(
     om_direction::type exit_dir
 )
 {
+
     if( exit_dir == om_direction::type::invalid ) {
-        // Try placing a new node
+        std::vector<pfnode> ret;
+        // Try placing new nodes
         for( om_direction::type dir : om_direction::all ) {
             const single_piece_placement &spp =
                 placements.get( connection.default_piece_idx, exit_pos, dir );
@@ -377,12 +404,13 @@ static find_matching_nodes(
                 n.pos = exit_pos;
                 n.rot = dir;
                 n.conn_idx = 0;
-
-                return {{ n }};
+                ret.push_back( std::move( n ) );
             }
         }
-        // Can't place default node there. Try reusing existing nodes.
-        std::vector<pfnode> ret;
+        if( !ret.empty() ) {
+            return ret;
+        }
+        // Try reusing existing nodes
         std::vector<reverse_lookup_res> rev_lookups = do_reverse_piece_lookup( connection );
         for( const reverse_lookup_res &lookup : rev_lookups ) {
             point_om_omt place_pos( exit_pos + lookup.rel_pos );
@@ -439,11 +467,22 @@ static find_matching_nodes(
     return ret;
 }
 
+static std::string debug_get_piece_id( int piece_idx, const overmap_connection &connection )
+{
+    if( piece_idx == PIECE_IDX_START ) {
+        return "START";
+    } else if( piece_idx == PIECE_IDX_GOAL ) {
+        return "GOAL";
+    } else {
+        return connection.pieces[piece_idx].str();
+    }
+}
+
 static void debug_print_node( const pfnode &node, const overmap_connection &connection )
 {
     std::cout << string_format( "  pos:%s  piece:%s  dir:%s  conn:%d  HASH:%ud\n",
                                 node.pos.to_string(),
-                                connection.pieces[node.piece_idx],
+                                debug_get_piece_id( node.piece_idx, connection ),
                                 om_direction::name( node.rot ),
                                 node.conn_idx,
                                 std::hash<pfnode> {}( node )
@@ -554,21 +593,89 @@ struct priority_queue {
         }
 };
 
+static bool
+check_nodes_conflict(
+    const overmap_connection &connection,
+    const pfnode &a,
+    const pfnode &b
+)
+{
+    std::set<point> pts_a;
+    std::set<point> pts_b;
+    const om_connection_piece &piece_a = connection.pieces[a.piece_idx].obj();
+    const om_connection_piece &piece_b = connection.pieces[b.piece_idx].obj();
+
+    if( piece_a.is_linear ) {
+        pts_a.emplace( a.pos );
+    } else {
+        for( const omcp_terrain &ter : piece_a.terrains ) {
+            pts_a.emplace( om_direction::rotate( ter.pos.xy(), a.rot ) + a.pos );
+        }
+    }
+    if( piece_b.is_linear ) {
+        pts_b.emplace( b.pos );
+    } else {
+        for( const omcp_terrain &ter : piece_b.terrains ) {
+            pts_b.emplace( om_direction::rotate( ter.pos.xy(), b.rot ) + b.pos );
+        }
+    }
+    for( const point &p : pts_a ) {
+        if( pts_b.count( p ) != 0 ) {
+            return true;
+        }
+    }
+    return false;
+}
+
+static bool
+check_intersects(
+    const overmap_connection &connection,
+    const std::unordered_map<pfnode, pfnode> &came_from,
+    const pfnode &current,
+    const piece_link &candidate
+)
+{
+    if( candidate.tgt_piece_idx == PIECE_IDX_START || candidate.tgt_piece_idx == PIECE_IDX_GOAL ) {
+        return false;
+    }
+    pfnode pseudo_node;
+    pseudo_node.piece_idx = candidate.tgt_piece_idx;
+    pseudo_node.pos = candidate.tgt_pos.xy();
+    pseudo_node.rot = candidate.tgt_dir;
+
+    const pfnode *cursor = &current;
+    while( true ) {
+        if( cursor->piece_idx == PIECE_IDX_START ) {
+            // Reached end
+            break;
+        }
+        if( check_nodes_conflict( connection, pseudo_node, *cursor ) ) {
+            return true;
+        }
+        auto it = came_from.find( *cursor );
+        if( it == came_from.end() ) {
+            // Error!?
+            std::abort();
+            break;
+        }
+        if( it->second == it->first ) {
+            // Reached end
+            break;
+        }
+        cursor = &it->second;
+    }
+    return false;
+}
+
 static std::vector<pfnode>
 find_path_greedy(
-    const std::vector<pfnode> &start_nodes,
-    const std::vector<pfnode> &end_nodes,
+    const pfnode &start,
+    const pfnode &goal,
     const piece_placements &placements,
     const overmap_connection &connection
 )
 {
-    bool verbose = false;
-
-    // TODO: all start nodes must be viable
-    pfnode start = start_nodes[0];
-
-    // TODO: all end nodes must be viable
-    pfnode goal = end_nodes[0];
+    bool verbose = true;
 
     if( verbose ) {
         std::cout << "start  ";
@@ -586,7 +693,7 @@ find_path_greedy(
     std::unordered_map<pfnode, int> cost_so_far;
     cost_so_far[start] = 0;
 
-    piece_placement_matrix<bool> visited_matrix( connection.pieces.size(), false );
+    //piece_placement_matrix<bool> visited_matrix( connection.pieces.size(), false );
 
     int num_iters = 0;
     bool path_found = false;
@@ -609,16 +716,23 @@ find_path_greedy(
 
         const single_piece_placement &current_pl =
             placements.get( current.piece_idx, current.pos, current.rot );
-        visited_matrix.get( current.piece_idx, current.pos, current.rot ) = true;
+        //visited_matrix.get( current.piece_idx, current.pos, current.rot ) = true;
         for( const piece_link &link : current_pl.links ) {
             if( link.src_conn_idx != current.conn_idx ) {
                 // Can't connect from this connection
                 continue;
             }
 
+            /*
             bool visited = visited_matrix.get( link.tgt_piece_idx, link.tgt_pos.xy(), link.tgt_dir );
             if( visited ) {
                 // Already visited
+                continue;
+            }
+            */
+
+            if( check_intersects( connection, came_from, current, link ) ) {
+                // Intersects path
                 continue;
             }
 
@@ -785,7 +899,7 @@ overmap_generation::lay_out_connection(
     bool /*must_be_unexplored*/
 )
 {
-    bool verbose = false;
+    bool verbose = true;
 
     ConnPath ret;
     ret.connection = &connection;
@@ -837,6 +951,7 @@ overmap_generation::lay_out_connection(
     if( start_nodes.empty() || end_nodes.empty() ) {
         found_cheap_path = true;
     } else {
+        /*
         // Shortcut: one of the nodes is both start and end node
         // TODO: decide which one is cheaper
         for( const pfnode &snode : start_nodes ) {
@@ -849,6 +964,52 @@ overmap_generation::lay_out_connection(
             }
             if( found_cheap_path ) {
                 break;
+            }
+        }
+        */
+    }
+
+    if( !found_cheap_path ) {
+        placements.data_start.cost = 0;
+        for( const pfnode &n : start_nodes ) {
+            {
+                piece_link link;
+                link.tgt_conn_idx = 0; // Should be a safe default
+                link.tgt_dir = om_direction::type::none; // Should be a safe default
+                link.tgt_pos = source.raw();
+                link.tgt_piece_idx = PIECE_IDX_START;
+                link.src_conn_idx = n.conn_idx;
+                placements.get( n.piece_idx, n.pos, n.rot ).links.push_back( link );
+            }
+            {
+                piece_link link;
+                link.tgt_conn_idx = n.conn_idx;
+                link.tgt_dir = n.rot;
+                link.tgt_pos = tripoint( n.pos, 0 );
+                link.tgt_piece_idx = n.piece_idx;
+                link.src_conn_idx = 0; // Should be a safe default
+                placements.data_start.links.push_back( link );
+            }
+        }
+        placements.data_goal.cost = 0;
+        for( const pfnode &n : end_nodes ) {
+            {
+                piece_link link;
+                link.tgt_conn_idx = 0; // Should be a safe default
+                link.tgt_dir = om_direction::type::none; // Should be a safe default
+                link.tgt_pos = dest.raw();
+                link.tgt_piece_idx = PIECE_IDX_GOAL;
+                link.src_conn_idx = n.conn_idx;
+                placements.get( n.piece_idx, n.pos, n.rot ).links.push_back( link );
+            }
+            {
+                piece_link link;
+                link.tgt_conn_idx = n.conn_idx;
+                link.tgt_dir = n.rot;
+                link.tgt_pos = tripoint( n.pos, 0 );
+                link.tgt_piece_idx = n.piece_idx;
+                link.src_conn_idx = 0; // Should be a safe default
+                placements.data_goal.links.push_back( link );
             }
         }
     }
@@ -866,36 +1027,45 @@ overmap_generation::lay_out_connection(
         }
         std::cout << "\n";
 
-        if( false ) {
+        if( true ) {
             std::cout << "\nPLACEMENT_CACHE:\n";
+
+            const auto report_piece = [&]( int piece_idx, point pos, om_direction::type dir ) {
+                const single_piece_placement &spp = placements.get( piece_idx, pos, dir );
+                if( !spp.is_valid() ) {
+                    return;
+                }
+                std::cout << string_format( "   piece:%s  dir:%s  cost:%d  links:%d\n",
+                                            debug_get_piece_id( piece_idx, connection ),
+                                            om_direction::name( dir ),
+                                            spp.cost,
+                                            spp.links.size()
+                                          );
+                for( const piece_link &link : spp.links ) {
+                    std::cout << string_format( "    - link pos:%s dir:%s piece:%s conn:%d src_conn:%d\n",
+                                                link.tgt_pos.to_string(),
+                                                om_direction::name( link.tgt_dir ),
+                                                debug_get_piece_id( link.tgt_piece_idx, connection ),
+                                                link.tgt_conn_idx,
+                                                link.src_conn_idx
+                                              );
+                }
+            };
+
+            std::cout << "(start):\n";
+            report_piece( PIECE_IDX_START, point( -1, -1 ), om_direction::type::none );
+
+            std::cout << "(goal):\n";
+            report_piece( PIECE_IDX_GOAL, point( -1, -1 ), om_direction::type::none );
+
             const int num_pieces = static_cast<int>( connection.pieces.size() );
             point pos;
             for( pos.x = 0; pos.x < 12; pos.x++ ) {
                 for( pos.y = 0; pos.y < 13; pos.y++ ) {
                     std::cout << pos.to_string() << ":\n";
                     for( int piece_idx = 0; piece_idx < num_pieces; piece_idx++ ) {
-                        const om_connection_piece &piece = connection.pieces[piece_idx].obj();
                         for( om_direction::type dir : om_direction::all ) {
-                            const single_piece_placement &spp = placements.get( piece_idx, pos, dir );
-                            if( !spp.is_valid() ) {
-                                continue;
-                            }
-                            std::cout << string_format( "   piece:%s  dir:%s  cost:%d  links:%d\n",
-                                                        piece.id,
-                                                        om_direction::name( dir ),
-                                                        spp.cost,
-                                                        spp.links.size()
-                                                      );
-                            for( const piece_link &link : spp.links ) {
-                                const om_connection_piece &tgt_piece = connection.pieces[link.tgt_piece_idx].obj();
-                                std::cout << string_format( "    - link pos:%s dir:%s piece:%s conn:%d src_conn:%d\n",
-                                                            link.tgt_pos.to_string(),
-                                                            om_direction::name( link.tgt_dir ),
-                                                            tgt_piece.id,
-                                                            link.tgt_conn_idx,
-                                                            link.src_conn_idx
-                                                          );
-                            }
+                            report_piece( piece_idx, pos, dir );
                         }
                     }
                 }
@@ -906,9 +1076,21 @@ overmap_generation::lay_out_connection(
 
     if( !found_cheap_path ) {
         // Find a path from any start node to any end node
+
+        pfnode pseudo_start;
+        pseudo_start.rot = om_direction::type::none;
+        pseudo_start.conn_idx = 0;
+        pseudo_start.pos = source.raw().xy();
+        pseudo_start.piece_idx = PIECE_IDX_START;
+
+        pfnode pseudo_goal;
+        pseudo_goal.rot = om_direction::type::none;
+        pseudo_goal.conn_idx = 0;
+        pseudo_goal.pos = dest.raw().xy();
+        pseudo_goal.piece_idx = PIECE_IDX_GOAL;
+
         if( true ) {
-            nodes = find_path_greedy( start_nodes, end_nodes, placements,
-                                      connection );
+            nodes = find_path_greedy( pseudo_start, pseudo_goal, placements, connection );
         } else if( true ) {
             nodes = find_path_dijkstra( start_nodes, end_nodes, placements,
                                         connection );
@@ -921,11 +1103,15 @@ overmap_generation::lay_out_connection(
     std::reverse( nodes.begin(), nodes.end() );
 
     if( verbose ) {
-        std::cout << "FINAL_PATH:\n";
+        std::cout << "FINAL_PATH: " << nodes.size() << " node(s)\n";
     }
     for( const pfnode &node : nodes ) {
         if( verbose ) {
             debug_print_node( node, connection );
+        }
+
+        if( node.piece_idx == PIECE_IDX_START || node.piece_idx == PIECE_IDX_GOAL ) {
+            continue;
         }
 
         overmap_generation::ConnNode n;
