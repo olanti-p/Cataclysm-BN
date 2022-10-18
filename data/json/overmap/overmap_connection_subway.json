@@ -1,26 +1,60 @@
 [
   {
     "type": "overmap_connection",
-    "id": "subway_tunnel",
+    "id": "subway_tunnel_new",
     "default_terrain": "subway",
-    "default_exit_type": "subway",
-    "default_piece": "basic_subway",
+    "default_exit_type": "subway_tunnel",
+    "default_piece": "subway_piece_end",
     "is_ortho": true,
+    "//_TODO": "Order of declaration of pieces here alters which piece gets chosen as endpiece",
     "pieces": [
-      "basic_subway"
+      "subway_piece_omni",
+      "subway_piece_end"
     ]
   },
   {
     "type": "om_connection_piece",
-    "id": "basic_subway",
-    "is_linear": true,
-    "terrain": "subway",
-    "conn_type": "subway",
+    "id": "subway_piece_end",
+    "terrains": [
+      [ [ 0, 0, 0 ], "subway_piece_end_north" ]
+    ],
+    "connections": [
+      [
+        [ [ 0, 0, 0 ], "s", "subway_tunnel" ]
+      ]
+    ],
     "placements": [
       {
-        "location": "subterranean_subway",
+        "locations": [
+          [ [ 0, 0, 0 ], "subterranean_subway" ]
+        ],
         "basic_cost": 5
       }
-    ]
+    ],
+    "allowed_rotations": [ "n", "e", "s", "w" ]
+  },
+  {
+    "type": "om_connection_piece",
+    "id": "subway_piece_omni",
+    "terrains": [
+      [ [ 0, 0, 0 ], "subway_piece_omni_north" ]
+    ],
+    "connections": [
+      [
+        [ [ 0, 0, 0 ], "n", "subway_tunnel" ],
+        [ [ 0, 0, 0 ], "e", "subway_tunnel" ],
+        [ [ 0, 0, 0 ], "s", "subway_tunnel" ],
+        [ [ 0, 0, 0 ], "w", "subway_tunnel" ]
+      ]
+    ],
+    "placements": [
+      {
+        "locations": [
+          [ [ 0, 0, 0 ], "subterranean_subway" ]
+        ],
+        "basic_cost": 5
+      }
+    ],
+    "allowed_rotations": [ "n" ]
   }
 ]

@@ -35,6 +35,17 @@ static map_helpers::canvas_legend legend = {{
     }
 };
 
+static map_helpers::canvas_legend legend_new = {{
+        { U'.', "empty_rock" },
+        { U'#', "rock_border" },
+        { U'v', "subway_piece_end_north" },
+        { U'<', "subway_piece_end_east" },
+        { U'^', "subway_piece_end_south" },
+        { U'>', "subway_piece_end_west" },
+        { U'+', "subway_piece_omni_north" },
+    }
+};
+
 class subway_gen_tester
 {
     private:
@@ -42,10 +53,13 @@ class subway_gen_tester
         std::unique_ptr<overmap> om;
         map_helpers::canvas_adapter adapter;
         tripoint sz;
+        bool use_new = false;
 
     public:
-        subway_gen_tester( int test_num, const map_helpers::canvas &initial ) :
-            test_num( test_num ), om( std::make_unique<overmap>( point_abs_om( 0, 0 ) ) ) {
+        subway_gen_tester( int test_num, const map_helpers::canvas &initial, bool use_new = false ) :
+            test_num( test_num ),
+            om( std::make_unique<overmap>( point_abs_om( 0, 0 ) ) ),
+            use_new( use_new ) {
             CAPTURE( test_num );
 
             sz = initial.size();
@@ -62,7 +76,7 @@ class subway_gen_tester
                 om->ter_set( tripoint_om_omt( sz.x + 1, y, 0 ), block );
             }
 
-            adapter = map_helpers::canvas_adapter( legend )
+            adapter = map_helpers::canvas_adapter( use_new ? legend_new : legend )
             .with_getter( [&]( const tripoint & p ) {
                 return om->ter( tripoint_om_omt( p ) + point( 1, 1 ) ).id().str();
             } )
@@ -86,7 +100,10 @@ class subway_gen_tester
         ) {
             CAPTURE( test_num );
 
-            const overmap_connection &connection = string_id<overmap_connection>( "subway_tunnel" ).obj();
+            const overmap_connection &connection =
+                use_new
+                ? string_id<overmap_connection>( "subway_tunnel_new" ).obj()
+                : string_id<overmap_connection>( "subway_tunnel" ).obj();
 
             overmap_generation::set_debug_output( true );
             auto _restore = on_out_of_scope( [] {
@@ -304,4 +321,140 @@ TEST_CASE( "subway_gen_s_bend", "[mapgen][connects][subway]" )
             U"#######"
         }
     } );
+}
+
+static map_helpers::canvas empty_5_5 = {{
+        U".....",
+        U".....",
+        U".....",
+        U".....",
+        U"....."
+    }
+};
+
+TEST_CASE( "subway_gen_straight_new_a", "[mapgen][connects][subway]" )
+{
+    subway_gen_tester( 1, empty_5_5, true )
+    // Vertical s->n
+    .run_gen( point( 2, 3 ), om_direction::type::invalid, point( 2, 1 ), om_direction::type::invalid )
+    .expect( {
+        {
+            U".....",
+            U"..v..",
+            U"..+..",
+            U"..^..",
+            U"....."
+        }
+    } );
+    /*
+    .expect( {
+        {
+            U".....",
+            U"..v..",
+            U"..│..",
+            U"..^..",
+            U"....."
+        }
+    } );
+    */
+}
+
+
+TEST_CASE( "subway_gen_straight_new", "[mapgen][connects][subway]" )
+{
+    subway_gen_tester( 1, empty_10_11, true )
+    // Horizontal w->e
+    .run_gen( point( 1, 1 ), om_direction::type::invalid, point( 3, 1 ), om_direction::type::invalid )
+    // Horizontal e->w
+    .run_gen( point( 3, 3 ), om_direction::type::invalid, point( 1, 3 ), om_direction::type::invalid )
+    // Vertical n->s
+    .run_gen( point( 8, 1 ), om_direction::type::invalid, point( 8, 3 ), om_direction::type::invalid )
+    // Vertical s->n
+    .run_gen( point( 8, 8 ), om_direction::type::invalid, point( 8, 6 ), om_direction::type::invalid )
+    // Crossing
+    .run_gen( point( 3, 5 ), om_direction::type::invalid, point( 3, 9 ), om_direction::type::invalid )
+    .run_gen( point( 1, 7 ), om_direction::type::invalid, point( 5, 7 ), om_direction::type::invalid )
+    .expect( {
+        {
+            U"..........",
+            U".>+<....v.",
+            U"........+.",
+            U".>+<....^.",
+            U"..........",
+            U"...v......",
+            U"...+....v.",
+            U".>+++<..+.",
+            U"...+....^.",
+            U"...^......",
+            U".........."
+        }
+    } );
+    /*
+    .expect( {
+        {
+            U"..........",
+            U".>─<....v.",
+            U"........│.",
+            U".>─<....^.",
+            U"..........",
+            U"...v......",
+            U"...│....v.",
+            U".>─+─<..│.",
+            U"...│....^.",
+            U"...^......",
+            U".........."
+        }
+    } );
+    */
+}
+
+TEST_CASE( "subway_gen_curves_and_connections_new", "[mapgen][connects][subway]" )
+{
+    subway_gen_tester( 2, empty_10_10, true )
+
+    // Straight with connections towards n and s
+    .run_gen( point( 9, 0 ), om_direction::type::north, point( 9, 9 ), om_direction::type::south )
+
+    // Straight with connections towards e and w, also intersects at dest
+    .run_gen( point( 0, 9 ), om_direction::type::west, point( 9, 9 ), om_direction::type::east )
+
+    // Straight with connections towards n and s, also intersects at src
+    .run_gen( point( 0, 9 ), om_direction::type::south, point( 0, 7 ), om_direction::type::north )
+
+    // Bend with connections at n and w
+    .run_gen( point( 0, 2 ), om_direction::type::west, point( 2, 0 ), om_direction::type::north )
+
+    // Bend with connections at n and w
+    .run_gen( point( 3, 6 ), om_direction::type::south, point( 5, 4 ), om_direction::type::east )
+
+    .expect( {
+        {
+            U"+++......+",
+            U"+........+",
+            U"+........+",
+            U".........+",
+            U"...+++...+",
+            U"...+.....+",
+            U"...+.....+",
+            U"+........+",
+            U"+........+",
+            U"++++++++++"
+        }
+    } );
+    /*
+    .expect( {
+        {
+            U"┌─┘......│",
+            U"│........│",
+            U"┘........│",
+            U".........│",
+            U"...┌──...│",
+            U"...│.....│",
+            U"...│.....│",
+            U"│........│",
+            U"│........│",
+            U"+────────+"
+        }
+    } );
+    */
 }

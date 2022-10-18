@@ -306,6 +306,15 @@
   },
   {
     "type": "overmap_terrain",
+    "id": [ "subway_piece_omni", "subway_piece_end" ],
+    "name": "subway",
+    "sym": "+",
+    "color": "dark_gray",
+    "see_cost": 5,
+    "extras": "subway"
+  },
+  {
+    "type": "overmap_terrain",
     "id": [ "s_reststop_1", "s_reststop_2" ],
     "copy-from": "generic_city_building",
     "name": "rest area",
