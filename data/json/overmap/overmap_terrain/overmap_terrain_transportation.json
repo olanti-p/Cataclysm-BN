@@ -339,6 +339,12 @@
   },
   {
     "type": "overmap_terrain",
+    "id": [ "subway_piece_bend_a1", "subway_piece_bend_a2", "subway_piece_bend_b1", "subway_piece_bend_b2" ],
+    "copy-from": "subway_piece_base",
+    "sym": "└"
+  },
+  {
+    "type": "overmap_terrain",
     "id": [ "s_reststop_1", "s_reststop_2" ],
     "copy-from": "generic_city_building",
     "name": "rest area",

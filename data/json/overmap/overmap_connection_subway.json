@@ -7,7 +7,7 @@
     "default_piece": "subway_piece_end",
     "is_ortho": true,
     "//_TODO": "Order of declaration of pieces here alters which piece gets chosen as endpiece",
-    "pieces": [ "subway_piece_omni", "subway_piece_end", "subway_piece_straight", "subway_piece_bend" ]
+    "pieces": [ "subway_piece_end", "subway_piece_straight", "subway_piece_bend_big" ]
   },
   {
     "type": "om_connection_piece",
@@ -31,6 +31,29 @@
     "terrains": [ [ [ 0, 0, 0 ], "subway_piece_bend_north" ] ],
     "connections": [ [ [ [ 0, 0, 0 ], "n", "subway_tunnel" ], [ [ 0, 0, 0 ], "e", "subway_tunnel" ] ] ],
     "placements": [ { "locations": [ [ [ 0, 0, 0 ], "subterranean_subway" ] ], "basic_cost": 5 } ],
+    "allowed_rotations": [ "n", "e", "s", "w" ]
+  },
+  {
+    "type": "om_connection_piece",
+    "id": "subway_piece_bend_big",
+    "terrains": [
+      [ [ 0, 0, 0 ], "subway_piece_bend_a1_north" ],
+      [ [ 0, 1, 0 ], "subway_piece_bend_a2_north" ],
+      [ [ 1, 0, 0 ], "subway_piece_bend_b1_north" ],
+      [ [ 1, 1, 0 ], "subway_piece_bend_b2_north" ]
+    ],
+    "connections": [ [ [ [ 0, 0, 0 ], "n", "subway_tunnel" ], [ [ 1, 1, 0 ], "e", "subway_tunnel" ] ] ],
+    "placements": [
+      {
+        "locations": [
+          [ [ 0, 0, 0 ], "subterranean_subway" ],
+          [ [ 0, 1, 0 ], "subterranean_subway" ],
+          [ [ 1, 0, 0 ], "subterranean_subway" ],
+          [ [ 1, 1, 0 ], "subterranean_subway" ]
+        ],
+        "basic_cost": 5
+      }
+    ],
     "allowed_rotations": [ "n", "e", "s", "w" ]
   },
   {
