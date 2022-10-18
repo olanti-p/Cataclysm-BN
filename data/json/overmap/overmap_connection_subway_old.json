@@ -6,9 +6,7 @@
     "default_exit_type": "subway",
     "default_piece": "basic_subway_old",
     "is_ortho": true,
-    "pieces": [
-      "basic_subway_old"
-    ]
+    "pieces": [ "basic_subway_old" ]
   },
   {
     "type": "om_connection_piece",
@@ -16,11 +14,6 @@
     "is_linear": true,
     "terrain": "subway",
     "conn_type": "subway",
-    "placements": [
-      {
-        "location": "subterranean_subway",
-        "basic_cost": 5
-      }
-    ]
+    "placements": [ { "location": "subterranean_subway", "basic_cost": 5 } ]
   }
 ]
