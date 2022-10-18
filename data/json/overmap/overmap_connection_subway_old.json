@@ -1,7 +1,7 @@
 [
   {
     "type": "overmap_connection",
-    "id": "subway_tunnel",
+    "id": "subway_tunnel_old",
     "default_terrain": "subway",
     "default_exit_type": "subway",
     "default_piece": "basic_subway_old",

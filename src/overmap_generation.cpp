@@ -700,7 +700,7 @@ find_path_greedy(
     while( !frontier.empty() ) {
         num_iters++;
 
-        if ( num_iters > 200000 ) {
+        if( num_iters > 20000 ) {
             break;
         }
 
@@ -911,10 +911,12 @@ overmap_generation::lay_out_connection(
         return ret;
     }
 
+    /*
     if( !debug_connection_lay ) {
         // TODO: remove this
         return ret;
     }
+    */
 
     if( verbose ) {
         std::cout << string_format( "LAYING OUT CONNECTION\nconn: %s\nsrc: %s %s\ndst: %s %s\n\n",

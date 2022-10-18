@@ -3654,6 +3654,8 @@ void overmap::connect_closest_points( const std::vector<point_om_omt> &points, i
 {
     if( points.size() == 1 ) {
         return;
+    } else if( connection.id.str() == "subway_tunnel" ) {
+        std::cout << "hi" << std::endl;
     }
     for( size_t i = 0; i < points.size(); ++i ) {
         int closest = -1;
