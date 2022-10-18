@@ -7,38 +7,36 @@
     "default_piece": "subway_piece_end",
     "is_ortho": true,
     "//_TODO": "Order of declaration of pieces here alters which piece gets chosen as endpiece",
-    "pieces": [
-      "subway_piece_omni",
-      "subway_piece_end"
-    ]
+    "pieces": [ "subway_piece_omni", "subway_piece_end", "subway_piece_straight", "subway_piece_bend" ]
   },
   {
     "type": "om_connection_piece",
     "id": "subway_piece_end",
-    "terrains": [
-      [ [ 0, 0, 0 ], "subway_piece_end_north" ]
-    ],
-    "connections": [
-      [
-        [ [ 0, 0, 0 ], "s", "subway_tunnel" ]
-      ]
-    ],
-    "placements": [
-      {
-        "locations": [
-          [ [ 0, 0, 0 ], "subterranean_subway" ]
-        ],
-        "basic_cost": 5
-      }
-    ],
+    "terrains": [ [ [ 0, 0, 0 ], "subway_piece_end_north" ] ],
+    "connections": [ [ [ [ 0, 0, 0 ], "s", "subway_tunnel" ] ] ],
+    "placements": [ { "locations": [ [ [ 0, 0, 0 ], "subterranean_subway" ] ], "basic_cost": 6 } ],
+    "allowed_rotations": [ "n", "e", "s", "w" ]
+  },
+  {
+    "type": "om_connection_piece",
+    "id": "subway_piece_straight",
+    "terrains": [ [ [ 0, 0, 0 ], "subway_piece_straight_north" ] ],
+    "connections": [ [ [ [ 0, 0, 0 ], "s", "subway_tunnel" ], [ [ 0, 0, 0 ], "n", "subway_tunnel" ] ] ],
+    "placements": [ { "locations": [ [ [ 0, 0, 0 ], "subterranean_subway" ] ], "basic_cost": 5 } ],
+    "allowed_rotations": [ "n", "e" ]
+  },
+  {
+    "type": "om_connection_piece",
+    "id": "subway_piece_bend",
+    "terrains": [ [ [ 0, 0, 0 ], "subway_piece_bend_north" ] ],
+    "connections": [ [ [ [ 0, 0, 0 ], "n", "subway_tunnel" ], [ [ 0, 0, 0 ], "e", "subway_tunnel" ] ] ],
+    "placements": [ { "locations": [ [ [ 0, 0, 0 ], "subterranean_subway" ] ], "basic_cost": 5 } ],
     "allowed_rotations": [ "n", "e", "s", "w" ]
   },
   {
     "type": "om_connection_piece",
     "id": "subway_piece_omni",
-    "terrains": [
-      [ [ 0, 0, 0 ], "subway_piece_omni_north" ]
-    ],
+    "terrains": [ [ [ 0, 0, 0 ], "subway_piece_omni_north" ] ],
     "connections": [
       [
         [ [ 0, 0, 0 ], "n", "subway_tunnel" ],
@@ -47,14 +45,7 @@
         [ [ 0, 0, 0 ], "w", "subway_tunnel" ]
       ]
     ],
-    "placements": [
-      {
-        "locations": [
-          [ [ 0, 0, 0 ], "subterranean_subway" ]
-        ],
-        "basic_cost": 5
-      }
-    ],
+    "placements": [ { "locations": [ [ [ 0, 0, 0 ], "subterranean_subway" ] ], "basic_cost": 10 } ],
     "allowed_rotations": [ "n" ]
   }
 ]

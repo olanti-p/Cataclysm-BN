@@ -306,12 +306,36 @@
   },
   {
     "type": "overmap_terrain",
-    "id": [ "subway_piece_omni", "subway_piece_end" ],
+    "abstract": "subway_piece_base",
     "name": "subway",
-    "sym": "+",
+    "sym": "?",
     "color": "dark_gray",
     "see_cost": 5,
     "extras": "subway"
+  },
+  {
+    "type": "overmap_terrain",
+    "id": "subway_piece_omni",
+    "copy-from": "subway_piece_base",
+    "sym": "+"
+  },
+  {
+    "type": "overmap_terrain",
+    "id": "subway_piece_end",
+    "copy-from": "subway_piece_base",
+    "sym": "v"
+  },
+  {
+    "type": "overmap_terrain",
+    "id": "subway_piece_straight",
+    "copy-from": "subway_piece_base",
+    "sym": "│"
+  },
+  {
+    "type": "overmap_terrain",
+    "id": "subway_piece_bend",
+    "copy-from": "subway_piece_base",
+    "sym": "└"
   },
   {
     "type": "overmap_terrain",
