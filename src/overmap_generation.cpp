@@ -675,7 +675,7 @@ find_path_greedy(
     const overmap_connection &connection
 )
 {
-    bool verbose = true;
+    bool verbose = false;
 
     if( verbose ) {
         std::cout << "start  ";
@@ -693,14 +693,16 @@ find_path_greedy(
     std::unordered_map<pfnode, int> cost_so_far;
     cost_so_far[start] = 0;
 
-    //piece_placement_matrix<bool> visited_matrix( connection.pieces.size(), false );
-
     int num_iters = 0;
     bool path_found = false;
     bool is_ortho = connection.is_ortho;
 
     while( !frontier.empty() ) {
         num_iters++;
+
+        if ( num_iters > 200000 ) {
+            break;
+        }
 
         pfnode current = frontier.get();
 
@@ -716,20 +718,11 @@ find_path_greedy(
 
         const single_piece_placement &current_pl =
             placements.get( current.piece_idx, current.pos, current.rot );
-        //visited_matrix.get( current.piece_idx, current.pos, current.rot ) = true;
         for( const piece_link &link : current_pl.links ) {
             if( link.src_conn_idx != current.conn_idx ) {
                 // Can't connect from this connection
                 continue;
             }
-
-            /*
-            bool visited = visited_matrix.get( link.tgt_piece_idx, link.tgt_pos.xy(), link.tgt_dir );
-            if( visited ) {
-                // Already visited
-                continue;
-            }
-            */
 
             if( check_intersects( connection, came_from, current, link ) ) {
                 // Intersects path
@@ -899,7 +892,7 @@ overmap_generation::lay_out_connection(
     bool /*must_be_unexplored*/
 )
 {
-    bool verbose = true;
+    bool verbose = false;
 
     ConnPath ret;
     ret.connection = &connection;
