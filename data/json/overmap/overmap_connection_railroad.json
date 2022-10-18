@@ -19,11 +19,7 @@
     "default_terrain": "railroad",
     "default_exit_type": "railroad",
     "default_piece": "basic_railroad",
-    "pieces": [
-      "basic_railroad",
-      "basic_railroad_bridge",
-      "railroad_level_crossing"
-    ]
+    "pieces": [ "basic_railroad", "basic_railroad_bridge", "railroad_level_crossing" ]
   },
   {
     "type": "om_connection_piece",
@@ -31,37 +27,14 @@
     "is_linear": true,
     "terrain": "railroad",
     "conn_type": "railroad",
-    "placements": [
-      {
-        "location": "wilderness",
-        "basic_cost": 1
-      },
-      {
-        "location": "swamp",
-        "basic_cost": 2
-      }
-    ]
+    "placements": [ { "location": "wilderness", "basic_cost": 1 }, { "location": "swamp", "basic_cost": 2 } ]
   },
   {
     "type": "om_connection_piece",
     "id": "basic_railroad_bridge",
-    "terrains": [
-      [ [ 0, 0, 0 ], "railroad_bridge_north" ]
-    ],
-    "connections": [
-      [
-        [ [ 0, 0, 0 ], "n", "railroad" ],
-        [ [ 0, 0, 0 ], "s", "railroad" ]
-      ]
-    ],
-    "placements": [
-      {
-        "locations": [
-          [ [ 0, 0, 0 ], "water" ]
-        ],
-        "basic_cost": 120
-      }
-    ],
+    "terrains": [ [ [ 0, 0, 0 ], "railroad_bridge_north" ] ],
+    "connections": [ [ [ [ 0, 0, 0 ], "n", "railroad" ], [ [ 0, 0, 0 ], "s", "railroad" ] ] ],
+    "placements": [ { "locations": [ [ [ 0, 0, 0 ], "water" ] ], "basic_cost": 120 } ],
     "allowed_rotations": [ "n", "e" ]
   }
 ]

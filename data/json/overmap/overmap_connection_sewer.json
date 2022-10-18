@@ -6,9 +6,7 @@
     "default_exit_type": "sewer",
     "default_piece": "basic_sewer",
     "is_ortho": true,
-    "pieces": [
-      "basic_sewer"
-    ]
+    "pieces": [ "basic_sewer" ]
   },
   {
     "type": "om_connection_piece",
@@ -16,11 +14,6 @@
     "is_linear": true,
     "terrain": "sewer",
     "conn_type": "sewer",
-    "placements": [
-      {
-        "location": "subterranean",
-        "basic_cost": 5
-      }
-    ]
+    "placements": [ { "location": "subterranean", "basic_cost": 5 } ]
   }
 ]
