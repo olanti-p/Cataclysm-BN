@@ -888,6 +888,7 @@ static void *bt[bt_cnt];
 
 void debug_write_backtrace( std::ostream &out )
 {
+    return;
 #if defined(_WIN32)
     if( !sym_init_ ) {
         sym_init_ = std::make_unique<sym_init>();
