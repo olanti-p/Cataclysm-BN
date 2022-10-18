@@ -94,6 +94,7 @@ ignorable = {
     "MONSTER_WHITELIST",
     "mutation_type",
     "obsolete_terrain",
+    "om_connection_piece",
     "overlay_order",
     "overmap_connection",
     "overmap_location",
