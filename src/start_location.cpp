@@ -7,6 +7,7 @@
 #include "avatar.h"
 #include "bodypart.h"
 #include "calendar.h"
+#include "clzones.h"
 #include "coordinate_conversions.h"
 #include "coordinates.h"
 #include "debug.h"
@@ -33,6 +34,7 @@
 class item;
 
 static const efftype_id effect_bleed( "bleed" );
+static const zone_type_id zone_type_ZONE_START_POINT( "ZONE_START_POINT" );
 
 namespace
 {
@@ -324,8 +326,21 @@ void start_location::place_player( player &u ) const
     std::fill_n( &checked[0][0], MAPSIZE_X * MAPSIZE_Y, 0 );
 
     bool found_good_spot = false;
-    // Try some random points at start
 
+    //Check if a start_point zone exists first
+    const zone_manager &mgr = zone_manager::get_manager();
+    for( const auto &i : mgr.get_zones() ) {
+        const zone_data &zone = i.get();
+        if( zone.get_type() == zone_type_ZONE_START_POINT ) {
+            if( m.inbounds( zone.get_center_point() ) ) {
+                found_good_spot = true;
+                u.setpos( m.getlocal( zone.get_center_point() ) );
+                break;
+            }
+        }
+    }
+
+    // Try some random points at start
     int tries = 0;
     const auto check_spot = [&]( const tripoint & pt ) {
         tries++;
