@@ -1,4 +1,4 @@
-project('cataclysm-bn', 'cpp', default_options: ['default_library=static', 'cpp_std=c++14'])
+project('cataclysm-bn', 'cpp', default_options: ['default_library=static', 'cpp_std=c++17'])
 
 cpp_args = [ '-DTILES' ]
 
