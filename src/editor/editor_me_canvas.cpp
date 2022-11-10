@@ -1,5 +1,6 @@
 #include "editor_me_canvas.h"
 #include "editor_me_color.h"
+#include "editor_widgets.h"
 
 namespace editor
 {
@@ -82,6 +83,20 @@ void fill_tile(
 )
 {
     draw_frame( draw_list, cam, tile, tile, col, true );
+}
+
+static void fill_tile_sprited(
+    ImDrawList *draw_list,
+    const me_camera &cam,
+    point_abs_etile tile,
+    const SpriteRef &img
+)
+{
+    ImVec2 p_min = cam.world_to_screen( project_combine( tile, point_etile_epos() ) ).raw();
+    ImVec2 p_max = cam.world_to_screen( project_combine( tile, point_etile_epos( ETILE_SIZE - 1,
+                                        ETILE_SIZE - 1 ) ) ).raw();
+    auto uvs = img.make_uvs();
+    draw_list->AddImage( img.get_tex_id(), p_min, p_max, uvs.first, uvs.second );
 }
 
 void highlight_region(
@@ -206,7 +221,13 @@ void show_canvas( me_state &state )
         for( int x = 0; x < state.file().mapgensize().x(); x++ ) {
             for( int y = 0; y < state.file().mapgensize().y(); y++ ) {
                 point_abs_etile p( x, y );
-                fill_tile( draw_list, state.camera, p, state.file().base.get_color_at( p.raw() ) ) ;
+                ImVec4 col = state.file().base.get_color_at( p.raw() );
+                const SpriteRef *img = state.file().base.get_sprite_at( p.raw() );
+                if( img ) {
+                    col.w *= 0.6f;
+                    fill_tile_sprited( draw_list, state.camera, p, *img );
+                }
+                fill_tile( draw_list, state.camera, p, col );
             }
         }
 

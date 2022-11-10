@@ -289,10 +289,12 @@ static void show_palette_entry_extended( me_state &state, editor::me_palette &p,
 
     if( ImGui::InputId( "ter", entry.ter ) ) {
         state.mark_changed();
+        entry.sprite_cache_valid = false;
     }
 
     if( ImGui::InputId( "furn", entry.furn ) ) {
         state.mark_changed();
+        entry.sprite_cache_valid = false;
     }
 
     ImGui::Text( "Pieces:" );
@@ -557,11 +559,13 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
         ImGui::SetNextItemWidth( ImGui::GetFrameHeight() * 15.0f );
         if( ImGui::InputId( "##furn", list[i].furn ) ) {
             state.mark_changed();
+            list[i].sprite_cache_valid = false;
         }
         ImGui::SameLine();
         ImGui::SetNextItemWidth( ImGui::GetFrameHeight() * 15.0f );
         if( ImGui::InputId( "##ter", list[i].ter ) ) {
             state.mark_changed();
+            list[i].sprite_cache_valid = false;
         }
         ImGui::SameLine();
         if( ImGui::ArrowButton( "##placing", ImGuiDir_Right ) ) {
@@ -591,6 +595,8 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
             state.file().uuid_gen(),
             state.file().base.pick_available_key(),
             col_default_piece_color,
+            false,
+            cata::nullopt,
             ter_eid::NULL_ID(),
             furn_eid::NULL_ID(),
             me_placing()
@@ -787,6 +793,27 @@ const ImVec4 &me_palette::color_from_uuid( const uuid_t &uuid ) const
     std::abort();
 }
 
+const SpriteRef *me_palette::sprite_from_uuid( const uuid_t &uuid ) const
+{
+    if( uuid == UUID_INVALID ) {
+        return nullptr;
+    }
+    const me_palette_entry *entry = find_entry( uuid );
+    if( entry ) {
+        if( !entry->sprite_cache_valid ) {
+            entry->build_sprite_cache();
+        }
+        if( !entry->sprite_cache ) {
+            return nullptr;
+        } else {
+            return &*entry->sprite_cache;
+        }
+    }
+
+    std::cerr << "Tried to find sprite, but uuid was not found " << uuid << std::endl;
+    std::abort();
+}
+
 me_palette_entry *me_palette::find_entry( const uuid_t &uuid )
 {
     if( uuid == UUID_INVALID ) {
@@ -811,6 +838,18 @@ const me_palette_entry *me_palette::find_entry( const uuid_t &uuid ) const
         }
     }
     return nullptr;
+}
+
+void me_palette_entry::build_sprite_cache() const
+{
+    if( !furn.is_null() && furn.is_valid() ) {
+        sprite_cache = SpriteRef( furn.data );
+    } else if( !ter.is_null() && ter.is_valid() ) {
+        sprite_cache = SpriteRef( ter.data );
+    } else {
+        sprite_cache.reset();
+    }
+    sprite_cache_valid = true;
 }
 
 void me_mapgen_base::set_size( const point &s )

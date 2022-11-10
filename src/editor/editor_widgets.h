@@ -9,6 +9,7 @@
 
 #include "editor_me_state.h"
 #include "editor_widget_combofilter.h"
+#include "editor_sprite_ref.h"
 
 class nc_color;
 struct jmapgen_int;
@@ -19,22 +20,6 @@ namespace editor
 enum class AssetType : int;
 struct editor_state;
 } // namespace editor
-
-struct SpriteRef {
-    int tile_idx = -1;
-
-    SpriteRef() = default;
-    SpriteRef( SpriteRef && ) = default;
-    SpriteRef( const SpriteRef & ) = default;
-
-    SpriteRef( int tile_idx ) : tile_idx( tile_idx ) {};
-    SpriteRef( const std::string &id );
-
-    ~SpriteRef() = default;
-
-    ImTextureID get_tex_id() const;
-    std::pair<ImVec2, ImVec2> make_uvs() const;
-};
 
 namespace ImGui
 {

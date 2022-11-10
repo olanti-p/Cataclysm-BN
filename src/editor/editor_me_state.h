@@ -10,6 +10,7 @@
 #include "editor_me_color.h"
 #include "editor_me_piece.h"
 #include "editor_me_editable_id.h"
+#include "editor_sprite_ref.h"
 #include "imgui.h"
 
 struct ImDrawList;
@@ -17,6 +18,7 @@ struct ImVec4;
 class JsonOut;
 class JsonIn;
 template<typename T> struct enum_traits;
+struct SpriteRef;
 
 namespace editor
 {
@@ -103,9 +105,13 @@ struct me_palette_entry {
     uuid_t uuid;
     map_key key;
     ImVec4 color;
+    mutable bool sprite_cache_valid = false;
+    mutable cata::optional<SpriteRef> sprite_cache;
     ter_eid ter;
     furn_eid furn;
     me_placing placing;
+
+    void build_sprite_cache() const;
 
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
@@ -124,6 +130,7 @@ struct me_palette {
 
     const map_key &key_from_uuid( const uuid_t &uuid ) const;
     const ImVec4 &color_from_uuid( const uuid_t &uuid ) const;
+    const SpriteRef *sprite_from_uuid( const uuid_t &uuid ) const;
 
     me_palette_entry *find_entry( const uuid_t &uuid );
     const me_palette_entry *find_entry( const uuid_t &uuid ) const;
@@ -155,6 +162,9 @@ struct me_mapgen_base {
     }
     inline const ImVec4 &get_color_at( const point &pos ) const {
         return inline_palette.color_from_uuid( get_uuid_at( pos ) );
+    }
+    inline const SpriteRef *get_sprite_at( const point &pos ) const {
+        return inline_palette.sprite_from_uuid( get_uuid_at( pos ) );
     }
     map_key pick_available_key() const;
     void remove_usages( const uuid_t &uuid );
