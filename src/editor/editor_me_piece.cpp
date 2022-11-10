@@ -166,8 +166,6 @@ const std::vector<std::unique_ptr<me_piece>> &get_piece_templates()
         REG_PIECE( me_piece_faction );
         REG_PIECE( me_piece_sign );
         REG_PIECE( me_piece_graffiti );
-        REG_PIECE( me_piece_sign );
-        REG_PIECE( me_piece_graffiti );
         REG_PIECE( me_piece_vending_machine );
         REG_PIECE( me_piece_toilet );
         REG_PIECE( me_piece_gaspump );
