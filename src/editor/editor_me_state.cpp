@@ -590,7 +590,7 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
         list.emplace_back( me_palette_entry{
             state.file().uuid_gen(),
             state.file().base.pick_available_key(),
-            ImVec4(),
+            col_default_piece_color,
             ter_eid::NULL_ID(),
             furn_eid::NULL_ID(),
             me_placing()

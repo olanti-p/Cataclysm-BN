@@ -1,4 +1,5 @@
 #include "editor_me_canvas.h"
+#include "editor_me_color.h"
 
 namespace editor
 {
@@ -123,10 +124,6 @@ void show_canvas( me_state &state )
                 );
 
     ImDrawList *draw_list = ImGui::GetWindowDrawList();
-
-    const ImVec4 col_cursor = ImVec4( 0.8f, 0.8f, 0.4f, 1.0f );
-    const ImVec4 col_mapgensize_bg = ImVec4( 0.7f, 0.7f, 0.7f, 0.1f );
-    const ImVec4 col_mapgensize_border = ImVec4( 0.7f, 0.7f, 0.7f, 1.0f );
 
     highlight_region(
         draw_list,

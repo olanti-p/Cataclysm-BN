@@ -7,6 +7,7 @@
 #include "../mapgen.h"
 
 #include "editor_assets.h"
+#include "editor_me_color.h"
 #include "editor_me_piece.h"
 #include "editor_me_editable_id.h"
 #include "imgui.h"
