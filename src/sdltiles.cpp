@@ -3405,7 +3405,7 @@ static void CheckMessages()
         // on focus gain. This seems to mess up the first redraw and
         // causes black screen that lasts ~0.5 seconds before the screen
         // contents are redrawn in the following code.
-        if ( editor::show_cata_ui() ) {
+        if( editor::show_cata_ui() ) {
             ui_manager::invalidate( rectangle<point>( point_zero, point( WindowWidth, WindowHeight ) ), false );
             ui_manager::redraw_invalidated();
         }
