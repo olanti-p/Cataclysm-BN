@@ -3008,7 +3008,6 @@ static void CheckMessages()
         }
         if( editor::process_event( ev ) ) {
             last_input = input_event();
-            need_redraw = true;
             needupdate = true;
             continue;
         }
