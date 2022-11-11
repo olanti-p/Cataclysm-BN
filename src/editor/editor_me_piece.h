@@ -27,6 +27,7 @@ class JsonObject;
     };                                                                  \
     void serialize( JsonOut &jsout ) const override;                    \
     void deserialize( JsonObject &jsin ) override;                      \
+    void export_func( JsonOut& jo ) const override;                     \
     void show_ui( me_state& state ) override;
 
 namespace editor
@@ -45,6 +46,7 @@ struct me_piece {
 
     virtual void serialize( JsonOut &jsout ) const = 0;
     virtual void deserialize( JsonObject &jsin ) = 0;
+    virtual void export_func( JsonOut &jo ) const = 0;
 
     virtual void show_ui( me_state &state ) = 0;
 };
