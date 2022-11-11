@@ -69,7 +69,7 @@ static void sign_or_graffiti(
     }
     ImGui::HelpMarkerInline( "Exact text to use." );
     if( ImGui::InputText( "text", &text ) ) {
-        state.mark_changed( is_sign ? "me-piece-sign-text-entry" : "me-piece-graffiti-text-entry" );
+        state.mark_changed( is_sign ? "me-piece-sign-text-input" : "me-piece-graffiti-text-input" );
     }
     if( use_snippet ) {
         ImGui::EndDisabled();
