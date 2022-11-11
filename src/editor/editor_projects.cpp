@@ -42,6 +42,11 @@ void show_projects_window( me_projects_state &state )
         state.ret = projects_ui_retval();
         state.ret->exit = true;
     }
+    if( ImGui::Button( "Exit To Desktop", btn_size ) ) {
+        state.ret = projects_ui_retval();
+        state.ret->exit = true;
+        state.ret->exit_to_desktop = true;
+    }
 
     if( state.open_file_dialog ) {
         state.open_file_dialog = false;

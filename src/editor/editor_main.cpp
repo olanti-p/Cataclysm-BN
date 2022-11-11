@@ -42,6 +42,7 @@ enum class EditorTool : int {
 
 struct editor_state {
     bool do_loop = true;
+    bool exit_to_desktop = false;
     bool show_demo_wnd = false;
     bool show_asset_lib = true;
     bool show_cata_ui = true;
@@ -670,6 +671,7 @@ void advanced_editor_run()
                 bool legacy_editor = false;
                 if( retval.exit ) {
                     state.do_loop = false;
+                    state.exit_to_desktop = retval.exit_to_desktop;
                 } else if( retval.make_new ) {
                     state.mapgenedit_state = me_state();
                 } else if( retval.load_existing ) {
@@ -693,6 +695,10 @@ void advanced_editor_run()
             } else if( state.mapgenedit_state && !state.mapgenedit_state->do_loop ) {
                 state.mapgenedit_state.reset();
             }
+        }
+
+        if( state.exit_to_desktop ) {
+            std::exit( 0 );
         }
     }
 
