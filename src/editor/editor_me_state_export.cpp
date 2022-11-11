@@ -38,6 +38,11 @@ void emit_object( JsonOut &jo, F func );
 template<typename F>
 void emit_object( JsonOut &jo, const std::string &key, F func );
 
+template<typename T>
+void emit_single_or_array( JsonOut &jo, const std::vector<T> &vals );
+template<typename T>
+void emit_single_or_array( JsonOut &jo, const std::string &key, const std::vector<T> &vals );
+
 /**
  * ============= EMIT DEFINITIONS =============
  */
@@ -127,6 +132,27 @@ void emit_object( JsonOut &jo, const std::string &key, F func )
 {
     emit_key( jo, key );
     emit_object( jo, func );
+}
+
+template<typename T>
+void emit_single_or_array( JsonOut &jo, const std::vector<T> &vals )
+{
+    if( vals.size() == 1 ) {
+        emit_val( jo, vals[0] );
+    } else {
+        emit_array( jo, [&]() {
+            for( const T &itm : vals ) {
+                emit_val( jo, itm );
+            }
+        } );
+    }
+}
+
+template<typename T>
+void emit_single_or_array( JsonOut &jo, const std::string &key, const std::vector<T> &vals )
+{
+    emit_key( jo, key );
+    emit_single_or_array( jo, vals );
 }
 
 } // namespace editor_export
@@ -470,17 +496,12 @@ void emit_file_contents( JsonOut &jo, const editor::me_file &file )
 
                 std::string palette_cat = get_palette_category( pt );
 
-                std::unordered_map<map_key, const editor::me_piece *> matching_pieces;
+                std::unordered_map<map_key, std::vector<const editor::me_piece *>> matching_pieces;
 
                 for( const editor::me_palette_entry &it : file.base.inline_palette.entries ) {
                     for( const auto &pc : it.mapping.pieces ) {
                         if( pc->get_type() == pt ) {
-                            if( matching_pieces.count( it.key ) ) {
-                                // TODO: hack in or forbid
-                                debugmsg( "Not implemented: export of multiple same piece types per symbol" );
-                                continue;
-                            }
-                            matching_pieces[it.key] = pc.get();
+                            matching_pieces[it.key].push_back( pc.get() );
                         }
                     }
                 }
@@ -498,7 +519,7 @@ void emit_file_contents( JsonOut &jo, const editor::me_file &file )
 
                 emit_object( jo, palette_cat, [&]() {
                     for( const auto &it : matching_pieces ) {
-                        emit( jo, it.first.str, it.second );
+                        emit_single_or_array( jo, it.first.str, it.second );
                     }
                 } );
             }
