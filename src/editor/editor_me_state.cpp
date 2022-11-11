@@ -11,95 +11,11 @@
 
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
-#include "ImGuiFileDialog.h"
 
 #include <unordered_set>
 
 namespace editor
 {
-static void handle_file_saving( me_state &state )
-{
-    if( state.tools_state.ongoing_tool_operation ) {
-        return;
-    }
-
-    if( ImGui::IsKeyDown( ImGuiKey_LeftCtrl ) && ImGui::IsKeyPressed( ImGuiKey_S ) ) {
-        if( ImGui::IsKeyDown( ImGuiKey_LeftShift ) || !state.file_save_path ) {
-            state.open_save_as = true;
-        } else {
-            state.do_save = true;
-        }
-    }
-
-    if( state.open_save_as ) {
-        state.open_save_as = false;
-        ImGuiFileDialog::Instance()->OpenDialog( "SaveToFile",
-                "Save As...", ".json",
-                state.file_save_path ? *state.file_save_path : ".",
-                1, nullptr, ImGuiFileDialogFlags_ConfirmOverwrite );
-    }
-
-    if( ImGuiFileDialog::Instance()->Display( "SaveToFile" ) ) {
-        if( ImGuiFileDialog::Instance()->IsOk() ) {
-            state.file_save_path = ImGuiFileDialog::Instance()->GetFilePathName();
-            state.do_save = true;
-        } else {
-            state.do_exit_after_save = false;
-        }
-        ImGuiFileDialog::Instance()->Close();
-    }
-
-    if( state.do_save ) {
-        state.do_save = false;
-        assert( state.file_save_path );
-        write_to_file( *state.file_save_path, [&]( std::ostream & oss ) {
-            oss << serialize( state.file() );
-        } );
-        state.histate.last_saved_revision = state.histate.current_revision.num;
-        if( state.do_exit_after_save ) {
-            state.do_loop = false;
-        }
-    }
-}
-
-static void handle_file_exporting( me_state &state )
-{
-    if( state.tools_state.ongoing_tool_operation ) {
-        return;
-    }
-
-    if( state.open_export_as ) {
-        state.open_export_as = false;
-        ImGuiFileDialog::Instance()->OpenDialog( "ExportToFile",
-                "Export As...", ".json",
-                state.file_export_path ? *state.file_export_path : ".",
-                1, nullptr, ImGuiFileDialogFlags_ConfirmOverwrite );
-    }
-
-    if( ImGuiFileDialog::Instance()->Display( "ExportToFile" ) ) {
-        if( ImGuiFileDialog::Instance()->IsOk() ) {
-            state.file_export_path = ImGuiFileDialog::Instance()->GetFilePathName();
-            state.do_export = true;
-        }
-        ImGuiFileDialog::Instance()->Close();
-    }
-
-    if( g->export_editor_project_on_start ) {
-        state.file_export_path = *g->export_editor_project_on_start;
-        state.do_export = true;
-        g->export_editor_project_on_start.reset();
-    }
-
-    if( state.do_export ) {
-        state.do_export = false;
-        assert( state.file_export_path );
-        write_to_file( *state.file_export_path, [&]( std::ostream & oss ) {
-            std::string s = editor_export::to_string( state.file() );
-            oss << editor_export::format_string( s );
-        } );
-        state.histate.last_exported_revision = state.histate.current_revision.num;
-    }
-}
 
 void show_control_window( me_state &state )
 {
@@ -107,39 +23,7 @@ void show_control_window( me_state &state )
     ImGui::Begin( "Advanced Map Editor", &keep_open );
     ImGui::Text( "Close this window to close the project." );
 
-    if( !keep_open ) {
-        if( state.histate.has_unsaved_changes() ) {
-            ImGui::OpenPopup( "###warn-unsaved-on-close" );
-        } else {
-            state.do_loop = false;
-        }
-    }
-
-    if( ImGui::BeginPopupModal( "###warn-unsaved-on-close", nullptr,
-                                ImGuiWindowFlags_AlwaysAutoResize ) ) {
-        ImGui::TextCentered( "Do you want to save the changes?" );
-        ImGui::Text( " " );
-        ImVec2 btn_sz( ImGui::GetFrameHeight() * 5.0f, ImGui::GetFrameHeight() );
-        if( ImGui::Button( "Don't Save", btn_sz ) ) {
-            ImGui::CloseCurrentPopup();
-            state.do_loop = false;
-        }
-        ImGui::SameLine();
-        if( ImGui::Button( "Cancel", btn_sz ) ) {
-            ImGui::CloseCurrentPopup();
-        }
-        ImGui::SameLine();
-        if( ImGui::Button( "Save", btn_sz ) ) {
-            ImGui::CloseCurrentPopup();
-            state.do_exit_after_save = true;
-            if( state.file_save_path ) {
-                state.do_save = true;
-            } else {
-                state.open_save_as = true;
-            }
-        }
-        ImGui::EndPopup();
-    }
+    save_on_close_widget_block( state, keep_open );
 
     // Controls
     if( ImGui::Button( "Toggle Demo Window" ) ) {
@@ -162,37 +46,7 @@ void show_control_window( me_state &state )
         state.show_toolbar = !state.show_toolbar;
     }
 
-    std::string save_btn = string_format( "%sSave###save-button",
-                                          state.histate.has_unsaved_changes() ? "* " : "" );
-    if( ImGui::Button( save_btn.c_str() ) ) {
-        if( !state.file_save_path ) {
-            state.open_save_as = true;
-        } else {
-            state.do_save = true;
-        }
-    }
-    ImGui::SameLine();
-    if( ImGui::Button( "Save As..." ) ) {
-        state.open_save_as = true;
-    }
-
-    handle_file_saving( state );
-
-    std::string export_btn = string_format( "%sExport###export-button",
-                                            state.histate.has_unexported_changes() ? "* " : "" );
-    if( ImGui::Button( export_btn.c_str() ) ) {
-        if( !state.file_export_path ) {
-            state.open_export_as = true;
-        } else {
-            state.do_export = true;
-        }
-    }
-    ImGui::SameLine();
-    if( ImGui::Button( "Export As..." ) ) {
-        state.open_export_as = true;
-    }
-
-    handle_file_exporting( state );
+    save_and_export_widget_block( state );
 
     // Camera
     {
@@ -307,7 +161,7 @@ me_state::me_state( std::unique_ptr<me_file> &&file,
                     const std::string *loaded_from_path ) : histate( std::move( file ), !!loaded_from_path )
 {
     if( loaded_from_path ) {
-        file_save_path = *loaded_from_path;
+        sestate.file_save_path = *loaded_from_path;
     }
     init_assets( assets );
 }

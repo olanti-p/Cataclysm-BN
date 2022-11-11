@@ -13,6 +13,7 @@
 #include "editor_me_editable_id.h"
 #include "editor_me_file.h"
 #include "editor_me_history.h"
+#include "editor_me_save_export.h"
 #include "editor_me_int_range.h"
 #include "editor_me_map_key_gen.h"
 #include "editor_me_palette.h"
@@ -55,15 +56,7 @@ struct me_state {
 
     cata::optional<uuid_t> view_mappings; // Whether to show mappings for given palette entry
 
-    bool open_save_as = false;
-    bool do_save = false;
-    bool do_exit_after_save = false;
-    cata::optional<std::string> file_save_path;
-
-    bool open_export_as = false;
-    bool do_export = false;
-    cata::optional<std::string> file_export_path;
-
+    me_save_export_state sestate;
     me_history_state histate;
 
     inline me_file &file() {
