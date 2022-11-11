@@ -261,7 +261,15 @@ struct me_file_revision {
     }
 };
 
+enum class CanvasTool {
+    Brush,
+    Bucket,
+    BucketGlobal,
+};
+
 struct me_canvas_tools_state {
+    CanvasTool tool = CanvasTool::Brush;
+    bool ongoing_tool_operation = false;
     bool ongoing_brush_stroke = false;
     bool brush_stroke_changed_data = false;
     uuid_t brush = UUID_INVALID;
@@ -285,6 +293,7 @@ struct me_state {
     bool show_file_info = true; // Whether to show file info
     bool show_base_inline_palette = false; // Whether to show base mapgen's palette
     bool show_file_history = true; // Whether to show undo/redo history
+    bool show_toolbar = true; // Whether to show canvas toolbar
     asset_library assets;
 
     me_canvas_tools_state tools_state;
@@ -353,6 +362,7 @@ void show_file_history( me_state &state, bool &show );
 void show_asset_lib( asset_library &assets, bool &show );
 void show_file_info( me_state &state, me_file &file, bool &show );
 void show_palette( me_state &state, me_palette &p, bool &show );
+void show_toolbar( me_state &state, bool &show );
 
 /**
  * ============= Entry point =============

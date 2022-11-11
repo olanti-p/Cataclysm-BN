@@ -23,8 +23,11 @@ namespace editor
 {
 static void handle_file_saving( me_state &state )
 {
-    if( !state.tools_state.ongoing_brush_stroke && ImGui::IsKeyDown( ImGuiKey_LeftCtrl ) &&
-        ImGui::IsKeyPressed( ImGuiKey_S ) ) {
+    if( state.tools_state.ongoing_tool_operation ) {
+        return;
+    }
+
+    if( ImGui::IsKeyDown( ImGuiKey_LeftCtrl ) && ImGui::IsKeyPressed( ImGuiKey_S ) ) {
         if( ImGui::IsKeyDown( ImGuiKey_LeftShift ) || !state.file_save_path ) {
             state.open_save_as = true;
         } else {
@@ -65,6 +68,10 @@ static void handle_file_saving( me_state &state )
 
 static void handle_file_exporting( me_state &state )
 {
+    if( state.tools_state.ongoing_tool_operation ) {
+        return;
+    }
+
     if( state.open_export_as ) {
         state.open_export_as = false;
         ImGuiFileDialog::Instance()->OpenDialog( "ExportToFile",
@@ -147,6 +154,10 @@ void show_control_window( me_state &state )
     ImGui::SameLine();
     if( ImGui::Button( "Toggle History" ) ) {
         state.show_file_history = !state.show_file_history;
+    }
+    ImGui::SameLine();
+    if( ImGui::Button( "Toggle Toolbar" ) ) {
+        state.show_toolbar = !state.show_toolbar;
     }
 
     std::string save_btn = string_format( "%sSave###save-button",
@@ -635,9 +646,35 @@ void show_palette( me_state &state, me_palette &p, bool &show )
     ImGui::PopID();
 }
 
+void show_toolbar( me_state &state, bool &show )
+{
+    if( !ImGui::Begin( "Toolbar", &show,
+                       ImGuiWindowFlags_AlwaysAutoResize |
+                       ImGuiWindowFlags_NoCollapse |
+                       ImGuiWindowFlags_NoResize
+                     ) ) {
+        ImGui::End();
+        return;
+    }
+
+    me_canvas_tools_state &tools = state.tools_state;
+
+    if( ImGui::RadioButton( "Brush", tools.tool == CanvasTool::Brush ) ) {
+        tools.tool = CanvasTool::Brush;
+    }
+    if( ImGui::RadioButton( "Bucket", tools.tool == CanvasTool::Bucket ) ) {
+        tools.tool = CanvasTool::Bucket;
+    }
+    if( ImGui::RadioButton( "Bucket (global)", tools.tool == CanvasTool::BucketGlobal ) ) {
+        tools.tool = CanvasTool::BucketGlobal;
+    }
+
+    ImGui::End();
+}
+
 static void handle_revision_change( me_state &state )
 {
-    if( state.tools_state.ongoing_brush_stroke ) {
+    if( state.tools_state.ongoing_tool_operation ) {
         return;
     }
     if( ImGui::IsKeyDown( ImGuiKey_LeftCtrl ) && ImGui::IsKeyPressed( ImGuiKey_Z ) ) {
@@ -714,6 +751,9 @@ void show_me_ui( me_state &state )
     }
     if( state.show_file_history ) {
         show_file_history( state, state.show_file_history );
+    }
+    if( state.show_toolbar ) {
+        show_toolbar( state, state.show_toolbar );
     }
 
     handle_revision_change( state );

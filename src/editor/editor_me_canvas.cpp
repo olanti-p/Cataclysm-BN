@@ -2,6 +2,8 @@
 #include "editor_me_color.h"
 #include "editor_widgets.h"
 
+#include <set>
+
 namespace editor
 {
 point_abs_epos me_camera::screen_to_world( const point_abs_screen &p ) const
@@ -123,6 +125,86 @@ void fill_region(
     draw_frame( draw_list, cam, p1, p2, col, true );
 }
 
+/**
+ * Find all tiles that match predicate.
+*/
+static std::vector<point> find_tiles_via_global( me_file &file,
+        std::function<bool( const uuid_t & )> func )
+{
+    std::vector<point> ret;
+
+    for( int x = 0; x < file.mapgensize().x(); x++ ) {
+        for( int y = 0; y < file.mapgensize().y(); y++ ) {
+            point p( x, y );
+            const uuid_t &t = file.base.get_uuid_at( p );
+            if( func( t ) ) {
+                ret.push_back( p );
+            }
+        }
+    }
+
+    return ret;
+}
+
+/**
+ * Find via floodfill all tiles that match predicate.
+*/
+static std::vector<point> find_tiles_via_floodfill( me_file &file, const point &initial_pos,
+        std::function<bool( const uuid_t & )> func )
+{
+    std::vector<point> ret;
+
+    if( !func( file.base.get_uuid_at( initial_pos ) ) ) {
+        return ret;
+    }
+
+    std::set<point> open;
+    std::set<point> closed;
+    open.insert( initial_pos );
+    point mgsize = file.mapgensize().raw();
+
+    while( !open.empty() ) {
+        auto it = open.cbegin();
+        point p = *it;
+        open.erase( it );
+        closed.insert( p );
+        ret.push_back( p );
+        for( const point &d : neighborhood ) {
+            point p2 = p + d;
+            if( p2.x < 0 || p2.y < 0 || p2.x >= mgsize.x || p2.y >= mgsize.y ) {
+                continue;
+            }
+            if( closed.count( p2 ) != 0 ) {
+                continue;
+            }
+            closed.insert( p2 );
+            if( func( file.base.get_uuid_at( p2 ) ) ) {
+                open.insert( p2 );
+            }
+        }
+    }
+
+    return ret;
+}
+
+static void apply_bucket_tool( me_file &file, const uuid_t &brush, const point_abs_etile &tile_pos,
+                               bool global )
+{
+    const uuid_t tgt = file.base.get_uuid_at( tile_pos.raw() );
+    const auto predicate = [ = ]( const uuid_t &t ) {
+        return t == tgt;
+    };
+    std::vector<point> tiles;
+    if( global ) {
+        tiles = find_tiles_via_global( file, predicate );
+    } else {
+        tiles = find_tiles_via_floodfill( file, tile_pos.raw(), predicate );
+    }
+    for( const point &p : tiles ) {
+        file.base.set_uuid_at( p, brush );
+    }
+}
+
 void show_canvas( me_state &state )
 {
     ImVec2 disp_size = ImGui::GetIO().DisplaySize;
@@ -180,19 +262,29 @@ void show_canvas( me_state &state )
             state.camera.scale = clamp( state.camera.scale + delta, MIN_SCALE, MAX_SCALE );
         }
         if( state.file().uses_rows() ) {
-            if( ImGui::IsMouseDown( ImGuiMouseButton_Left ) ) {
+            if( tools.tool == CanvasTool::Brush && ImGui::IsMouseDown( ImGuiMouseButton_Left ) ) {
                 brush_stroke_active = true;
+                tools.ongoing_tool_operation = true;
                 tools.ongoing_brush_stroke = true;
                 point_rel_etile mapgensize = state.file().mapgensize();
                 if( tile_pos.x() >= 0 && tile_pos.y() >= 0 && tile_pos.x() < mapgensize.x() &&
                     tile_pos.y() < mapgensize.y() ) {
                     const uuid_t &uuid = state.file().base.get_uuid_at( tile_pos.raw() );
-                    if( tools.brush != UUID_INVALID && uuid != tools.brush ) {
+                    if( uuid != tools.brush ) {
                         state.file().base.set_uuid_at( tile_pos.raw(), tools.brush );
                         tools.brush_stroke_changed_data = true;
-                    } else if( tools.brush == UUID_INVALID && uuid != UUID_INVALID ) {
-                        state.file().base.set_uuid_at( tile_pos.raw(), tools.brush );
-                        tools.brush_stroke_changed_data = true;
+                    }
+                }
+            }
+            if( ( tools.tool == CanvasTool::Bucket || tools.tool == CanvasTool::BucketGlobal ) &&
+                ImGui::IsMouseClicked( ImGuiMouseButton_Left ) ) {
+                point_rel_etile mapgensize = state.file().mapgensize();
+                if( tile_pos.x() >= 0 && tile_pos.y() >= 0 && tile_pos.x() < mapgensize.x() &&
+                    tile_pos.y() < mapgensize.y() ) {
+                    const uuid_t &uuid = state.file().base.get_uuid_at( tile_pos.raw() );
+                    if( uuid != tools.brush ) {
+                        apply_bucket_tool( state.file(), tools.brush, tile_pos, tools.tool == CanvasTool::BucketGlobal );
+                        state.mark_changed();
                     }
                 }
             }
@@ -210,12 +302,13 @@ void show_canvas( me_state &state )
     }
 
     if( state.file().uses_rows() ) {
-        if( tools.ongoing_brush_stroke && !brush_stroke_active ) {
+        if( tools.tool == CanvasTool::Brush && tools.ongoing_brush_stroke && !brush_stroke_active ) {
             // Brush stroke ended, queue changes as a single operation
             if( tools.brush_stroke_changed_data ) {
                 state.mark_changed();
             }
             tools.ongoing_brush_stroke = false;
+            tools.ongoing_tool_operation = false;
             tools.brush_stroke_changed_data = false;
         }
 
