@@ -8,8 +8,9 @@
 
 #include "editor_assets.h"
 #include "editor_me_color.h"
-#include "editor_me_piece.h"
 #include "editor_me_editable_id.h"
+#include "editor_me_int_range.h"
+#include "editor_me_piece.h"
 #include "editor_sprite_ref.h"
 #include "imgui.h"
 
@@ -72,18 +73,6 @@ struct me_map_key_generator {
                 return opts[0];
             }
         }
-};
-
-struct me_int_range {
-    int min = 0;
-    int max = 0;
-
-    inline operator bool() const {
-        return min != 0 || max != 0;
-    }
-
-    void serialize( JsonOut &jsout ) const;
-    void deserialize( JsonIn &jsin );
 };
 
 struct me_placing {
