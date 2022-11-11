@@ -59,7 +59,9 @@ struct me_piece_field : public me_piece {
 struct me_piece_npc : public me_piece {
     IMPLEMENT_ME_PIECE( me_piece_npc, PieceType::NPC );
 
-    // TODO
+    npc_template_eid npc_class;
+    bool target = false;
+    std::vector<trait_eid> traits;
 };
 
 struct me_piece_faction : public me_piece {

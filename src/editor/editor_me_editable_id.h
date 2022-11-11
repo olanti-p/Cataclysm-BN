@@ -10,6 +10,8 @@ class JsonOut;
 class JsonIn;
 template<typename T> struct enum_traits;
 
+class npc_template;
+
 namespace editor
 {
 
@@ -69,9 +71,11 @@ std::vector<std::string> editable_id<T>::all_opts;
 
 using field_eid = editable_id<field_type>;
 using furn_eid = editable_id<furn_t>;
+using npc_template_eid = editable_id<npc_template>;
 using oter_eid = editable_id<oter_t>;
 using palette_eid = editable_id<mapgen_palette>;
 using ter_eid = editable_id<ter_t>;
+using trait_eid = editable_id<mutation_branch>;
 
 } // namespace editor
 

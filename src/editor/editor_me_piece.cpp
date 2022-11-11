@@ -23,7 +23,13 @@ void me_piece_field::show_ui( me_state &state )
 
 void me_piece_npc::show_ui( me_state &state )
 {
-    ImGui::Text( "TODO" );
+    if( ImGui::InputId( "npc_class", npc_class ) ) {
+        state.mark_changed();
+    }
+    if( ImGui::Checkbox( "target", &target ) ) {
+        state.mark_changed();
+    }
+    ImGui::Text( "TODO: traits" );
 }
 
 void me_piece_faction::show_ui( me_state &state )

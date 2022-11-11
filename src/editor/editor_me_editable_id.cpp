@@ -1,9 +1,14 @@
 #include "editor_me_editable_id.h"
 
+#include "../faction.h"
 #include "../field_type.h"
-#include "../omdata.h"
+#include "../game.h"
 #include "../mapdata.h"
 #include "../mapgen.h"
+#include "../mutation.h"
+#include "../npc.h"
+#include "../omdata.h"
+#include "../text_snippets.h"
 
 namespace editor
 {
@@ -27,6 +32,18 @@ const std::vector<std::string> &editable_id<furn_t>::get_all_opts()
         all_opts.reserve( furn_t::get_all().size() );
         for( const furn_t &it : furn_t::get_all() ) {
             all_opts.push_back( it.id.str() );
+        }
+    }
+    return all_opts;
+}
+
+template<>
+const std::vector<std::string> &editable_id<npc_template>::get_all_opts()
+{
+    if( all_opts.empty() ) {
+        all_opts.reserve( get_all_npc_templates().size() );
+        for( const auto &it : get_all_npc_templates() ) {
+            all_opts.push_back( it.first.str() );
         }
     }
     return all_opts;
@@ -62,6 +79,18 @@ const std::vector<std::string> &editable_id<ter_t>::get_all_opts()
     if( all_opts.empty() ) {
         all_opts.reserve( ter_t::get_all().size() );
         for( const ter_t &it : ter_t::get_all() ) {
+            all_opts.push_back( it.id.str() );
+        }
+    }
+    return all_opts;
+}
+
+template<>
+const std::vector<std::string> &editable_id<mutation_branch>::get_all_opts()
+{
+    if( all_opts.empty() ) {
+        all_opts.reserve( mutation_branch::get_all().size() );
+        for( const mutation_branch &it : mutation_branch::get_all() ) {
             all_opts.push_back( it.id.str() );
         }
     }

@@ -154,12 +154,16 @@ void me_piece_field::deserialize( JsonObject &jsin )
 
 void me_piece_npc::serialize( JsonOut &jsout ) const
 {
-    // TODO
+    jsout.member( "npc_class", npc_class );
+    jsout.member( "target", target );
+    jsout.member( "traits", traits );
 }
 
 void me_piece_npc::deserialize( JsonObject &jsin )
 {
-    // TODO
+    jsin.read( "npc_class", npc_class );
+    jsin.read( "target", target );
+    jsin.read( "traits", traits );
 }
 
 void me_piece_faction::serialize( JsonOut &jsout ) const
