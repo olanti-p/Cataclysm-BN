@@ -89,6 +89,15 @@ void TextCentered( const std::string &text );
 void BeginErrorArea();
 void EndErrorArea();
 
+/**
+ * Helper to display a little (?) mark which shows a tooltip when hovered.
+ *
+ * Copied from ImGui's demo example.
+ */
+void HelpMarker( const char *desc );
+void HelpMarkerInline( const char *desc );
+void HelpPopup( const char *desc );
+
 } // namespace ImGui
 
 #endif // CATA_SRC_EDITOR_EDITOR_WIDGETS_H

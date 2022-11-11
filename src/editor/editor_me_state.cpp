@@ -194,6 +194,16 @@ void show_control_window( me_state &state )
 
     // Camera
     {
+        ImGui::TextDisabled( "(?: Camera contols)" );
+        ImGui::HelpPopup(
+            "Camera controls:\n\n"
+            "- Drag the view with RMB to pan.\n"
+            "- Scroll over the view to zoom.\n"
+            "- Use widgets below to manually control zoom and position.\n"
+            "\nIn canvas mode:\n"
+            "- Press MMB (mouse wheel) on tile to select it.\n"
+            "- Press MMB outside bounds (or on empty tile) to clear selection."
+        );
         ImGui::DragInt( "Zoom", &state.camera.scale, 0.2f, MIN_SCALE, MAX_SCALE );
         ImGui::DragPoint( "Pos", &state.camera.pos, 1.0f, -10000, 10000 );
     }
@@ -216,10 +226,30 @@ void show_file_history( me_state &state, bool &show )
         return;
     }
 
+    ImGui::HelpMarkerInline(
+        "Undo/redo support.\n\n"
+        "In order to enable undo and redo, the editor has to keep track of the old versions (revisions) of the file.  "
+        "This is done entirely in memory, so remembering too much revisions may exhaust available RAM at some point "
+        "and trigger program termination by the OS.  You can manually control how much revisions will be kept alive "
+        "using the widget below.\n"
+        "\nHotkeys:\n"
+        "  Ctrl+Z - Undo (advance to older revision)\n"
+        "  Ctrl+Shift+Z - Redo (advance to newer revision)\n"
+    );
+
     ImGui::SetNextItemWidth( ImGui::GetFrameHeight() * 4.0f );
     ImGui::InputIntClamped( "History limit", state.history_capacity, 10, 10000,
                             ImGuiInputTextFlags_AutoSelectAll );
-    ImGui::Text( "Edit counter: %d", state.edit_counter );
+
+    ImGui::HelpMarkerInline(
+        "The list below keeps track of file revisions.\n\n"
+        "Click on a revision to make it active.  "
+        "Every edit automatically generates a new revision and places it at the top.\n"
+        "\nMarkers use in the list:\n"
+        "  [S] This revision is the one saved in the project file.\n"
+        "  [E] This revision is the one that was used for export.\n"
+    );
+    ImGui::Text( "Edit counter (debug): %d", state.edit_counter );
 
     for( const me_file_revision &entry : state.file_history ) {
         bool is_saved = state.last_saved_revision && *state.last_saved_revision == entry.num;
@@ -327,6 +357,7 @@ static void show_palette_entry_extended( me_state &state, editor::me_palette &p,
         if( ImGui::ImageButton( "del", "me_delete" ) ) {
             del = i;
         }
+        ImGui::HelpPopup( "Delete piece." );
         ImGui::SameLine();
 
         if( i == 0 ) {
@@ -335,6 +366,7 @@ static void show_palette_entry_extended( me_state &state, editor::me_palette &p,
         if( ImGui::ArrowButton( "up", ImGuiDir_Up ) ) {
             move_up = i;
         }
+        ImGui::HelpPopup( "Move piece up." );
         if( i == 0 ) {
             ImGui::EndDisabled();
         }
@@ -346,6 +378,7 @@ static void show_palette_entry_extended( me_state &state, editor::me_palette &p,
         if( ImGui::ArrowButton( "down", ImGuiDir_Down ) ) {
             move_dn = i;
         }
+        ImGui::HelpPopup( "Move piece down." );
         if( i == list.size() - 1 ) {
             ImGui::EndDisabled();
         }
@@ -411,56 +444,100 @@ void show_file_info( me_state &state, me_file &file, bool &show )
         file.base.set_size( file.mapgensize().raw() );
         state.mark_changed();
     }
+    ImGui::HelpPopup(
+        "Overmap terrain mapgen.\n\n"
+        "Must be assigned to one (or more) overmap terrain types.\n"
+        "When game generates local map for an omt, it randomly selects one of the overmap mapgens associated "
+        "with given omt's type and runs it, then applies automatic transformations such as rotation.\n"
+        "Each omt type must have at least 1 omt mapgen assigned to it."
+    );
     ImGui::SameLine();
     if( ImGui::RadioButton( "Update", file.mtype == MapgenType::Update ) ) {
         file.mtype = MapgenType::Update;
         file.base.set_size( file.mapgensize().raw() );
         state.mark_changed();
     }
+    ImGui::HelpPopup(
+        "Update mapgen.\n\n"
+        "Invoked by basecamp upgrade routines.\n"
+        "Can be used for automatic calculation of camp blueprint requirements."
+    );
     ImGui::SameLine();
     if( ImGui::RadioButton( "Nested", file.mtype == MapgenType::Nested ) ) {
         file.mtype = MapgenType::Nested;
         file.base.set_size( file.mapgensize().raw() );
         state.mark_changed();
     }
+    ImGui::HelpPopup(
+        "Nested mapgen.\n\n"
+        "Can be invoked by omt and upgrate mapgens.\n"
+        "This is essentially a 'chunk' of any size up to 24x24 that can be procedurally placed by the calling mapgen."
+    );
     ImGui::Separator();
 
     if( file.mtype == MapgenType::Oter ) {
         if( ImGui::InputId( "om_terrain", file.oter.om_terrain ) ) {
             state.mark_changed();
         }
+        ImGui::HelpPopup( "Overmap terrain type to assign this mapgen to." );
         if( ImGui::InputIntClamped( "weight", file.oter.weight, 0, 10000 ) ) {
             state.mark_changed();
         }
+        ImGui::HelpPopup(
+            "Weight of this mapgen, defaults to 100.\n\n"
+            "The higher this value is, the more frequently this mapgen will be chosen "
+            "to generate the overmap terrain."
+        );
         if( ImGui::InputIntRange( "rotation", file.oter.rotation ) ) {
             state.mark_changed();
         }
         ImGui::Text( "Oter mapgen base:" );
+        ImGui::HelpPopup( "Defines how to fill in the 'empty' tiles in the canvas." );
 
         if( ImGui::RadioButton( "Fill terrain", file.oter.mapgen_base == OterMapgenBase::FillTer ) ) {
             file.oter.mapgen_base = OterMapgenBase::FillTer;
             state.mark_changed();
         }
+        ImGui::HelpPopup(
+            "Fill with terrain type.\n\n"
+            "Useful for maps where most of the terrain is monotonic (e.g. solid rock, or open air)."
+        );
         ImGui::SameLine();
         if( ImGui::RadioButton( "Predecessor mapgen",
                                 file.oter.mapgen_base == OterMapgenBase::PredecessorMapgen ) ) {
             file.oter.mapgen_base = OterMapgenBase::PredecessorMapgen;
             state.mark_changed();
         }
+        ImGui::HelpPopup(
+            "Run this mapgen on top of a map created for some other overmap terrain type.\n\n"
+            "Useful for generating objects that don't occupy the whole 24x24 area, "
+            "or maps that are extremely similar to some other maps."
+            "For example, a small 8x8 glade in the woods may use 'forest' predecessor mapgen "
+            "to generate the greenery, and then place some grass in the center.\n\n"
+            "Keep in mind that predecessor mapgen may place items, monsters and vehices!"
+        );
         ImGui::SameLine();
         if( ImGui::RadioButton( "Rows", file.oter.mapgen_base == OterMapgenBase::Rows ) ) {
             file.oter.mapgen_base = OterMapgenBase::Rows;
             state.mark_changed();
         }
+        ImGui::HelpPopup(
+            "Use a 24x24 canvas to place tiles.\n\n"
+            "The most straightforward method, just define a bunch of palettes ('symbol: data' pairs) "
+            "and then place symbols on the canvas to define positions.\n"
+            "Most useful for complex layouts with little variation, such as buildings."
+        );
 
         if( file.oter.mapgen_base == OterMapgenBase::PredecessorMapgen ) {
             if( ImGui::InputId( "predecessor_mapgen", file.oter.predecessor_mapgen ) ) {
                 state.mark_changed();
             }
+            ImGui::HelpPopup( "Overmap type id to run predecessor mapgen for." );
         } else {
             if( ImGui::InputId( "fill_ter", file.oter.fill_ter ) ) {
                 state.mark_changed();
             }
+            ImGui::HelpPopup( "Terrain type to fill empty spots with." );
         }
         if( file.oter.mapgen_base == OterMapgenBase::Rows ) {
             show_canvas_hint();
@@ -469,22 +546,27 @@ void show_file_info( me_state &state, me_file &file, bool &show )
         if( ImGui::InputText( "update_mapgen_id", &file.update.update_mapgen_id ) ) {
             state.mark_changed();
         }
+        ImGui::HelpPopup( "ID of this update mapgen." );
         if( ImGui::InputId( "fill_ter", file.update.fill_ter ) ) {
             state.mark_changed();
         }
+        ImGui::HelpPopup( "Terrain type to fill empty spots with." );
     } else { // MapgenType::Nested
         if( ImGui::InputText( "nested_mapgen_id", &file.nested.nested_mapgen_id ) ) {
             state.mark_changed();
         }
+        ImGui::HelpPopup( "ID of this nested mapgen." );
         if( ImGui::InputIntRange( "rotation", file.nested.rotation ) ) {
             state.mark_changed();
         }
+        ImGui::HelpPopup( "Allowed rotations." );
         // Only square nested mapgens are possible
         if( ImGui::InputIntClamped( "mapgensize", file.nested.size.x, 1, SEEX * 2 ) ) {
             file.nested.size.y = file.nested.size.x;
             file.base.set_size( file.mapgensize().raw() );
             state.mark_changed();
         }
+        ImGui::HelpPopup( "Size of this nested mapgen." );
         show_canvas_hint();
     }
 
@@ -521,6 +603,7 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
         if( ImGui::ImageButton( "del", "me_delete" ) ) {
             del = i;
         }
+        ImGui::HelpPopup( "Delete entry." );
         ImGui::SameLine();
 
         if( i == 0 ) {
@@ -529,6 +612,7 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
         if( ImGui::ArrowButton( "up", ImGuiDir_Up ) ) {
             move_up = i;
         }
+        ImGui::HelpPopup( "Move entry up." );
         if( i == 0 ) {
             ImGui::EndDisabled();
         }
@@ -540,6 +624,7 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
         if( ImGui::ArrowButton( "down", ImGuiDir_Down ) ) {
             move_dn = i;
         }
+        ImGui::HelpPopup( "Move entry down." );
         if( i == list.size() - 1 ) {
             ImGui::EndDisabled();
         }
@@ -550,10 +635,12 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
             if( ImGui::ImageButton( "unpick", "me_clear_rows_brush" ) ) {
                 brush = UUID_INVALID;
             }
+            ImGui::HelpPopup( "Unselect (turns brush into eraser)." );
         } else {
             if( ImGui::ImageButton( "pick", "me_set_rows_brush" ) ) {
                 brush = list[i].uuid;
             }
+            ImGui::HelpPopup( "Select as active for brush." );
         }
         ImGui::SameLine();
 
@@ -571,6 +658,7 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
         if( ImGui::InputSymbol( "##key", list[i].key.str, default_map_key.str.c_str() ) ) {
             state.mark_changed( "palette-entry-key" );
         }
+        ImGui::HelpPopup( "Symbol to use on canvas." );
         if( is_dupe_symbol ) {
             ImGui::EndErrorArea();
         }
@@ -622,6 +710,7 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
         } );
         state.mark_changed();
     }
+    ImGui::HelpPopup( "Add new entry." );
 }
 
 void show_palette( me_state &state, me_palette &p, bool &show )
@@ -662,12 +751,15 @@ void show_toolbar( me_state &state, bool &show )
     if( ImGui::RadioButton( "Brush", tools.tool == CanvasTool::Brush ) ) {
         tools.tool = CanvasTool::Brush;
     }
+    ImGui::HelpPopup( "Hold LMB to draw with selected tile." );
     if( ImGui::RadioButton( "Bucket", tools.tool == CanvasTool::Bucket ) ) {
         tools.tool = CanvasTool::Bucket;
     }
+    ImGui::HelpPopup( "Click LMB to flood fill with selected tile." );
     if( ImGui::RadioButton( "Bucket (global)", tools.tool == CanvasTool::BucketGlobal ) ) {
         tools.tool = CanvasTool::BucketGlobal;
     }
+    ImGui::HelpPopup( "Click LMB to replace all such tiles with selected tile." );
 
     ImGui::End();
 }

@@ -118,6 +118,7 @@ bool detail::InputId( const char *label,
 
 bool InputIntRange( const char *label, editor::me_int_range &r )
 {
+    ImGui::BeginGroup();
     ImGui::Text( "%s", label );
     ImGui::SameLine();
     ImGui::PushID( label );
@@ -127,6 +128,7 @@ bool InputIntRange( const char *label, editor::me_int_range &r )
     ImGui::SetNextItemWidth( GetFrameHeight() * 1.5f );
     bool ret2 = ImGui::InputInt( "##max", &r.max, -1, -1, ImGuiInputTextFlags_AutoSelectAll );
     ImGui::PopID();
+    ImGui::EndGroup();
     return ret1 || ret2;
 }
 
@@ -359,6 +361,34 @@ void BeginErrorArea()
 void EndErrorArea()
 {
     ImGui::PopStyleColor();
+}
+
+static void help_popup_common( const char *desc, ImGuiHoveredFlags flags )
+{
+    if( ImGui::IsItemHovered( flags ) ) {
+        ImGui::BeginTooltip();
+        ImGui::PushTextWrapPos( ImGui::GetFontSize() * 35.0f );
+        ImGui::TextUnformatted( desc );
+        ImGui::PopTextWrapPos();
+        ImGui::EndTooltip();
+    }
+}
+
+void HelpMarker( const char *desc )
+{
+    ImGui::TextDisabled( "(?)" );
+    help_popup_common( desc, ImGuiHoveredFlags_DelayShort );
+}
+
+void HelpMarkerInline( const char *desc )
+{
+    HelpMarker( desc );
+    SameLine();
+}
+
+void HelpPopup( const char *desc )
+{
+    help_popup_common( desc, ImGuiHoveredFlags_DelayNormal );
 }
 
 } // namespace ImGui

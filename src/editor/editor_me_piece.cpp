@@ -10,12 +10,15 @@ namespace editor
 
 void me_piece_field::show_ui( me_state &state )
 {
+    ImGui::HelpMarkerInline( "Type of the field." );
     if( ImGui::InputId( "ftype", ftype ) ) {
         state.mark_changed();
     }
+    ImGui::HelpMarkerInline( "Intensity of the field." );
     if( ImGui::InputIntClamped( "intensity", intensity, 1, 3 ) ) {
         state.mark_changed();
     }
+    ImGui::HelpMarkerInline( "Age of the field at the moment of spawn.  Affects decay rate." );
     if( ImGui::InputDuration( "age", age ) ) {
         state.mark_changed();
     }
@@ -23,12 +26,15 @@ void me_piece_field::show_ui( me_state &state )
 
 void me_piece_npc::show_ui( me_state &state )
 {
+    ImGui::HelpMarkerInline( "NPC template to use." );
     if( ImGui::InputId( "npc_class", npc_class ) ) {
         state.mark_changed();
     }
+    ImGui::HelpMarkerInline( "Whether this NPC is the target of a quest." );
     if( ImGui::Checkbox( "target", &target ) ) {
         state.mark_changed();
     }
+    ImGui::HelpMarkerInline( "List of additional character traits applied on spawn." );
     ImGui::Text( "TODO: traits" );
 }
 
@@ -45,12 +51,14 @@ static void sign_or_graffiti(
     std::string &text
 )
 {
+    ImGui::HelpMarkerInline( "Signs and graffiti can use either exact text string or a random snippet from category." );
     if( ImGui::Checkbox( "Use snippet from category", &use_snippet ) ) {
         state.mark_changed();
     }
     if( !use_snippet ) {
         ImGui::BeginDisabled();
     }
+    ImGui::HelpMarkerInline( "Snippet category to draw from." );
     if( ImGui::InputId( "snippet", snippet ) ) {
         state.mark_changed();
     }
@@ -59,6 +67,7 @@ static void sign_or_graffiti(
     } else {
         ImGui::BeginDisabled();
     }
+    ImGui::HelpMarkerInline( "Exact text to use." );
     if( ImGui::InputText( "text", &text ) ) {
         state.mark_changed( is_sign ? "me-piece-sign-text-entry" : "me-piece-graffiti-text-entry" );
     }
