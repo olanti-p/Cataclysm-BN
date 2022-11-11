@@ -118,15 +118,22 @@ bool detail::InputId( const char *label,
 
 bool InputIntRange( const char *label, editor::me_int_range &r )
 {
+    bool has_error = r.min > r.max;
     ImGui::BeginGroup();
     ImGui::Text( "%s", label );
     ImGui::SameLine();
     ImGui::PushID( label );
+    if( has_error ) {
+        BeginErrorArea();
+    }
     ImGui::SetNextItemWidth( GetFrameHeight() * 1.5f );
     bool ret1 = ImGui::InputInt( "##min", &r.min, -1, -1, ImGuiInputTextFlags_AutoSelectAll );
     ImGui::SameLine();
     ImGui::SetNextItemWidth( GetFrameHeight() * 1.5f );
     bool ret2 = ImGui::InputInt( "##max", &r.max, -1, -1, ImGuiInputTextFlags_AutoSelectAll );
+    if( has_error ) {
+        EndErrorArea();
+    }
     ImGui::PopID();
     ImGui::EndGroup();
     return ret1 || ret2;
