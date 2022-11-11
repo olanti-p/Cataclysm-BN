@@ -7,10 +7,16 @@
 #include "../mapgen.h"
 
 #include "editor_assets.h"
+#include "editor_me_camera.h"
+#include "editor_me_canvas_tool.h"
 #include "editor_me_color.h"
 #include "editor_me_editable_id.h"
+#include "editor_me_file.h"
 #include "editor_me_int_range.h"
+#include "editor_me_map_key_gen.h"
+#include "editor_me_palette.h"
 #include "editor_me_piece.h"
+#include "editor_me_uuid.h"
 #include "editor_sprite_ref.h"
 #include "imgui.h"
 
@@ -19,214 +25,9 @@ struct ImVec4;
 class JsonOut;
 class JsonIn;
 template<typename T> struct enum_traits;
-struct SpriteRef;
 
 namespace editor
 {
-
-constexpr int MIN_SCALE = 8;
-constexpr int MAX_SCALE = 128;
-constexpr int DEFAULT_SCALE = 32;
-
-struct me_camera {
-    point_abs_epos pos;
-    point_rel_epos drag_delta;
-    int scale = DEFAULT_SCALE;
-
-    point_abs_epos screen_to_world( const point_abs_screen &p ) const;
-    point_abs_screen world_to_screen( const point_abs_epos &p ) const;
-    point_rel_epos screen_to_world( const point_rel_screen &p ) const;
-    point_rel_screen world_to_screen( const point_rel_epos &p ) const;
-};
-
-using uuid_t = uint64_t;
-constexpr uuid_t UUID_INVALID = 0;
-
-struct uuid_generator {
-    private:
-        uuid_t counter = UUID_INVALID;
-
-    public:
-        inline uuid_t operator()() {
-            counter++;
-            return counter;
-        }
-
-        void serialize( JsonOut &jsout ) const;
-        void deserialize( JsonIn &jsin );
-};
-
-struct me_map_key_generator {
-    private:
-        std::vector<map_key> opts;
-
-    public:
-        me_map_key_generator();
-        ~me_map_key_generator() = default;
-
-        void blacklist( const map_key &opt );
-
-        inline map_key operator()() {
-            if( opts.empty() ) {
-                return default_map_key;
-            } else {
-                return opts[0];
-            }
-        }
-};
-
-struct me_mapping {
-    std::vector<std::unique_ptr<me_piece>> pieces;
-
-    me_mapping() = default;
-    me_mapping( const me_mapping &rhs );
-    me_mapping( me_mapping && ) = default;
-    ~me_mapping() = default;
-
-    me_mapping &operator=( const me_mapping &rhs );
-    me_mapping &operator=( me_mapping && ) = default;
-
-    void serialize( JsonOut &jsout ) const;
-    void deserialize( JsonIn &jsin );
-};
-
-struct me_palette_entry {
-    uuid_t uuid;
-    map_key key;
-    ImVec4 color;
-    mutable bool sprite_cache_valid = false;
-    mutable cata::optional<SpriteRef> sprite_cache;
-    ter_eid ter;
-    furn_eid furn;
-    me_mapping mapping;
-
-    void build_sprite_cache() const;
-
-    void serialize( JsonOut &jsout ) const;
-    void deserialize( JsonIn &jsin );
-};
-
-struct me_palette {
-    static me_palette make_inline() {
-        me_palette ret;
-        ret.is_inline = true;
-        return ret;
-    }
-
-    bool is_inline = false;
-    palette_eid id;
-    std::vector<me_palette_entry> entries;
-
-    const map_key &key_from_uuid( const uuid_t &uuid ) const;
-    const ImVec4 &color_from_uuid( const uuid_t &uuid ) const;
-    const SpriteRef *sprite_from_uuid( const uuid_t &uuid ) const;
-
-    me_palette_entry *find_entry( const uuid_t &uuid );
-    const me_palette_entry *find_entry( const uuid_t &uuid ) const;
-
-    void serialize( JsonOut &jsout ) const;
-    void deserialize( JsonIn &jsin );
-};
-
-struct me_mapgen_base {
-    me_mapgen_base() {
-        set_size( point( SEEX * 2, SEEY * 2 ) );
-    }
-    ~me_mapgen_base();
-
-    point size;
-    // TODO: refer to palette entries by their ids
-    std::vector<uuid_t> rows;
-    me_palette inline_palette = me_palette::make_inline();
-
-    void set_size( const point &s );
-    inline void set_uuid_at( const point &pos, const uuid_t &uuid ) {
-        rows[ pos.y * size.x + pos.x ] = uuid;
-    }
-    inline const uuid_t &get_uuid_at( const point &pos ) const {
-        return rows[ pos.y * size.x + pos.x ];
-    }
-    inline const map_key &get_key_at( const point &pos ) const {
-        return inline_palette.key_from_uuid( get_uuid_at( pos ) );
-    }
-    inline const ImVec4 &get_color_at( const point &pos ) const {
-        return inline_palette.color_from_uuid( get_uuid_at( pos ) );
-    }
-    inline const SpriteRef *get_sprite_at( const point &pos ) const {
-        return inline_palette.sprite_from_uuid( get_uuid_at( pos ) );
-    }
-    map_key pick_available_key() const;
-    void remove_usages( const uuid_t &uuid );
-
-    void serialize( JsonOut &jsout ) const;
-    void deserialize( JsonIn &jsin );
-};
-
-enum class OterMapgenBase {
-    FillTer,
-    PredecessorMapgen,
-    Rows,
-    _Num,
-};
-
-struct me_mapgen_oter {
-    oter_eid om_terrain;
-    int weight = 100;
-    OterMapgenBase mapgen_base = OterMapgenBase::FillTer;
-    ter_eid fill_ter = ter_eid::NULL_ID();
-    oter_eid predecessor_mapgen;
-    me_int_range rotation;
-
-    void serialize( JsonOut &jsout ) const;
-    void deserialize( JsonIn &jsin );
-};
-
-struct me_mapgen_update {
-    std::string update_mapgen_id;
-    ter_eid fill_ter = ter_eid::NULL_ID();
-
-    void serialize( JsonOut &jsout ) const;
-    void deserialize( JsonIn &jsin );
-};
-
-struct me_mapgen_nested {
-    std::string nested_mapgen_id;
-    point size = point( 24, 24 );
-    me_int_range rotation;
-
-    void serialize( JsonOut &jsout ) const;
-    void deserialize( JsonIn &jsin );
-};
-
-enum class MapgenType {
-    Oter,
-    Update,
-    Nested,
-    _Num,
-};
-
-struct me_file {
-    uuid_generator uuid_gen;
-
-    MapgenType mtype = MapgenType::Oter;
-    me_mapgen_base base;
-    me_mapgen_oter oter;
-    me_mapgen_update update;
-    me_mapgen_nested nested;
-
-    void serialize( JsonOut &jsout ) const;
-    void deserialize( JsonIn &jsin );
-
-    inline bool uses_rows() const {
-        return mtype == editor::MapgenType::Nested ||
-               (
-                   mtype == editor::MapgenType::Oter &&
-                   oter.mapgen_base == editor::OterMapgenBase::Rows
-               );
-    }
-
-    point_rel_etile mapgensize() const;
-};
 
 struct me_file_revision {
     std::unique_ptr<me_file> file;
@@ -248,20 +49,6 @@ struct me_file_revision {
         ret.num = num;
         return ret;
     }
-};
-
-enum class CanvasTool {
-    Brush,
-    Bucket,
-    BucketGlobal,
-};
-
-struct me_canvas_tools_state {
-    CanvasTool tool = CanvasTool::Brush;
-    bool ongoing_tool_operation = false;
-    bool ongoing_brush_stroke = false;
-    bool brush_stroke_changed_data = false;
-    uuid_t brush = UUID_INVALID;
 };
 
 struct me_state {
@@ -349,9 +136,6 @@ struct me_state {
 void show_control_window( me_state &state );
 void show_file_history( me_state &state, bool &show );
 void show_asset_lib( asset_library &assets, bool &show );
-void show_file_info( me_state &state, me_file &file, bool &show );
-void show_palette( me_state &state, me_palette &p, bool &show );
-void show_toolbar( me_state &state, bool &show );
 
 /**
  * ============= Entry point =============
@@ -359,15 +143,5 @@ void show_toolbar( me_state &state, bool &show );
 void show_me_ui( me_state &state );
 
 } // namespace editor
-
-template<>
-struct enum_traits<editor::OterMapgenBase> {
-    static constexpr editor::OterMapgenBase last = editor::OterMapgenBase::_Num;
-};
-
-template<>
-struct enum_traits<editor::MapgenType> {
-    static constexpr editor::MapgenType last = editor::MapgenType::_Num;
-};
 
 #endif // CATA_SRC_EDITOR_EDITOR_ME_STATE_H
