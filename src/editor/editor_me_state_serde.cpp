@@ -1,3 +1,4 @@
+#include "editor_me_state_serde.h"
 #include "editor_me_state.h"
 
 #include "../json.h"
@@ -622,9 +623,17 @@ void me_mapgen_nested::deserialize( JsonIn &jsin )
     jo.read( "rotation", rotation );
 }
 
+static int project_load_version_val = PROJECT_FORMAT_VERSION;
+
+int project_load_version()
+{
+    return project_load_version_val;
+}
+
 void me_file::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
+    jsout.member( "project_format_version", PROJECT_FORMAT_VERSION );
     jsout.member( "uuid_gen", uuid_gen );
     jsout.member( "mtype", mtype );
     jsout.member( "base", base );
@@ -637,6 +646,8 @@ void me_file::serialize( JsonOut &jsout ) const
 void me_file::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
+
+    jo.read( "project_format_version", project_load_version_val );
 
     jo.read( "uuid_gen", uuid_gen );
     jo.read( "mtype", mtype );
