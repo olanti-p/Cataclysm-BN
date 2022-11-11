@@ -3,14 +3,19 @@
 #include "editor_me_state_export.h"
 #include "editor_me_canvas.h"
 
-#include "imgui.h"
-#include "misc/cpp/imgui_stdlib.h"
-#include "ImGuiFileDialog.h"
-
 #include "../fstream_utils.h"
 #include "../game_constants.h"
 #include "../string_utils.h"
 #include "../text_snippets.h"
+
+#ifdef DebugLog
+#  undef DebugLog
+#endif
+
+#include "imgui.h"
+#include "imgui_internal.h"
+#include "misc/cpp/imgui_stdlib.h"
+#include "ImGuiFileDialog.h"
 
 #include <unordered_set>
 
@@ -203,6 +208,7 @@ void show_file_history( me_state &state, bool &show )
     ImGui::SetNextItemWidth( ImGui::GetFrameHeight() * 4.0f );
     ImGui::InputIntClamped( "History limit", state.history_capacity, 10, 10000,
                             ImGuiInputTextFlags_AutoSelectAll );
+    ImGui::Text( "Edit counter: %d", state.edit_counter );
 
     for( const me_file_revision &entry : state.file_history ) {
         bool is_saved = state.last_saved_revision && *state.last_saved_revision == entry.num;
@@ -654,12 +660,34 @@ static void handle_revision_change( me_state &state )
     } else if( state.file_has_changes ) {
         state.file_has_changes = false;
 
+        const bool is_changing_same = state.last_widget_changed && state.current_widget_changed &&
+                                      *state.last_widget_changed == *state.current_widget_changed;
+
+        state.current_widget_changed_str.clear();
+        state.last_widget_changed = state.current_widget_changed;
+        state.current_widget_changed = cata::nullopt;
+
+        bool is_alt_history = false;
+
         // Erase alternative history
         while( state.file_history[0].num != state.current_revision.num ) {
+            // TODO: optimize this to use dequeue
             state.file_history.erase( state.file_history.cbegin() );
+            is_alt_history = true;
         }
 
-        state.current_revision.num++;
+        const bool is_rev_saved = state.last_saved_revision ? *state.last_saved_revision ==
+                                  state.current_revision.num : false;
+        const bool is_rev_exported = state.last_exported_revision ? *state.last_exported_revision ==
+                                     state.current_revision.num : false;
+        const bool collapse_change = is_changing_same && !is_alt_history && !is_rev_saved &&
+                                     !is_rev_exported && !state.file_history.empty();
+
+        if( collapse_change ) {
+            state.file_history.erase( state.file_history.cbegin() );
+        } else {
+            state.current_revision.num++;
+        }
         state.file_history.insert( state.file_history.cbegin(), state.current_revision.make_copy() );
 
         // Erase old entries
@@ -753,6 +781,26 @@ me_state::me_state( std::unique_ptr<me_file> &&file,
 }
 
 me_state::~me_state() = default;
+
+void me_state::mark_changed( const char *id )
+{
+    std::string new_widget_changed_str = id ? id : "<nullptr>";
+    if( file_has_changes ) {
+        std::cerr << string_format(
+                      "Tried to invoke mark_changed( \"%s\" ), but the file has already been marked as changed with id \"%s\".",
+                      new_widget_changed_str,
+                      current_widget_changed_str
+                  ) << std::endl;
+        std::abort();
+    }
+    current_widget_changed_str = new_widget_changed_str;
+    if( id ) {
+        ImGuiWindow *wnd = ImGui::GetCurrentWindow();
+        current_widget_changed = wnd->GetID( id );
+    }
+    file_has_changes = true;
+    edit_counter++;
+}
 
 bool me_state::has_unsaved_changes() const
 {
