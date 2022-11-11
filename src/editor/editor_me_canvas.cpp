@@ -151,6 +151,7 @@ void show_canvas( me_state &state )
 
     ImGuiIO &io = ImGui::GetIO();
     bool canvas_hovered = ImGui::IsWindowHovered();
+    me_canvas_tools_state &tools = state.tools_state;
     bool brush_stroke_active = false;
     if( canvas_hovered ) {
         point_abs_etile tile_pos = get_mouse_tile_pos( state.camera );
@@ -181,17 +182,17 @@ void show_canvas( me_state &state )
         if( state.file().uses_rows() ) {
             if( ImGui::IsMouseDown( ImGuiMouseButton_Left ) ) {
                 brush_stroke_active = true;
-                state.ongoing_brush_stroke = true;
+                tools.ongoing_brush_stroke = true;
                 point_rel_etile mapgensize = state.file().mapgensize();
                 if( tile_pos.x() >= 0 && tile_pos.y() >= 0 && tile_pos.x() < mapgensize.x() &&
                     tile_pos.y() < mapgensize.y() ) {
                     const uuid_t &uuid = state.file().base.get_uuid_at( tile_pos.raw() );
-                    if( state.rows_brush != UUID_INVALID && uuid != state.rows_brush ) {
-                        state.file().base.set_uuid_at( tile_pos.raw(), state.rows_brush );
-                        state.brush_stroke_changed_data = true;
-                    } else if( state.rows_brush == UUID_INVALID && uuid != UUID_INVALID ) {
-                        state.file().base.set_uuid_at( tile_pos.raw(), state.rows_brush );
-                        state.brush_stroke_changed_data = true;
+                    if( tools.brush != UUID_INVALID && uuid != tools.brush ) {
+                        state.file().base.set_uuid_at( tile_pos.raw(), tools.brush );
+                        tools.brush_stroke_changed_data = true;
+                    } else if( tools.brush == UUID_INVALID && uuid != UUID_INVALID ) {
+                        state.file().base.set_uuid_at( tile_pos.raw(), tools.brush );
+                        tools.brush_stroke_changed_data = true;
                     }
                 }
             }
@@ -200,22 +201,22 @@ void show_canvas( me_state &state )
                 if( tile_pos.x() >= 0 && tile_pos.y() >= 0 && tile_pos.x() < mapgensize.x() &&
                     tile_pos.y() < mapgensize.y() ) {
                     const uuid_t &uuid = state.file().base.get_uuid_at( tile_pos.raw() );
-                    state.rows_brush = uuid;
+                    tools.brush = uuid;
                 } else {
-                    state.rows_brush = UUID_INVALID;
+                    tools.brush = UUID_INVALID;
                 }
             }
         }
     }
 
     if( state.file().uses_rows() ) {
-        if( state.ongoing_brush_stroke && !brush_stroke_active ) {
+        if( tools.ongoing_brush_stroke && !brush_stroke_active ) {
             // Brush stroke ended, queue changes as a single operation
-            if( state.brush_stroke_changed_data ) {
+            if( tools.brush_stroke_changed_data ) {
                 state.mark_changed();
             }
-            state.ongoing_brush_stroke = false;
-            state.brush_stroke_changed_data = false;
+            tools.ongoing_brush_stroke = false;
+            tools.brush_stroke_changed_data = false;
         }
 
         for( int x = 0; x < state.file().mapgensize().x(); x++ ) {

@@ -23,7 +23,7 @@ namespace editor
 {
 static void handle_file_saving( me_state &state )
 {
-    if( !state.ongoing_brush_stroke && ImGui::IsKeyDown( ImGuiKey_LeftCtrl ) &&
+    if( !state.tools_state.ongoing_brush_stroke && ImGui::IsKeyDown( ImGuiKey_LeftCtrl ) &&
         ImGui::IsKeyPressed( ImGuiKey_S ) ) {
         if( ImGui::IsKeyDown( ImGuiKey_LeftShift ) || !state.file_save_path ) {
             state.open_save_as = true;
@@ -534,13 +534,14 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
         }
         ImGui::SameLine();
 
-        if( list[i].uuid == state.rows_brush ) {
+        uuid_t &brush = state.tools_state.brush;
+        if( list[i].uuid == brush ) {
             if( ImGui::ImageButton( "unpick", "me_clear_rows_brush" ) ) {
-                state.rows_brush = UUID_INVALID;
+                brush = UUID_INVALID;
             }
         } else {
             if( ImGui::ImageButton( "pick", "me_set_rows_brush" ) ) {
-                state.rows_brush = list[i].uuid;
+                brush = list[i].uuid;
             }
         }
         ImGui::SameLine();
@@ -583,8 +584,8 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
     if( del ) {
         const uuid_t &uuid = list[ *del ].uuid;
         state.file().base.remove_usages( uuid );
-        if( state.rows_brush == uuid ) {
-            state.rows_brush = UUID_INVALID;
+        if( state.tools_state.brush == uuid ) {
+            state.tools_state.brush = UUID_INVALID;
         }
         list.erase( list.begin() + *del );
         state.mark_changed();
@@ -636,7 +637,7 @@ void show_palette( me_state &state, me_palette &p, bool &show )
 
 static void handle_revision_change( me_state &state )
 {
-    if( state.ongoing_brush_stroke ) {
+    if( state.tools_state.ongoing_brush_stroke ) {
         return;
     }
     if( ImGui::IsKeyDown( ImGuiKey_LeftCtrl ) && ImGui::IsKeyPressed( ImGuiKey_Z ) ) {

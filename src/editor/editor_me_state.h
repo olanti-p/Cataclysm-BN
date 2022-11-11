@@ -261,6 +261,12 @@ struct me_file_revision {
     }
 };
 
+struct me_canvas_tools_state {
+    bool ongoing_brush_stroke = false;
+    bool brush_stroke_changed_data = false;
+    uuid_t brush = UUID_INVALID;
+};
+
 struct me_state {
     me_state();
     explicit me_state( std::unique_ptr<me_file> &&file );
@@ -281,10 +287,9 @@ struct me_state {
     bool show_file_history = true; // Whether to show undo/redo history
     asset_library assets;
 
-    cata::optional<uuid_t> view_placings; // Whether to show placings for given palette entry
+    me_canvas_tools_state tools_state;
 
-    bool ongoing_brush_stroke = false;
-    bool brush_stroke_changed_data = false;
+    cata::optional<uuid_t> view_placings; // Whether to show placings for given palette entry
 
     bool open_save_as = false;
     bool do_save = false;
@@ -338,8 +343,6 @@ struct me_state {
     cata::optional<int> last_saved_revision;
     cata::optional<int> last_exported_revision;
     int edit_counter = 0;
-
-    uuid_t rows_brush = UUID_INVALID;
 };
 
 /**
