@@ -360,13 +360,24 @@ void TextCentered( const std::string &text )
     ImGui::Text( "%s", text.c_str() );
 }
 
+bool IsDisabled()
+{
+    return ImGui::GetCurrentContext()->DisabledStackSize != 0;
+}
+
 void BeginErrorArea()
 {
+    if( IsDisabled() ) {
+        return;
+    }
     ImGui::PushStyleColor( ImGuiCol_FrameBg, ImVec4( 0.8f, 0.3f, 0.3f, 1.0f ) );
 }
 
 void EndErrorArea()
 {
+    if( IsDisabled() ) {
+        return;
+    }
     ImGui::PopStyleColor();
 }
 

@@ -86,6 +86,8 @@ bool InputDuration( const char *label, time_duration &dur, ImGuiInputTextFlags f
 
 void TextCentered( const std::string &text );
 
+bool IsDisabled();
+
 void BeginErrorArea();
 void EndErrorArea();
 
