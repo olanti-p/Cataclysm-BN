@@ -23,7 +23,8 @@
           { "id": "me_move_down", "fg": 2 },
           { "id": "me_add", "fg": 3 },
           { "id": "me_set_rows_brush", "fg": 4 },
-          { "id": "me_clear_rows_brush", "fg": 5 }
+          { "id": "me_clear_rows_brush", "fg": 5 },
+          { "id": "me_duplicate", "fg": 6 }
         ]
       }
     ]
