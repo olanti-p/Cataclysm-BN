@@ -115,7 +115,20 @@ void me_piece_vending_machine::show_ui( me_state &state )
 
 void me_piece_toilet::show_ui( me_state &state )
 {
-    ImGui::Text( "TODO" );
+    ImGui::HelpMarkerInline( "Whether to use default amount (24)." );
+    if( ImGui::Checkbox( "Use default amount", &use_default_amount ) ) {
+        state.mark_changed();
+    }
+    if( use_default_amount ) {
+        ImGui::BeginDisabled();
+    }
+    ImGui::HelpMarkerInline( "Amount of water to spawn, [min, max]." );
+    if( ImGui::InputIntRange( "amount", amount ) ) {
+        state.mark_changed( "me-piece-toilet-amount-input" );
+    }
+    if( use_default_amount ) {
+        ImGui::EndDisabled();
+    }
 }
 
 void me_piece_gaspump::show_ui( me_state &state )

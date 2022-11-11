@@ -6,6 +6,7 @@
 #include "../enum_conversions.h"
 
 #include "editor_me_editable_id.h"
+#include "editor_me_int_range.h"
 
 #include <memory>
 #include <string>
@@ -97,7 +98,8 @@ struct me_piece_vending_machine : public me_piece {
 struct me_piece_toilet : public me_piece {
     IMPLEMENT_ME_PIECE( me_piece_toilet, PieceType::Toilet );
 
-    // TODO
+    bool use_default_amount = true;
+    me_int_range amount;
 };
 
 struct me_piece_gaspump : public me_piece {

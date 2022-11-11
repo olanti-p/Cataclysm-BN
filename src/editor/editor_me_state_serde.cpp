@@ -220,12 +220,14 @@ void me_piece_vending_machine::deserialize( JsonObject &jsin )
 
 void me_piece_toilet::serialize( JsonOut &jsout ) const
 {
-    // TODO
+    jsout.member( "use_default_amount", use_default_amount );
+    jsout.member( "amount", amount );
 }
 
 void me_piece_toilet::deserialize( JsonObject &jsin )
 {
-    // TODO
+    jsin.read( "use_default_amount", use_default_amount );
+    jsin.read( "amount", amount );
 }
 
 void me_piece_gaspump::serialize( JsonOut &jsout ) const
