@@ -15,14 +15,16 @@ namespace editor_export
 
 void emit_key( JsonOut &jo, const std::string &key );
 
-void emit_val( JsonOut &jo, const int &i );
+void emit_val( JsonOut &jo, int i );
+void emit_val( JsonOut &jo, bool b );
+void emit_val( JsonOut &jo, const char *str );
 void emit_val( JsonOut &jo, const std::string &str );
 template<typename T>
 void emit_val( JsonOut &jo, const editor::editable_id<T> &eid );
 void emit_val( JsonOut &jo, const editor::me_int_range &r );
 
 template<typename T>
-void emit( JsonOut &jo, const std::string &key, const T &value );
+void emit( JsonOut &jo, const std::string &key, T value );
 
 template<typename F>
 void emit_array( JsonOut &jo, F func );
@@ -43,9 +45,19 @@ void emit_key( JsonOut &jo, const std::string &key )
     jo.member( key );
 }
 
-void emit_val( JsonOut &jo, const int &i )
+void emit_val( JsonOut &jo, int i )
 {
     jo.write( i );
+}
+
+void emit_val( JsonOut &jo, bool b )
+{
+    jo.write_bool( b );
+}
+
+void emit_val( JsonOut &jo, const char *str )
+{
+    jo.write( str );
 }
 
 void emit_val( JsonOut &jo, const std::string &str )
@@ -72,7 +84,7 @@ void emit_val( JsonOut &jo, const editor::me_int_range &r )
 }
 
 template<typename T>
-void emit( JsonOut &jo, const std::string &key, const T &value )
+void emit( JsonOut &jo, const std::string &key, T value )
 {
     emit_key( jo, key );
     emit_val( jo, value );
