@@ -490,14 +490,14 @@ void me_int_range::deserialize( JsonIn &jsin )
     jo.read( "max", max );
 }
 
-void me_placing::serialize( JsonOut &jsout ) const
+void me_mapping::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
     jsout.member( "pieces", pieces );
     jsout.end_object();
 }
 
-void me_placing::deserialize( JsonIn &jsin )
+void me_mapping::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
@@ -512,7 +512,7 @@ void me_palette_entry::serialize( JsonOut &jsout ) const
     jsout.member( "color", color );
     jsout.member( "ter", ter );
     jsout.member( "furn", furn );
-    jsout.member( "placing", placing );
+    jsout.member( "mapping", mapping );
     jsout.end_object();
 }
 
@@ -525,7 +525,7 @@ void me_palette_entry::deserialize( JsonIn &jsin )
     jo.read( "color", color );
     jo.read( "ter", ter );
     jo.read( "furn", furn );
-    jo.read( "placing", placing );
+    jo.read( "mapping", mapping );
 }
 
 void me_palette::serialize( JsonOut &jsout ) const

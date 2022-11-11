@@ -75,16 +75,16 @@ struct me_map_key_generator {
         }
 };
 
-struct me_placing {
+struct me_mapping {
     std::vector<std::unique_ptr<me_piece>> pieces;
 
-    me_placing() = default;
-    me_placing( const me_placing &rhs );
-    me_placing( me_placing && ) = default;
-    ~me_placing() = default;
+    me_mapping() = default;
+    me_mapping( const me_mapping &rhs );
+    me_mapping( me_mapping && ) = default;
+    ~me_mapping() = default;
 
-    me_placing &operator=( const me_placing &rhs );
-    me_placing &operator=( me_placing && ) = default;
+    me_mapping &operator=( const me_mapping &rhs );
+    me_mapping &operator=( me_mapping && ) = default;
 
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
@@ -98,7 +98,7 @@ struct me_palette_entry {
     mutable cata::optional<SpriteRef> sprite_cache;
     ter_eid ter;
     furn_eid furn;
-    me_placing placing;
+    me_mapping mapping;
 
     void build_sprite_cache() const;
 
@@ -287,7 +287,7 @@ struct me_state {
 
     me_canvas_tools_state tools_state;
 
-    cata::optional<uuid_t> view_placings; // Whether to show placings for given palette entry
+    cata::optional<uuid_t> view_mappings; // Whether to show mappings for given palette entry
 
     bool open_save_as = false;
     bool do_save = false;

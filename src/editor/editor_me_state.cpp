@@ -356,7 +356,7 @@ static void show_palette_entry_extended( me_state &state, editor::me_palette &p,
     cata::optional<size_t> del;
     cata::optional<size_t> move_up;
     cata::optional<size_t> move_dn;
-    auto &list = entry.placing.pieces;
+    auto &list = entry.mapping.pieces;
     for( size_t i = 0; i < list.size(); i++ ) {
         ImGui::PushID( i );
         ImGui::Separator();
@@ -434,7 +434,7 @@ static void show_palette_entry_extended( me_state &state, editor::me_palette &p,
 
     ImGui::End();
     if( !show ) {
-        state.view_placings.reset();
+        state.view_mappings.reset();
     }
 }
 
@@ -581,8 +581,8 @@ void show_file_info( me_state &state, me_file &file, bool &show )
 
     ImGui::End();
 
-    if( state.view_placings ) {
-        editor::me_palette_entry *entry = file.base.inline_palette.find_entry( *state.view_placings );
+    if( state.view_mappings ) {
+        editor::me_palette_entry *entry = file.base.inline_palette.find_entry( *state.view_mappings );
         if( entry ) {
             show_palette_entry_extended( state, file.base.inline_palette, *entry );
         }
@@ -682,8 +682,8 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
             list[i].sprite_cache_valid = false;
         }
         ImGui::SameLine();
-        if( ImGui::ArrowButton( "##placing", ImGuiDir_Right ) ) {
-            state.view_placings = list[i].uuid;
+        if( ImGui::ArrowButton( "##mapping", ImGuiDir_Right ) ) {
+            state.view_mappings = list[i].uuid;
         }
         ImGui::PopID();
     }
@@ -713,7 +713,7 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
             cata::nullopt,
             ter_eid::NULL_ID(),
             furn_eid::NULL_ID(),
-            me_placing()
+            me_mapping()
         } );
         state.mark_changed();
     }
@@ -883,12 +883,12 @@ void me_map_key_generator::blacklist( const map_key &opt )
     std::remove( opts.begin(), opts.end(), opt );
 }
 
-me_placing::me_placing( const me_placing &rhs )
+me_mapping::me_mapping( const me_mapping &rhs )
 {
     *this = rhs;
 }
 
-me_placing &me_placing::operator=( const me_placing &rhs )
+me_mapping &me_mapping::operator=( const me_mapping &rhs )
 {
     pieces.reserve( rhs.pieces.size() );
     for( const auto &piece : rhs.pieces ) {

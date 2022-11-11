@@ -473,7 +473,7 @@ void emit_file_contents( JsonOut &jo, const editor::me_file &file )
                 std::unordered_map<map_key, const editor::me_piece *> matching_pieces;
 
                 for( const editor::me_palette_entry &it : file.base.inline_palette.entries ) {
-                    for( const auto &pc : it.placing.pieces ) {
+                    for( const auto &pc : it.mapping.pieces ) {
                         if( pc->get_type() == pt ) {
                             if( matching_pieces.count( it.key ) ) {
                                 // TODO: hack in or forbid
