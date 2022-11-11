@@ -545,9 +545,10 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
         }
         ImGui::SameLine();
 
-        // TODO: undo/redo support for color selector
-        ImGui::ColorEdit4( "MyColor##3", ( float * )&list[i].color,
-                           ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel );
+        if( ImGui::ColorEdit4( "MyColor##3", ( float * )&list[i].color,
+                               ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel ) ) {
+            state.mark_changed( "palette-entry-color" );
+        }
         ImGui::SameLine();
 
         ImGui::SetNextItemWidth( ImGui::GetFrameHeight() );
@@ -556,7 +557,7 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
             ImGui::BeginErrorArea();
         }
         if( ImGui::InputSymbol( "##key", list[i].key.str, default_map_key.str.c_str() ) ) {
-            state.mark_changed();
+            state.mark_changed( "palette-entry-key" );
         }
         if( is_dupe_symbol ) {
             ImGui::EndErrorArea();
