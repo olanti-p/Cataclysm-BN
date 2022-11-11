@@ -37,14 +37,44 @@ void me_piece_faction::show_ui( me_state &state )
     ImGui::Text( "TODO" );
 }
 
+static void sign_or_graffiti(
+    me_state &state,
+    bool is_sign,
+    bool &use_snippet,
+    snippet_category_eid &snippet,
+    std::string &text
+)
+{
+    if( ImGui::Checkbox( "Use snippet from category", &use_snippet ) ) {
+        state.mark_changed();
+    }
+    if( !use_snippet ) {
+        ImGui::BeginDisabled();
+    }
+    if( ImGui::InputId( "snippet", snippet ) ) {
+        state.mark_changed();
+    }
+    if( !use_snippet ) {
+        ImGui::EndDisabled();
+    } else {
+        ImGui::BeginDisabled();
+    }
+    if( ImGui::InputText( "text", &text ) ) {
+        state.mark_changed( is_sign ? "me-piece-sign-text-entry" : "me-piece-graffiti-text-entry" );
+    }
+    if( use_snippet ) {
+        ImGui::EndDisabled();
+    }
+}
+
 void me_piece_sign::show_ui( me_state &state )
 {
-    ImGui::Text( "TODO" );
+    sign_or_graffiti( state, true, use_snippet, snippet, text );
 }
 
 void me_piece_graffiti::show_ui( me_state &state )
 {
-    ImGui::Text( "TODO" );
+    sign_or_graffiti( state, false, use_snippet, snippet, text );
 }
 
 void me_piece_vending_machine::show_ui( me_state &state )

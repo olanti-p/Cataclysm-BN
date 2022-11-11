@@ -73,13 +73,17 @@ struct me_piece_faction : public me_piece {
 struct me_piece_sign : public me_piece {
     IMPLEMENT_ME_PIECE( me_piece_sign, PieceType::Sign );
 
-    // TODO
+    bool use_snippet = false;
+    snippet_category_eid snippet;
+    std::string text;
 };
 
 struct me_piece_graffiti : public me_piece {
     IMPLEMENT_ME_PIECE( me_piece_graffiti, PieceType::Graffiti );
 
-    // TODO
+    bool use_snippet = false;
+    snippet_category_eid snippet;
+    std::string text;
 };
 
 struct me_piece_vending_machine : public me_piece {

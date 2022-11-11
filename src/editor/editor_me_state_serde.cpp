@@ -178,22 +178,30 @@ void me_piece_faction::deserialize( JsonObject &jsin )
 
 void me_piece_sign::serialize( JsonOut &jsout ) const
 {
-    // TODO
+    jsout.member( "use_snippet", use_snippet );
+    jsout.member( "snippet", snippet );
+    jsout.member( "text", text );
 }
 
 void me_piece_sign::deserialize( JsonObject &jsin )
 {
-    // TODO
+    jsin.read( "use_snippet", use_snippet );
+    jsin.read( "snippet", snippet );
+    jsin.read( "text", text );
 }
 
 void me_piece_graffiti::serialize( JsonOut &jsout ) const
 {
-    // TODO
+    jsout.member( "use_snippet", use_snippet );
+    jsout.member( "snippet", snippet );
+    jsout.member( "text", text );
 }
 
 void me_piece_graffiti::deserialize( JsonObject &jsin )
 {
-    // TODO
+    jsin.read( "use_snippet", use_snippet );
+    jsin.read( "snippet", snippet );
+    jsin.read( "text", text );
 }
 
 void me_piece_vending_machine::serialize( JsonOut &jsout ) const

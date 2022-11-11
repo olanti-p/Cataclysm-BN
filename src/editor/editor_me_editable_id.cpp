@@ -74,6 +74,18 @@ const std::vector<std::string> &editable_id<mapgen_palette>::get_all_opts()
 }
 
 template<>
+const std::vector<std::string> &editable_id<snippet_category_tag>::get_all_opts()
+{
+    if( all_opts.empty() ) {
+        all_opts.reserve( SNIPPET.snippets_by_category.size() );
+        for( const auto &it : SNIPPET.snippets_by_category ) {
+            all_opts.push_back( it.first );
+        }
+    }
+    return all_opts;
+}
+
+template<>
 const std::vector<std::string> &editable_id<ter_t>::get_all_opts()
 {
     if( all_opts.empty() ) {
@@ -98,3 +110,9 @@ const std::vector<std::string> &editable_id<mutation_branch>::get_all_opts()
 }
 
 } // namespace editor
+
+template<>
+bool string_id<editor::snippet_category_tag>::is_valid() const
+{
+    return SNIPPET.snippets_by_category.count( this->str() ) > 0;
+}

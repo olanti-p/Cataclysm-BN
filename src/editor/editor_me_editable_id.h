@@ -69,11 +69,14 @@ struct editable_id {
 template<typename T>
 std::vector<std::string> editable_id<T>::all_opts;
 
+struct snippet_category_tag {};
+
 using field_eid = editable_id<field_type>;
 using furn_eid = editable_id<furn_t>;
 using npc_template_eid = editable_id<npc_template>;
 using oter_eid = editable_id<oter_t>;
 using palette_eid = editable_id<mapgen_palette>;
+using snippet_category_eid = editable_id<snippet_category_tag>;
 using ter_eid = editable_id<ter_t>;
 using trait_eid = editable_id<mutation_branch>;
 
