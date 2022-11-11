@@ -5,6 +5,7 @@
 
 #include "../fstream_utils.h"
 #include "../game_constants.h"
+#include "../game.h"
 #include "../string_utils.h"
 #include "../text_snippets.h"
 
@@ -86,6 +87,12 @@ static void handle_file_exporting( me_state &state )
             state.do_export = true;
         }
         ImGuiFileDialog::Instance()->Close();
+    }
+
+    if( g->export_editor_project_on_start ) {
+        state.file_export_path = *g->export_editor_project_on_start;
+        state.do_export = true;
+        g->export_editor_project_on_start.reset();
     }
 
     if( state.do_export ) {

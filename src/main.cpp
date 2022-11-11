@@ -198,6 +198,7 @@ int main( int argc, char *argv[] )
     std::vector<std::string> opts;
     std::string world; /** if set try to load first save in this world on startup */
     cata::optional<std::string> load_editor_project_on_start;
+    cata::optional<std::string> export_editor_project_on_start;
 
 #if defined(__ANDROID__)
     // Start the standard output logging redirector
@@ -238,7 +239,7 @@ int main( int argc, char *argv[] )
         const char *section_default = nullptr;
         const char *section_map_sharing = "Map sharing";
         const char *section_user_directory = "User directories";
-        const std::array<arg_handler, 15> first_pass_arguments = {{
+        const std::array<arg_handler, 16> first_pass_arguments = {{
                 {
                     "--seed", "<string of letters and or numbers>",
                     "Sets the random number generator's seed value",
@@ -436,6 +437,19 @@ int main( int argc, char *argv[] )
                             return -1;
                         }
                         load_editor_project_on_start = params[0];
+                        return 1;
+                    }
+                },
+                {
+                    "--export", "<path>",
+                    "Export editor project",
+                    section_default,
+                    [&]( int n, const char *params[] ) -> int {
+                        if( n < 1 )
+                        {
+                            return -1;
+                        }
+                        export_editor_project_on_start = params[0];
                         return 1;
                     }
                 },
@@ -703,6 +717,7 @@ int main( int argc, char *argv[] )
     g = std::make_unique<game>();
     g->enter_editor_on_start = enter_editor_on_start;
     g->load_editor_project_on_start = load_editor_project_on_start;
+    g->export_editor_project_on_start = export_editor_project_on_start;
     // First load and initialize everything that does not
     // depend on the mods.
     try {
