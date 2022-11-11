@@ -92,7 +92,25 @@ void me_piece_graffiti::show_ui( me_state &state )
 
 void me_piece_vending_machine::show_ui( me_state &state )
 {
-    ImGui::Text( "TODO" );
+    ImGui::HelpMarkerInline( "Whether this vending machine is reinforced." );
+    if( ImGui::Checkbox( "reinforced", &reinforced ) ) {
+        state.mark_changed();
+    }
+    ImGui::HelpMarkerInline( "Whether to use \"default_vending_machine\" group." );
+    if( ImGui::Checkbox( "Use default item group", &use_default_group ) ) {
+        state.mark_changed();
+    }
+    if( use_default_group ) {
+        ImGui::BeginDisabled();
+    }
+    ImGui::HelpMarkerInline( "Item group id string.\n\nWARNING: no validation is done here." );
+    // TODO: validation
+    if( ImGui::InputText( "item_group", &item_group ) ) {
+        state.mark_changed( "me-piece-vending-machine-item-group-input" );
+    }
+    if( use_default_group ) {
+        ImGui::EndDisabled();
+    }
 }
 
 void me_piece_toilet::show_ui( me_state &state )

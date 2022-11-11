@@ -206,12 +206,16 @@ void me_piece_graffiti::deserialize( JsonObject &jsin )
 
 void me_piece_vending_machine::serialize( JsonOut &jsout ) const
 {
-    // TODO
+    jsout.member( "reinforced", reinforced );
+    jsout.member( "use_default_group", use_default_group );
+    jsout.member( "item_group", item_group );
 }
 
 void me_piece_vending_machine::deserialize( JsonObject &jsin )
 {
-    // TODO
+    jsin.read( "reinforced", reinforced );
+    jsin.read( "use_default_group", use_default_group );
+    jsin.read( "item_group", item_group );
 }
 
 void me_piece_toilet::serialize( JsonOut &jsout ) const

@@ -89,7 +89,9 @@ struct me_piece_graffiti : public me_piece {
 struct me_piece_vending_machine : public me_piece {
     IMPLEMENT_ME_PIECE( me_piece_vending_machine, PieceType::VendingMachine );
 
-    // TODO
+    bool reinforced = false;
+    bool use_default_group = true;
+    std::string item_group;
 };
 
 struct me_piece_toilet : public me_piece {
