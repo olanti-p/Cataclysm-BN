@@ -40,7 +40,11 @@ void me_piece_npc::show_ui( me_state &state )
 
 void me_piece_faction::show_ui( me_state &state )
 {
-    ImGui::Text( "TODO" );
+    ImGui::HelpMarkerInline( "Faction id string.\n\nWARNING: no validation is done here." );
+    // TODO: validation
+    if( ImGui::InputText( "id", &id ) ) {
+        state.mark_changed( "me-piece-faction-id-input" );
+    }
 }
 
 static void sign_or_graffiti(

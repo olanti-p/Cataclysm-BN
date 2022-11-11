@@ -168,12 +168,12 @@ void me_piece_npc::deserialize( JsonObject &jsin )
 
 void me_piece_faction::serialize( JsonOut &jsout ) const
 {
-    // TODO
+    jsout.member( "id", id );
 }
 
 void me_piece_faction::deserialize( JsonObject &jsin )
 {
-    // TODO
+    jsin.read( "id", id );
 }
 
 void me_piece_sign::serialize( JsonOut &jsout ) const

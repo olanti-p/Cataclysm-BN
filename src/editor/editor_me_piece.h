@@ -67,7 +67,7 @@ struct me_piece_npc : public me_piece {
 struct me_piece_faction : public me_piece {
     IMPLEMENT_ME_PIECE( me_piece_faction, PieceType::Faction );
 
-    // TODO
+    std::string id;
 };
 
 struct me_piece_sign : public me_piece {
