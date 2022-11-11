@@ -603,6 +603,7 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
     }
 
     cata::optional<size_t> del;
+    cata::optional<size_t> dupe;
     cata::optional<size_t> move_up;
     cata::optional<size_t> move_dn;
     for( size_t i = 0; i < list.size(); i++ ) {
@@ -611,6 +612,12 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
             del = i;
         }
         ImGui::HelpPopup( "Delete entry." );
+        ImGui::SameLine();
+
+        if( ImGui::ImageButton( "dupe", "me_duplicate" ) ) {
+            dupe = i;
+        }
+        ImGui::HelpPopup( "Duplicate entry." );
         ImGui::SameLine();
 
         if( i == 0 ) {
@@ -702,6 +709,20 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
     }
     if( move_dn ) {
         std::swap( list[*move_dn], list[*move_dn + 1] );
+        state.mark_changed();
+    }
+    if( dupe ) {
+        const me_palette_entry &src = list[ *dupe ];
+        list.insert( std::next( list.cbegin(), *dupe + 1 ), me_palette_entry{
+            state.file().uuid_gen(),
+            state.file().base.pick_available_key(),
+            src.color,
+            false,
+            cata::nullopt,
+            src.ter,
+            src.furn,
+            src.mapping
+        } );
         state.mark_changed();
     }
     if( ImGui::ImageButton( "add", "me_add" ) ) {
