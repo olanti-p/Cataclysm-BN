@@ -12,6 +12,7 @@
 #include "editor_me_color.h"
 #include "editor_me_editable_id.h"
 #include "editor_me_file.h"
+#include "editor_me_history.h"
 #include "editor_me_int_range.h"
 #include "editor_me_map_key_gen.h"
 #include "editor_me_palette.h"
@@ -28,28 +29,6 @@ template<typename T> struct enum_traits;
 
 namespace editor
 {
-
-struct me_file_revision {
-    std::unique_ptr<me_file> file;
-    int num = 0;
-
-    me_file_revision() {
-        file = std::make_unique<me_file>();
-    }
-    me_file_revision( const me_file_revision & ) = delete;
-    me_file_revision( me_file_revision && ) = default;
-    ~me_file_revision() {};
-
-    me_file_revision &operator=( const me_file_revision & ) = delete;
-    me_file_revision &operator=( me_file_revision && ) = default;
-
-    me_file_revision make_copy() const {
-        me_file_revision ret;
-        ret.file = std::make_unique<me_file>( *file );
-        ret.num = num;
-        return ret;
-    }
-};
 
 struct me_state {
     me_state();
@@ -85,8 +64,10 @@ struct me_state {
     bool do_export = false;
     cata::optional<std::string> file_export_path;
 
+    me_history_state histate;
+
     inline me_file &file() {
-        return *current_revision.file;
+        return histate.file();
     }
 
     /**
@@ -96,45 +77,15 @@ struct me_state {
      *           collapsed into a single undo/redo operation, pass id of the operation here.
      *           Respects current ImGui id stack.
      */
-    void mark_changed( const char *id = nullptr );
-
-    inline bool can_undo() const {
-        return current_revision.num != file_history[file_history.size() - 1].num;
+    inline void mark_changed( const char *id = nullptr ) {
+        histate.mark_changed( id );
     }
-
-    inline void queue_undo() {
-        switch_to_revision = current_revision.num - 1;
-    }
-
-    inline bool can_redo() const {
-        return current_revision.num != file_history[0].num;
-    }
-
-    inline void queue_redo() {
-        switch_to_revision = current_revision.num + 1;
-    }
-
-    bool has_unsaved_changes() const;
-    bool has_unexported_changes() const;
-
-    bool file_has_changes = false;
-    cata::optional<ImGuiID> current_widget_changed = 0;
-    std::string current_widget_changed_str;
-    cata::optional<ImGuiID> last_widget_changed = 0;
-    cata::optional<int> switch_to_revision;
-    me_file_revision current_revision;
-    std::vector<me_file_revision> file_history;
-    int history_capacity = 200;
-    cata::optional<int> last_saved_revision;
-    cata::optional<int> last_exported_revision;
-    int edit_counter = 0;
 };
 
 /**
  * =============== Windows ===============
  */
 void show_control_window( me_state &state );
-void show_file_history( me_state &state, bool &show );
 void show_asset_lib( asset_library &assets, bool &show );
 
 /**

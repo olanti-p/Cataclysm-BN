@@ -10,6 +10,7 @@ editor_sources = files(
     'editor_me_canvas.cpp',
     'editor_me_editable_id.cpp',
     'editor_me_file.cpp',
+    'editor_me_history.cpp',
     'editor_me_map_key_gen.cpp',
     'editor_me_palette.cpp',
     'editor_me_piece.cpp',
