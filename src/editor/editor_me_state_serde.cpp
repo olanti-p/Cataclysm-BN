@@ -7,6 +7,7 @@ void serialize( const std::unique_ptr<editor::me_piece> &ptr, JsonOut &jsout )
 {
     jsout.start_object();
     jsout.member( "piece_type", ptr->get_type() );
+    ptr->serialize( jsout );
     jsout.end_object();
 }
 
