@@ -105,7 +105,7 @@ void show_palette_entry_extended( me_state &state, editor::me_palette &p,
 
     ImGui::End();
     if( !show ) {
-        state.view_mappings.reset();
+        state.uistate.view_mappings.reset();
     }
 }
 
@@ -210,7 +210,7 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
         }
         ImGui::SameLine();
         if( ImGui::ArrowButton( "##mapping", ImGuiDir_Right ) ) {
-            state.view_mappings = list[i].uuid;
+            state.uistate.view_mappings = list[i].uuid;
         }
         ImGui::PopID();
     }

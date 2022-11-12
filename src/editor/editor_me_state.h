@@ -18,6 +18,7 @@
 #include "editor_me_palette.h"
 #include "editor_me_piece.h"
 #include "editor_me_save_export.h"
+#include "editor_me_uistate.h"
 #include "editor_me_uuid.h"
 #include "editor_sprite_ref.h"
 #include "imgui.h"
@@ -43,19 +44,9 @@ struct me_state {
     me_state &operator=( me_state && ) = default;
 
     me_camera camera;
-    bool do_loop = true; // Setting this to false will quit the editor
-    bool show_demo_wnd = false; // Whether to show ImGui Demo window
-    bool show_asset_lib = false; // Whether to show asset library
-    bool show_file_info = true; // Whether to show file info
-    bool show_base_inline_palette = false; // Whether to show base mapgen's palette
-    bool show_file_history = true; // Whether to show undo/redo history
-    bool show_toolbar = true; // Whether to show canvas toolbar
+    me_uistate uistate;
     asset_library assets;
-
     me_canvas_tools_state tools_state;
-
-    cata::optional<uuid_t> view_mappings; // Whether to show mappings for given palette entry
-
     me_save_export_state sestate;
     me_history_state histate;
 
@@ -74,11 +65,6 @@ struct me_state {
         histate.mark_changed( id );
     }
 };
-
-/**
- * =============== Windows ===============
- */
-void show_control_window( me_state &state );
 
 /**
  * ============= Entry point =============

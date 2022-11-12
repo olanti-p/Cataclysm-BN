@@ -19,6 +19,7 @@ editor_sources = files(
     'editor_me_state_export.cpp',
     'editor_me_state_serde.cpp',
     'editor_me_state.cpp',
+    'editor_me_uistate.cpp',
     'editor_projects.cpp',
     'editor_widget_combofilter.cpp',
     'editor_widgets.cpp',

@@ -151,12 +151,13 @@ void show_file_info( me_state &state, me_file &file, bool &show )
         show_canvas_hint();
     }
 
-    show_palette( state, file.base.inline_palette, state.show_base_inline_palette );
+    show_palette( state, file.base.inline_palette, state.uistate.show_base_inline_palette );
 
     ImGui::End();
 
-    if( state.view_mappings ) {
-        editor::me_palette_entry *entry = file.base.inline_palette.find_entry( *state.view_mappings );
+    if( state.uistate.view_mappings ) {
+        editor::me_palette_entry *entry = file.base.inline_palette.find_entry(
+                                              *state.uistate.view_mappings );
         if( entry ) {
             show_palette_entry_extended( state, file.base.inline_palette, *entry );
         }

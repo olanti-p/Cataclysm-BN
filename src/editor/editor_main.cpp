@@ -692,7 +692,7 @@ void advanced_editor_run()
                 if( legacy_editor ) {
                     state.projects_state.reset();
                 }
-            } else if( state.mapgenedit_state && !state.mapgenedit_state->do_loop ) {
+            } else if( state.mapgenedit_state && !state.mapgenedit_state->uistate.do_loop ) {
                 state.mapgenedit_state.reset();
             }
         }

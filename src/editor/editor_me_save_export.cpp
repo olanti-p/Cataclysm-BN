@@ -51,7 +51,7 @@ void handle_file_saving( me_state &state )
         } );
         state.histate.last_saved_revision = state.histate.current_revision.num;
         if( sestate.do_exit_after_save ) {
-            state.do_loop = false;
+            state.uistate.do_loop = false;
         }
     }
 }
@@ -103,7 +103,7 @@ void save_on_close_widget_block( me_state &state, bool keep_open )
         if( state.histate.has_unsaved_changes() ) {
             ImGui::OpenPopup( "###warn-unsaved-on-close" );
         } else {
-            state.do_loop = false;
+            state.uistate.do_loop = false;
         }
     }
 
@@ -116,7 +116,7 @@ void save_on_close_widget_block( me_state &state, bool keep_open )
         ImVec2 btn_sz( ImGui::GetFrameHeight() * 5.0f, ImGui::GetFrameHeight() );
         if( ImGui::Button( "Don't Save", btn_sz ) ) {
             ImGui::CloseCurrentPopup();
-            state.do_loop = false;
+            state.uistate.do_loop = false;
         }
         ImGui::SameLine();
         if( ImGui::Button( "Cancel", btn_sz ) ) {
