@@ -1,5 +1,5 @@
 #include "editor_me_state_export.h"
-#include "editor_me_piece.h"
+#include "editor_me_piece_impl.h"
 #include "editor_me_file.h"
 
 #include "../fstream_utils.h"

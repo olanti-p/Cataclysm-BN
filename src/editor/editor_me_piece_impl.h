@@ -1,0 +1,194 @@
+#ifndef CATA_SRC_EDITOR_EDITOR_ME_PIECE_IMPL_H
+#define CATA_SRC_EDITOR_EDITOR_ME_PIECE_IMPL_H
+
+#include "editor_me_piece.h"
+
+#include "../calendar.h"
+#include "editor_me_editable_id.h"
+#include "editor_me_int_range.h"
+
+namespace editor
+{
+
+struct me_piece_field : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_field, PieceType::Field );
+
+    field_eid ftype;
+    int intensity = 1;
+    time_duration age = 0_seconds;
+};
+
+struct me_piece_npc : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_npc, PieceType::NPC );
+
+    npc_template_eid npc_class;
+    bool target = false;
+    std::vector<trait_eid> traits;
+};
+
+struct me_piece_faction : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_faction, PieceType::Faction );
+
+    std::string id;
+};
+
+struct me_piece_sign : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_sign, PieceType::Sign );
+
+    bool use_snippet = false;
+    snippet_category_eid snippet;
+    std::string text;
+};
+
+struct me_piece_graffiti : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_graffiti, PieceType::Graffiti );
+
+    bool use_snippet = false;
+    snippet_category_eid snippet;
+    std::string text;
+};
+
+struct me_piece_vending_machine : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_vending_machine, PieceType::VendingMachine );
+
+    bool reinforced = false;
+    bool use_default_group = true;
+    std::string item_group;
+};
+
+struct me_piece_toilet : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_toilet, PieceType::Toilet );
+
+    bool use_default_amount = true;
+    me_int_range amount;
+};
+
+struct me_piece_gaspump : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_gaspump, PieceType::GasPump );
+
+    // TODO
+};
+
+struct me_piece_liquid : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_liquid, PieceType::Liquid );
+
+    // TODO
+};
+
+struct me_piece_igroup : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_igroup, PieceType::Igroup );
+
+    // TODO
+};
+
+struct me_piece_loot : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_loot, PieceType::Loot );
+
+    // TODO
+};
+
+struct me_piece_mgroup : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_mgroup, PieceType::Mgroup );
+
+    // TODO
+};
+
+struct me_piece_monster : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_monster, PieceType::Monster );
+
+    // TODO
+};
+
+struct me_piece_vehicle : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_vehicle, PieceType::Vehicle );
+
+    // TODO
+};
+
+struct me_piece_item : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_item, PieceType::Item );
+
+    // TODO
+};
+
+struct me_piece_trap : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_trap, PieceType::Trap );
+
+    // TODO
+};
+
+struct me_piece_furniture : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_furniture, PieceType::Furniture );
+
+    // TODO
+};
+
+struct me_piece_terrain : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_terrain, PieceType::Terrain );
+
+    // TODO
+};
+
+struct me_piece_ter_furn_transform : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_ter_furn_transform, PieceType::TerFurnTransform );
+
+    // TODO
+};
+
+struct me_piece_make_rubble : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_make_rubble, PieceType::MakeRubble );
+
+    // TODO
+};
+
+struct me_piece_computer : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_computer, PieceType::Computer );
+
+    // TODO
+};
+
+struct me_piece_sealed_item : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_sealed_item, PieceType::SealedItem );
+
+    // TODO
+};
+
+struct me_piece_translate : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_translate, PieceType::Translate );
+
+    // TODO
+};
+
+struct me_piece_zone : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_zone, PieceType::Zone );
+
+    // TODO
+};
+
+struct me_piece_nested : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_nested, PieceType::Nested );
+
+    // TODO
+};
+
+struct me_piece_alt_trap : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_alt_trap, PieceType::AltTrap );
+
+    // TODO
+};
+
+struct me_piece_alt_furniture : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_alt_furniture, PieceType::AltFurniture );
+
+    // TODO
+};
+
+struct me_piece_alt_terrain : public me_piece {
+    IMPLEMENT_ME_PIECE( me_piece_alt_terrain, PieceType::AltTerrain );
+
+    // TODO
+};
+
+} // namespace editor
+
+#endif // CATA_SRC_EDITOR_EDITOR_ME_PIECE_IMPL_H

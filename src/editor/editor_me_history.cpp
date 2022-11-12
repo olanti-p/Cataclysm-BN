@@ -14,14 +14,16 @@
 
 namespace editor
 {
-me_file_revision::me_file_revision() {
+me_file_revision::me_file_revision()
+{
     file = std::make_unique<me_file>();
 }
 me_file_revision::me_file_revision( me_file_revision && ) = default;
 me_file_revision::~me_file_revision() = default;
 me_file_revision &me_file_revision::operator=( me_file_revision && ) = default;
 
-me_file_revision me_file_revision::make_copy() const {
+me_file_revision me_file_revision::make_copy() const
+{
     me_file_revision ret;
     ret.file = std::make_unique<me_file>( *file );
     ret.num = num;
