@@ -2,6 +2,8 @@
 #include "editor_main.h"
 #include "editor_widgets.h"
 
+#include "editor_me_file.h"
+
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
 

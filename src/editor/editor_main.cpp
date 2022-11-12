@@ -1,6 +1,8 @@
 #include "editor_assets.h"
 #include "editor_main.h"
+#include "editor_me_file.h"
 #include "editor_me_state.h"
+#include "editor_me_uistate.h"
 #include "editor_projects.h"
 #include "editor_widgets.h"
 
@@ -692,7 +694,7 @@ void advanced_editor_run()
                 if( legacy_editor ) {
                     state.projects_state.reset();
                 }
-            } else if( state.mapgenedit_state && !state.mapgenedit_state->uistate.do_loop ) {
+            } else if( state.mapgenedit_state && !state.mapgenedit_state->uistate->do_loop ) {
                 state.mapgenedit_state.reset();
             }
         }

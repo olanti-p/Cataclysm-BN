@@ -1,5 +1,10 @@
 #include "editor_me_palette.h"
 
+#include "editor_me_canvas_tool.h"
+#include "editor_me_color.h"
+#include "editor_me_file.h"
+#include "editor_me_state.h"
+#include "editor_me_uistate.h"
 #include "editor_widgets.h"
 
 #include <unordered_set>
@@ -105,7 +110,7 @@ void show_palette_entry_extended( me_state &state, editor::me_palette &p,
 
     ImGui::End();
     if( !show ) {
-        state.uistate.view_mappings.reset();
+        state.uistate->view_mappings.reset();
     }
 }
 
@@ -164,7 +169,7 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
         }
         ImGui::SameLine();
 
-        uuid_t &brush = state.tools_state.brush;
+        uuid_t &brush = state.tools_state->brush;
         if( list[i].uuid == brush ) {
             if( ImGui::ImageButton( "unpick", "me_clear_rows_brush" ) ) {
                 brush = UUID_INVALID;
@@ -210,15 +215,15 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
         }
         ImGui::SameLine();
         if( ImGui::ArrowButton( "##mapping", ImGuiDir_Right ) ) {
-            state.uistate.view_mappings = list[i].uuid;
+            state.uistate->view_mappings = list[i].uuid;
         }
         ImGui::PopID();
     }
     if( del ) {
         const uuid_t &uuid = list[ *del ].uuid;
         state.file().base.remove_usages( uuid );
-        if( state.tools_state.brush == uuid ) {
-            state.tools_state.brush = UUID_INVALID;
+        if( state.tools_state->brush == uuid ) {
+            state.tools_state->brush = UUID_INVALID;
         }
         list.erase( list.begin() + *del );
         state.mark_changed();

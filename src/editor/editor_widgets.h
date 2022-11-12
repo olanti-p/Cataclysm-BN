@@ -7,9 +7,12 @@
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
 
-#include "editor_me_state.h"
+#include "editor_me_editable_id.h"
+#include "editor_me_int_range.h"
 #include "editor_widget_combofilter.h"
 #include "editor_sprite_ref.h"
+
+#include "../calendar.h"
 
 class nc_color;
 struct jmapgen_int;

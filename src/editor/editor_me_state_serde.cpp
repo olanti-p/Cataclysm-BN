@@ -1,5 +1,9 @@
 #include "editor_me_state_serde.h"
-#include "editor_me_state.h"
+
+#include "editor_me_piece.h"
+#include "editor_me_file.h"
+
+#include "imgui.h"
 
 #include "../json.h"
 #include "../mapgen.h"

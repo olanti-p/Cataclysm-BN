@@ -1,7 +1,8 @@
 #include "editor_me_file.h"
 
+#include "editor_me_map_key_gen.h"
 #include "editor_me_state.h"
-
+#include "editor_me_uistate.h"
 #include "editor_widgets.h"
 
 namespace editor
@@ -151,13 +152,13 @@ void show_file_info( me_state &state, me_file &file, bool &show )
         show_canvas_hint();
     }
 
-    show_palette( state, file.base.inline_palette, state.uistate.show_base_inline_palette );
+    show_palette( state, file.base.inline_palette, state.uistate->show_base_inline_palette );
 
     ImGui::End();
 
-    if( state.uistate.view_mappings ) {
+    if( state.uistate->view_mappings ) {
         editor::me_palette_entry *entry = file.base.inline_palette.find_entry(
-                                              *state.uistate.view_mappings );
+                                              *state.uistate->view_mappings );
         if( entry ) {
             show_palette_entry_extended( state, file.base.inline_palette, *entry );
         }

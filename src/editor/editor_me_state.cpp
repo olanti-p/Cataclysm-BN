@@ -1,18 +1,11 @@
 #include "editor_me_state.h"
-#include "editor_widgets.h"
-#include "editor_me_state_export.h"
-#include "editor_me_canvas.h"
 
-#include "../fstream_utils.h"
-#include "../game_constants.h"
-#include "../game.h"
-#include "../string_utils.h"
-#include "../text_snippets.h"
-
-#include "imgui.h"
-#include "misc/cpp/imgui_stdlib.h"
-
-#include <unordered_set>
+#include "editor_me_assetlib.h"
+#include "editor_me_camera.h"
+#include "editor_me_canvas_tool.h"
+#include "editor_me_history.h"
+#include "editor_me_save_export.h"
+#include "editor_me_uistate.h"
 
 namespace editor
 {
@@ -30,11 +23,24 @@ me_state::me_state( std::unique_ptr<me_file> &&file,
                     const std::string *loaded_from_path ) : histate( std::move( file ), !!loaded_from_path )
 {
     if( loaded_from_path ) {
-        sestate.file_save_path = *loaded_from_path;
+        sestate->file_save_path = *loaded_from_path;
     }
-    init_assets( assets );
+    init_assets( *assets );
 }
 
 me_state::~me_state() = default;
+
+me_state::me_state( me_state && ) = default;
+me_state &me_state::operator=( me_state && ) = default;
+
+me_file &me_state::file()
+{
+    return histate->file();
+}
+
+void me_state::mark_changed( const char *id )
+{
+    histate->mark_changed();
+}
 
 } // namespace editor

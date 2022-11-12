@@ -1,8 +1,14 @@
 #include "editor_me_canvas.h"
+
 #include "editor_me_color.h"
+#include "editor_me_camera.h"
 #include "editor_widgets.h"
+#include "editor_me_file.h"
+#include "editor_me_state.h"
+#include "editor_me_canvas_tool.h"
 
 #include <set>
+#include <functional>
 
 namespace editor
 {
@@ -198,10 +204,11 @@ void show_canvas( me_state &state )
                 );
 
     ImDrawList *draw_list = ImGui::GetWindowDrawList();
+    me_camera &cam = *state.camera;
 
     highlight_region(
         draw_list,
-        state.camera,
+        cam,
         point_abs_etile( 0, 0 ),
         point_abs_etile( -1, -1 ) + state.file().mapgensize(),
         col_mapgensize_bg,
@@ -210,33 +217,33 @@ void show_canvas( me_state &state )
 
     ImGuiIO &io = ImGui::GetIO();
     bool canvas_hovered = ImGui::IsWindowHovered();
-    me_canvas_tools_state &tools = state.tools_state;
+    me_canvas_tools_state &tools = *state.tools_state;
     bool brush_stroke_active = false;
     if( canvas_hovered ) {
-        point_abs_etile tile_pos = get_mouse_tile_pos( state.camera );
-        highlight_tile( draw_list, state.camera, tile_pos, col_cursor );
+        point_abs_etile tile_pos = get_mouse_tile_pos( cam );
+        highlight_tile( draw_list, cam, tile_pos, col_cursor );
 
         if( ImGui::IsMouseDragging( ImGuiMouseButton_Right ) ) {
             point_rel_screen drag_delta( ImGui::GetMouseDragDelta( ImGuiMouseButton_Right ) );
-            state.camera.drag_delta = -state.camera.screen_to_world( drag_delta );
+            cam.drag_delta = -cam.screen_to_world( drag_delta );
         } else {
-            state.camera.pos += state.camera.drag_delta;
-            state.camera.drag_delta = point_rel_epos();
+            cam.pos += cam.drag_delta;
+            cam.drag_delta = point_rel_epos();
         }
         if( std::abs( io.MouseWheel ) > 0.5f ) {
             int zoom_speed;
-            if( state.camera.scale >= 64 ) {
+            if( cam.scale >= 64 ) {
                 zoom_speed = 16;
-            } else if( state.camera.scale >= 32 ) {
+            } else if( cam.scale >= 32 ) {
                 zoom_speed = 8;
-            } else if( state.camera.scale >= 16 ) {
+            } else if( cam.scale >= 16 ) {
                 zoom_speed = 4;
             } else {
                 zoom_speed = 2;
             }
             int delta_wheel = static_cast<int>( std::round( io.MouseWheel ) );
             int delta = delta_wheel * zoom_speed;
-            state.camera.scale = clamp( state.camera.scale + delta, MIN_SCALE, MAX_SCALE );
+            cam.scale = clamp( cam.scale + delta, MIN_SCALE, MAX_SCALE );
         }
         if( state.file().uses_rows() ) {
             if( tools.tool == CanvasTool::Brush && ImGui::IsMouseDown( ImGuiMouseButton_Left ) ) {
@@ -296,9 +303,9 @@ void show_canvas( me_state &state )
                 const SpriteRef *img = state.file().base.get_sprite_at( p.raw() );
                 if( img ) {
                     col.w *= 0.6f;
-                    fill_tile_sprited( draw_list, state.camera, p, *img );
+                    fill_tile_sprited( draw_list, cam, p, *img );
                 }
-                fill_tile( draw_list, state.camera, p, col );
+                fill_tile( draw_list, cam, p, col );
             }
         }
 
@@ -308,7 +315,7 @@ void show_canvas( me_state &state )
                 const map_key &mk = state.file().base.get_key_at( p.raw() );
                 point_abs_epos center = coords::project_combine( p,
                                         point_etile_epos( ETILE_SIZE / 2, ETILE_SIZE / 2 ) );
-                point_abs_screen text_center = state.camera.world_to_screen( center );
+                point_abs_screen text_center = cam.world_to_screen( center );
                 point_rel_screen text_size( ImGui::CalcTextSize( mk.str.c_str() ) );
                 point_abs_screen text_pos = text_center - text_size.raw() / 2;
                 ImGui::SetCursorPos( text_pos.raw() );

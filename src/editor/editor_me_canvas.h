@@ -1,10 +1,15 @@
 #ifndef CATA_SRC_EDITOR_EDITOR_ME_CANVAS_H
 #define CATA_SRC_EDITOR_EDITOR_ME_CANVAS_H
 
-#include "editor_me_state.h"
+#include "../coordinates.h"
+
+#include "imgui.h"
 
 namespace editor
 {
+struct me_state;
+struct me_camera;
+
 /**
  * ============ Mouse helpers ============
  */
