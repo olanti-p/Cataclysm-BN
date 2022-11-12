@@ -6,7 +6,7 @@
 #include "../type_id.h"
 #include "../mapgen.h"
 
-#include "editor_assets.h"
+#include "editor_me_assetlib.h"
 #include "editor_me_camera.h"
 #include "editor_me_canvas_tool.h"
 #include "editor_me_color.h"
@@ -79,7 +79,6 @@ struct me_state {
  * =============== Windows ===============
  */
 void show_control_window( me_state &state );
-void show_asset_lib( asset_library &assets, bool &show );
 
 /**
  * ============= Entry point =============
