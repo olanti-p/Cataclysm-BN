@@ -1,32 +1,31 @@
 #ifndef CATA_SRC_EDITOR_EDITOR_ME_HISTORY_H
 #define CATA_SRC_EDITOR_EDITOR_ME_HISTORY_H
 
-#include "editor_me_file.h"
+#include <memory>
+#include <vector>
+#include <string>
+
+#include "../optional.h"
+#include "imgui.h"
 
 namespace editor
 {
+struct me_file;
 struct me_canvas_tools_state;
 
 struct me_file_revision {
     std::unique_ptr<me_file> file;
     int num = 0;
 
-    me_file_revision() {
-        file = std::make_unique<me_file>();
-    }
+    me_file_revision();
     me_file_revision( const me_file_revision & ) = delete;
-    me_file_revision( me_file_revision && ) = default;
-    ~me_file_revision() {};
+    me_file_revision( me_file_revision && );
+    ~me_file_revision();
 
     me_file_revision &operator=( const me_file_revision & ) = delete;
-    me_file_revision &operator=( me_file_revision && ) = default;
+    me_file_revision &operator=( me_file_revision && );
 
-    me_file_revision make_copy() const {
-        me_file_revision ret;
-        ret.file = std::make_unique<me_file>( *file );
-        ret.num = num;
-        return ret;
-    }
+    me_file_revision make_copy() const;
 };
 
 struct me_history_state {

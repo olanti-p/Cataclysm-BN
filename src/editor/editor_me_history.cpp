@@ -1,7 +1,8 @@
 #include "editor_me_history.h"
 
-#include "editor_widgets.h"
 #include "editor_me_canvas_tool.h"
+#include "editor_me_file.h"
+#include "editor_widgets.h"
 
 // Cata's DebugLog define conflicts with function in ImGui
 #ifdef DebugLog
@@ -13,6 +14,19 @@
 
 namespace editor
 {
+me_file_revision::me_file_revision() {
+    file = std::make_unique<me_file>();
+}
+me_file_revision::me_file_revision( me_file_revision && ) = default;
+me_file_revision::~me_file_revision() = default;
+me_file_revision &me_file_revision::operator=( me_file_revision && ) = default;
+
+me_file_revision me_file_revision::make_copy() const {
+    me_file_revision ret;
+    ret.file = std::make_unique<me_file>( *file );
+    ret.num = num;
+    return ret;
+}
 
 void show_file_history( me_history_state &state, bool &show )
 {

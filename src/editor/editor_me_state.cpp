@@ -3,6 +3,7 @@
 #include "editor_me_assetlib.h"
 #include "editor_me_camera.h"
 #include "editor_me_canvas_tool.h"
+#include "editor_me_file.h"
 #include "editor_me_history.h"
 #include "editor_me_save_export.h"
 #include "editor_me_uistate.h"
