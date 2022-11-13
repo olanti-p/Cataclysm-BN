@@ -1,6 +1,7 @@
 #ifndef CATA_SRC_EDITOR_EDITOR_WIDGETS_H
 #define CATA_SRC_EDITOR_EDITOR_WIDGETS_H
 
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -102,6 +103,89 @@ void EndErrorArea();
 void HelpMarker( const char *desc );
 void HelpMarkerInline( const char *desc );
 void HelpPopup( const char *desc );
+
+class VectorWidget
+{
+    private:
+        std::function<void( size_t )> f_for_each;
+        std::function<void( size_t, size_t )> f_move;
+        std::function<void( size_t )> f_duplicate;
+        std::function<void( size_t )> f_delete;
+        std::function<bool()> f_add;
+
+        bool run_internal( size_t num );
+
+    public:
+        VectorWidget() = default;
+        ~VectorWidget() = default;
+
+        inline VectorWidget &with_for_each( std::function<void( size_t )> &&f ) {
+            f_for_each = f;
+            return *this;
+        }
+
+        inline VectorWidget &with_move( std::function<void( size_t, size_t )> &&f ) {
+            f_move = f;
+            return *this;
+        }
+
+        inline VectorWidget &with_duplicate( std::function<void( size_t )> &&f ) {
+            f_duplicate = f;
+            return *this;
+        }
+
+        inline VectorWidget &with_delete( std::function<void( size_t )> &&f ) {
+            f_delete = f;
+            return *this;
+        }
+
+        inline VectorWidget &with_add( std::function<bool()> &&f ) {
+            f_add = f;
+            return *this;
+        }
+
+        template<typename T, const bool def_dupe = std::is_copy_constructible<T>::value>
+        inline bool run( std::vector<T> &vec ) {
+            if( !f_for_each ) {
+                f_for_each = [&]( size_t idx ) {
+                    ImGui::Text( "Element [%d]", static_cast<int>( idx ) );
+                };
+            }
+            if( !f_move ) {
+                f_move = [&]( size_t src, size_t dst ) {
+                    // TODO: optimize with std::rotate
+                    T elem = std::move( vec[src] );
+                    vec.erase( std::next( vec.cbegin(), src ) );
+                    vec.insert( std::next( vec.cbegin(), dst ), std::move( elem ) );
+                };
+            }
+            if constexpr( def_dupe ) {
+                if( !f_duplicate ) {
+                    f_duplicate = [&]( size_t idx ) {
+                        vec.insert( std::next( vec.cbegin(), idx + 1 ), vec[idx] );
+                    };
+                }
+            }
+            if( !f_delete ) {
+                f_delete = [&]( size_t idx ) {
+                    vec.erase( std::next( vec.cbegin(), idx ) );
+                };
+            }
+            if( !f_add ) {
+                f_add = [&]() -> bool {
+                    bool ret = false;
+                    if( ImGui::ImageButton( "add", "me_add" ) ) {
+                        vec.emplace_back();
+                        ret = true;
+                    }
+                    ImGui::HelpPopup( "Add new entry." );
+                    return ret;
+                };
+            }
+
+            return run_internal( vec.size() );
+        }
+};
 
 } // namespace ImGui
 

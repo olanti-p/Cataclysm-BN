@@ -409,4 +409,97 @@ void HelpPopup( const char *desc )
     help_popup_common( desc, ImGuiHoveredFlags_DelayNormal );
 }
 
+bool VectorWidget::run_internal( size_t num )
+{
+    cata::optional<size_t> del;
+    cata::optional<size_t> dupe;
+    cata::optional<size_t> move_from;
+    cata::optional<size_t> move_to;
+    for( size_t i = 0; i < num; i++ ) {
+        ImGui::PushID( i );
+        if( f_delete ) {
+            if( ImGui::ImageButton( "del", "me_delete" ) ) {
+                del = i;
+            }
+            ImGui::HelpPopup( "Delete entry." );
+            ImGui::SameLine();
+        }
+
+        if( f_duplicate ) {
+            if( ImGui::ImageButton( "dupe", "me_duplicate" ) ) {
+                dupe = i;
+            }
+            ImGui::HelpPopup( "Duplicate entry." );
+            ImGui::SameLine();
+        }
+
+        if( f_move ) {
+            if( i == 0 ) {
+                ImGui::BeginDisabled();
+            }
+            if( ImGui::ArrowButton( "up", ImGuiDir_Up ) ) {
+                move_from = i;
+                if( ImGui::IsKeyDown( ImGuiKey_ModShift ) ) {
+                    move_to = 0;
+                } else {
+                    move_to = i - 1;
+                }
+            }
+            ImGui::HelpPopup(
+                "Move entry up.\n\n"
+                "Hold Shift to move entry to the top."
+            );
+            if( i == 0 ) {
+                ImGui::EndDisabled();
+            }
+            ImGui::SameLine();
+
+            if( i == num - 1 ) {
+                ImGui::BeginDisabled();
+            }
+            if( ImGui::ArrowButton( "down", ImGuiDir_Down ) ) {
+                move_from = i;
+                if( ImGui::IsKeyDown( ImGuiKey_ModShift ) ) {
+                    move_to = num - 1;
+                } else {
+                    move_to = i + 1;
+                }
+            }
+            ImGui::HelpPopup(
+                "Move entry down.\n\n"
+                "Hold Shift to move entry to the bottom."
+            );
+            if( i == num - 1 ) {
+                ImGui::EndDisabled();
+            }
+            ImGui::SameLine();
+        }
+
+        if( f_for_each ) {
+            ImGui::PushID( "elem-val" );
+            f_for_each( i );
+            ImGui::PopID();
+        }
+
+        ImGui::PopID();
+    }
+    bool ret = false;
+    if( del ) {
+        f_delete( *del );
+        ret = true;
+    }
+    if( move_from ) {
+        f_move( *move_from, *move_to );
+        ret = true;
+    }
+    if( dupe ) {
+        f_duplicate( *dupe );
+        ret = true;
+    }
+    if( f_add && f_add() ) {
+        ret = true;
+    }
+    return ret;
+}
+
 } // namespace ImGui
