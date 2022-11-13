@@ -9,6 +9,7 @@
 #include "../npc.h"
 #include "../omdata.h"
 #include "../text_snippets.h"
+#include "../trap.h"
 
 namespace editor
 {
@@ -103,6 +104,18 @@ const std::vector<std::string> &editable_id<mutation_branch>::get_all_opts()
     if( all_opts.empty() ) {
         all_opts.reserve( mutation_branch::get_all().size() );
         for( const mutation_branch &it : mutation_branch::get_all() ) {
+            all_opts.push_back( it.id.str() );
+        }
+    }
+    return all_opts;
+}
+
+template<>
+const std::vector<std::string> &editable_id<trap>::get_all_opts()
+{
+    if( all_opts.empty() ) {
+        all_opts.reserve( trap::get_all().size() );
+        for( const trap &it : trap::get_all() ) {
             all_opts.push_back( it.id.str() );
         }
     }

@@ -5,6 +5,7 @@
 #include "../fstream_utils.h"
 #include "../json.h"
 #include "../../tools/format/format.h"
+#include "editor_me_weighted_list.h"
 
 #include <sstream>
 
@@ -25,6 +26,8 @@ void emit_val( JsonOut &jo, const editor::me_piece *piece );
 template<typename T>
 void emit_val( JsonOut &jo, const editor::editable_id<T> &eid );
 void emit_val( JsonOut &jo, const editor::me_int_range &r );
+template<typename T>
+void emit_val( JsonOut &jo, const editor::me_weighted_list<T> &list );
 
 template<typename T>
 void emit( JsonOut &jo, const std::string &key, T value );
@@ -75,9 +78,16 @@ void emit_val( JsonOut &jo, const std::string &str )
 
 void emit_val( JsonOut &jo, const editor::me_piece *piece )
 {
-    emit_object( jo, [&]() {
+    editor::PieceType pt = piece->get_type();
+    if( pt == editor::PieceType::AltFurniture ||
+        pt == editor::PieceType::AltTerrain ||
+        pt == editor::PieceType::AltTrap ) {
         piece->export_func( jo );
-    } );
+    } else {
+        emit_object( jo, [&]() {
+            piece->export_func( jo );
+        } );
+    }
 }
 
 template<typename T>
@@ -94,6 +104,27 @@ void emit_val( JsonOut &jo, const editor::me_int_range &r )
         emit_array( jo, [&]() {
             emit_val( jo, r.min );
             emit_val( jo, r.max );
+        } );
+    }
+}
+
+template<typename T>
+void emit_val( JsonOut &jo, const editor::me_weighted_list<T> &list )
+{
+    if( list.entries.size() == 1 ) {
+        emit_val( jo, list.entries[0].val );
+    } else {
+        emit_array( jo, [&]() {
+            for( const auto &e : list.entries ) {
+                if( e.weight == 1 ) {
+                    emit_val( jo, e.val );
+                } else {
+                    emit_array( jo, [&]() {
+                        emit_val( jo, e.val );
+                        emit_val( jo, e.weight );
+                    } );
+                }
+            }
         } );
     }
 }
@@ -325,17 +356,17 @@ void me_piece_nested::export_func( JsonOut &jo ) const
 
 void me_piece_alt_trap::export_func( JsonOut &jo ) const
 {
-    // TODO
+    ee::emit_val( jo, list );
 }
 
 void me_piece_alt_furniture::export_func( JsonOut &jo ) const
 {
-    // TODO
+    ee::emit_val( jo, list );
 }
 
 void me_piece_alt_terrain::export_func( JsonOut &jo ) const
 {
-    // TODO
+    ee::emit_val( jo, list );
 }
 
 } // namespace editor
@@ -372,9 +403,9 @@ std::string get_palette_category( editor::PieceType data )
         case editor::PieceType::Translate: return "translate";
         case editor::PieceType::Zone: return "zones";
         case editor::PieceType::Nested: return "nested";
-        case editor::PieceType::AltTrap: return "";         // TODO: CONFLICT
-        case editor::PieceType::AltFurniture: return "";    // TODO: CONFLICT
-        case editor::PieceType::AltTerrain: return "";      // TODO: CONFLICT
+        case editor::PieceType::AltTrap: return "alt_trap";         // TODO: CONFLICT
+        case editor::PieceType::AltFurniture: return "alt_furn";    // TODO: CONFLICT
+        case editor::PieceType::AltTerrain: return "alt_ter";      // TODO: CONFLICT
         // *INDENT-ON*
         default:
             break;
@@ -512,17 +543,33 @@ void emit_file_contents( JsonOut &jo, const editor::me_file &file )
                     continue;
                 }
 
-                if( palette_cat.empty() ) {
-                    // TODO: export questionable pieces
-                    debugmsg( "Not implemented: export of piece type %s", io::enum_to_string( pt ) );
-                    continue;
-                }
-
-                emit_object( jo, palette_cat, [&]() {
-                    for( const auto &it : matching_pieces ) {
-                        emit_single_or_array( jo, it.first.str, it.second );
+                if( pt == editor::PieceType::AltTerrain ||
+                    pt == editor::PieceType::AltFurniture ||
+                    pt == editor::PieceType::AltTrap
+                  ) {
+                    emit_object( jo, palette_cat, [&]() {
+                        for( const auto &it : matching_pieces ) {
+                            if( it.second.size() > 1 ) {
+                                // TODO: forbid creating dupe alt_* pieces in UI
+                                debugmsg( "Not implemented: restriction on single piece of type %s", io::enum_to_string( pt ) );
+                                continue;
+                            }
+                            emit( jo, it.first.str, it.second[0] );
+                        }
+                    } );
+                } else {
+                    if( palette_cat.empty() ) {
+                        // TODO: export questionable pieces
+                        debugmsg( "Not implemented: export of piece type %s", io::enum_to_string( pt ) );
+                        continue;
                     }
-                } );
+
+                    emit_object( jo, palette_cat, [&]() {
+                        for( const auto &it : matching_pieces ) {
+                            emit_single_or_array( jo, it.first.str, it.second );
+                        }
+                    } );
+                }
             }
         }
     } );

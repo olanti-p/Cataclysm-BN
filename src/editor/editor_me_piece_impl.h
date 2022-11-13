@@ -6,6 +6,7 @@
 #include "../calendar.h"
 #include "editor_me_editable_id.h"
 #include "editor_me_int_range.h"
+#include "editor_me_weighted_list.h"
 
 namespace editor
 {
@@ -174,19 +175,19 @@ struct me_piece_nested : public me_piece {
 struct me_piece_alt_trap : public me_piece {
     IMPLEMENT_ME_PIECE( me_piece_alt_trap, PieceType::AltTrap );
 
-    // TODO
+    me_weighted_list<trap_eid> list;
 };
 
 struct me_piece_alt_furniture : public me_piece {
     IMPLEMENT_ME_PIECE( me_piece_alt_furniture, PieceType::AltFurniture );
 
-    // TODO
+    me_weighted_list<furn_eid> list;
 };
 
 struct me_piece_alt_terrain : public me_piece {
     IMPLEMENT_ME_PIECE( me_piece_alt_terrain, PieceType::AltTerrain );
 
-    // TODO
+    me_weighted_list<ter_eid> list;
 };
 
 } // namespace editor

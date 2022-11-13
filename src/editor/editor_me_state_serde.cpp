@@ -2,6 +2,7 @@
 
 #include "editor_me_piece_impl.h"
 #include "editor_me_file.h"
+#include "editor_me_weighted_list_serde.h"
 
 #include "imgui.h"
 
@@ -417,32 +418,32 @@ void me_piece_nested::deserialize( JsonObject &jsin )
 
 void me_piece_alt_trap::serialize( JsonOut &jsout ) const
 {
-    // TODO
+    jsout.member( "list", list );
 }
 
 void me_piece_alt_trap::deserialize( JsonObject &jsin )
 {
-    // TODO
+    jsin.read( "list", list );
 }
 
 void me_piece_alt_furniture::serialize( JsonOut &jsout ) const
 {
-    // TODO
+    jsout.member( "list", list );
 }
 
 void me_piece_alt_furniture::deserialize( JsonObject &jsin )
 {
-    // TODO
+    jsin.read( "list", list );
 }
 
 void me_piece_alt_terrain::serialize( JsonOut &jsout ) const
 {
-    // TODO
+    jsout.member( "list", list );
 }
 
 void me_piece_alt_terrain::deserialize( JsonObject &jsin )
 {
-    // TODO
+    jsin.read( "list", list );
 }
 
 

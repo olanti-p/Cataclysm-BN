@@ -231,19 +231,56 @@ void me_piece_nested::show_ui( me_state &state )
     ImGui::Text( "TODO" );
 }
 
+template<typename T>
+void show_piece_alt( me_state &state, editor::me_weighted_list<T> &list )
+{
+    ImGui::Indent( style::list_indent );
+
+    const auto show_val = [&]( size_t i ) {
+        ImGui::SetNextItemWidth( ImGui::GetFrameHeight() * 5.0f );
+        bool bad_weight = list.entries[i].weight <= 0;
+        if( bad_weight ) {
+            ImGui::BeginErrorArea();
+        }
+        if( ImGui::InputInt( "##weight", &list.entries[i].weight ) ) {
+            state.mark_changed( "entry-weight" );
+        }
+        if( bad_weight ) {
+            ImGui::EndErrorArea();
+        }
+        ImGui::HelpPopup( "Weight" );
+        ImGui::SameLine();
+
+        ImGui::SetNextItemWidth( ImGui::GetFrameHeight() * 10.0f );
+        if( ImGui::InputId( "##ter", list.entries[i].val ) ) {
+            state.mark_changed();
+        }
+        ImGui::HelpPopup( "Value" );
+    };
+
+    if(
+        ImGui::VectorWidget()
+        .with_for_each( show_val )
+        .run( list.entries ) ) {
+        state.mark_changed();
+    }
+
+    ImGui::Indent( -style::list_indent );
+}
+
 void me_piece_alt_trap::show_ui( me_state &state )
 {
-    ImGui::Text( "TODO" );
+    show_piece_alt( state, list );
 }
 
 void me_piece_alt_furniture::show_ui( me_state &state )
 {
-    ImGui::Text( "TODO" );
+    show_piece_alt( state, list );
 }
 
 void me_piece_alt_terrain::show_ui( me_state &state )
 {
-    ImGui::Text( "TODO" );
+    show_piece_alt( state, list );
 }
 
 } // namespace editor

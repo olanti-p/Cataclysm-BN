@@ -79,6 +79,7 @@ using palette_eid = editable_id<mapgen_palette>;
 using snippet_category_eid = editable_id<snippet_category_tag>;
 using ter_eid = editable_id<ter_t>;
 using trait_eid = editable_id<mutation_branch>;
+using trap_eid = editable_id<trap>;
 
 } // namespace editor
 
