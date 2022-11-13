@@ -1,5 +1,6 @@
 #include "editor_me_piece_impl.h"
 
+#include "editor_me_style.h"
 #include "editor_me_state.h"
 #include "editor_widgets.h"
 
@@ -33,7 +34,18 @@ void me_piece_npc::show_ui( me_state &state )
         state.mark_changed();
     }
     ImGui::HelpMarkerInline( "List of additional character traits applied on spawn." );
-    ImGui::Text( "TODO: traits" );
+    ImGui::Text( "traits:" );
+    ImGui::Indent( style::list_indent );
+    bool changed = ImGui::VectorWidget()
+    .with_for_each( [&]( size_t idx ) {
+        if( ImGui::InputId( "##trait-input", traits[idx] ) ) {
+            state.mark_changed();
+        }
+    } ).run( traits );
+    if( changed ) {
+        state.mark_changed();
+    }
+    ImGui::Indent( -style::list_indent );
 }
 
 void me_piece_faction::show_ui( me_state &state )
