@@ -41,7 +41,7 @@ me_file &me_state::file()
 
 void me_state::mark_changed( const char *id )
 {
-    histate->mark_changed();
+    histate->mark_changed( id );
 }
 
 } // namespace editor
