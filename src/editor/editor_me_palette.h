@@ -97,9 +97,14 @@ struct me_palette {
 /**
  * =============== Windows ===============
  */
-void show_palette_entry_extended( me_state &state, editor::me_palette &p,
-                                  editor::me_palette_entry &entry );
-void show_palette( me_state &state, me_palette &p, me_file &file, bool &show );
+map_key pick_available_key( const me_palette &pal );
+
+/**
+ * =============== Windows ===============
+ */
+void show_mapping( me_state &state, editor::me_palette &p, editor::me_palette_entry &entry,
+                   bool &show );
+void show_palette( me_state &state, me_palette &p, bool &show );
 
 } // namespace editor
 

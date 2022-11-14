@@ -34,7 +34,6 @@ struct me_mapgen_base {
     inline const uuid_t &get_uuid_at( const point &pos ) const {
         return rows[ pos.y * size.x + pos.x ];
     }
-    map_key pick_available_key( me_project &project ) const;
     void remove_usages( const uuid_t &uuid );
 
     void serialize( JsonOut &jsout ) const;

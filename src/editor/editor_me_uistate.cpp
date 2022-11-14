@@ -5,6 +5,7 @@
 #include "editor_me_canvas_tool.h"
 #include "editor_me_canvas.h"
 #include "editor_me_file.h"
+#include "editor_me_palette.h"
 #include "editor_me_project.h"
 #include "editor_me_history.h"
 #include "editor_me_save_export.h"
@@ -14,6 +15,31 @@
 
 namespace editor
 {
+
+void me_uistate::toggle_show_palette( uuid_t uuid )
+{
+    for( auto &it : open_palettes ) {
+        if( it.uuid == uuid ) {
+            it.open = false;
+            return;
+        }
+    }
+    open_palettes.emplace_back();
+    open_palettes.back().uuid = uuid;
+}
+
+void me_uistate::toggle_show_mapping( uuid_t palette, uuid_t uuid )
+{
+    for( auto &it : open_mappings ) {
+        if( it.uuid == uuid && it.palette == palette ) {
+            it.open = false;
+            return;
+        }
+    }
+    open_mappings.emplace_back();
+    open_mappings.back().uuid = uuid;
+    open_mappings.back().palette = palette;
+}
 
 void show_ui_control_window( me_state &state )
 {
@@ -108,6 +134,53 @@ void run_ui_for_state( me_state &state )
     }
     if( uistate.show_toolbar ) {
         show_toolbar( *state.tools_state, uistate.show_toolbar );
+    }
+
+    for( auto &it : uistate.open_palettes ) {
+        if( !it.open ) {
+            continue;
+        }
+        me_palette *pal = proj.get_palette_by_uuid( it.uuid );
+        if( pal ) {
+            show_palette( state, *pal, it.open );
+        } else {
+            it.open = false;
+        }
+    }
+    for( auto &it : uistate.open_mappings ) {
+        if( !it.open ) {
+            continue;
+        }
+        me_palette *pal = proj.get_palette_by_uuid( it.palette );
+        if( pal ) {
+            me_palette_entry *entry = pal->find_entry( it.uuid );
+            if( entry ) {
+                show_mapping( state, *pal, *entry, it.open );
+            } else {
+                it.open = false;
+            }
+        } else {
+            it.open = false;
+        }
+    }
+    for( auto it = uistate.open_palettes.cbegin(); it != uistate.open_palettes.cend(); ) {
+        if( !it->open ) {
+            for( auto &mit : uistate.open_mappings ) {
+                if( mit.palette == it->uuid ) {
+                    mit.open = false;
+                }
+            }
+            it = uistate.open_palettes.erase( it );
+        } else {
+            it++;
+        }
+    }
+    for( auto it = uistate.open_mappings.cbegin(); it != uistate.open_mappings.cend(); ) {
+        if( !it->open ) {
+            it = uistate.open_mappings.erase( it );
+        } else {
+            it++;
+        }
     }
 
     handle_revision_change( *state.histate, *state.tools_state );

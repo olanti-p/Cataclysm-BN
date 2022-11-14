@@ -3,21 +3,36 @@
 #include "editor_me_canvas_tool.h"
 #include "editor_me_color.h"
 #include "editor_me_file.h"
+#include "editor_me_map_key_gen.h"
+#include "editor_me_piece_impl.h"
 #include "editor_me_project.h"
 #include "editor_me_state.h"
 #include "editor_me_uistate.h"
 #include "editor_widgets.h"
-#include "editor_me_piece_impl.h"
 
 #include <unordered_set>
 
 namespace editor
 {
-void show_palette_entry_extended( me_state &state, editor::me_palette &p,
-                                  editor::me_palette_entry &entry )
+map_key pick_available_key( const me_palette &pal )
 {
-    bool show = true;
-    ImGui::Begin( "Extended Info", &show );
+    me_map_key_generator gen;
+    for( const auto &it : pal.entries ) {
+        gen.blacklist( it.key );
+    }
+    return gen();
+}
+
+void show_mapping( me_state &state, editor::me_palette &p, editor::me_palette_entry &entry,
+                   bool &show )
+{
+    std::string wnd_id = string_format( "Mappings##wnd-mappings-%d-%d", p.uuid, entry.uuid );
+    ImGui::SetNextWindowSize( ImVec2( 450.0f, 300.0f ), ImGuiCond_FirstUseEver );
+    ImGui::SetNextWindowPos( ImVec2( 50.0f, 50.0f ), ImGuiCond_FirstUseEver );
+    if( !ImGui::Begin( wnd_id.c_str(), &show ) ) {
+        ImGui::End();
+        return;
+    }
     ImGui::PushID( entry.uuid );
 
     auto &list = entry.mapping.pieces;
@@ -88,14 +103,11 @@ void show_palette_entry_extended( me_state &state, editor::me_palette &p,
 
     ImGui::PopID();
     ImGui::End();
-    if( !show ) {
-        state.uistate->view_mappings.reset();
-    }
 }
 
-static void show_palette_entries( me_state &state, me_file &file,
-                                  std::vector<me_palette_entry> &list )
+static void show_palette_entries( me_state &state, me_palette &palette )
 {
+    std::vector<me_palette_entry> &list = palette.entries;
     std::unordered_set<map_key> checked;
     std::unordered_set<map_key> dupe_symbols;
 
@@ -116,7 +128,7 @@ static void show_palette_entries( me_state &state, me_file &file,
         {
             list.emplace_back( me_palette_entry{
                 proj.uuid_gen(),
-                file.base.pick_available_key( proj ),
+                pick_available_key( palette ),
                 col_default_piece_color,
                 me_mapping(),
                 false,
@@ -131,7 +143,7 @@ static void show_palette_entries( me_state &state, me_file &file,
         const me_palette_entry &src = list[ idx ];
         list.insert( std::next( list.cbegin(), idx + 1 ), me_palette_entry{
             proj.uuid_gen(),
-            file.base.pick_available_key( proj ),
+            pick_available_key( palette ),
             src.color,
             src.mapping,
             false,
@@ -140,7 +152,9 @@ static void show_palette_entries( me_state &state, me_file &file,
     } )
     .with_delete( [&]( size_t idx ) {
         const uuid_t &uuid = list[ idx ].uuid;
-        file.base.remove_usages( uuid );
+        for( me_file &file : proj.files ) {
+            file.base.remove_usages( uuid );
+        }
         if( state.tools_state->brush == uuid ) {
             state.tools_state->brush = UUID_INVALID;
         }
@@ -221,9 +235,9 @@ static void show_palette_entries( me_state &state, me_file &file,
         }
         ImGui::SameLine();
         if( ImGui::ArrowButton( "##mapping", ImGuiDir_Right ) ) {
-            state.uistate->view_mappings = list[idx].uuid;
+            state.uistate->toggle_show_mapping( palette.uuid, list[idx].uuid );
         }
-        ImGui::HelpPopup( "Click to edit mappings associated with this symbol." );
+        ImGui::HelpPopup( "Show/hide mappings associated with this symbol." );
         ImGui::SameLine();
         ImGui::Text( "[%d]", static_cast<int>( list[idx].mapping.pieces.size() ) );
     } )
@@ -234,15 +248,17 @@ static void show_palette_entries( me_state &state, me_file &file,
     }
 }
 
-void show_palette( me_state &state, me_palette &p, me_file &file, bool &show )
+void show_palette( me_state &state, me_palette &p, bool &show )
 {
-    ImGui::PushID( &p );
+    ImGui::SetNextWindowSize( ImVec2( 670.0f, 120.0f ), ImGuiCond_FirstUseEver );
+    ImGui::SetNextWindowPos( ImVec2( 50.0f, 50.0f ), ImGuiCond_FirstUseEver );
 
-    if( !ImGui::Begin( "Palette", &show ) ) {
+    std::string wnd_id = string_format( "Palette##palette-%d", p.uuid );
+    if( !ImGui::Begin( wnd_id.c_str(), &show ) ) {
         ImGui::End();
-        ImGui::PopID();
         return;
     }
+    ImGui::PushID( p.uuid );
 
     if( p.is_inline ) {
         ImGui::Text( "<inline palette>" );
@@ -250,10 +266,10 @@ void show_palette( me_state &state, me_palette &p, me_file &file, bool &show )
         ImGui::Text( "id: %s", p.id.data.c_str() );
     }
 
-    show_palette_entries( state, file, p.entries );
+    show_palette_entries( state, p );
 
-    ImGui::End();
     ImGui::PopID();
+    ImGui::End();
 }
 
 me_mapping::me_mapping( const me_mapping &rhs )

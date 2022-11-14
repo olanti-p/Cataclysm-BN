@@ -32,6 +32,7 @@ me_file_revision me_file_revision::make_copy() const
 
 void show_file_history( me_history_state &state, bool &show )
 {
+    ImGui::SetNextWindowSize( ImVec2( 230.0f, 130.0f ), ImGuiCond_FirstUseEver );
     if( !ImGui::Begin( "File history", &show ) ) {
         ImGui::End();
         return;

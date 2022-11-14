@@ -1,6 +1,5 @@
 #include "editor_me_file.h"
 
-#include "editor_me_map_key_gen.h"
 #include "editor_me_palette.h"
 #include "editor_me_state.h"
 #include "editor_me_project.h"
@@ -58,6 +57,11 @@ void show_file_info( me_state &state, me_file &file, bool &show )
         "Can be invoked by omt and upgrate mapgens.\n"
         "This is essentially a 'chunk' of any size up to 24x24 that can be procedurally placed by the calling mapgen."
     );
+    ImGui::Separator();
+
+    if( ImGui::Button( "Show/hide inline palette" ) ) {
+        state.uistate->toggle_show_palette( file.base.inline_palette_id );
+    }
     ImGui::Separator();
 
     if( file.mtype == MapgenType::Oter ) {
@@ -155,19 +159,8 @@ void show_file_info( me_state &state, me_file &file, bool &show )
         show_canvas_hint();
     }
 
-    me_palette *pal = state.project().get_palette_by_uuid( file.base.inline_palette_id );
-    assert( pal );
-    show_palette( state, *pal, file, state.uistate->show_base_inline_palette );
-
     ImGui::PopID();
     ImGui::End();
-
-    if( state.uistate->view_mappings ) {
-        editor::me_palette_entry *entry = pal->find_entry( *state.uistate->view_mappings );
-        if( entry ) {
-            show_palette_entry_extended( state, *pal, *entry );
-        }
-    }
 }
 
 point_rel_etile me_file::mapgensize() const
@@ -191,17 +184,6 @@ void me_mapgen_base::set_size( const point &s )
 }
 
 me_mapgen_base::~me_mapgen_base() = default;
-
-map_key me_mapgen_base::pick_available_key( me_project &project ) const
-{
-    me_map_key_generator gen;
-    me_palette *pal = project.get_palette_by_uuid( inline_palette_id );
-    assert( pal );
-    for( const auto &it : pal->entries ) {
-        gen.blacklist( it.key );
-    }
-    return gen();
-}
 
 void me_mapgen_base::remove_usages( const uuid_t &uuid )
 {

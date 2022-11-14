@@ -32,6 +32,7 @@ const me_palette *me_project::get_palette_by_uuid( const uuid_t &fid ) const
 
 void show_project_ui( me_state &state, me_project &project )
 {
+    ImGui::SetNextWindowSize( ImVec2( 250.0f, 200.0f ), ImGuiCond_FirstUseEver );
     ImGui::Begin( "Project Overview" );
 
     ImGui::Text( "Mapgens:" );
@@ -39,6 +40,11 @@ void show_project_ui( me_state &state, me_project &project )
     bool changed_mapgens = ImGui::VectorWidget()
     .with_for_each( [&]( size_t idx ) {
         uuid_t this_uuid = project.files[idx].uuid;
+        if( ImGui::ImageButton( "toggle_palette", "me_palette" ) ) {
+            state.uistate->toggle_show_palette( project.files[idx].base.inline_palette_id );
+        }
+        ImGui::HelpPopup( "Show/hide inline palette for this mapgen." );
+        ImGui::SameLine();
         if( ImGui::Selectable(
                 string_format( "Mapgen #%d", idx ).c_str(),
                 state.uistate->active_file_id && *state.uistate->active_file_id == this_uuid )
