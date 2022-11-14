@@ -1,9 +1,9 @@
-#include "editor_projects.h"
-#include "editor_widgets.h"
+#include "editor_me_title_screen.h"
 
+#include "editor_widgets.h"
 #include "imgui.h"
-#include "misc/cpp/imgui_stdlib.h"
 #include "ImGuiFileDialog.h"
+#include "misc/cpp/imgui_stdlib.h"
 
 #include "../fstream_utils.h"
 #include "../string_utils.h"
@@ -13,9 +13,9 @@
 namespace editor
 {
 
-void show_projects_window( me_projects_state &state )
+static void show_titlescreen_window( me_titlescreen_state &state )
 {
-    ImGui::Begin( "##projects-wnd", nullptr,
+    ImGui::Begin( "##title-screen-wnd", nullptr,
                   ImGuiWindowFlags_AlwaysAutoResize |
                   ImGuiWindowFlags_NoDecoration |
                   ImGuiWindowFlags_NoMove
@@ -28,22 +28,22 @@ void show_projects_window( me_projects_state &state )
     // Controls
     ImVec2 btn_size( ImGui::GetFrameHeight() * 8.0f, ImGui::GetFrameHeight() * 2.0f );
     if( ImGui::Button( "New Project", btn_size ) ) {
-        state.ret = projects_ui_retval();
+        state.ret = titlescreen_ui_retval();
         state.ret->make_new = true;
     }
     if( ImGui::Button( "Load Project", btn_size ) ) {
         state.open_file_dialog = true;
     }
     if( ImGui::Button( "Legacy Editor", btn_size ) ) {
-        state.ret = projects_ui_retval();
+        state.ret = titlescreen_ui_retval();
         state.ret->legacy_editor = true;
     }
     if( ImGui::Button( "Exit Editor", btn_size ) ) {
-        state.ret = projects_ui_retval();
+        state.ret = titlescreen_ui_retval();
         state.ret->exit = true;
     }
     if( ImGui::Button( "Exit To Desktop", btn_size ) ) {
-        state.ret = projects_ui_retval();
+        state.ret = titlescreen_ui_retval();
         state.ret->exit = true;
         state.ret->exit_to_desktop = true;
     }
@@ -57,7 +57,7 @@ void show_projects_window( me_projects_state &state )
         if( ImGuiFileDialog::Instance()->IsOk() ) {
             std::map<std::string, std::string> selections = ImGuiFileDialog::Instance()->GetSelection();
             if( selections.size() == 1 ) {
-                state.ret = projects_ui_retval();
+                state.ret = titlescreen_ui_retval();
                 state.ret->load_existing = true;
                 for( const auto &sel : selections ) {
                     state.ret->load_path = sel.second;
@@ -69,7 +69,7 @@ void show_projects_window( me_projects_state &state )
     }
 
     if( g->load_editor_project_on_start ) {
-        state.ret = projects_ui_retval();
+        state.ret = titlescreen_ui_retval();
         state.ret->load_existing = true;
         state.ret->load_path = *g->load_editor_project_on_start;
         g->load_editor_project_on_start.reset();
@@ -96,9 +96,9 @@ void show_projects_window( me_projects_state &state )
     ImGui::End();
 }
 
-void show_projects_ui( me_projects_state &state )
+void show_title_screen( me_titlescreen_state &state )
 {
-    show_projects_window( state );
+    show_titlescreen_window( state );
 }
 
 } // namespace editor

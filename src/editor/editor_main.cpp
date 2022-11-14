@@ -1,9 +1,9 @@
 #include "editor_assets.h"
 #include "editor_main.h"
 #include "editor_me_file.h"
+#include "editor_me_title_screen.h"
 #include "editor_me_state.h"
 #include "editor_me_uistate.h"
-#include "editor_projects.h"
 #include "editor_widgets.h"
 
 #include "imgui.h"
@@ -62,7 +62,7 @@ struct editor_state {
 
     cata::optional<tripoint> examine_selection;
 
-    cata::optional<me_projects_state> projects_state;
+    cata::optional<me_titlescreen_state> projects_state;
     cata::optional<me_state> mapgenedit_state;
 };
 
@@ -601,7 +601,7 @@ static void show_editor_ui( editor_state &state )
         show_me_ui( *state.mapgenedit_state );
         return;
     } else if( state.projects_state ) {
-        show_projects_ui( *state.projects_state );
+        show_title_screen( *state.projects_state );
         return;
     }
 
@@ -633,7 +633,7 @@ void advanced_editor_run()
         init_assets( state.assets );
         current_state = &state;
 
-        state.projects_state = me_projects_state();
+        state.projects_state = me_titlescreen_state();
         state.show_cata_ui = false;
 
         bool old_submap_grid = g->debug_submap_grid_overlay;
@@ -669,7 +669,7 @@ void advanced_editor_run()
             }
             refresh_display();
             if( state.projects_state && state.projects_state->ret ) {
-                const editor::projects_ui_retval &retval = *state.projects_state->ret;
+                const editor::titlescreen_ui_retval &retval = *state.projects_state->ret;
                 bool legacy_editor = false;
                 if( retval.exit ) {
                     state.do_loop = false;
