@@ -78,10 +78,7 @@ void emit_val( JsonOut &jo, const std::string &str )
 
 void emit_val( JsonOut &jo, const editor::me_piece *piece )
 {
-    editor::PieceType pt = piece->get_type();
-    if( pt == editor::PieceType::AltFurniture ||
-        pt == editor::PieceType::AltTerrain ||
-        pt == editor::PieceType::AltTrap ) {
+    if( editor::is_alt_piece( piece->get_type() ) ) {
         piece->export_func( jo );
     } else {
         emit_object( jo, [&]() {
@@ -529,17 +526,11 @@ void emit_file_contents( JsonOut &jo, const editor::me_file &file )
                     continue;
                 }
 
-                if( pt == editor::PieceType::AltTerrain ||
-                    pt == editor::PieceType::AltFurniture ||
-                    pt == editor::PieceType::AltTrap
-                  ) {
+                if( editor::is_alt_piece( pt ) ) {
                     emit_object( jo, palette_cat, [&]() {
                         for( const auto &it : matching_pieces ) {
-                            if( it.second.size() > 1 ) {
-                                // TODO: forbid creating dupe alt_* pieces in UI
-                                debugmsg( "Not implemented: restriction on single piece of type %s", io::enum_to_string( pt ) );
-                                continue;
-                            }
+                            // Alt pieces are also exclusive pieces
+                            assert( it.second.size() == 1 );
                             emit( jo, it.first.str, it.second[0] );
                         }
                     } );

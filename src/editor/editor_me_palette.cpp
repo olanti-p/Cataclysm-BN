@@ -21,23 +21,24 @@ void show_palette_entry_extended( me_state &state, editor::me_palette &p,
 
     auto &list = entry.mapping.pieces;
 
-    static std::string new_piece_str;
-    static std::vector<PieceType> piece_opts;
-    if( piece_opts.empty() ) {
-        new_piece_str += "Add mapping...";
-        new_piece_str += '\0';
-        for( const auto &it : editor::get_piece_templates() ) {
-            piece_opts.push_back( it->get_type() );
-            new_piece_str += io::enum_to_string<PieceType>( it->get_type() );
-            new_piece_str += '\0';
-        }
-    }
-
     bool changed = ImGui::VectorWidget()
     .with_add( [&]()->bool {
         bool ret = false;
         ImGui::Separator();
         int new_piece_type = 0;
+        std::string new_piece_str;
+        std::vector<PieceType> piece_opts;
+        new_piece_str += "Add mapping...";
+        new_piece_str += '\0';
+        for( const auto &it : editor::get_piece_templates() )
+        {
+            if( is_piece_exclusive( it->get_type() ) && entry.mapping.has_piece_of_type( it->get_type() ) ) {
+                continue;
+            }
+            piece_opts.push_back( it->get_type() );
+            new_piece_str += io::enum_to_string<PieceType>( it->get_type() );
+            new_piece_str += '\0';
+        }
         if( ImGui::Combo( "##pick-new-mapping", &new_piece_type, new_piece_str.c_str() ) )
         {
             if( new_piece_type != 0 ) {
@@ -53,6 +54,9 @@ void show_palette_entry_extended( me_state &state, editor::me_palette &p,
                      io::enum_to_string<PieceType>( list[idx]->get_type() ).c_str() );
 
         list[idx]->show_ui( state );
+    } )
+    .with_can_duplicate( [&]( size_t idx ) -> bool {
+        return !editor::is_piece_exclusive( list[idx]->get_type() );
     } )
     .with_duplicate( [&]( size_t idx ) {
         list.insert( std::next( list.cbegin(), idx + 1 ), list[idx]->clone() );
@@ -159,14 +163,11 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
         }
         {
             cata::optional<std::string> text;
-            for( const auto &it : list[idx].mapping.pieces ) {
-                me_piece_alt_terrain *ptr = dynamic_cast<me_piece_alt_terrain *>( it.get() );
-                if( ptr && !ptr->list.entries.empty() ) {
-                    text = ptr->list.entries[0].val.data;
-                    if( ptr->list.entries.size() > 1 ) {
-                        *text += string_format( " (+%d)", ptr->list.entries.size() - 1 );
-                    }
-                    break;
+            me_piece_alt_terrain *ptr = list[idx].mapping.get_first_piece_of_type<me_piece_alt_terrain>();
+            if( ptr && !ptr->list.entries.empty() ) {
+                text = ptr->list.entries[0].val.data;
+                if( ptr->list.entries.size() > 1 ) {
+                    *text += string_format( " (+%d)", ptr->list.entries.size() - 1 );
                 }
             }
             if( !text ) {
@@ -182,14 +183,11 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
         }
         {
             cata::optional<std::string> text;
-            for( const auto &it : list[idx].mapping.pieces ) {
-                me_piece_alt_furniture *ptr = dynamic_cast<me_piece_alt_furniture *>( it.get() );
-                if( ptr && !ptr->list.entries.empty() ) {
-                    text = ptr->list.entries[0].val.data;
-                    if( ptr->list.entries.size() > 1 ) {
-                        *text += string_format( " (+%d)", ptr->list.entries.size() - 1 );
-                    }
-                    break;
+            me_piece_alt_furniture *ptr = list[idx].mapping.get_first_piece_of_type<me_piece_alt_furniture>();
+            if( ptr && !ptr->list.entries.empty() ) {
+                text = ptr->list.entries[0].val.data;
+                if( ptr->list.entries.size() > 1 ) {
+                    *text += string_format( " (+%d)", ptr->list.entries.size() - 1 );
                 }
             }
             if( !text ) {
@@ -252,6 +250,16 @@ me_mapping &me_mapping::operator=( const me_mapping &rhs )
         pieces.emplace_back( piece->clone() );
     }
     return *this;
+}
+
+bool me_mapping::has_piece_of_type( PieceType pt ) const
+{
+    for( const auto &piece : pieces ) {
+        if( piece->get_type() == pt ) {
+            return true;
+        }
+    }
+    return false;
 }
 
 const map_key &me_palette::key_from_uuid( const uuid_t &uuid ) const
@@ -335,9 +343,10 @@ void me_palette_entry::build_sprite_cache() const
     sprite_cache.reset();
 
     // Try furniture tile
-    for( const auto &it : mapping.pieces ) {
-        if( it->get_type() == PieceType::AltFurniture ) {
-            auto list = dynamic_cast<me_piece_alt_furniture &>( *it ).list;
+    {
+        const me_piece_alt_furniture *ptr = mapping.get_first_piece_of_type<me_piece_alt_furniture>();
+        if( ptr ) {
+            auto list = ptr->list;
             if( !list.entries.empty() ) {
                 sprite_cache = SpriteRef( list.entries[0].val.data );
             }
@@ -346,12 +355,11 @@ void me_palette_entry::build_sprite_cache() const
 
     // Try terrain tile
     if( !sprite_cache ) {
-        for( const auto &it : mapping.pieces ) {
-            if( it->get_type() == PieceType::AltTerrain ) {
-                auto list = dynamic_cast<me_piece_alt_terrain &>( *it ).list;
-                if( !list.entries.empty() ) {
-                    sprite_cache = SpriteRef( list.entries[0].val.data );
-                }
+        const me_piece_alt_terrain *ptr = mapping.get_first_piece_of_type<me_piece_alt_terrain>();
+        if( ptr ) {
+            auto list = ptr->list;
+            if( !list.entries.empty() ) {
+                sprite_cache = SpriteRef( list.entries[0].val.data );
             }
         }
     }

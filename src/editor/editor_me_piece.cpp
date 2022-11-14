@@ -54,4 +54,16 @@ std::unique_ptr<me_piece> make_new_piece( PieceType pt )
     std::abort();
 }
 
+bool is_alt_piece( PieceType pt )
+{
+    return pt == editor::PieceType::AltTerrain ||
+           pt == editor::PieceType::AltFurniture ||
+           pt == editor::PieceType::AltTrap;
+}
+
+bool is_piece_exclusive( PieceType pt )
+{
+    return is_alt_piece( pt );
+}
+
 } // namespace editor

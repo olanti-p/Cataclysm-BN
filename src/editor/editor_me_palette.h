@@ -33,6 +33,25 @@ struct me_mapping {
 
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
+
+    template<typename T>
+    const T *get_first_piece_of_type() const {
+        for( auto &piece : pieces ) {
+            T *ptr = dynamic_cast<T *>( piece.get() );
+            if( ptr ) {
+                return ptr;
+            }
+        }
+        return nullptr;
+    }
+
+    template<typename T>
+    T *get_first_piece_of_type() {
+        const me_mapping *this_c = this;
+        return const_cast<T *>( this_c->get_first_piece_of_type<T>() );
+    }
+
+    bool has_piece_of_type( PieceType pt ) const;
 };
 
 struct me_palette_entry {

@@ -426,9 +426,12 @@ bool VectorWidget::run_internal( size_t num )
         }
 
         if( f_duplicate ) {
+            bool disabled = f_can_duplicate && !f_can_duplicate( i );
+            ImGui::BeginDisabled( disabled );
             if( ImGui::ImageButton( "dupe", "me_duplicate" ) ) {
                 dupe = i;
             }
+            ImGui::EndDisabled();
             ImGui::HelpPopup( "Duplicate entry." );
             ImGui::SameLine();
         }

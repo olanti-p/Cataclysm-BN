@@ -113,6 +113,8 @@ class VectorWidget
         std::function<void( size_t )> f_delete;
         std::function<bool()> f_add;
 
+        std::function<bool( size_t )> f_can_duplicate;
+
         bool run_internal( size_t num );
 
     public:
@@ -126,6 +128,11 @@ class VectorWidget
 
         inline VectorWidget &with_move( std::function<void( size_t, size_t )> &&f ) {
             f_move = f;
+            return *this;
+        }
+
+        inline VectorWidget &with_can_duplicate( std::function<bool( size_t )> &&f ) {
+            f_can_duplicate = f;
             return *this;
         }
 

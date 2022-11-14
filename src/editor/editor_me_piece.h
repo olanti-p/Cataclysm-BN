@@ -54,6 +54,9 @@ struct me_piece {
 const std::vector<std::unique_ptr<me_piece>> &get_piece_templates();
 std::unique_ptr<me_piece> make_new_piece( PieceType pt );
 
+bool is_alt_piece( PieceType pt );
+bool is_piece_exclusive( PieceType pt );
+
 } // namespace editor
 
 template<>
