@@ -16,6 +16,7 @@ void show_palette_entry_extended( me_state &state, editor::me_palette &p,
 {
     bool show = true;
     ImGui::Begin( "Extended Info", &show );
+    ImGui::PushID( entry.uuid );
 
     if( ImGui::InputId( "ter", entry.ter ) ) {
         state.mark_changed();
@@ -73,6 +74,7 @@ void show_palette_entry_extended( me_state &state, editor::me_palette &p,
         state.mark_changed();
     }
 
+    ImGui::PopID();
     ImGui::End();
     if( !show ) {
         state.uistate->view_mappings.reset();
