@@ -516,8 +516,6 @@ void me_palette_entry::serialize( JsonOut &jsout ) const
     jsout.member( "uuid", uuid );
     jsout.member( "key", key );
     jsout.member( "color", color );
-    jsout.member( "ter", ter );
-    jsout.member( "furn", furn );
     jsout.member( "mapping", mapping );
     jsout.end_object();
 }
@@ -529,8 +527,6 @@ void me_palette_entry::deserialize( JsonIn &jsin )
     jo.read( "uuid", uuid );
     jo.read( "key", key );
     jo.read( "color", color );
-    jo.read( "ter", ter );
-    jo.read( "furn", furn );
     jo.read( "mapping", mapping );
 }
 

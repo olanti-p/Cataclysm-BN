@@ -44,4 +44,9 @@ void me_state::mark_changed( const char *id )
     histate->mark_changed( id );
 }
 
+bool me_state::is_changed() const
+{
+    return histate->is_changed();
+}
+
 } // namespace editor

@@ -6,6 +6,7 @@
 #include "editor_me_state.h"
 #include "editor_me_uistate.h"
 #include "editor_widgets.h"
+#include "editor_me_piece_impl.h"
 
 #include <unordered_set>
 
@@ -18,24 +19,12 @@ void show_palette_entry_extended( me_state &state, editor::me_palette &p,
     ImGui::Begin( "Extended Info", &show );
     ImGui::PushID( entry.uuid );
 
-    if( ImGui::InputId( "ter", entry.ter ) ) {
-        state.mark_changed();
-        entry.sprite_cache_valid = false;
-    }
-
-    if( ImGui::InputId( "furn", entry.furn ) ) {
-        state.mark_changed();
-        entry.sprite_cache_valid = false;
-    }
-
-    ImGui::Text( "Pieces:" );
-
     auto &list = entry.mapping.pieces;
 
     static std::string new_piece_str;
     static std::vector<PieceType> piece_opts;
     if( piece_opts.empty() ) {
-        new_piece_str += "Add piece...";
+        new_piece_str += "Add mapping...";
         new_piece_str += '\0';
         for( const auto &it : editor::get_piece_templates() ) {
             piece_opts.push_back( it->get_type() );
@@ -49,7 +38,7 @@ void show_palette_entry_extended( me_state &state, editor::me_palette &p,
         bool ret = false;
         ImGui::Separator();
         int new_piece_type = 0;
-        if( ImGui::Combo( "##pick-new-piece", &new_piece_type, new_piece_str.c_str() ) )
+        if( ImGui::Combo( "##pick-new-mapping", &new_piece_type, new_piece_str.c_str() ) )
         {
             if( new_piece_type != 0 ) {
                 list.push_back( editor::make_new_piece( piece_opts[new_piece_type - 1] ) );
@@ -60,7 +49,7 @@ void show_palette_entry_extended( me_state &state, editor::me_palette &p,
     } )
     .with_for_each( [&]( size_t idx ) {
         ImGui::Separator();
-        ImGui::Text( "Piece %d: %s", static_cast<int>( idx ),
+        ImGui::Text( "Mapping %d: %s", static_cast<int>( idx ),
                      io::enum_to_string<PieceType>( list[idx]->get_type() ).c_str() );
 
         list[idx]->show_ui( state );
@@ -72,6 +61,10 @@ void show_palette_entry_extended( me_state &state, editor::me_palette &p,
 
     if( changed ) {
         state.mark_changed();
+    }
+
+    if( state.is_changed() ) {
+        entry.sprite_cache_valid = false;
     }
 
     ImGui::PopID();
@@ -103,11 +96,9 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
                 state.file().uuid_gen(),
                 state.file().base.pick_available_key(),
                 col_default_piece_color,
+                me_mapping(),
                 false,
-                cata::nullopt,
-                ter_eid::NULL_ID(),
-                furn_eid::NULL_ID(),
-                me_mapping()
+                cata::nullopt
             } );
             ret = true;
         }
@@ -120,11 +111,9 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
             state.file().uuid_gen(),
             state.file().base.pick_available_key(),
             src.color,
+            src.mapping,
             false,
-            cata::nullopt,
-            src.ter,
-            src.furn,
-            src.mapping
+            cata::nullopt
         } );
     } )
     .with_delete( [&]( size_t idx ) {
@@ -168,22 +157,59 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
         if( is_dupe_symbol ) {
             ImGui::EndErrorArea();
         }
-        ImGui::SameLine();
-        ImGui::SetNextItemWidth( ImGui::GetFrameHeight() * 15.0f );
-        if( ImGui::InputId( "##furn", list[idx].furn ) ) {
-            state.mark_changed();
-            list[idx].sprite_cache_valid = false;
+        {
+            cata::optional<std::string> text;
+            for( const auto &it : list[idx].mapping.pieces ) {
+                me_piece_alt_terrain *ptr = dynamic_cast<me_piece_alt_terrain *>( it.get() );
+                if( ptr && !ptr->list.entries.empty() ) {
+                    text = ptr->list.entries[0].val.data;
+                    if( ptr->list.entries.size() > 1 ) {
+                        *text += string_format( " (+%d)", ptr->list.entries.size() - 1 );
+                    }
+                    break;
+                }
+            }
+            if( !text ) {
+                text = "<None>";
+            }
+            ImGui::SameLine();
+            ImGui::BeginDisabled();
+            ImGui::Button(
+                string_format( "Ter: %s", *text ).c_str(),
+                ImVec2( ImGui::GetFrameHeight() * 10.0f, 0.0f )
+            );
+            ImGui::EndDisabled();
         }
-        ImGui::SameLine();
-        ImGui::SetNextItemWidth( ImGui::GetFrameHeight() * 15.0f );
-        if( ImGui::InputId( "##ter", list[idx].ter ) ) {
-            state.mark_changed();
-            list[idx].sprite_cache_valid = false;
+        {
+            cata::optional<std::string> text;
+            for( const auto &it : list[idx].mapping.pieces ) {
+                me_piece_alt_furniture *ptr = dynamic_cast<me_piece_alt_furniture *>( it.get() );
+                if( ptr && !ptr->list.entries.empty() ) {
+                    text = ptr->list.entries[0].val.data;
+                    if( ptr->list.entries.size() > 1 ) {
+                        *text += string_format( " (+%d)", ptr->list.entries.size() - 1 );
+                    }
+                    break;
+                }
+            }
+            if( !text ) {
+                text = "<None>";
+            }
+            ImGui::SameLine();
+            ImGui::BeginDisabled();
+            ImGui::Button(
+                string_format( "Furn: %s", *text ).c_str(),
+                ImVec2( ImGui::GetFrameHeight() * 10.0f, 0.0f )
+            );
+            ImGui::EndDisabled();
         }
         ImGui::SameLine();
         if( ImGui::ArrowButton( "##mapping", ImGuiDir_Right ) ) {
             state.uistate->view_mappings = list[idx].uuid;
         }
+        ImGui::HelpPopup( "Click to edit mappings associated with this symbol." );
+        ImGui::SameLine();
+        ImGui::Text( "[%d]", static_cast<int>( list[idx].mapping.pieces.size() ) );
     } )
     .run( list );
 
@@ -306,13 +332,30 @@ const me_palette_entry *me_palette::find_entry( const uuid_t &uuid ) const
 
 void me_palette_entry::build_sprite_cache() const
 {
-    if( !furn.is_null() && furn.is_valid() ) {
-        sprite_cache = SpriteRef( furn.data );
-    } else if( !ter.is_null() && ter.is_valid() ) {
-        sprite_cache = SpriteRef( ter.data );
-    } else {
-        sprite_cache.reset();
+    sprite_cache.reset();
+
+    // Try furniture tile
+    for( const auto &it : mapping.pieces ) {
+        if( it->get_type() == PieceType::AltFurniture ) {
+            auto list = dynamic_cast<me_piece_alt_furniture &>( *it ).list;
+            if( !list.entries.empty() ) {
+                sprite_cache = SpriteRef( list.entries[0].val.data );
+            }
+        }
     }
+
+    // Try terrain tile
+    if( !sprite_cache ) {
+        for( const auto &it : mapping.pieces ) {
+            if( it->get_type() == PieceType::AltTerrain ) {
+                auto list = dynamic_cast<me_piece_alt_terrain &>( *it ).list;
+                if( !list.entries.empty() ) {
+                    sprite_cache = SpriteRef( list.entries[0].val.data );
+                }
+            }
+        }
+    }
+
     sprite_cache_valid = true;
 }
 

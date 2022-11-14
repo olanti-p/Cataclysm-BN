@@ -393,7 +393,7 @@ std::string get_palette_category( editor::PieceType data )
         case editor::PieceType::Monster: return "monster";
         case editor::PieceType::Vehicle: return "vehicles";
         case editor::PieceType::Item: return "item";
-        case editor::PieceType::Trap: return "traps";
+        case editor::PieceType::Trap: return "";            // TODO: CONFLICT
         case editor::PieceType::Furniture: return "";       // TODO: CONFLICT
         case editor::PieceType::Terrain: return "";         // TODO: CONFLICT
         case editor::PieceType::TerFurnTransform: return "ter_furn_transforms";
@@ -403,9 +403,9 @@ std::string get_palette_category( editor::PieceType data )
         case editor::PieceType::Translate: return "translate";
         case editor::PieceType::Zone: return "zones";
         case editor::PieceType::Nested: return "nested";
-        case editor::PieceType::AltTrap: return "alt_trap";         // TODO: CONFLICT
-        case editor::PieceType::AltFurniture: return "alt_furn";    // TODO: CONFLICT
-        case editor::PieceType::AltTerrain: return "alt_ter";      // TODO: CONFLICT
+        case editor::PieceType::AltTrap: return "trap";         // TODO: CONFLICT
+        case editor::PieceType::AltFurniture: return "furniture";    // TODO: CONFLICT
+        case editor::PieceType::AltTerrain: return "terrain";      // TODO: CONFLICT
         // *INDENT-ON*
         default:
             break;
@@ -506,20 +506,6 @@ void emit_file_contents( JsonOut &jo, const editor::me_file &file )
                         s += mk.str;
                     }
                     emit_val( jo, s );
-                }
-            } );
-
-            emit_object( jo, "terrain", [&]() {
-                for( const editor::me_palette_entry &it : file.base.inline_palette.entries ) {
-                    emit( jo, it.key.str, it.ter );
-                }
-            } );
-
-            emit_object( jo, "furniture", [&]() {
-                for( const editor::me_palette_entry &it : file.base.inline_palette.entries ) {
-                    if( !it.furn.is_null() ) {
-                        emit( jo, it.key.str, it.furn );
-                    }
                 }
             } );
 

@@ -39,11 +39,10 @@ struct me_palette_entry {
     uuid_t uuid;
     map_key key;
     ImVec4 color;
+    me_mapping mapping;
+
     mutable bool sprite_cache_valid = false;
     mutable cata::optional<SpriteRef> sprite_cache;
-    ter_eid ter;
-    furn_eid furn;
-    me_mapping mapping;
 
     void build_sprite_cache() const;
 

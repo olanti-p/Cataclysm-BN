@@ -41,6 +41,11 @@ struct me_state {
      *           Respects current ImGui id stack.
      */
     void mark_changed( const char *id = nullptr );
+
+    /**
+     * Check whether state has been marked as changed.
+     */
+    bool is_changed() const;
 };
 
 /**

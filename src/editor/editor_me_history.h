@@ -51,6 +51,13 @@ struct me_history_state {
      */
     void mark_changed( const char *id = nullptr );
 
+    /**
+     * Check whether state has been marked as changed.
+     */
+    inline bool is_changed() const {
+        return file_has_changes;
+    }
+
     inline bool can_undo() const {
         return current_revision.num != file_history[file_history.size() - 1].num;
     }
