@@ -23,29 +23,38 @@ void show_palette_entry_extended( me_state &state, editor::me_palette &p,
 
     bool changed = ImGui::VectorWidget()
     .with_add( [&]()->bool {
-        bool ret = false;
         ImGui::Separator();
-        int new_piece_type = 0;
-        std::string new_piece_str;
-        std::vector<PieceType> piece_opts;
-        new_piece_str += "Add mapping...";
-        new_piece_str += '\0';
+        std::vector<std::pair<std::string, PieceType>> piece_opts;
         for( const auto &it : editor::get_piece_templates() )
         {
-            if( !is_available_as_mapping( it->get_type() ) ) {
+            PieceType pt = it->get_type();
+            if( !is_available_as_mapping( pt ) ) {
                 continue;
             }
-            if( is_piece_exclusive( it->get_type() ) && entry.mapping.has_piece_of_type( it->get_type() ) ) {
+            if( is_piece_exclusive( pt ) && entry.mapping.has_piece_of_type( pt ) ) {
                 continue;
             }
-            piece_opts.push_back( it->get_type() );
-            new_piece_str += io::enum_to_string<PieceType>( it->get_type() );
+            piece_opts.emplace_back( io::enum_to_string<PieceType>( pt ), pt );
+        }
+
+        std::sort( piece_opts.begin(), piece_opts.end(), []( const auto & a, const auto & b ) -> bool {
+            return localized_compare( a, b );
+        } );
+
+        std::string new_piece_str;
+        new_piece_str += "Add mapping...";
+        new_piece_str += '\0';
+        for( const auto &it : piece_opts )
+        {
+            new_piece_str += it.first;
             new_piece_str += '\0';
         }
+        bool ret = false;
+        int new_piece_type = 0;
         if( ImGui::Combo( "##pick-new-mapping", &new_piece_type, new_piece_str.c_str() ) )
         {
             if( new_piece_type != 0 ) {
-                auto ptr = editor::make_new_piece( piece_opts[new_piece_type - 1] );
+                auto ptr = editor::make_new_piece( piece_opts[new_piece_type - 1].second );
                 ptr->init_new();
                 list.push_back( std::move( ptr ) );
                 ret = true;
