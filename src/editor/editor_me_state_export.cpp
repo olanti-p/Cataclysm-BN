@@ -385,14 +385,10 @@ std::string get_palette_category( editor::PieceType data )
         case editor::PieceType::GasPump: return "gaspumps";
         case editor::PieceType::Liquid: return "liquids";
         case editor::PieceType::Igroup: return "items";
-        case editor::PieceType::Loot: return "";            // TODO: DOES NOT EXIST
         case editor::PieceType::Mgroup: return "monsters";
         case editor::PieceType::Monster: return "monster";
         case editor::PieceType::Vehicle: return "vehicles";
         case editor::PieceType::Item: return "item";
-        case editor::PieceType::Trap: return "";            // TODO: CONFLICT
-        case editor::PieceType::Furniture: return "";       // TODO: CONFLICT
-        case editor::PieceType::Terrain: return "";         // TODO: CONFLICT
         case editor::PieceType::TerFurnTransform: return "ter_furn_transforms";
         case editor::PieceType::MakeRubble: return "rubble";
         case editor::PieceType::Computer: return "computers";
@@ -400,9 +396,16 @@ std::string get_palette_category( editor::PieceType data )
         case editor::PieceType::Translate: return "translate";
         case editor::PieceType::Zone: return "zones";
         case editor::PieceType::Nested: return "nested";
-        case editor::PieceType::AltTrap: return "trap";         // TODO: CONFLICT
-        case editor::PieceType::AltFurniture: return "furniture";    // TODO: CONFLICT
-        case editor::PieceType::AltTerrain: return "terrain";      // TODO: CONFLICT
+        case editor::PieceType::AltTrap: return "trap";
+        case editor::PieceType::AltFurniture: return "furniture";
+        case editor::PieceType::AltTerrain: return "terrain";
+        // These cannot exist as mappings
+        case editor::PieceType::Loot:
+        case editor::PieceType::Trap:
+        case editor::PieceType::Furniture:
+        case editor::PieceType::Terrain: {
+            return "";
+        }
         // *INDENT-ON*
         default:
             break;
@@ -436,13 +439,16 @@ std::string get_placing_category( editor::PieceType data )
         case editor::PieceType::TerFurnTransform: return "place_ter_furn_transforms";
         case editor::PieceType::MakeRubble: return "place_rubble";
         case editor::PieceType::Computer: return "place_computers";
-        case editor::PieceType::SealedItem: return "";      // TODO: DOES NOT EXIST
         case editor::PieceType::Translate: return "translate_ter";
         case editor::PieceType::Zone: return "place_zones";
         case editor::PieceType::Nested: return "place_nested";
-        case editor::PieceType::AltTrap: return "";         // TODO: CONFLICT
-        case editor::PieceType::AltFurniture: return "";    // TODO: CONFLICT
-        case editor::PieceType::AltTerrain: return "";      // TODO: CONFLICT
+        // These cannot exist as objects
+        case editor::PieceType::SealedItem:
+        case editor::PieceType::AltTrap:
+        case editor::PieceType::AltFurniture:
+        case editor::PieceType::AltTerrain: {
+            return "";
+        }
         // *INDENT-ON*
         default:
             break;
@@ -536,9 +542,11 @@ void emit_file_contents( JsonOut &jo, const editor::me_file &file )
                     } );
                 } else {
                     if( palette_cat.empty() ) {
-                        // TODO: export questionable pieces
-                        debugmsg( "Not implemented: export of piece type %s", io::enum_to_string( pt ) );
-                        continue;
+                        std::cerr << string_format(
+                                      "Tried to export piece of type %s as a mapping.",
+                                      io::enum_to_string( pt )
+                                  );
+                        std::abort();
                     }
 
                     emit_object( jo, palette_cat, [&]() {

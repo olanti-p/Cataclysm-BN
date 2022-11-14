@@ -32,6 +32,9 @@ void show_palette_entry_extended( me_state &state, editor::me_palette &p,
         new_piece_str += '\0';
         for( const auto &it : editor::get_piece_templates() )
         {
+            if( !is_available_as_mapping( it->get_type() ) ) {
+                continue;
+            }
             if( is_piece_exclusive( it->get_type() ) && entry.mapping.has_piece_of_type( it->get_type() ) ) {
                 continue;
             }

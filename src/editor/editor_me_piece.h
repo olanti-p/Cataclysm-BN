@@ -56,6 +56,7 @@ std::unique_ptr<me_piece> make_new_piece( PieceType pt );
 
 bool is_alt_piece( PieceType pt );
 bool is_piece_exclusive( PieceType pt );
+bool is_available_as_mapping( PieceType pt );
 
 } // namespace editor
 

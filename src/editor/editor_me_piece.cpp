@@ -66,4 +66,14 @@ bool is_piece_exclusive( PieceType pt )
     return is_alt_piece( pt );
 }
 
+bool is_available_as_mapping( PieceType pt )
+{
+    return !(
+               pt == editor::PieceType::Terrain ||
+               pt == editor::PieceType::Furniture ||
+               pt == editor::PieceType::Trap ||
+               pt == editor::PieceType::Loot
+           );
+}
+
 } // namespace editor
