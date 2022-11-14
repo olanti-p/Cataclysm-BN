@@ -418,9 +418,12 @@ bool VectorWidget::run_internal( size_t num )
     for( size_t i = 0; i < num; i++ ) {
         ImGui::PushID( i );
         if( f_delete ) {
+            bool disabled = f_can_delete && !f_can_delete( i );
+            ImGui::BeginDisabled( disabled );
             if( ImGui::ImageButton( "del", "me_delete" ) ) {
                 del = i;
             }
+            ImGui::EndDisabled();
             ImGui::HelpPopup( "Delete entry." );
             ImGui::SameLine();
         }

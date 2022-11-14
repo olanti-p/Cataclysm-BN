@@ -236,6 +236,10 @@ void show_piece_alt( me_state &state, editor::me_weighted_list<T> &list )
 {
     ImGui::Indent( style::list_indent );
 
+    const auto can_delete = [&]( size_t ) -> bool {
+        return list.entries.size() > 1;
+    };
+
     const auto show_val = [&]( size_t i ) {
         ImGui::SetNextItemWidth( ImGui::GetFrameHeight() * 5.0f );
         bool bad_weight = list.entries[i].weight <= 0;
@@ -261,6 +265,7 @@ void show_piece_alt( me_state &state, editor::me_weighted_list<T> &list )
     if(
         ImGui::VectorWidget()
         .with_for_each( show_val )
+        .with_can_delete( can_delete )
         .run( list.entries ) ) {
         state.mark_changed();
     }
