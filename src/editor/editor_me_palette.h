@@ -79,6 +79,7 @@ struct me_palette {
     }
 
     bool is_inline = false;
+    uuid_t uuid;
     palette_eid id;
     std::vector<me_palette_entry> entries;
 

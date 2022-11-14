@@ -25,7 +25,7 @@ struct me_mapgen_base {
     point size;
     // TODO: refer to palette entries by their ids
     std::vector<uuid_t> rows;
-    me_palette inline_palette = me_palette::make_inline();
+    uuid_t inline_palette_id = UUID_INVALID;
 
     void set_size( const point &s );
     inline void set_uuid_at( const point &pos, const uuid_t &uuid ) {
@@ -34,16 +34,7 @@ struct me_mapgen_base {
     inline const uuid_t &get_uuid_at( const point &pos ) const {
         return rows[ pos.y * size.x + pos.x ];
     }
-    inline const map_key &get_key_at( const point &pos ) const {
-        return inline_palette.key_from_uuid( get_uuid_at( pos ) );
-    }
-    inline const ImVec4 &get_color_at( const point &pos ) const {
-        return inline_palette.color_from_uuid( get_uuid_at( pos ) );
-    }
-    inline const SpriteRef *get_sprite_at( const point &pos ) const {
-        return inline_palette.sprite_from_uuid( get_uuid_at( pos ) );
-    }
-    map_key pick_available_key() const;
+    map_key pick_available_key( me_project &project ) const;
     void remove_usages( const uuid_t &uuid );
 
     void serialize( JsonOut &jsout ) const;

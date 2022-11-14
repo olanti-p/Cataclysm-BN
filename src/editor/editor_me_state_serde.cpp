@@ -534,6 +534,7 @@ void me_palette_entry::deserialize( JsonIn &jsin )
 void me_palette::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
+    jsout.member( "uuid", uuid );
     jsout.member( "is_inline", is_inline );
     jsout.member( "id", id );
     jsout.member( "entries", entries );
@@ -544,6 +545,7 @@ void me_palette::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
+    jo.read( "uuid", uuid );
     jo.read( "is_inline", is_inline );
     jo.read( "id", id );
     jo.read( "entries", entries );
@@ -554,7 +556,7 @@ void me_mapgen_base::serialize( JsonOut &jsout ) const
     jsout.start_object();
     jsout.member( "size", size );
     jsout.member( "rows", rows );
-    jsout.member( "inline_palette", inline_palette );
+    jsout.member( "inline_palette_id", inline_palette_id );
     jsout.end_object();
 }
 
@@ -564,7 +566,7 @@ void me_mapgen_base::deserialize( JsonIn &jsin )
 
     jo.read( "size", size );
     jo.read( "rows", rows );
-    jo.read( "inline_palette", inline_palette );
+    jo.read( "inline_palette_id", inline_palette_id );
 }
 
 void me_mapgen_oter::serialize( JsonOut &jsout ) const
@@ -662,6 +664,7 @@ void me_project::serialize( JsonOut &jsout ) const
     jsout.member( "project_format_version", PROJECT_FORMAT_VERSION );
     jsout.member( "uuid_gen", uuid_gen );
     jsout.member( "files", files );
+    jsout.member( "palettes", palettes );
     jsout.end_object();
 }
 
@@ -672,6 +675,7 @@ void me_project::deserialize( JsonIn &jsin )
     jo.read( "project_format_version", project_load_version_val );
     jo.read( "uuid_gen", uuid_gen );
     jo.read( "files", files );
+    jo.read( "palettes", palettes );
 }
 
 } // namespace editor

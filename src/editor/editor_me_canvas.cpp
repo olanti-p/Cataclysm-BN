@@ -2,6 +2,8 @@
 
 #include "editor_me_color.h"
 #include "editor_me_camera.h"
+#include "editor_me_palette.h"
+#include "editor_me_uuid.h"
 #include "editor_widgets.h"
 #include "editor_me_file.h"
 #include "editor_me_project.h"
@@ -307,11 +309,17 @@ void show_canvas( me_state &state, me_file *file_ptr )
             tools.brush_stroke_changed_data = false;
         }
 
+        me_palette *pal_ptr = state.project().get_palette_by_uuid( file.base.inline_palette_id );
+        assert( pal_ptr );
+
+        me_palette &pal = *pal_ptr;
+
         for( int x = 0; x < file.mapgensize().x(); x++ ) {
             for( int y = 0; y < file.mapgensize().y(); y++ ) {
                 point_abs_etile p( x, y );
-                ImVec4 col = file.base.get_color_at( p.raw() );
-                const SpriteRef *img = file.base.get_sprite_at( p.raw() );
+                uuid_t uuid = file.base.get_uuid_at( p.raw() );
+                ImVec4 col = pal.color_from_uuid( uuid );
+                const SpriteRef *img = pal.sprite_from_uuid( uuid );
                 if( img ) {
                     col.w *= 0.6f;
                     fill_tile_sprited( draw_list, cam, p, *img );
@@ -323,7 +331,7 @@ void show_canvas( me_state &state, me_file *file_ptr )
         for( int x = 0; x < file.mapgensize().x(); x++ ) {
             for( int y = 0; y < file.mapgensize().y(); y++ ) {
                 point_abs_etile p( x, y );
-                const map_key &mk = file.base.get_key_at( p.raw() );
+                const map_key &mk = pal.key_from_uuid( file.base.get_uuid_at( p.raw() ) );
                 point_abs_epos center = coords::project_combine( p,
                                         point_etile_epos( ETILE_SIZE / 2, ETILE_SIZE / 2 ) );
                 point_abs_screen text_center = cam.world_to_screen( center );

@@ -116,7 +116,7 @@ static void show_palette_entries( me_state &state, me_file &file,
         {
             list.emplace_back( me_palette_entry{
                 proj.uuid_gen(),
-                file.base.pick_available_key(),
+                file.base.pick_available_key( proj ),
                 col_default_piece_color,
                 me_mapping(),
                 false,
@@ -131,7 +131,7 @@ static void show_palette_entries( me_state &state, me_file &file,
         const me_palette_entry &src = list[ idx ];
         list.insert( std::next( list.cbegin(), idx + 1 ), me_palette_entry{
             proj.uuid_gen(),
-            file.base.pick_available_key(),
+            file.base.pick_available_key( proj ),
             src.color,
             src.mapping,
             false,

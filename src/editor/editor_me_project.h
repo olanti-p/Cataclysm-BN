@@ -2,6 +2,8 @@
 #define CATA_SRC_EDITOR_EDITOR_ME_PROJECT_H
 
 #include "editor_me_file.h"
+#include "editor_me_palette.h"
+#include "editor_me_uuid.h"
 
 namespace editor
 {
@@ -10,11 +12,22 @@ struct me_state;
 struct me_project {
     uuid_generator uuid_gen;
     std::vector<me_file> files;
+    std::vector<me_palette> palettes;
 
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
 
-    me_file *get_file_by_uuid( const uuid_t &fid );
+    const me_file *get_file_by_uuid( const uuid_t &fid ) const;
+    inline me_file *get_file_by_uuid( const uuid_t &fid ) {
+        const me_project *this_c = this;
+        return const_cast<me_file *>( this_c->get_file_by_uuid( fid ) );
+    }
+
+    const me_palette *get_palette_by_uuid( const uuid_t &pid ) const;
+    inline me_palette *get_palette_by_uuid( const uuid_t &pid ) {
+        const me_project *this_c = this;
+        return const_cast<me_palette *>( this_c->get_palette_by_uuid( pid ) );
+    }
 };
 
 void show_project_ui( me_state &state, me_project &project );

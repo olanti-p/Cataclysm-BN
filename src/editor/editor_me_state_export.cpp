@@ -1,4 +1,5 @@
 #include "editor_me_state_export.h"
+#include "editor_me_palette.h"
 #include "editor_me_piece_impl.h"
 #include "editor_me_file.h"
 #include "editor_me_project.h"
@@ -462,7 +463,8 @@ std::string get_placing_category( editor::PieceType data )
  * ============= HIGH-LEVEL FUNCTIONS =============
  */
 
-void emit_file_contents( JsonOut &jo, const editor::me_file &file )
+static void emit_file_contents( JsonOut &jo, const editor::me_project &project,
+                                const editor::me_file &file )
 {
     emit( jo, "type", "mapgen" );
     emit( jo, "method", "json" );
@@ -502,11 +504,13 @@ void emit_file_contents( JsonOut &jo, const editor::me_file &file )
         }
 
         if( file.uses_rows() ) {
+            const editor::me_palette &pal = *project.get_palette_by_uuid( file.base.inline_palette_id );
             emit_array( jo, "rows", [&]() {
                 for( int y = 0; y < file.mapgensize().y(); y++ ) {
                     std::string s;
                     for( int x = 0; x < file.mapgensize().x(); x++ ) {
-                        const map_key &mk = file.base.get_key_at( point( x, y ) );
+                        editor::uuid_t uuid = file.base.get_uuid_at( point( x, y ) );
+                        const map_key &mk = pal.key_from_uuid( uuid );
                         s += mk.str;
                     }
                     emit_val( jo, s );
@@ -520,7 +524,7 @@ void emit_file_contents( JsonOut &jo, const editor::me_file &file )
 
                 std::unordered_map<map_key, std::vector<const editor::me_piece *>> matching_pieces;
 
-                for( const editor::me_palette_entry &it : file.base.inline_palette.entries ) {
+                for( const editor::me_palette_entry &it : pal.entries ) {
                     for( const auto &pc : it.mapping.pieces ) {
                         if( pc->get_type() == pt ) {
                             matching_pieces[it.key].push_back( pc.get() );
@@ -567,7 +571,7 @@ std::string to_string( const editor::me_project &project )
         emit_array( jo, [&]() {
             for( const editor::me_file &file : project.files ) {
                 emit_object( jo, [&]() {
-                    emit_file_contents( jo, file );
+                    emit_file_contents( jo, project, file );
                 } );
             }
         } );

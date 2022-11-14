@@ -1,7 +1,9 @@
 #include "editor_me_file.h"
 
 #include "editor_me_map_key_gen.h"
+#include "editor_me_palette.h"
 #include "editor_me_state.h"
+#include "editor_me_project.h"
 #include "editor_me_uistate.h"
 #include "editor_widgets.h"
 
@@ -153,16 +155,17 @@ void show_file_info( me_state &state, me_file &file, bool &show )
         show_canvas_hint();
     }
 
-    show_palette( state, file.base.inline_palette, file, state.uistate->show_base_inline_palette );
+    me_palette *pal = state.project().get_palette_by_uuid( file.base.inline_palette_id );
+    assert( pal );
+    show_palette( state, *pal, file, state.uistate->show_base_inline_palette );
 
     ImGui::PopID();
     ImGui::End();
 
     if( state.uistate->view_mappings ) {
-        editor::me_palette_entry *entry = file.base.inline_palette.find_entry(
-                                              *state.uistate->view_mappings );
+        editor::me_palette_entry *entry = pal->find_entry( *state.uistate->view_mappings );
         if( entry ) {
-            show_palette_entry_extended( state, file.base.inline_palette, *entry );
+            show_palette_entry_extended( state, *pal, *entry );
         }
     }
 }
@@ -189,10 +192,12 @@ void me_mapgen_base::set_size( const point &s )
 
 me_mapgen_base::~me_mapgen_base() = default;
 
-map_key me_mapgen_base::pick_available_key() const
+map_key me_mapgen_base::pick_available_key( me_project &project ) const
 {
     me_map_key_generator gen;
-    for( const auto &it : inline_palette.entries ) {
+    me_palette *pal = project.get_palette_by_uuid( inline_palette_id );
+    assert( pal );
+    for( const auto &it : pal->entries ) {
         gen.blacklist( it.key );
     }
     return gen();
