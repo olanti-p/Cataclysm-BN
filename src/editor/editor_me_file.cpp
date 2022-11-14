@@ -19,6 +19,7 @@ void show_file_info( me_state &state, me_file &file, bool &show )
         ImGui::End();
         return;
     }
+    ImGui::PushID( file.uuid );
 
     ImGui::Text( "Mapgen type:" );
     if( ImGui::RadioButton( "Oter", file.mtype == MapgenType::Oter ) ) {
@@ -154,6 +155,7 @@ void show_file_info( me_state &state, me_file &file, bool &show )
 
     show_palette( state, file.base.inline_palette, file, state.uistate->show_base_inline_palette );
 
+    ImGui::PopID();
     ImGui::End();
 
     if( state.uistate->view_mappings ) {

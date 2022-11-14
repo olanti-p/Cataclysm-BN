@@ -204,9 +204,6 @@ void show_canvas( me_state &state, me_file *file_ptr )
                   ImGuiWindowFlags_NoScrollWithMouse
                 );
 
-    ImDrawList *draw_list = ImGui::GetWindowDrawList();
-    me_camera &cam = *state.camera;
-
     if( !file_ptr ) {
         ImGui::BeginDisabled();
         ImGui::TextCenteredVH( "No active file" );
@@ -215,7 +212,10 @@ void show_canvas( me_state &state, me_file *file_ptr )
         return;
     }
 
+    ImDrawList *draw_list = ImGui::GetWindowDrawList();
+    me_camera &cam = *state.camera;
     editor::me_file &file = *file_ptr;
+    ImGui::PushID( file.uuid );
 
     highlight_region(
         draw_list,
@@ -335,6 +335,7 @@ void show_canvas( me_state &state, me_file *file_ptr )
         }
     }
 
+    ImGui::PopID();
     ImGui::End();
 }
 
