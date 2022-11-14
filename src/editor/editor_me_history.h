@@ -10,11 +10,11 @@
 
 namespace editor
 {
-struct me_file;
+struct me_project;
 struct me_canvas_tools_state;
 
 struct me_file_revision {
-    std::unique_ptr<me_file> file;
+    std::unique_ptr<me_project> project;
     int num = 0;
 
     me_file_revision();
@@ -31,19 +31,19 @@ struct me_file_revision {
 struct me_history_state {
     me_history_state() = default;
     ~me_history_state() = default;
-    me_history_state( std::unique_ptr<me_file> &&file, bool was_loaded );
+    me_history_state( std::unique_ptr<me_project> &&project, bool was_loaded );
 
     me_history_state( const me_history_state & ) = delete;
     me_history_state( me_history_state && ) = default;
     me_history_state &operator=( const me_history_state & ) = delete;
     me_history_state &operator=( me_history_state && ) = default;
 
-    inline me_file &file() {
-        return *current_revision.file;
+    inline me_project &project() {
+        return *current_revision.project;
     }
 
     /**
-     * Mark state as changed.
+     * Mark project as changed.
      *
      * @param id (optional) If edit operation repeatedly generates change events that should be
      *           collapsed into a single undo/redo operation, pass id of the operation here.
@@ -52,7 +52,7 @@ struct me_history_state {
     void mark_changed( const char *id = nullptr );
 
     /**
-     * Check whether state has been marked as changed.
+     * Check whether project has been marked as changed.
      */
     inline bool is_changed() const {
         return file_has_changes;

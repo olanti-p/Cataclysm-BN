@@ -94,7 +94,7 @@ enum class MapgenType {
 };
 
 struct me_file {
-    uuid_generator uuid_gen;
+    uuid_t uuid = UUID_INVALID;
 
     MapgenType mtype = MapgenType::Oter;
     me_mapgen_base base;

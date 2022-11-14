@@ -9,6 +9,7 @@ namespace editor
 {
 struct me_state;
 struct me_camera;
+struct me_file;
 
 /**
  * ============ Mouse helpers ============
@@ -58,7 +59,7 @@ void fill_region(
 /**
  * =============== Windows ===============
  */
-void show_canvas( me_state &state );
+void show_canvas( me_state &state, me_file *file_ptr );
 
 } // namespace editor
 

@@ -8,7 +8,7 @@
 namespace editor_export
 {
 
-std::string to_string( const editor::me_file &file );
+std::string to_string( const editor::me_project &project );
 
 std::string format_string( const std::string &js );
 

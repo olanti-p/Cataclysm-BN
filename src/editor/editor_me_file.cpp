@@ -152,7 +152,7 @@ void show_file_info( me_state &state, me_file &file, bool &show )
         show_canvas_hint();
     }
 
-    show_palette( state, file.base.inline_palette, state.uistate->show_base_inline_palette );
+    show_palette( state, file.base.inline_palette, file, state.uistate->show_base_inline_palette );
 
     ImGui::End();
 

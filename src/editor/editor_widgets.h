@@ -89,6 +89,7 @@ bool InputIntClamped( const char *label, int &val, int min, int max,
 bool InputDuration( const char *label, time_duration &dur, ImGuiInputTextFlags flags = 0 );
 
 void TextCentered( const std::string &text );
+void TextCenteredVH( const std::string &text );
 
 bool IsDisabled();
 

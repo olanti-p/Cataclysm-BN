@@ -19,6 +19,8 @@ struct SpriteRef;
 
 namespace editor
 {
+struct me_file;
+struct me_project;
 
 struct me_mapping {
     std::vector<std::unique_ptr<me_piece>> pieces;
@@ -96,7 +98,7 @@ struct me_palette {
  */
 void show_palette_entry_extended( me_state &state, editor::me_palette &p,
                                   editor::me_palette_entry &entry );
-void show_palette( me_state &state, me_palette &p, bool &show );
+void show_palette( me_state &state, me_palette &p, me_file &file, bool &show );
 
 } // namespace editor
 

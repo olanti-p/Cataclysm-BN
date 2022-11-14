@@ -1,7 +1,7 @@
 #include "editor_me_history.h"
 
 #include "editor_me_canvas_tool.h"
-#include "editor_me_file.h"
+#include "editor_me_project.h"
 #include "editor_widgets.h"
 
 // Cata's DebugLog define conflicts with function in ImGui
@@ -16,7 +16,7 @@ namespace editor
 {
 me_file_revision::me_file_revision()
 {
-    file = std::make_unique<me_file>();
+    project = std::make_unique<me_project>();
 }
 me_file_revision::me_file_revision( me_file_revision && ) = default;
 me_file_revision::~me_file_revision() = default;
@@ -25,7 +25,7 @@ me_file_revision &me_file_revision::operator=( me_file_revision && ) = default;
 me_file_revision me_file_revision::make_copy() const
 {
     me_file_revision ret;
-    ret.file = std::make_unique<me_file>( *file );
+    ret.project = std::make_unique<me_project>( *project );
     ret.num = num;
     return ret;
 }
@@ -143,7 +143,7 @@ void handle_revision_change( me_history_state &state, me_canvas_tools_state &too
     }
 }
 
-me_history_state::me_history_state( std::unique_ptr<me_file> &&file, bool was_loaded )
+me_history_state::me_history_state( std::unique_ptr<me_project> &&project, bool was_loaded )
 {
     current_revision = me_file_revision();
 
@@ -151,8 +151,8 @@ me_history_state::me_history_state( std::unique_ptr<me_file> &&file, bool was_lo
         last_saved_revision = current_revision.num;
     }
 
-    if( file ) {
-        current_revision.file = std::move( file );
+    if( project ) {
+        current_revision.project = std::move( project );
     }
 
     file_history.reserve( history_capacity + 1 );

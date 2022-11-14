@@ -16,6 +16,7 @@ editor_sources = files(
     'editor_me_palette.cpp',
     'editor_me_piece_impl.cpp',
     'editor_me_piece.cpp',
+    'editor_me_project.cpp',
     'editor_me_save_export.cpp',
     'editor_me_state_export.cpp',
     'editor_me_state_serde.cpp',

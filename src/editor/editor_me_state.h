@@ -5,18 +5,18 @@
 
 namespace editor
 {
-struct me_file;
-struct me_camera;
-struct me_uistate;
 struct asset_library;
+struct me_camera;
 struct me_canvas_tools_state;
-struct me_save_export_state;
 struct me_history_state;
+struct me_project;
+struct me_save_export_state;
+struct me_uistate;
 
 struct me_state {
     me_state();
-    explicit me_state( std::unique_ptr<me_file> &&file );
-    me_state( std::unique_ptr<me_file> &&file, const std::string *loaded_from_path );
+    explicit me_state( std::unique_ptr<me_project> &&project );
+    me_state( std::unique_ptr<me_project> &&project, const std::string *loaded_from_path );
     me_state( const me_state & ) = delete;
     me_state( me_state && );
     ~me_state();
@@ -24,17 +24,17 @@ struct me_state {
     me_state &operator=( const me_state & ) = delete;
     me_state &operator=( me_state && );
 
-    pimpl<me_camera> camera;
-    pimpl<me_uistate> uistate;
     pimpl<asset_library> assets;
+    pimpl<me_camera> camera;
     pimpl<me_canvas_tools_state> tools_state;
-    pimpl<me_save_export_state> sestate;
     pimpl<me_history_state> histate;
+    pimpl<me_save_export_state> sestate;
+    pimpl<me_uistate> uistate;
 
-    me_file &file();
+    me_project &project();
 
     /**
-     * Mark state as changed.
+     * Mark project as changed.
      *
      * @param id (optional) If edit operation repeatedly generates change events that should be
      *           collapsed into a single undo/redo operation, pass id of the operation here.
@@ -43,7 +43,7 @@ struct me_state {
     void mark_changed( const char *id = nullptr );
 
     /**
-     * Check whether state has been marked as changed.
+     * Check whether project has been marked as changed.
      */
     bool is_changed() const;
 };

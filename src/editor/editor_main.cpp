@@ -1,6 +1,6 @@
 #include "editor_assets.h"
 #include "editor_main.h"
-#include "editor_me_file.h"
+#include "editor_me_project.h"
 #include "editor_me_title_screen.h"
 #include "editor_me_state.h"
 #include "editor_me_uistate.h"
@@ -677,7 +677,7 @@ void advanced_editor_run()
                 } else if( retval.make_new ) {
                     state.mapgenedit_state = me_state();
                 } else if( retval.load_existing ) {
-                    std::unique_ptr<me_file> f = std::make_unique<me_file>();
+                    std::unique_ptr<me_project> f = std::make_unique<me_project>();
                     auto reader = [&]( JsonIn & jsin ) {
                         f->deserialize( jsin );
                     };

@@ -4,6 +4,7 @@
 #include "editor_me_camera.h"
 #include "editor_widgets.h"
 #include "editor_me_file.h"
+#include "editor_me_project.h"
 #include "editor_me_state.h"
 #include "editor_me_canvas_tool.h"
 
@@ -188,7 +189,7 @@ static void apply_bucket_tool( me_file &file, const uuid_t &brush, const point_a
     }
 }
 
-void show_canvas( me_state &state )
+void show_canvas( me_state &state, me_file *file_ptr )
 {
     ImVec2 disp_size = ImGui::GetIO().DisplaySize;
 
@@ -206,11 +207,21 @@ void show_canvas( me_state &state )
     ImDrawList *draw_list = ImGui::GetWindowDrawList();
     me_camera &cam = *state.camera;
 
+    if( !file_ptr ) {
+        ImGui::BeginDisabled();
+        ImGui::TextCenteredVH( "No active file" );
+        ImGui::EndDisabled();
+        ImGui::End();
+        return;
+    }
+
+    editor::me_file &file = *file_ptr;
+
     highlight_region(
         draw_list,
         cam,
         point_abs_etile( 0, 0 ),
-        point_abs_etile( -1, -1 ) + state.file().mapgensize(),
+        point_abs_etile( -1, -1 ) + file.mapgensize(),
         col_mapgensize_bg,
         col_mapgensize_border
     );
@@ -245,38 +256,38 @@ void show_canvas( me_state &state )
             int delta = delta_wheel * zoom_speed;
             cam.scale = clamp( cam.scale + delta, MIN_SCALE, MAX_SCALE );
         }
-        if( state.file().uses_rows() ) {
+        if( file.uses_rows() ) {
             if( tools.tool == CanvasTool::Brush && ImGui::IsMouseDown( ImGuiMouseButton_Left ) ) {
                 brush_stroke_active = true;
                 tools.ongoing_tool_operation = true;
                 tools.ongoing_brush_stroke = true;
-                point_rel_etile mapgensize = state.file().mapgensize();
+                point_rel_etile mapgensize = file.mapgensize();
                 if( tile_pos.x() >= 0 && tile_pos.y() >= 0 && tile_pos.x() < mapgensize.x() &&
                     tile_pos.y() < mapgensize.y() ) {
-                    const uuid_t &uuid = state.file().base.get_uuid_at( tile_pos.raw() );
+                    const uuid_t &uuid = file.base.get_uuid_at( tile_pos.raw() );
                     if( uuid != tools.brush ) {
-                        state.file().base.set_uuid_at( tile_pos.raw(), tools.brush );
+                        file.base.set_uuid_at( tile_pos.raw(), tools.brush );
                         tools.brush_stroke_changed_data = true;
                     }
                 }
             }
             if( ( tools.tool == CanvasTool::Bucket || tools.tool == CanvasTool::BucketGlobal ) &&
                 ImGui::IsMouseClicked( ImGuiMouseButton_Left ) ) {
-                point_rel_etile mapgensize = state.file().mapgensize();
+                point_rel_etile mapgensize = file.mapgensize();
                 if( tile_pos.x() >= 0 && tile_pos.y() >= 0 && tile_pos.x() < mapgensize.x() &&
                     tile_pos.y() < mapgensize.y() ) {
-                    const uuid_t &uuid = state.file().base.get_uuid_at( tile_pos.raw() );
+                    const uuid_t &uuid = file.base.get_uuid_at( tile_pos.raw() );
                     if( uuid != tools.brush ) {
-                        apply_bucket_tool( state.file(), tools.brush, tile_pos, tools.tool == CanvasTool::BucketGlobal );
+                        apply_bucket_tool( file, tools.brush, tile_pos, tools.tool == CanvasTool::BucketGlobal );
                         state.mark_changed();
                     }
                 }
             }
             if( ImGui::IsMouseClicked( ImGuiMouseButton_Middle ) ) {
-                point_rel_etile mapgensize = state.file().mapgensize();
+                point_rel_etile mapgensize = file.mapgensize();
                 if( tile_pos.x() >= 0 && tile_pos.y() >= 0 && tile_pos.x() < mapgensize.x() &&
                     tile_pos.y() < mapgensize.y() ) {
-                    const uuid_t &uuid = state.file().base.get_uuid_at( tile_pos.raw() );
+                    const uuid_t &uuid = file.base.get_uuid_at( tile_pos.raw() );
                     tools.brush = uuid;
                 } else {
                     tools.brush = UUID_INVALID;
@@ -285,7 +296,7 @@ void show_canvas( me_state &state )
         }
     }
 
-    if( state.file().uses_rows() ) {
+    if( file.uses_rows() ) {
         if( tools.tool == CanvasTool::Brush && tools.ongoing_brush_stroke && !brush_stroke_active ) {
             // Brush stroke ended, queue changes as a single operation
             if( tools.brush_stroke_changed_data ) {
@@ -296,11 +307,11 @@ void show_canvas( me_state &state )
             tools.brush_stroke_changed_data = false;
         }
 
-        for( int x = 0; x < state.file().mapgensize().x(); x++ ) {
-            for( int y = 0; y < state.file().mapgensize().y(); y++ ) {
+        for( int x = 0; x < file.mapgensize().x(); x++ ) {
+            for( int y = 0; y < file.mapgensize().y(); y++ ) {
                 point_abs_etile p( x, y );
-                ImVec4 col = state.file().base.get_color_at( p.raw() );
-                const SpriteRef *img = state.file().base.get_sprite_at( p.raw() );
+                ImVec4 col = file.base.get_color_at( p.raw() );
+                const SpriteRef *img = file.base.get_sprite_at( p.raw() );
                 if( img ) {
                     col.w *= 0.6f;
                     fill_tile_sprited( draw_list, cam, p, *img );
@@ -309,10 +320,10 @@ void show_canvas( me_state &state )
             }
         }
 
-        for( int x = 0; x < state.file().mapgensize().x(); x++ ) {
-            for( int y = 0; y < state.file().mapgensize().y(); y++ ) {
+        for( int x = 0; x < file.mapgensize().x(); x++ ) {
+            for( int y = 0; y < file.mapgensize().y(); y++ ) {
                 point_abs_etile p( x, y );
-                const map_key &mk = state.file().base.get_key_at( p.raw() );
+                const map_key &mk = file.base.get_key_at( p.raw() );
                 point_abs_epos center = coords::project_combine( p,
                                         point_etile_epos( ETILE_SIZE / 2, ETILE_SIZE / 2 ) );
                 point_abs_screen text_center = cam.world_to_screen( center );

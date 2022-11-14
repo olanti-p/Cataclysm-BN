@@ -5,6 +5,7 @@
 #include "editor_me_canvas_tool.h"
 #include "editor_me_canvas.h"
 #include "editor_me_file.h"
+#include "editor_me_project.h"
 #include "editor_me_history.h"
 #include "editor_me_save_export.h"
 #include "editor_me_state.h"
@@ -76,7 +77,19 @@ void show_ui_control_window( me_state &state )
 
 void run_ui_for_state( me_state &state )
 {
-    show_canvas( state );
+    me_project &proj = state.project();
+    show_project_ui( state, proj );
+
+    me_file *active_file = nullptr;
+    if( state.uistate->active_file_id ) {
+        active_file = proj.get_file_by_uuid( *state.uistate->active_file_id );
+        if( !active_file ) {
+            state.uistate->active_file_id.reset();
+        }
+    }
+
+    // TODO: multiple files on same canvas
+    show_canvas( state, active_file );
     show_ui_control_window( state );
 
     me_uistate &uistate = *state.uistate;
@@ -87,8 +100,8 @@ void run_ui_for_state( me_state &state )
     if( uistate.show_asset_lib ) {
         show_asset_lib( *state.assets, uistate.show_asset_lib );
     }
-    if( uistate.show_file_info ) {
-        show_file_info( state, state.file(), uistate.show_file_info );
+    if( uistate.show_file_info && active_file ) {
+        show_file_info( state, *active_file, uistate.show_file_info );
     }
     if( uistate.show_file_history ) {
         show_file_history( *state.histate, uistate.show_file_history );

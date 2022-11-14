@@ -19,6 +19,7 @@ struct me_uistate {
     bool show_file_history = true; // Whether to show undo/redo history
     bool show_toolbar = true; // Whether to show canvas toolbar
     cata::optional<uuid_t> view_mappings; // Whether to show mappings for given palette entry
+    cata::optional<uuid_t> active_file_id; // UUID of active file
 };
 
 /**

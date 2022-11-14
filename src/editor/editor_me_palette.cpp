@@ -3,6 +3,7 @@
 #include "editor_me_canvas_tool.h"
 #include "editor_me_color.h"
 #include "editor_me_file.h"
+#include "editor_me_project.h"
 #include "editor_me_state.h"
 #include "editor_me_uistate.h"
 #include "editor_widgets.h"
@@ -92,7 +93,8 @@ void show_palette_entry_extended( me_state &state, editor::me_palette &p,
     }
 }
 
-static void show_palette_entries( me_state &state, std::vector<me_palette_entry> &list )
+static void show_palette_entries( me_state &state, me_file &file,
+                                  std::vector<me_palette_entry> &list )
 {
     std::unordered_set<map_key> checked;
     std::unordered_set<map_key> dupe_symbols;
@@ -105,14 +107,16 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
         }
     }
 
+    me_project &proj = state.project();
+
     bool changed = ImGui::VectorWidget()
     .with_add( [&]() -> bool {
         bool ret = false;
         if( ImGui::ImageButton( "add", "me_add" ) )
         {
             list.emplace_back( me_palette_entry{
-                state.file().uuid_gen(),
-                state.file().base.pick_available_key(),
+                proj.uuid_gen(),
+                file.base.pick_available_key(),
                 col_default_piece_color,
                 me_mapping(),
                 false,
@@ -126,8 +130,8 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
     .with_duplicate( [&]( size_t idx ) {
         const me_palette_entry &src = list[ idx ];
         list.insert( std::next( list.cbegin(), idx + 1 ), me_palette_entry{
-            state.file().uuid_gen(),
-            state.file().base.pick_available_key(),
+            proj.uuid_gen(),
+            file.base.pick_available_key(),
             src.color,
             src.mapping,
             false,
@@ -136,7 +140,7 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
     } )
     .with_delete( [&]( size_t idx ) {
         const uuid_t &uuid = list[ idx ].uuid;
-        state.file().base.remove_usages( uuid );
+        file.base.remove_usages( uuid );
         if( state.tools_state->brush == uuid ) {
             state.tools_state->brush = UUID_INVALID;
         }
@@ -230,7 +234,7 @@ static void show_palette_entries( me_state &state, std::vector<me_palette_entry>
     }
 }
 
-void show_palette( me_state &state, me_palette &p, bool &show )
+void show_palette( me_state &state, me_palette &p, me_file &file, bool &show )
 {
     ImGui::PushID( &p );
 
@@ -246,7 +250,7 @@ void show_palette( me_state &state, me_palette &p, bool &show )
         ImGui::Text( "id: %s", p.id.data.c_str() );
     }
 
-    show_palette_entries( state, p.entries );
+    show_palette_entries( state, file, p.entries );
 
     ImGui::End();
     ImGui::PopID();

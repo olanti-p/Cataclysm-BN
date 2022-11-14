@@ -360,6 +360,14 @@ void TextCentered( const std::string &text )
     ImGui::Text( "%s", text.c_str() );
 }
 
+void TextCenteredVH( const std::string &text )
+{
+    ImVec2 wnd = ImGui::GetWindowSize();
+    ImVec2 sz = ImGui::CalcTextSize( text.c_str() );
+    ImGui::SetCursorPos( ImVec2( wnd.x / 2 - sz.x / 2, wnd.y / 2 - sz.y / 2 ) );
+    ImGui::Text( "%s", text.c_str() );
+}
+
 bool IsDisabled()
 {
     return ImGui::GetCurrentContext()->DisabledStackSize != 0;

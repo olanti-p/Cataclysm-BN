@@ -2,6 +2,7 @@
 
 #include "editor_me_piece_impl.h"
 #include "editor_me_file.h"
+#include "editor_me_project.h"
 #include "editor_me_weighted_list_serde.h"
 
 #include "imgui.h"
@@ -634,8 +635,7 @@ int project_load_version()
 void me_file::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
-    jsout.member( "project_format_version", PROJECT_FORMAT_VERSION );
-    jsout.member( "uuid_gen", uuid_gen );
+    jsout.member( "uuid", uuid );
     jsout.member( "mtype", mtype );
     jsout.member( "base", base );
     jsout.member( "oter", oter );
@@ -648,14 +648,30 @@ void me_file::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
-    jo.read( "project_format_version", project_load_version_val );
-
-    jo.read( "uuid_gen", uuid_gen );
+    jo.read( "uuid", uuid );
     jo.read( "mtype", mtype );
     jo.read( "base", base );
     jo.read( "oter", oter );
     jo.read( "update", update );
     jo.read( "nested", nested );
+}
+
+void me_project::serialize( JsonOut &jsout ) const
+{
+    jsout.start_object();
+    jsout.member( "project_format_version", PROJECT_FORMAT_VERSION );
+    jsout.member( "uuid_gen", uuid_gen );
+    jsout.member( "files", files );
+    jsout.end_object();
+}
+
+void me_project::deserialize( JsonIn &jsin )
+{
+    JsonObject jo = jsin.get_object();
+
+    jo.read( "project_format_version", project_load_version_val );
+    jo.read( "uuid_gen", uuid_gen );
+    jo.read( "files", files );
 }
 
 } // namespace editor

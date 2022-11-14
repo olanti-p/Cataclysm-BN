@@ -1,6 +1,7 @@
 #include "editor_me_state_export.h"
 #include "editor_me_piece_impl.h"
 #include "editor_me_file.h"
+#include "editor_me_project.h"
 
 #include "../fstream_utils.h"
 #include "../json.h"
@@ -560,14 +561,15 @@ void emit_file_contents( JsonOut &jo, const editor::me_file &file )
     } );
 }
 
-std::string to_string( const editor::me_file &file )
+std::string to_string( const editor::me_project &project )
 {
     return serialize_wrapper( [&]( JsonOut & jo ) {
-        // Wrap it as 1-element array to adhere to modern BN data format
         emit_array( jo, [&]() {
-            emit_object( jo, [&]() {
-                emit_file_contents( jo, file );
-            } );
+            for( const editor::me_file &file : project.files ) {
+                emit_object( jo, [&]() {
+                    emit_file_contents( jo, file );
+                } );
+            }
         } );
     } );
 }

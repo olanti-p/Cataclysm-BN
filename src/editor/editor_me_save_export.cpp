@@ -4,7 +4,7 @@
 #include "../game.h"
 
 #include "editor_me_canvas_tool.h"
-#include "editor_me_file.h"
+#include "editor_me_project.h"
 #include "editor_me_history.h"
 #include "editor_me_save_export.h"
 #include "editor_me_state.h"
@@ -52,7 +52,7 @@ void handle_file_saving( me_state &state )
         sestate.do_save = false;
         assert( sestate.file_save_path );
         write_to_file( *sestate.file_save_path, [&]( std::ostream & oss ) {
-            oss << serialize( state.file() );
+            oss << serialize( state.project() );
         } );
         state.histate->last_saved_revision = state.histate->current_revision.num;
         if( sestate.do_exit_after_save ) {
@@ -95,7 +95,7 @@ void handle_file_exporting( me_state &state )
         sestate.do_export = false;
         assert( sestate.file_export_path );
         write_to_file( *sestate.file_export_path, [&]( std::ostream & oss ) {
-            std::string s = editor_export::to_string( state.file() );
+            std::string s = editor_export::to_string( state.project() );
             oss << editor_export::format_string( s );
         } );
         state.histate->last_exported_revision = state.histate->current_revision.num;
