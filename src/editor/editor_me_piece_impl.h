@@ -175,17 +175,23 @@ struct me_piece_nested : public me_piece {
 struct me_piece_alt_trap : public me_piece {
     IMPLEMENT_ME_PIECE( me_piece_alt_trap, PieceType::AltTrap );
 
+    void init_new() override;
+
     me_weighted_list<trap_eid> list;
 };
 
 struct me_piece_alt_furniture : public me_piece {
     IMPLEMENT_ME_PIECE( me_piece_alt_furniture, PieceType::AltFurniture );
 
+    void init_new() override;
+
     me_weighted_list<furn_eid> list;
 };
 
 struct me_piece_alt_terrain : public me_piece {
     IMPLEMENT_ME_PIECE( me_piece_alt_terrain, PieceType::AltTerrain );
+
+    void init_new() override;
 
     me_weighted_list<ter_eid> list;
 };

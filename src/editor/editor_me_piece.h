@@ -49,6 +49,8 @@ struct me_piece {
     virtual void export_func( JsonOut &jo ) const = 0;
 
     virtual void show_ui( me_state &state ) = 0;
+
+    virtual void init_new() {};
 };
 
 const std::vector<std::unique_ptr<me_piece>> &get_piece_templates();

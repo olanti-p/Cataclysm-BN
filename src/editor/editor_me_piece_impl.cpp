@@ -268,14 +268,32 @@ void show_piece_alt( me_state &state, editor::me_weighted_list<T> &list )
     ImGui::Indent( -style::list_indent );
 }
 
+void me_piece_alt_trap::init_new()
+{
+    list.entries.emplace_back();
+    list.entries.back().weight = 1;
+}
+
 void me_piece_alt_trap::show_ui( me_state &state )
 {
     show_piece_alt( state, list );
 }
 
+void me_piece_alt_furniture::init_new()
+{
+    list.entries.emplace_back();
+    list.entries.back().weight = 1;
+}
+
 void me_piece_alt_furniture::show_ui( me_state &state )
 {
     show_piece_alt( state, list );
+}
+
+void me_piece_alt_terrain::init_new()
+{
+    list.entries.emplace_back();
+    list.entries.back().weight = 1;
 }
 
 void me_piece_alt_terrain::show_ui( me_state &state )

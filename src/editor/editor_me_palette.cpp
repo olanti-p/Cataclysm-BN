@@ -45,7 +45,9 @@ void show_palette_entry_extended( me_state &state, editor::me_palette &p,
         if( ImGui::Combo( "##pick-new-mapping", &new_piece_type, new_piece_str.c_str() ) )
         {
             if( new_piece_type != 0 ) {
-                list.push_back( editor::make_new_piece( piece_opts[new_piece_type - 1] ) );
+                auto ptr = editor::make_new_piece( piece_opts[new_piece_type - 1] );
+                ptr->init_new();
+                list.push_back( std::move( ptr ) );
                 ret = true;
             }
         }
