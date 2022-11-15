@@ -6,9 +6,8 @@
 - Cut/paste symbols on canvas
 - Import existing mapgens
 - Implement all mapgen pieces
-- Detach terrain and furniture from palette
-- Show pieces summary in palette
-- Check for bugs in undo/redo when dealing with repeated-edit-event widgets and different palettes
+- Show terrain underneath furniture in preview
+- Show pieces summary in palette, ability to collapse pieces
 - Palette inheritance
 - Nested mapgen preview on canvas
 - Update mapgen, blueprint autocalc
@@ -16,8 +15,11 @@
 - Vehicle placement preview
 - Quick test of mapgen in game
 - Multiple mapgens on same screen
-- Placings support
+- Object placement support
 - Fill out known bugs section
 
 ## Known bugs:
 TODO
+
+- When opening project from title screen, the mouse click may erroneously propagate into applying brush to canvas
+- Terrain and furniture sprites with non-standard sizes (e.g. trees, or fridge) get squeezed to fit
