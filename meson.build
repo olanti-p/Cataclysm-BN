@@ -19,12 +19,7 @@ if meson.get_compiler('cpp').has_argument('-Wno-shadow')
     cpp_args += [ '-Wno-shadow' ]
 endif
 
-version_dep = declare_dependency(
-    sources : [version_h],
-)
-
 lib_dependencies = [
-    version_dep,
     sdl2_dep,
     sdl2_image_dep,
     sdl2_ttf_dep,

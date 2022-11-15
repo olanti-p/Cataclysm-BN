@@ -318,9 +318,9 @@ lib_sources = files(
 
 subdir('editor/')
 
-version_h = custom_target(
-    'version.h',
+vcs_tag(
+    command: [ 'git', 'describe', '--tags', '--match', 'bnme-*' ],
+    input: 'version.h.in',
     output: 'version.h',
-    input: 'version_static.h',
-    command: [ find_program('../build-scripts/copy-file.py'), '@INPUT@', '@OUTPUT@']
+    replace_string: '@VERSION@'
 )
