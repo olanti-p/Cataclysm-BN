@@ -4,6 +4,7 @@
 #include "editor_me_piece.h"
 
 #include "../calendar.h"
+#include "../enum_traits.h"
 #include "editor_me_editable_id.h"
 #include "editor_me_int_range.h"
 #include "editor_me_weighted_list.h"
@@ -64,10 +65,20 @@ struct me_piece_toilet : public me_piece {
     me_int_range amount;
 };
 
+enum class GasPumpFuel {
+    Random,
+    Gasoline,
+    Diesel,
+
+    _Num,
+};
+
 struct me_piece_gaspump : public me_piece {
     IMPLEMENT_ME_PIECE( me_piece_gaspump, PieceType::GasPump );
 
-    // TODO
+    bool use_default_amount = true;
+    me_int_range amount;
+    GasPumpFuel fuel;
 };
 
 struct me_piece_liquid : public me_piece {
@@ -197,5 +208,10 @@ struct me_piece_alt_terrain : public me_piece {
 };
 
 } // namespace editor
+
+template<>
+struct enum_traits<editor::GasPumpFuel> {
+    static constexpr editor::GasPumpFuel last = editor::GasPumpFuel::_Num;
+};
 
 #endif // CATA_SRC_EDITOR_EDITOR_ME_PIECE_IMPL_H

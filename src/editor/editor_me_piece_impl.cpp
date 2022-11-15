@@ -143,7 +143,35 @@ void me_piece_toilet::show_ui( me_state &state )
 
 void me_piece_gaspump::show_ui( me_state &state )
 {
-    ImGui::Text( "TODO" );
+    ImGui::HelpMarkerInline( "Whether to use default amount\n( random value within [10000, 50000] )." );
+    if( ImGui::Checkbox( "Use default amount", &use_default_amount ) ) {
+        state.mark_changed();
+    }
+    if( use_default_amount ) {
+        ImGui::BeginDisabled();
+    }
+    ImGui::HelpMarkerInline( "Amount of fuel to spawn, [min, max]." );
+    if( ImGui::InputIntRange( "amount", amount ) ) {
+        state.mark_changed( "me-piece-gaspump-amount-input" );
+    }
+    if( use_default_amount ) {
+        ImGui::EndDisabled();
+    }
+
+    ImGui::HelpMarkerInline(
+        "Type of fuel to spawn.\n\n"
+        "Setting it to 'Random' will choose randomly between diesel (25% chance) and gasoline (75% chance)."
+    );
+    ImGui::Text( "Fuel type:" );
+    if( ImGui::RadioButton( "Random", fuel == GasPumpFuel::Random ) ) {
+        fuel = GasPumpFuel::Random;
+    }
+    if( ImGui::RadioButton( "Diesel", fuel == GasPumpFuel::Diesel ) ) {
+        fuel = GasPumpFuel::Diesel;
+    }
+    if( ImGui::RadioButton( "Gasoline", fuel == GasPumpFuel::Gasoline ) ) {
+        fuel = GasPumpFuel::Gasoline;
+    }
 }
 
 void me_piece_liquid::show_ui( me_state &state )

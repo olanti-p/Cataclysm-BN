@@ -265,7 +265,14 @@ void me_piece_toilet::export_func( JsonOut &jo ) const
 
 void me_piece_gaspump::export_func( JsonOut &jo ) const
 {
-    // TODO
+    if( !use_default_amount ) {
+        ee::emit( jo, "amount", amount );
+    }
+    if( fuel == GasPumpFuel::Gasoline ) {
+        ee::emit( jo, "fuel", "gasoline" );
+    } else if( fuel == GasPumpFuel::Diesel ) {
+        ee::emit( jo, "fuel", "diesel" );
+    }
 }
 
 void me_piece_liquid::export_func( JsonOut &jo ) const

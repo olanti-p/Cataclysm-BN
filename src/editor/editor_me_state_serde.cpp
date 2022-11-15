@@ -100,6 +100,22 @@ std::string enum_to_string<editor::MapgenType>( editor::MapgenType data )
 }
 
 template<>
+std::string enum_to_string<editor::GasPumpFuel>( editor::GasPumpFuel data )
+{
+    switch( data ) {
+        // *INDENT-OFF*
+        case editor::GasPumpFuel::Random: return "Random";
+        case editor::GasPumpFuel::Diesel: return "Diesel";
+        case editor::GasPumpFuel::Gasoline: return "Gasoline";
+        // *INDENT-ON*
+        case editor::GasPumpFuel::_Num:
+            break;
+    }
+    debugmsg( "Invalid editor::GasPumpFuel" );
+    abort();
+}
+
+template<>
 std::string enum_to_string<editor::PieceType>( editor::PieceType data )
 {
     switch( data ) {
@@ -239,12 +255,16 @@ void me_piece_toilet::deserialize( JsonObject &jsin )
 
 void me_piece_gaspump::serialize( JsonOut &jsout ) const
 {
-    // TODO
+    jsout.member( "use_default_amount", use_default_amount );
+    jsout.member( "amount", amount );
+    jsout.member_as_string( "fuel", fuel );
 }
 
 void me_piece_gaspump::deserialize( JsonObject &jsin )
 {
-    // TODO
+    jsin.read( "use_default_amount", use_default_amount );
+    jsin.read( "amount", amount );
+    jsin.read( "fuel", fuel );
 }
 
 void me_piece_liquid::serialize( JsonOut &jsout ) const
