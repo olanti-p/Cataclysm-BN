@@ -2,12 +2,17 @@
 #define CATA_SRC_EDITOR_EDITOR_ME_UISTATE_H
 
 #include "../optional.h"
+#include "../pimpl.h"
 
 #include "editor_me_uuid.h"
+#include "editor_me_camera.h"
+#include "editor_me_canvas_tool.h"
 
 namespace editor
 {
 struct me_state;
+struct me_camera;
+struct me_canvas_tools_state;
 
 namespace detail
 {
@@ -29,7 +34,24 @@ struct open_mapping {
 };
 } // namespace detail
 
+/**
+ * Editor UI state.
+ *
+ * It's saving and loading is managed by imgui settings save/load routines,
+ * so it may fall out of sync with the project state (e.g. use nonexistent uuids).
+ *
+ * As such, it is required to check members for validity when using them,
+ * and in case of invalidation - reset to some neutral but valid state.
+*/
 struct me_uistate {
+    me_uistate();
+    me_uistate( const me_uistate & ) = delete;
+    me_uistate( me_uistate && );
+    ~me_uistate();
+
+    me_uistate &operator=( const me_uistate & ) = delete;
+    me_uistate &operator=( me_uistate && );
+
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
 
@@ -43,6 +65,9 @@ struct me_uistate {
 
     std::vector<detail::open_palette> open_palettes; // List of open palettes
     std::vector<detail::open_mapping> open_mappings; // List of open mappings
+
+    pimpl<me_camera> camera;
+    pimpl<me_canvas_tools_state> tools_state;
 
     void toggle_show_palette( uuid_t uuid );
     void toggle_show_mapping( uuid_t palette, uuid_t uuid );

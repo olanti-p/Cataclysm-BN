@@ -88,6 +88,30 @@ void initialize_settings_export()
     ImGui::AddSettingsHandler( &ini_handler );
 }
 
+} // namespace editor
+
+namespace io
+{
+
+template<>
+std::string enum_to_string<editor::CanvasTool>( editor::CanvasTool data )
+{
+    switch( data ) {
+        // *INDENT-OFF*
+        case editor::CanvasTool::Brush: return "Brush";
+        case editor::CanvasTool::Bucket: return "Bucket";
+        case editor::CanvasTool::BucketGlobal: return "BucketGlobal";
+        // *INDENT-ON*
+        case editor::CanvasTool::_Num:
+            break;
+    }
+    debugmsg( "Invalid editor::CanvasTool" );
+    abort();
+}
+} // namespace io
+
+namespace editor
+{
 namespace detail
 {
 
@@ -129,6 +153,8 @@ void open_mapping::deserialize( JsonIn &jsin )
 
 void me_uistate::serialize( JsonOut &jsout ) const
 {
+    // These are intentionally omitted:
+    // - do_loop
     jsout.start_object();
     jsout.member( "show_demo_wnd", show_demo_wnd );
     jsout.member( "show_asset_lib", show_asset_lib );
@@ -138,6 +164,8 @@ void me_uistate::serialize( JsonOut &jsout ) const
     jsout.member( "active_file_id", active_file_id );
     jsout.member( "open_palettes", open_palettes );
     jsout.member( "open_mappings", open_mappings );
+    jsout.member( "camera", camera );
+    jsout.member( "tools_state", tools_state );
     jsout.end_object();
 }
 
@@ -153,6 +181,46 @@ void me_uistate::deserialize( JsonIn &jsin )
     jo.read( "active_file_id", active_file_id );
     jo.read( "open_palettes", open_palettes );
     jo.read( "open_mappings", open_mappings );
+    jo.read( "camera", camera );
+    jo.read( "tools_state", tools_state );
+}
+
+void me_camera::serialize( JsonOut &jsout ) const
+{
+    // These are intentionally omitted:
+    // - drag_delta
+    jsout.start_object();
+    jsout.member( "pos", pos );
+    jsout.member( "scale", scale );
+    jsout.end_object();
+}
+
+void me_camera::deserialize( JsonIn &jsin )
+{
+    JsonObject jo = jsin.get_object();
+
+    jo.read( "pos", pos );
+    jo.read( "scale", scale );
+}
+
+void me_canvas_tools_state::serialize( JsonOut &jsout ) const
+{
+    // These are intentionally omitted:
+    // - ongoing_tool_operation
+    // - ongoing_brush_stroke
+    // - brush_stroke_changed_data
+    jsout.start_object();
+    jsout.member( "tool", tool );
+    jsout.member( "brush", brush );
+    jsout.end_object();
+}
+
+void me_canvas_tools_state::deserialize( JsonIn &jsin )
+{
+    JsonObject jo = jsin.get_object();
+
+    jo.read( "tool", tool );
+    jo.read( "brush", brush );
 }
 
 } // namespace editor

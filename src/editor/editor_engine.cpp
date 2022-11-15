@@ -25,8 +25,12 @@ static std::string ini_file_path;
 
 namespace editor
 {
-void set_default_ini_path()
+void set_default_ini_path( bool flush )
 {
+    if( flush ) {
+        flush_ini_to_disk();
+    }
+
     ini_file_path = PATH_INFO::config_dir() + "imgui.ini";
     ImGuiIO &io = ImGui::GetIO();
     io.IniFilename = ini_file_path.c_str();
@@ -35,14 +39,24 @@ void set_default_ini_path()
     ImGui::LoadIniSettingsFromDisk( io.IniFilename );
 }
 
-void set_project_ini_path( const std::string &project_uuid )
+void set_project_ini_path( const std::string &project_uuid, bool flush )
 {
+    if( flush ) {
+        flush_ini_to_disk();
+    }
+
     ini_file_path = PATH_INFO::config_dir() + "imgui/" + project_uuid + ".ini";
     ImGuiIO &io = ImGui::GetIO();
     io.IniFilename = ini_file_path.c_str();
 
     ImGui::ClearIniSettings();
     ImGui::LoadIniSettingsFromDisk( io.IniFilename );
+}
+
+void flush_ini_to_disk()
+{
+    ImGuiIO &io = ImGui::GetIO();
+    ImGui::SaveIniSettingsToDisk( io.IniFilename );
 }
 
 bool init_ui( SDL_Window &window_ref, SDL_Renderer &renderer_ref )
@@ -62,7 +76,7 @@ bool init_ui( SDL_Window &window_ref, SDL_Renderer &renderer_ref )
     ImGui_ImplSDLRenderer_Init( renderer );
 
     // Specify ini file path
-    set_default_ini_path();
+    set_default_ini_path( false );
 
     return true;
 }

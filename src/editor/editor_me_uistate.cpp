@@ -16,6 +16,10 @@
 
 namespace editor
 {
+me_uistate::me_uistate() = default;
+me_uistate::me_uistate( me_uistate && ) = default;
+me_uistate::~me_uistate() = default;
+me_uistate &me_uistate::operator=( me_uistate && ) = default;
 
 void me_uistate::toggle_show_palette( uuid_t uuid )
 {
@@ -87,14 +91,14 @@ void show_ui_control_window( me_state &state )
             "- Press MMB (mouse wheel) on tile to select it.\n"
             "- Press MMB outside bounds (or on empty tile) to clear selection."
         );
-        ImGui::DragInt( "Zoom", &state.camera->scale, 0.2f, MIN_SCALE, MAX_SCALE );
-        ImGui::DragPoint( "Pos", &state.camera->pos, 1.0f, -10000, 10000 );
+        ImGui::DragInt( "Zoom", &uistate.camera->scale, 0.2f, MIN_SCALE, MAX_SCALE );
+        ImGui::DragPoint( "Pos", &uistate.camera->pos, 1.0f, -10000, 10000 );
     }
 
     // Mouse position
     {
         point_abs_screen screen_pos = get_mouse_pos();
-        point_abs_etile etile_pos = get_mouse_tile_pos( *state.camera );
+        point_abs_etile etile_pos = get_mouse_tile_pos( *uistate.camera );
         ImGui::Text( "Mouse pos, px: %s", screen_pos.to_string().c_str() );
         ImGui::Text( "Mouse pos, tile: %s", etile_pos.to_string().c_str() );
     }
@@ -138,7 +142,7 @@ void run_ui_for_state( me_state &state )
         show_file_history( *state.histate, uistate.show_file_history );
     }
     if( uistate.show_toolbar ) {
-        show_toolbar( *state.tools_state, uistate.show_toolbar );
+        show_toolbar( *uistate.tools_state, uistate.show_toolbar );
     }
 
     for( auto &it : uistate.open_palettes ) {
@@ -188,7 +192,7 @@ void run_ui_for_state( me_state &state )
         }
     }
 
-    handle_revision_change( *state.histate, *state.tools_state );
+    handle_revision_change( *state.histate, *uistate.tools_state );
 }
 
 } // namespace editor

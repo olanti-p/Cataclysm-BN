@@ -11,6 +11,9 @@ constexpr int MAX_SCALE = 128;
 constexpr int DEFAULT_SCALE = 32;
 
 struct me_camera {
+    void serialize( JsonOut &jsout ) const;
+    void deserialize( JsonIn &jsin );
+
     point_abs_epos pos;
     point_rel_epos drag_delta;
     int scale = DEFAULT_SCALE;

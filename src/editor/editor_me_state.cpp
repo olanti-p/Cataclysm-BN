@@ -1,8 +1,6 @@
 #include "editor_me_state.h"
 
 #include "editor_me_assetlib.h"
-#include "editor_me_camera.h"
-#include "editor_me_canvas_tool.h"
 #include "editor_me_project.h"
 #include "editor_me_history.h"
 #include "editor_me_save_export.h"

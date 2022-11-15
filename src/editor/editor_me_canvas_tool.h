@@ -3,6 +3,8 @@
 
 #include "editor_me_uuid.h"
 
+#include "../enum_traits.h"
+
 
 namespace editor
 {
@@ -12,9 +14,14 @@ enum class CanvasTool {
     Brush,
     Bucket,
     BucketGlobal,
+
+    _Num,
 };
 
 struct me_canvas_tools_state {
+    void serialize( JsonOut &jsout ) const;
+    void deserialize( JsonIn &jsin );
+
     CanvasTool tool = CanvasTool::Brush;
     bool ongoing_tool_operation = false;
     bool ongoing_brush_stroke = false;
@@ -28,5 +35,10 @@ struct me_canvas_tools_state {
 void show_toolbar( me_canvas_tools_state &tools, bool &show );
 
 } // namespace editor
+
+template<>
+struct enum_traits<editor::CanvasTool> {
+    static constexpr editor::CanvasTool last = editor::CanvasTool::_Num;
+};
 
 #endif // CATA_SRC_EDITOR_EDITOR_ME_CANVAS_TOOL_H

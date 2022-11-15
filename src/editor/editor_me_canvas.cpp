@@ -8,6 +8,7 @@
 #include "editor_me_file.h"
 #include "editor_me_project.h"
 #include "editor_me_state.h"
+#include "editor_me_uistate.h"
 #include "editor_me_canvas_tool.h"
 
 #include <set>
@@ -215,7 +216,7 @@ void show_canvas( me_state &state, me_file *file_ptr )
     }
 
     ImDrawList *draw_list = ImGui::GetWindowDrawList();
-    me_camera &cam = *state.camera;
+    me_camera &cam = *state.uistate->camera;
     editor::me_file &file = *file_ptr;
     ImGui::PushID( file.uuid );
 
@@ -230,7 +231,7 @@ void show_canvas( me_state &state, me_file *file_ptr )
 
     ImGuiIO &io = ImGui::GetIO();
     bool canvas_hovered = ImGui::IsWindowHovered();
-    me_canvas_tools_state &tools = *state.tools_state;
+    me_canvas_tools_state &tools = *state.uistate->tools_state;
     bool brush_stroke_active = false;
     if( canvas_hovered ) {
         point_abs_etile tile_pos = get_mouse_tile_pos( cam );
@@ -259,6 +260,11 @@ void show_canvas( me_state &state, me_file *file_ptr )
             cam.scale = clamp( cam.scale + delta, MIN_SCALE, MAX_SCALE );
         }
         if( file.uses_rows() ) {
+            // Ensure the brush is in valid state
+            const me_palette &pal = *state.project().get_palette_by_uuid( file.base.inline_palette_id );
+            if( !pal.find_entry( tools.brush ) ) {
+                tools.brush = UUID_INVALID;
+            }
             if( tools.tool == CanvasTool::Brush && ImGui::IsMouseDown( ImGuiMouseButton_Left ) ) {
                 brush_stroke_active = true;
                 tools.ongoing_tool_operation = true;

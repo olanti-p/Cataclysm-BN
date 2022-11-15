@@ -120,6 +120,7 @@ static void show_palette_entries( me_state &state, me_palette &palette )
     }
 
     me_project &proj = state.project();
+    me_canvas_tools_state &tools = *state.uistate->tools_state;
 
     bool changed = ImGui::VectorWidget()
     .with_add( [&]() -> bool {
@@ -155,13 +156,13 @@ static void show_palette_entries( me_state &state, me_palette &palette )
         for( me_file &file : proj.files ) {
             file.base.remove_usages( uuid );
         }
-        if( state.tools_state->brush == uuid ) {
-            state.tools_state->brush = UUID_INVALID;
+        if( tools.brush == uuid ) {
+            tools.brush = UUID_INVALID;
         }
         list.erase( std::next( list.cbegin(), idx ) );
     } )
     .with_for_each( [&]( size_t idx ) {
-        uuid_t &brush = state.tools_state->brush;
+        uuid_t &brush = tools.brush;
         if( list[idx].uuid == brush ) {
             if( ImGui::ImageButton( "unpick", "me_clear_rows_brush" ) ) {
                 brush = UUID_INVALID;
