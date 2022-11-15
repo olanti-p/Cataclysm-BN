@@ -353,12 +353,22 @@ void me_piece_vehicle::deserialize( JsonObject &jsin )
 
 void me_piece_item::serialize( JsonOut &jsout ) const
 {
-    // TODO
+    jsout.member( "item_id", item_id );
+    jsout.member( "amount", amount );
+    jsout.member( "spawn_always", spawn_always );
+    jsout.member( "chance", chance );
+    jsout.member( "spawn_once", spawn_once );
+    jsout.member( "repeat", repeat );
 }
 
 void me_piece_item::deserialize( JsonObject &jsin )
 {
-    // TODO
+    jsin.read( "item_id", item_id );
+    jsin.read( "amount", amount );
+    jsin.read( "spawn_always", spawn_always );
+    jsin.read( "chance", chance );
+    jsin.read( "spawn_once", spawn_once );
+    jsin.read( "repeat", repeat );
 }
 
 void me_piece_trap::serialize( JsonOut &jsout ) const

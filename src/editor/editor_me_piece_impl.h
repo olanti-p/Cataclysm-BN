@@ -132,7 +132,12 @@ struct me_piece_vehicle : public me_piece {
 struct me_piece_item : public me_piece {
     IMPLEMENT_ME_PIECE( me_piece_item, PieceType::Item );
 
-    // TODO
+    item_eid item_id;
+    me_int_range amount;
+    bool spawn_always = true;
+    me_int_range chance;
+    bool spawn_once = true;
+    me_int_range repeat;
 };
 
 struct me_piece_trap : public me_piece {

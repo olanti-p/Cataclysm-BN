@@ -331,7 +331,16 @@ void me_piece_vehicle::export_func( JsonOut &jo ) const
 
 void me_piece_item::export_func( JsonOut &jo ) const
 {
-    // TODO
+    ee::emit( jo, "item", item_id );
+    if( amount.min != 1 || amount.max != 1 ) {
+        ee::emit( jo, "amount", amount );
+    }
+    if( !spawn_always ) {
+        ee::emit( jo, "chance", chance );
+    }
+    if( !spawn_once ) {
+        ee::emit( jo, "repeat", repeat );
+    }
 }
 
 void me_piece_trap::export_func( JsonOut &jo ) const

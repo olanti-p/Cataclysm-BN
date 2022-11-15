@@ -294,7 +294,37 @@ void me_piece_vehicle::show_ui( me_state &state )
 
 void me_piece_item::show_ui( me_state &state )
 {
-    ImGui::Text( "TODO" );
+    ImGui::HelpMarkerInline( "Item type to spawn." );
+    if( ImGui::InputId( "item_id", item_id ) ) {
+        state.mark_changed();
+    }
+
+    ImGui::HelpMarkerInline( "Amount of items to spawn, [min, max]." );
+    if( ImGui::InputIntRange( "amount", amount ) ) {
+        state.mark_changed( "me-piece-item-amount-input" );
+    }
+
+    ImGui::HelpMarkerInline( "Whether to spawn always, or with a chance." );
+    if( ImGui::Checkbox( "Always", &spawn_always ) ) {
+        state.mark_changed();
+    }
+    ImGui::BeginDisabled( spawn_always );
+    ImGui::HelpMarkerInline( "TODO" );
+    if( ImGui::InputIntRange( "chance", chance ) ) {
+        state.mark_changed( "me-piece-item-chance-input" );
+    }
+    ImGui::EndDisabled();
+
+    ImGui::HelpMarkerInline( "Whether to spawn once, or multiple times." );
+    if( ImGui::Checkbox( "Once", &spawn_once ) ) {
+        state.mark_changed();
+    }
+    ImGui::BeginDisabled( spawn_once );
+    ImGui::HelpMarkerInline( "TODO" );
+    if( ImGui::InputIntRange( "repeat", repeat ) ) {
+        state.mark_changed( "me-piece-item-repeat-input" );
+    }
+    ImGui::EndDisabled();
 }
 
 void me_piece_trap::show_ui( me_state &state )
