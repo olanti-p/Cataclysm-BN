@@ -217,7 +217,33 @@ void me_piece_liquid::show_ui( me_state &state )
 
 void me_piece_igroup::show_ui( me_state &state )
 {
-    ImGui::Text( "TODO" );
+    ImGui::HelpMarkerInline( "Whether to spawn always, or with a chance." );
+    if( ImGui::Checkbox( "Always", &spawn_always ) ) {
+        state.mark_changed();
+    }
+    ImGui::BeginDisabled( spawn_always );
+    ImGui::HelpMarkerInline( "TODO" );
+    if( ImGui::InputIntRange( "chance", chance ) ) {
+        state.mark_changed( "me-piece-igroup-chance-input" );
+    }
+    ImGui::EndDisabled();
+
+    ImGui::HelpMarkerInline( "Whether to spawn once, or multiple times." );
+    if( ImGui::Checkbox( "Once", &spawn_once ) ) {
+        state.mark_changed();
+    }
+    ImGui::BeginDisabled( spawn_once );
+    ImGui::HelpMarkerInline( "TODO" );
+    if( ImGui::InputIntRange( "repeat", repeat ) ) {
+        state.mark_changed( "me-piece-igroup-repeat-input" );
+    }
+    ImGui::EndDisabled();
+
+    // TODO: inline item groups
+    ImGui::HelpMarkerInline( "Item group to spawn." );
+    if( ImGui::InputId( "group_id", group_id ) ) {
+        state.mark_changed();
+    }
 }
 
 void me_piece_loot::show_ui( me_state &state )

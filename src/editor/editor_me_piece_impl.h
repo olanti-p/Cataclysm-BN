@@ -94,7 +94,11 @@ struct me_piece_liquid : public me_piece {
 struct me_piece_igroup : public me_piece {
     IMPLEMENT_ME_PIECE( me_piece_igroup, PieceType::Igroup );
 
-    // TODO
+    igroup_eid group_id;
+    bool spawn_always = true;
+    me_int_range chance;
+    bool spawn_once = true;
+    me_int_range repeat;
 };
 
 struct me_piece_loot : public me_piece {

@@ -288,7 +288,13 @@ void me_piece_liquid::export_func( JsonOut &jo ) const
 
 void me_piece_igroup::export_func( JsonOut &jo ) const
 {
-    // TODO
+    if( !spawn_always ) {
+        ee::emit( jo, "chance", chance );
+    }
+    ee::emit( jo, "item", group_id );
+    if( !spawn_once ) {
+        ee::emit( jo, "repeat", repeat );
+    }
 }
 
 void me_piece_loot::export_func( JsonOut &jo ) const
