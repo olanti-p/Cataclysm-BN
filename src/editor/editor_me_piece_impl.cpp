@@ -217,16 +217,17 @@ void me_piece_liquid::show_ui( me_state &state )
 
 void me_piece_igroup::show_ui( me_state &state )
 {
-    ImGui::HelpMarkerInline( "Whether to spawn always, or with a chance." );
-    if( ImGui::Checkbox( "Always", &spawn_always ) ) {
-        state.mark_changed();
-    }
-    ImGui::BeginDisabled( spawn_always );
-    ImGui::HelpMarkerInline( "TODO" );
-    if( ImGui::InputIntRange( "chance", chance ) ) {
+    ImGui::HelpMarkerInline(
+        "Chance to spawn an item from the group, in percent.\n\n"
+        "Accepted values: [1, 100].\n\n"
+        "The value is multiplied by ITEM_SPAWNRATE option, and in case it overflows 100 - "
+        "guarantees a spawn for every full 100%.\n\n"
+        "For example: with chance of 70% and ITEM_SPAWNRATE of 4.1 the resulting chance would be "
+        "287%, which results in 2 guaranteed spawns and 1 spawn with 87% chance."
+    );
+    if( ImGui::InputIntRange( "chance (%)", chance ) ) {
         state.mark_changed( "me-piece-igroup-chance-input" );
     }
-    ImGui::EndDisabled();
 
     ImGui::HelpMarkerInline( "Whether to spawn once, or multiple times." );
     if( ImGui::Checkbox( "Once", &spawn_once ) ) {
@@ -304,13 +305,20 @@ void me_piece_item::show_ui( me_state &state )
         state.mark_changed( "me-piece-item-amount-input" );
     }
 
-    ImGui::HelpMarkerInline( "Whether to spawn always, or with a chance." );
-    if( ImGui::Checkbox( "Always", &spawn_always ) ) {
+    ImGui::HelpMarkerInline( "Whether to always spawn 1, or any amount with a chance." );
+    if( ImGui::Checkbox( "Spawn one", &spawn_one ) ) {
         state.mark_changed();
     }
-    ImGui::BeginDisabled( spawn_always );
-    ImGui::HelpMarkerInline( "TODO" );
-    if( ImGui::InputIntRange( "chance", chance ) ) {
+    ImGui::BeginDisabled( spawn_one );
+    ImGui::HelpMarkerInline(
+        "Chance to spawn item, in percent.\n\n"
+        "Accepted values: [1, 99].\n\n"
+        "The value is multiplied by ITEM_SPAWNRATE option, and in case it overflows 100 - "
+        "guarantees a spawn for every full 100%.\n\n"
+        "For example: with chance of 70% and ITEM_SPAWNRATE of 4.1 the resulting chance would be "
+        "287%, which results in 2 guaranteed spawns and 1 spawn with 87% chance."
+    );
+    if( ImGui::InputIntRange( "chance (%)", chance ) ) {
         state.mark_changed( "me-piece-item-chance-input" );
     }
     ImGui::EndDisabled();

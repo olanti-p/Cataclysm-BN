@@ -95,7 +95,6 @@ struct me_piece_igroup : public me_piece {
     IMPLEMENT_ME_PIECE( me_piece_igroup, PieceType::Igroup );
 
     igroup_eid group_id;
-    bool spawn_always = true;
     me_int_range chance;
     bool spawn_once = true;
     me_int_range repeat;
@@ -134,7 +133,7 @@ struct me_piece_item : public me_piece {
 
     item_eid item_id;
     me_int_range amount;
-    bool spawn_always = true;
+    bool spawn_one = true;
     me_int_range chance;
     bool spawn_once = true;
     me_int_range repeat;

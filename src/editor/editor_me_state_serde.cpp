@@ -287,7 +287,6 @@ void me_piece_liquid::deserialize( JsonObject &jsin )
 
 void me_piece_igroup::serialize( JsonOut &jsout ) const
 {
-    jsout.member( "spawn_always", spawn_always );
     jsout.member( "chance", chance );
     jsout.member( "group_id", group_id );
     jsout.member( "spawn_once", spawn_once );
@@ -296,7 +295,6 @@ void me_piece_igroup::serialize( JsonOut &jsout ) const
 
 void me_piece_igroup::deserialize( JsonObject &jsin )
 {
-    jsin.read( "spawn_always", spawn_always );
     jsin.read( "chance", chance );
     jsin.read( "group_id", group_id );
     jsin.read( "spawn_once", spawn_once );
@@ -355,7 +353,7 @@ void me_piece_item::serialize( JsonOut &jsout ) const
 {
     jsout.member( "item_id", item_id );
     jsout.member( "amount", amount );
-    jsout.member( "spawn_always", spawn_always );
+    jsout.member( "spawn_one", spawn_one );
     jsout.member( "chance", chance );
     jsout.member( "spawn_once", spawn_once );
     jsout.member( "repeat", repeat );
@@ -365,7 +363,7 @@ void me_piece_item::deserialize( JsonObject &jsin )
 {
     jsin.read( "item_id", item_id );
     jsin.read( "amount", amount );
-    jsin.read( "spawn_always", spawn_always );
+    jsin.read( "spawn_one", spawn_one );
     jsin.read( "chance", chance );
     jsin.read( "spawn_once", spawn_once );
     jsin.read( "repeat", repeat );

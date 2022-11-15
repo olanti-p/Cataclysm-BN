@@ -294,10 +294,8 @@ void me_piece_liquid::export_func( JsonOut &jo ) const
 
 void me_piece_igroup::export_func( JsonOut &jo ) const
 {
-    if( !spawn_always ) {
-        ee::emit( jo, "chance", chance );
-    }
     ee::emit( jo, "item", group_id );
+    ee::emit( jo, "chance", chance );
     if( !spawn_once ) {
         ee::emit( jo, "repeat", repeat );
     }
@@ -335,10 +333,10 @@ void me_piece_item::export_func( JsonOut &jo ) const
     if( amount.min != 1 || amount.max != 1 ) {
         ee::emit( jo, "amount", amount );
     }
-    if( !spawn_always ) {
-        ee::emit( jo, "chance", chance );
-    } else {
+    if( spawn_one ) {
         ee::emit( jo, "chance", me_int_range{ .min = 100, .max = 100 } );
+    } else {
+        ee::emit( jo, "chance", chance );
     }
     if( !spawn_once ) {
         ee::emit( jo, "repeat", repeat );
