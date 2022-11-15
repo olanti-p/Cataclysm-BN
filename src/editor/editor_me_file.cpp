@@ -70,7 +70,7 @@ void show_file_info( me_state &state, me_file &file, bool &show )
         }
         ImGui::HelpPopup( "Overmap terrain type to assign this mapgen to." );
         if( ImGui::InputIntClamped( "weight", file.oter.weight, 0, 10000 ) ) {
-            state.mark_changed();
+            state.mark_changed( "file-info-oter-weight-input" );
         }
         ImGui::HelpPopup(
             "Weight of this mapgen, defaults to 100.\n\n"
