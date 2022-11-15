@@ -210,7 +210,7 @@ void me_canvas_tools_state::serialize( JsonOut &jsout ) const
     // - ongoing_brush_stroke
     // - brush_stroke_changed_data
     jsout.start_object();
-    jsout.member( "tool", tool );
+    jsout.member_as_string( "tool", tool );
     jsout.member( "brush", brush );
     jsout.end_object();
 }

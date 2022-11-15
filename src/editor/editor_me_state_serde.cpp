@@ -13,7 +13,7 @@
 void serialize( const std::unique_ptr<editor::me_piece> &ptr, JsonOut &jsout )
 {
     jsout.start_object();
-    jsout.member( "piece_type", ptr->get_type() );
+    jsout.member_as_string( "piece_type", ptr->get_type() );
     ptr->serialize( jsout );
     jsout.end_object();
 }
@@ -574,7 +574,7 @@ void me_mapgen_oter::serialize( JsonOut &jsout ) const
     jsout.start_object();
     jsout.member( "om_terrain", om_terrain );
     jsout.member( "weight", weight );
-    jsout.member( "mapgen_base", mapgen_base );
+    jsout.member_as_string( "mapgen_base", mapgen_base );
     jsout.member( "fill_ter", fill_ter );
     jsout.member( "predecessor_mapgen", predecessor_mapgen );
     jsout.member( "rotation", rotation );
@@ -638,7 +638,7 @@ void me_file::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
     jsout.member( "uuid", uuid );
-    jsout.member( "mtype", mtype );
+    jsout.member_as_string( "mtype", mtype );
     jsout.member( "base", base );
     jsout.member( "oter", oter );
     jsout.member( "update", update );
