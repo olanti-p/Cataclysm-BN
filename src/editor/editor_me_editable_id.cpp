@@ -40,6 +40,18 @@ const std::vector<std::string> &editable_id<furn_t>::get_all_opts()
 }
 
 template<>
+const std::vector<std::string> &editable_id<item_group_tag>::get_all_opts()
+{
+    if( all_opts.empty() ) {
+        all_opts.reserve( item_controller->get_all_group_names().size() );
+        for( const item_group_id &it : item_controller->get_all_group_names() ) {
+            all_opts.push_back( it.str() );
+        }
+    }
+    return all_opts;
+}
+
+template<>
 const std::vector<std::string> &editable_id<itype>::get_all_opts()
 {
     if( all_opts.empty() ) {
@@ -162,4 +174,10 @@ template<>
 bool string_id<editor::liquid_item_tag>::is_valid() const
 {
     return itype_id( this->str() ).is_valid();
+}
+
+template<>
+bool string_id<editor::item_group_tag>::is_valid() const
+{
+    return item_controller->get_group( item_group_id( this->str() ) );
 }

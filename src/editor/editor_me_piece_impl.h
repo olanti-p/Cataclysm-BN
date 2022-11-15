@@ -55,7 +55,7 @@ struct me_piece_vending_machine : public me_piece {
 
     bool reinforced = false;
     bool use_default_group = true;
-    std::string item_group;
+    igroup_eid item_group;
 };
 
 struct me_piece_toilet : public me_piece {

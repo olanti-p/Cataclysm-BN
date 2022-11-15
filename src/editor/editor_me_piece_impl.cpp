@@ -113,10 +113,9 @@ void me_piece_vending_machine::show_ui( me_state &state )
     if( use_default_group ) {
         ImGui::BeginDisabled();
     }
-    ImGui::HelpMarkerInline( "Item group id string.\n\nWARNING: no validation is done here." );
-    // TODO: validation
-    if( ImGui::InputText( "item_group", &item_group ) ) {
-        state.mark_changed( "me-piece-vending-machine-item-group-input" );
+    ImGui::HelpMarkerInline( "Item group to spawn items from." );
+    if( ImGui::InputId( "item_group", item_group ) ) {
+        state.mark_changed();
     }
     if( use_default_group ) {
         ImGui::EndDisabled();

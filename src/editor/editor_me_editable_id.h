@@ -71,9 +71,11 @@ std::vector<std::string> editable_id<T>::all_opts;
 
 struct snippet_category_tag {};
 struct liquid_item_tag {};
+struct item_group_tag {};
 
 using field_eid = editable_id<field_type>;
 using furn_eid = editable_id<furn_t>;
+using igroup_eid = editable_id<item_group_tag>;
 using item_eid = editable_id<itype>;
 using liquid_eid = editable_id<liquid_item_tag>;
 using npc_template_eid = editable_id<npc_template>;
