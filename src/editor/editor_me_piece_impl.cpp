@@ -23,6 +23,11 @@ void me_piece_field::show_ui( me_state &state )
     }
 }
 
+std::string me_piece_field::fmt_data_summary() const
+{
+    return string_format( "%s:%d", ftype.data, intensity );
+}
+
 void me_piece_npc::show_ui( me_state &state )
 {
     ImGui::HelpMarkerInline( "NPC template to use." );
@@ -48,6 +53,11 @@ void me_piece_npc::show_ui( me_state &state )
     ImGui::Indent( -style::list_indent );
 }
 
+std::string me_piece_npc::fmt_data_summary() const
+{
+    return npc_class.data;
+}
+
 void me_piece_faction::show_ui( me_state &state )
 {
     ImGui::HelpMarkerInline( "Faction id string.\n\nWARNING: no validation is done here." );
@@ -55,6 +65,11 @@ void me_piece_faction::show_ui( me_state &state )
     if( ImGui::InputText( "id", &id ) ) {
         state.mark_changed( "me-piece-faction-id-input" );
     }
+}
+
+std::string me_piece_faction::fmt_data_summary() const
+{
+    return id;
 }
 
 static void sign_or_graffiti(
@@ -95,9 +110,27 @@ void me_piece_sign::show_ui( me_state &state )
     sign_or_graffiti( state, true, use_snippet, snippet, text );
 }
 
+std::string me_piece_sign::fmt_data_summary() const
+{
+    if( use_snippet ) {
+        return string_format( "<%s>", snippet.data );
+    } else {
+        return string_format( "\"%s\"", text );
+    }
+}
+
 void me_piece_graffiti::show_ui( me_state &state )
 {
     sign_or_graffiti( state, false, use_snippet, snippet, text );
+}
+
+std::string me_piece_graffiti::fmt_data_summary() const
+{
+    if( use_snippet ) {
+        return string_format( "<%s>", snippet.data );
+    } else {
+        return string_format( "\"%s\"", text );
+    }
 }
 
 void me_piece_vending_machine::show_ui( me_state &state )
@@ -122,6 +155,15 @@ void me_piece_vending_machine::show_ui( me_state &state )
     }
 }
 
+std::string me_piece_vending_machine::fmt_data_summary() const
+{
+    if( use_default_group ) {
+        return "default_vending_machine";
+    } else {
+        return item_group.data;
+    }
+}
+
 void me_piece_toilet::show_ui( me_state &state )
 {
     ImGui::HelpMarkerInline( "Whether to use default amount (24)." );
@@ -138,6 +180,11 @@ void me_piece_toilet::show_ui( me_state &state )
     if( use_default_amount ) {
         ImGui::EndDisabled();
     }
+}
+
+std::string me_piece_toilet::fmt_data_summary() const
+{
+    return "TODO";
 }
 
 void me_piece_gaspump::show_ui( me_state &state )
@@ -171,6 +218,11 @@ void me_piece_gaspump::show_ui( me_state &state )
     if( ImGui::RadioButton( "Gasoline", fuel == GasPumpFuel::Gasoline ) ) {
         fuel = GasPumpFuel::Gasoline;
     }
+}
+
+std::string me_piece_gaspump::fmt_data_summary() const
+{
+    return "TODO";
 }
 
 void me_piece_liquid::show_ui( me_state &state )
@@ -215,6 +267,11 @@ void me_piece_liquid::show_ui( me_state &state )
     }
 }
 
+std::string me_piece_liquid::fmt_data_summary() const
+{
+    return liquid.data;
+}
+
 void me_piece_igroup::show_ui( me_state &state )
 {
     ImGui::HelpMarkerInline(
@@ -247,9 +304,19 @@ void me_piece_igroup::show_ui( me_state &state )
     }
 }
 
+std::string me_piece_igroup::fmt_data_summary() const
+{
+    return group_id.data;
+}
+
 void me_piece_loot::show_ui( me_state &state )
 {
     ImGui::Text( "TODO" );
+}
+
+std::string me_piece_loot::fmt_data_summary() const
+{
+    return "TODO";
 }
 
 void me_piece_mgroup::show_ui( me_state &state )
@@ -283,14 +350,29 @@ void me_piece_mgroup::show_ui( me_state &state )
     ImGui::EndDisabled();
 }
 
+std::string me_piece_mgroup::fmt_data_summary() const
+{
+    return group_id.data;
+}
+
 void me_piece_monster::show_ui( me_state &state )
 {
     ImGui::Text( "TODO" );
 }
 
+std::string me_piece_monster::fmt_data_summary() const
+{
+    return "TODO";
+}
+
 void me_piece_vehicle::show_ui( me_state &state )
 {
     ImGui::Text( "TODO" );
+}
+
+std::string me_piece_vehicle::fmt_data_summary() const
+{
+    return "TODO";
 }
 
 void me_piece_item::show_ui( me_state &state )
@@ -335,9 +417,19 @@ void me_piece_item::show_ui( me_state &state )
     ImGui::EndDisabled();
 }
 
+std::string me_piece_item::fmt_data_summary() const
+{
+    return item_id.data;
+}
+
 void me_piece_trap::show_ui( me_state &state )
 {
     ImGui::Text( "TODO" );
+}
+
+std::string me_piece_trap::fmt_data_summary() const
+{
+    return "TODO";
 }
 
 void me_piece_furniture::show_ui( me_state &state )
@@ -345,9 +437,19 @@ void me_piece_furniture::show_ui( me_state &state )
     ImGui::Text( "TODO" );
 }
 
+std::string me_piece_furniture::fmt_data_summary() const
+{
+    return "TODO";
+}
+
 void me_piece_terrain::show_ui( me_state &state )
 {
     ImGui::Text( "TODO" );
+}
+
+std::string me_piece_terrain::fmt_data_summary() const
+{
+    return "TODO";
 }
 
 void me_piece_ter_furn_transform::show_ui( me_state &state )
@@ -355,9 +457,19 @@ void me_piece_ter_furn_transform::show_ui( me_state &state )
     ImGui::Text( "TODO" );
 }
 
+std::string me_piece_ter_furn_transform::fmt_data_summary() const
+{
+    return "TODO";
+}
+
 void me_piece_make_rubble::show_ui( me_state &state )
 {
     ImGui::Text( "TODO" );
+}
+
+std::string me_piece_make_rubble::fmt_data_summary() const
+{
+    return "TODO";
 }
 
 void me_piece_computer::show_ui( me_state &state )
@@ -365,9 +477,19 @@ void me_piece_computer::show_ui( me_state &state )
     ImGui::Text( "TODO" );
 }
 
+std::string me_piece_computer::fmt_data_summary() const
+{
+    return "TODO";
+}
+
 void me_piece_sealed_item::show_ui( me_state &state )
 {
     ImGui::Text( "TODO" );
+}
+
+std::string me_piece_sealed_item::fmt_data_summary() const
+{
+    return "TODO";
 }
 
 void me_piece_translate::show_ui( me_state &state )
@@ -375,14 +497,29 @@ void me_piece_translate::show_ui( me_state &state )
     ImGui::Text( "TODO" );
 }
 
+std::string me_piece_translate::fmt_data_summary() const
+{
+    return "TODO";
+}
+
 void me_piece_zone::show_ui( me_state &state )
 {
     ImGui::Text( "TODO" );
 }
 
+std::string me_piece_zone::fmt_data_summary() const
+{
+    return "TODO";
+}
+
 void me_piece_nested::show_ui( me_state &state )
 {
     ImGui::Text( "TODO" );
+}
+
+std::string me_piece_nested::fmt_data_summary() const
+{
+    return "TODO";
 }
 
 template<typename T>
@@ -438,6 +575,15 @@ void me_piece_alt_trap::show_ui( me_state &state )
     show_piece_alt( state, list );
 }
 
+std::string me_piece_alt_trap::fmt_data_summary() const
+{
+    std::string ret = list.entries[0].val.data;
+    if( list.entries.size() > 1 ) {
+        ret += string_format( " (+%d)", list.entries.size() - 1 );
+    }
+    return ret;
+}
+
 void me_piece_alt_furniture::init_new()
 {
     list.entries.emplace_back();
@@ -449,6 +595,15 @@ void me_piece_alt_furniture::show_ui( me_state &state )
     show_piece_alt( state, list );
 }
 
+std::string me_piece_alt_furniture::fmt_data_summary() const
+{
+    std::string ret = list.entries[0].val.data;
+    if( list.entries.size() > 1 ) {
+        ret += string_format( " (+%d)", list.entries.size() - 1 );
+    }
+    return ret;
+}
+
 void me_piece_alt_terrain::init_new()
 {
     list.entries.emplace_back();
@@ -458,6 +613,15 @@ void me_piece_alt_terrain::init_new()
 void me_piece_alt_terrain::show_ui( me_state &state )
 {
     show_piece_alt( state, list );
+}
+
+std::string me_piece_alt_terrain::fmt_data_summary() const
+{
+    std::string ret = list.entries[0].val.data;
+    if( list.entries.size() > 1 ) {
+        ret += string_format( " (+%d)", list.entries.size() - 1 );
+    }
+    return ret;
 }
 
 } // namespace editor

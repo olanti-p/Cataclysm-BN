@@ -6,6 +6,11 @@
 namespace editor
 {
 
+std::string me_piece::fmt_summary() const
+{
+    return string_format( "%s: %s", io::enum_to_string<PieceType>( get_type() ), fmt_data_summary() );
+}
+
 const std::vector<std::unique_ptr<me_piece>> &get_piece_templates()
 {
     static std::vector<std::unique_ptr<me_piece>> ret;

@@ -28,7 +28,8 @@ class JsonObject;
     void serialize( JsonOut &jsout ) const override;                    \
     void deserialize( JsonObject &jsin ) override;                      \
     void export_func( JsonOut& jo ) const override;                     \
-    void show_ui( me_state& state ) override;
+    void show_ui( me_state& state ) override;                           \
+    std::string fmt_data_summary() const override;
 
 namespace editor
 {
@@ -51,6 +52,16 @@ struct me_piece {
     virtual void show_ui( me_state &state ) = 0;
 
     virtual void init_new() {};
+
+    /**
+     * Returns "Type: data" summary string
+    */
+    std::string fmt_summary() const;
+
+    /**
+     * Returns data summary string;
+    */
+    virtual std::string fmt_data_summary() const = 0;
 };
 
 const std::vector<std::unique_ptr<me_piece>> &get_piece_templates();
