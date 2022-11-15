@@ -2,6 +2,14 @@ project('cataclysm-bn', 'cpp', default_options: ['default_library=static', 'cpp_
 
 cpp_args = [ '-DTILES' ]
 
+if meson.get_compiler('cpp').get_id() == 'msvc'
+    cpp_args += [
+        '/wd4068',
+        '/wd4244',
+        '/wd4305'
+    ]
+endif
+
 subdir('src/')
 subdir('tools/format')
 

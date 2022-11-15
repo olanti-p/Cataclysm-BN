@@ -334,7 +334,10 @@ void me_piece_item::export_func( JsonOut &jo ) const
         ee::emit( jo, "amount", amount );
     }
     if( spawn_one ) {
-        ee::emit( jo, "chance", me_int_range{ .min = 100, .max = 100 } );
+        me_int_range x;
+        x.min = 100;
+        x.max = 100;
+        ee::emit( jo, "chance", x );
     } else {
         ee::emit( jo, "chance", chance );
     }
