@@ -70,9 +70,12 @@ template<typename T>
 std::vector<std::string> editable_id<T>::all_opts;
 
 struct snippet_category_tag {};
+struct liquid_item_tag {};
 
 using field_eid = editable_id<field_type>;
 using furn_eid = editable_id<furn_t>;
+using item_eid = editable_id<itype>;
+using liquid_eid = editable_id<liquid_item_tag>;
 using npc_template_eid = editable_id<npc_template>;
 using oter_eid = editable_id<oter_t>;
 using palette_eid = editable_id<mapgen_palette>;

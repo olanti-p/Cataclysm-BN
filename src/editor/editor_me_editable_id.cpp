@@ -4,6 +4,7 @@
 #include "../field_type.h"
 #include "../game.h"
 #include "../mapdata.h"
+#include "../item_factory.h"
 #include "../mapgen.h"
 #include "../mutation.h"
 #include "../npc.h"
@@ -34,6 +35,33 @@ const std::vector<std::string> &editable_id<furn_t>::get_all_opts()
         for( const furn_t &it : furn_t::get_all() ) {
             all_opts.push_back( it.id.str() );
         }
+    }
+    return all_opts;
+}
+
+template<>
+const std::vector<std::string> &editable_id<itype>::get_all_opts()
+{
+    if( all_opts.empty() ) {
+        all_opts.reserve( item_controller->all().size() );
+        for( const itype *it : item_controller->all() ) {
+            all_opts.push_back( it->id.str() );
+        }
+    }
+    return all_opts;
+}
+
+template<>
+const std::vector<std::string> &editable_id<liquid_item_tag>::get_all_opts()
+{
+    if( all_opts.empty() ) {
+        for( const itype *it : item_controller->all() ) {
+            if( it->phase != phase_id::LIQUID ) {
+                continue;
+            }
+            all_opts.push_back( it->id.str() );
+        }
+        all_opts.shrink_to_fit();
     }
     return all_opts;
 }
@@ -128,4 +156,10 @@ template<>
 bool string_id<editor::snippet_category_tag>::is_valid() const
 {
     return SNIPPET.snippets_by_category.count( this->str() ) > 0;
+}
+
+template<>
+bool string_id<editor::liquid_item_tag>::is_valid() const
+{
+    return itype_id( this->str() ).is_valid();
 }

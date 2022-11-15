@@ -176,7 +176,44 @@ void me_piece_gaspump::show_ui( me_state &state )
 
 void me_piece_liquid::show_ui( me_state &state )
 {
-    ImGui::Text( "TODO" );
+    // TODO: show default amount from item
+    ImGui::HelpMarkerInline( "Whether to use default amount\n( derived from item type )." );
+    if( ImGui::Checkbox( "Use default amount", &use_default_amount ) ) {
+        state.mark_changed();
+    }
+    if( use_default_amount ) {
+        ImGui::BeginDisabled();
+    }
+    ImGui::HelpMarkerInline( "Amount of liquid to spawn, [min, max]." );
+    if( ImGui::InputIntRange( "amount", amount ) ) {
+        state.mark_changed( "me-piece-liquid-amount-input" );
+    }
+    if( use_default_amount ) {
+        ImGui::EndDisabled();
+    }
+
+    ImGui::HelpMarkerInline( "Type of liquid to spawn.\n\nWARNING: no validation is done here." );
+    if( ImGui::InputId( "liquid", liquid ) ) {
+        state.mark_changed();
+    }
+
+    ImGui::HelpMarkerInline( "Whether to spawn always, or with a chance." );
+    if( ImGui::Checkbox( "Always", &spawn_always ) ) {
+        state.mark_changed();
+    }
+    if( spawn_always ) {
+        ImGui::BeginDisabled();
+    }
+    ImGui::HelpMarkerInline(
+        "Chance to spawn, non-linear.\n\n"
+        "Formula is:  one_in( rng( [min, max] ) )"
+    );
+    if( ImGui::InputIntRange( "chance", chance ) ) {
+        state.mark_changed( "me-piece-liquid-chance-input" );
+    }
+    if( spawn_always ) {
+        ImGui::EndDisabled();
+    }
 }
 
 void me_piece_igroup::show_ui( me_state &state )

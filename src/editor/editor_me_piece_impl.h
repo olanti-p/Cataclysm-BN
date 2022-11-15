@@ -84,7 +84,11 @@ struct me_piece_gaspump : public me_piece {
 struct me_piece_liquid : public me_piece {
     IMPLEMENT_ME_PIECE( me_piece_liquid, PieceType::Liquid );
 
-    // TODO
+    bool use_default_amount = true;
+    me_int_range amount;
+    liquid_eid liquid;
+    bool spawn_always = true;
+    me_int_range chance;
 };
 
 struct me_piece_igroup : public me_piece {

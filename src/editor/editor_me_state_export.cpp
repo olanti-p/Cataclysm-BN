@@ -277,7 +277,13 @@ void me_piece_gaspump::export_func( JsonOut &jo ) const
 
 void me_piece_liquid::export_func( JsonOut &jo ) const
 {
-    // TODO
+    if( !use_default_amount ) {
+        ee::emit( jo, "amount", amount );
+    }
+    ee::emit( jo, "liquid", liquid );
+    if( !spawn_always ) {
+        ee::emit( jo, "chance", chance );
+    }
 }
 
 void me_piece_igroup::export_func( JsonOut &jo ) const

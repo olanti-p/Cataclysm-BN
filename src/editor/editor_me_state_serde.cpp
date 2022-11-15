@@ -269,12 +269,20 @@ void me_piece_gaspump::deserialize( JsonObject &jsin )
 
 void me_piece_liquid::serialize( JsonOut &jsout ) const
 {
-    // TODO
+    jsout.member( "use_default_amount", use_default_amount );
+    jsout.member( "amount", amount );
+    jsout.member( "liquid", liquid );
+    jsout.member( "spawn_always", spawn_always );
+    jsout.member( "chance", chance );
 }
 
 void me_piece_liquid::deserialize( JsonObject &jsin )
 {
-    // TODO
+    jsin.read( "use_default_amount", use_default_amount );
+    jsin.read( "amount", amount );
+    jsin.read( "liquid", liquid );
+    jsin.read( "spawn_always", spawn_always );
+    jsin.read( "chance", chance );
 }
 
 void me_piece_igroup::serialize( JsonOut &jsout ) const
