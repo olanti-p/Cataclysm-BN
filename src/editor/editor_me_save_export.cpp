@@ -69,6 +69,14 @@ void handle_file_exporting( me_state &state )
 
     me_save_export_state &sestate = *state.sestate;
 
+    if( ImGui::IsKeyDown( ImGuiKey_LeftCtrl ) && ImGui::IsKeyPressed( ImGuiKey_E ) ) {
+        if( ImGui::IsKeyDown( ImGuiKey_LeftShift ) || !sestate.file_export_path ) {
+            sestate.open_export_as = true;
+        } else {
+            sestate.do_export = true;
+        }
+    }
+
     if( sestate.open_export_as ) {
         sestate.open_export_as = false;
         ImGuiFileDialog::Instance()->OpenDialog( "ExportToFile",
