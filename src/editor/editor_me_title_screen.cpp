@@ -50,6 +50,7 @@ static void show_titlescreen_window( me_titlescreen_state &state )
 
     if( state.open_file_dialog ) {
         state.open_file_dialog = false;
+        ImGui::SetNextWindowSize( ImVec2( 580, 380 ), ImGuiCond_FirstUseEver );
         ImGuiFileDialog::Instance()->OpenDialog( "OpenFile", "Choose a File", ".json", "." );
     }
 
