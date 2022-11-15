@@ -69,6 +69,8 @@ struct me_uistate {
     pimpl<me_camera> camera;
     pimpl<me_canvas_tools_state> tools_state;
 
+    std::set<std::string> expanded_mapping_pieces;
+
     void toggle_show_palette( uuid_t uuid );
     void toggle_show_mapping( uuid_t palette, uuid_t uuid );
 };

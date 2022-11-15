@@ -23,6 +23,27 @@ map_key pick_available_key( const me_palette &pal )
     return gen();
 }
 
+static std::string fmt_piece_id( editor::me_palette &p, editor::me_palette_entry &entry,
+                                 size_t idx )
+{
+    return string_format( "%d-%d-%d", p.uuid, entry.uuid, idx );
+}
+
+static bool is_expanded( const me_state &state, const std::string &piece_id )
+{
+    return state.uistate->expanded_mapping_pieces.count( piece_id ) != 0;
+}
+
+static void expand_piece( me_state &state, const std::string &piece_id )
+{
+    state.uistate->expanded_mapping_pieces.insert( piece_id );
+}
+
+static void collapse_piece( me_state &state, const std::string &piece_id )
+{
+    state.uistate->expanded_mapping_pieces.erase( piece_id );
+}
+
 void show_mapping( me_state &state, editor::me_palette &p, editor::me_palette_entry &entry,
                    bool &show )
 {
@@ -39,7 +60,6 @@ void show_mapping( me_state &state, editor::me_palette &p, editor::me_palette_en
 
     bool changed = ImGui::VectorWidget()
     .with_add( [&]()->bool {
-        ImGui::Separator();
         std::vector<std::pair<std::string, PieceType>> piece_opts;
         for( const auto &it : editor::get_piece_templates() )
         {
@@ -73,17 +93,31 @@ void show_mapping( me_state &state, editor::me_palette &p, editor::me_palette_en
                 auto ptr = editor::make_new_piece( piece_opts[new_piece_type - 1].second );
                 ptr->init_new();
                 list.push_back( std::move( ptr ) );
+                expand_piece( state, fmt_piece_id( p, entry, list.size() - 1 ) );
                 ret = true;
             }
         }
         return ret;
     } )
     .with_for_each( [&]( size_t idx ) {
-        ImGui::Separator();
-        ImGui::Text( "Mapping %d: %s", static_cast<int>( idx ),
-                     io::enum_to_string<PieceType>( list[idx]->get_type() ).c_str() );
-
-        list[idx]->show_ui( state );
+        std::string piece_id = fmt_piece_id( p, entry, idx );
+        if( is_expanded( state, piece_id ) ) {
+            if( ImGui::ArrowButton( "##collapse", ImGuiDir_Down ) ) {
+                collapse_piece( state, piece_id );
+            }
+            ImGui::HelpPopup( "Hide details." );
+            ImGui::SameLine();
+            ImGui::Text( "%d %s", static_cast<int>( idx ), list[idx]->fmt_summary().c_str() );
+            list[idx]->show_ui( state );
+            ImGui::Separator();
+        } else {
+            if( ImGui::ArrowButton( "##expand", ImGuiDir_Right ) ) {
+                expand_piece( state, piece_id );
+            }
+            ImGui::HelpPopup( "Show details." );
+            ImGui::SameLine();
+            ImGui::Text( "%d %s", static_cast<int>( idx ), list[idx]->fmt_summary().c_str() );
+        }
     } )
     .with_can_duplicate( [&]( size_t idx ) -> bool {
         return !editor::is_piece_exclusive( list[idx]->get_type() );
@@ -197,11 +231,8 @@ static void show_palette_entries( me_state &state, me_palette &palette )
         {
             cata::optional<std::string> text;
             me_piece_alt_terrain *ptr = list[idx].mapping.get_first_piece_of_type<me_piece_alt_terrain>();
-            if( ptr && !ptr->list.entries.empty() ) {
-                text = ptr->list.entries[0].val.data;
-                if( ptr->list.entries.size() > 1 ) {
-                    *text += string_format( " (+%d)", ptr->list.entries.size() - 1 );
-                }
+            if( ptr ) {
+                text = ptr->fmt_data_summary();
             }
             ImGui::SameLine();
             ImGui::BeginDisabled();
@@ -214,11 +245,8 @@ static void show_palette_entries( me_state &state, me_palette &palette )
         {
             cata::optional<std::string> text;
             me_piece_alt_furniture *ptr = list[idx].mapping.get_first_piece_of_type<me_piece_alt_furniture>();
-            if( ptr && !ptr->list.entries.empty() ) {
-                text = ptr->list.entries[0].val.data;
-                if( ptr->list.entries.size() > 1 ) {
-                    *text += string_format( " (+%d)", ptr->list.entries.size() - 1 );
-                }
+            if( ptr ) {
+                text = ptr->fmt_data_summary();
             }
             ImGui::SameLine();
             ImGui::BeginDisabled();

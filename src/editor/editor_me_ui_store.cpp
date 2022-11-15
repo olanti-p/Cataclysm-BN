@@ -166,6 +166,7 @@ void me_uistate::serialize( JsonOut &jsout ) const
     jsout.member( "open_mappings", open_mappings );
     jsout.member( "camera", camera );
     jsout.member( "tools_state", tools_state );
+    jsout.member( "expanded_mapping_pieces", expanded_mapping_pieces );
     jsout.end_object();
 }
 
@@ -183,6 +184,7 @@ void me_uistate::deserialize( JsonIn &jsin )
     jo.read( "open_mappings", open_mappings );
     jo.read( "camera", camera );
     jo.read( "tools_state", tools_state );
+    jo.read( "expanded_mapping_pieces", expanded_mapping_pieces );
 }
 
 void me_camera::serialize( JsonOut &jsout ) const
