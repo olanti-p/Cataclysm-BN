@@ -32,6 +32,7 @@ void handle_file_saving( me_state &state )
 
     if( sestate.open_save_as ) {
         sestate.open_save_as = false;
+        ImGui::SetNextWindowSize( ImVec2( 580, 380 ), ImGuiCond_FirstUseEver );
         ImGuiFileDialog::Instance()->OpenDialog( "SaveToFile",
                 "Save As...", ".json",
                 sestate.file_save_path ? *sestate.file_save_path : ".",
@@ -79,6 +80,7 @@ void handle_file_exporting( me_state &state )
 
     if( sestate.open_export_as ) {
         sestate.open_export_as = false;
+        ImGui::SetNextWindowSize( ImVec2( 580, 380 ), ImGuiCond_FirstUseEver );
         ImGuiFileDialog::Instance()->OpenDialog( "ExportToFile",
                 "Export As...", ".json",
                 sestate.file_export_path ? *sestate.file_export_path : ".",
