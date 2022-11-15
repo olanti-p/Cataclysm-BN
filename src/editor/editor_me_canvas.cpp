@@ -323,11 +323,21 @@ void show_canvas( me_state &state, me_file *file_ptr )
             for( int y = 0; y < file.mapgensize().y(); y++ ) {
                 point_abs_etile p( x, y );
                 uuid_t uuid = file.base.get_uuid_at( p.raw() );
+                const SpriteRef *img = pal.sprite_from_uuid( uuid );
+                if( img ) {
+                    fill_tile_sprited( draw_list, cam, p, *img );
+                }
+            }
+        }
+
+        for( int x = 0; x < file.mapgensize().x(); x++ ) {
+            for( int y = 0; y < file.mapgensize().y(); y++ ) {
+                point_abs_etile p( x, y );
+                uuid_t uuid = file.base.get_uuid_at( p.raw() );
                 ImVec4 col = pal.color_from_uuid( uuid );
                 const SpriteRef *img = pal.sprite_from_uuid( uuid );
                 if( img ) {
                     col.w *= 0.6f;
-                    fill_tile_sprited( draw_list, cam, p, *img );
                 }
                 fill_tile( draw_list, cam, p, col );
             }
