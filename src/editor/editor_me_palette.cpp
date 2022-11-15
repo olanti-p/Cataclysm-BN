@@ -203,14 +203,11 @@ static void show_palette_entries( me_state &state, me_palette &palette )
                     *text += string_format( " (+%d)", ptr->list.entries.size() - 1 );
                 }
             }
-            if( !text ) {
-                text = "<None>";
-            }
             ImGui::SameLine();
             ImGui::BeginDisabled();
             ImGui::Button(
-                string_format( "Ter: %s", *text ).c_str(),
-                ImVec2( ImGui::GetFrameHeight() * 10.0f, 0.0f )
+                text ? text->c_str() : "-",
+                ImVec2( ImGui::GetFrameHeight() * 8.0f, 0.0f )
             );
             ImGui::EndDisabled();
         }
@@ -223,14 +220,11 @@ static void show_palette_entries( me_state &state, me_palette &palette )
                     *text += string_format( " (+%d)", ptr->list.entries.size() - 1 );
                 }
             }
-            if( !text ) {
-                text = "<None>";
-            }
             ImGui::SameLine();
             ImGui::BeginDisabled();
             ImGui::Button(
-                string_format( "Furn: %s", *text ).c_str(),
-                ImVec2( ImGui::GetFrameHeight() * 10.0f, 0.0f )
+                text ? text->c_str() : "-",
+                ImVec2( ImGui::GetFrameHeight() * 8.0f, 0.0f )
             );
             ImGui::EndDisabled();
         }
@@ -238,9 +232,19 @@ static void show_palette_entries( me_state &state, me_palette &palette )
         if( ImGui::ArrowButton( "##mapping", ImGuiDir_Right ) ) {
             state.uistate->toggle_show_mapping( palette.uuid, list[idx].uuid );
         }
-        ImGui::HelpPopup( "Show/hide mappings associated with this symbol." );
-        ImGui::SameLine();
-        ImGui::Text( "[%d]", static_cast<int>( list[idx].mapping.pieces.size() ) );
+        ImGui::HelpPopup( "Show/hide mappings\nassociated with this symbol." );
+
+        int additional_pieces = 0;
+        for( const auto &it : list[idx].mapping.pieces ) {
+            if( it->get_type() == PieceType::AltTerrain || it->get_type() == PieceType::AltFurniture ) {
+                continue;
+            }
+            additional_pieces += 1;
+        }
+        if( additional_pieces > 0 ) {
+            ImGui::SameLine();
+            ImGui::Text( "+ %d", additional_pieces );
+        }
     } )
     .run( list );
 
