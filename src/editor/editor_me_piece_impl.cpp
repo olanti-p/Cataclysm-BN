@@ -253,7 +253,33 @@ void me_piece_loot::show_ui( me_state &state )
 
 void me_piece_mgroup::show_ui( me_state &state )
 {
-    ImGui::Text( "TODO" );
+    ImGui::HelpMarkerInline( "Whether to spawn always, or with a chance." );
+    if( ImGui::Checkbox( "Always", &spawn_always ) ) {
+        state.mark_changed();
+    }
+    ImGui::BeginDisabled( spawn_always );
+    ImGui::HelpMarkerInline( "TODO" );
+    if( ImGui::InputIntRange( "chance", chance ) ) {
+        state.mark_changed( "me-piece-mgroup-chance-input" );
+    }
+    ImGui::EndDisabled();
+
+    ImGui::HelpMarkerInline( "Monster group to spawn." );
+    if( ImGui::InputId( "group_id", group_id ) ) {
+        state.mark_changed();
+    }
+
+    ImGui::HelpMarkerInline( "Whether to use default map density, or a custom one." );
+    if( ImGui::Checkbox( "Use default density", &use_default_density ) ) {
+        state.mark_changed();
+    }
+    ImGui::BeginDisabled( use_default_density );
+    ImGui::HelpMarkerInline( "TODO" );
+    // TODO: validation
+    if( ImGui::InputFloat( "density", &density ) ) {
+        state.mark_changed( "me-piece-mgroup-density-input" );
+    }
+    ImGui::EndDisabled();
 }
 
 void me_piece_monster::show_ui( me_state &state )

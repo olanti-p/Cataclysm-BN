@@ -78,6 +78,7 @@ using furn_eid = editable_id<furn_t>;
 using igroup_eid = editable_id<item_group_tag>;
 using item_eid = editable_id<itype>;
 using liquid_eid = editable_id<liquid_item_tag>;
+using mgroup_eid = editable_id<MonsterGroup>;
 using npc_template_eid = editable_id<npc_template>;
 using oter_eid = editable_id<oter_t>;
 using palette_eid = editable_id<mapgen_palette>;

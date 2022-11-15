@@ -110,7 +110,11 @@ struct me_piece_loot : public me_piece {
 struct me_piece_mgroup : public me_piece {
     IMPLEMENT_ME_PIECE( me_piece_mgroup, PieceType::Mgroup );
 
-    // TODO
+    mgroup_eid group_id;
+    bool spawn_always = true;
+    me_int_range chance;
+    bool use_default_density = true;
+    float density = -1.0f;
 };
 
 struct me_piece_monster : public me_piece {

@@ -315,12 +315,20 @@ void me_piece_loot::deserialize( JsonObject &jsin )
 
 void me_piece_mgroup::serialize( JsonOut &jsout ) const
 {
-    // TODO
+    jsout.member( "spawn_always", spawn_always );
+    jsout.member( "chance", chance );
+    jsout.member( "group_id", group_id );
+    jsout.member( "use_default_density", use_default_density );
+    jsout.member( "density", density );
 }
 
 void me_piece_mgroup::deserialize( JsonObject &jsin )
 {
-    // TODO
+    jsin.read( "spawn_always", spawn_always );
+    jsin.read( "chance", chance );
+    jsin.read( "group_id", group_id );
+    jsin.read( "use_default_density", use_default_density );
+    jsin.read( "density", density );
 }
 
 void me_piece_monster::serialize( JsonOut &jsout ) const

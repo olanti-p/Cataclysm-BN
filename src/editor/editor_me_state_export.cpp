@@ -21,6 +21,7 @@ namespace editor_export
 void emit_key( JsonOut &jo, const std::string &key );
 
 void emit_val( JsonOut &jo, int i );
+void emit_val( JsonOut &jo, float f );
 void emit_val( JsonOut &jo, bool b );
 void emit_val( JsonOut &jo, const char *str );
 void emit_val( JsonOut &jo, const std::string &str );
@@ -61,6 +62,11 @@ void emit_key( JsonOut &jo, const std::string &key )
 void emit_val( JsonOut &jo, int i )
 {
     jo.write( i );
+}
+
+void emit_val( JsonOut &jo, float f )
+{
+    jo.write( f );
 }
 
 void emit_val( JsonOut &jo, bool b )
@@ -304,7 +310,13 @@ void me_piece_loot::export_func( JsonOut &jo ) const
 
 void me_piece_mgroup::export_func( JsonOut &jo ) const
 {
-    // TODO
+    ee::emit( jo, "monster", group_id );
+    if( !spawn_always ) {
+        ee::emit( jo, "chance", chance );
+    }
+    if( !use_default_density ) {
+        ee::emit( jo, "density", density );
+    }
 }
 
 void me_piece_monster::export_func( JsonOut &jo ) const

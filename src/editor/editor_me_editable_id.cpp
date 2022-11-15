@@ -3,9 +3,10 @@
 #include "../faction.h"
 #include "../field_type.h"
 #include "../game.h"
-#include "../mapdata.h"
 #include "../item_factory.h"
+#include "../mapdata.h"
 #include "../mapgen.h"
+#include "../mongroup.h"
 #include "../mutation.h"
 #include "../npc.h"
 #include "../omdata.h"
@@ -74,6 +75,18 @@ const std::vector<std::string> &editable_id<liquid_item_tag>::get_all_opts()
             all_opts.push_back( it->id.str() );
         }
         all_opts.shrink_to_fit();
+    }
+    return all_opts;
+}
+
+template<>
+const std::vector<std::string> &editable_id<MonsterGroup>::get_all_opts()
+{
+    if( all_opts.empty() ) {
+        all_opts.reserve( MonsterGroupManager::get_all().size() );
+        for( const auto &it : MonsterGroupManager::get_all() ) {
+            all_opts.push_back( it.first.str() );
+        }
     }
     return all_opts;
 }
