@@ -337,6 +337,8 @@ void me_piece_item::export_func( JsonOut &jo ) const
     }
     if( !spawn_always ) {
         ee::emit( jo, "chance", chance );
+    } else {
+        ee::emit( jo, "chance", me_int_range{ .min = 100, .max = 100 } );
     }
     if( !spawn_once ) {
         ee::emit( jo, "repeat", repeat );
