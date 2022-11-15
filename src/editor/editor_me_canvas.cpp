@@ -235,7 +235,6 @@ void show_canvas( me_state &state, me_file *file_ptr )
     bool brush_stroke_active = false;
     if( canvas_hovered ) {
         point_abs_etile tile_pos = get_mouse_tile_pos( cam );
-        highlight_tile( draw_list, cam, tile_pos, col_cursor );
 
         if( ImGui::IsMouseDragging( ImGuiMouseButton_Right ) ) {
             point_rel_screen drag_delta( ImGui::GetMouseDragDelta( ImGuiMouseButton_Right ) );
@@ -347,6 +346,11 @@ void show_canvas( me_state &state, me_file *file_ptr )
                 ImGui::Text( "%s", mk.str.c_str() );
             }
         }
+    }
+
+    if( canvas_hovered ) {
+        point_abs_etile tile_pos = get_mouse_tile_pos( cam );
+        highlight_tile( draw_list, cam, tile_pos, col_cursor );
     }
 
     ImGui::PopID();
