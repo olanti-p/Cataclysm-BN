@@ -233,8 +233,18 @@ void show_canvas( me_state &state, me_file *file_ptr )
     bool canvas_hovered = ImGui::IsWindowHovered();
     me_canvas_tools_state &tools = *state.uistate->tools_state;
     bool brush_stroke_active = false;
+    const me_palette_entry *show_tooltip_for_entry = nullptr;
     if( canvas_hovered ) {
         point_abs_etile tile_pos = get_mouse_tile_pos( cam );
+        point_rel_etile mapgensize = file.mapgensize();
+        bool is_mouse_in_bounds = tile_pos.x() >= 0 && tile_pos.y() >= 0 && tile_pos.x() < mapgensize.x() &&
+                                  tile_pos.y() < mapgensize.y();
+
+        if( is_mouse_in_bounds && ImGui::IsKeyDown( ImGuiKey_ModCtrl ) ) {
+            const uuid_t &uuid = file.base.get_uuid_at( tile_pos.raw() );
+            show_tooltip_for_entry = state.project().get_palette_by_uuid(
+                                         file.base.inline_palette_id )->find_entry( uuid );
+        }
 
         if( ImGui::IsMouseDragging( ImGuiMouseButton_Right ) ) {
             point_rel_screen drag_delta( ImGui::GetMouseDragDelta( ImGuiMouseButton_Right ) );
@@ -268,9 +278,7 @@ void show_canvas( me_state &state, me_file *file_ptr )
                 brush_stroke_active = true;
                 tools.ongoing_tool_operation = true;
                 tools.ongoing_brush_stroke = true;
-                point_rel_etile mapgensize = file.mapgensize();
-                if( tile_pos.x() >= 0 && tile_pos.y() >= 0 && tile_pos.x() < mapgensize.x() &&
-                    tile_pos.y() < mapgensize.y() ) {
+                if( is_mouse_in_bounds ) {
                     const uuid_t &uuid = file.base.get_uuid_at( tile_pos.raw() );
                     if( uuid != tools.brush ) {
                         file.base.set_uuid_at( tile_pos.raw(), tools.brush );
@@ -280,9 +288,7 @@ void show_canvas( me_state &state, me_file *file_ptr )
             }
             if( ( tools.tool == CanvasTool::Bucket || tools.tool == CanvasTool::BucketGlobal ) &&
                 ImGui::IsMouseClicked( ImGuiMouseButton_Left ) ) {
-                point_rel_etile mapgensize = file.mapgensize();
-                if( tile_pos.x() >= 0 && tile_pos.y() >= 0 && tile_pos.x() < mapgensize.x() &&
-                    tile_pos.y() < mapgensize.y() ) {
+                if( is_mouse_in_bounds ) {
                     const uuid_t &uuid = file.base.get_uuid_at( tile_pos.raw() );
                     if( uuid != tools.brush ) {
                         apply_bucket_tool( file, tools.brush, tile_pos, tools.tool == CanvasTool::BucketGlobal );
@@ -291,9 +297,7 @@ void show_canvas( me_state &state, me_file *file_ptr )
                 }
             }
             if( ImGui::IsMouseClicked( ImGuiMouseButton_Middle ) ) {
-                point_rel_etile mapgensize = file.mapgensize();
-                if( tile_pos.x() >= 0 && tile_pos.y() >= 0 && tile_pos.x() < mapgensize.x() &&
-                    tile_pos.y() < mapgensize.y() ) {
+                if( is_mouse_in_bounds ) {
                     const uuid_t &uuid = file.base.get_uuid_at( tile_pos.raw() );
                     tools.brush = uuid;
                 } else {
@@ -361,6 +365,15 @@ void show_canvas( me_state &state, me_file *file_ptr )
     if( canvas_hovered ) {
         point_abs_etile tile_pos = get_mouse_tile_pos( cam );
         highlight_tile( draw_list, cam, tile_pos, col_cursor );
+    }
+
+    if( show_tooltip_for_entry ) {
+        ImGui::BeginTooltip();
+        const me_palette_entry &e = *show_tooltip_for_entry;
+        for( const auto &it : e.mapping.pieces ) {
+            ImGui::Text( "%s", it->fmt_summary().c_str() );
+        }
+        ImGui::EndTooltip();
     }
 
     ImGui::PopID();

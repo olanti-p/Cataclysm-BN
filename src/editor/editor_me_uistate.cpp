@@ -87,6 +87,7 @@ void show_ui_control_window( me_state &state )
             "- Drag the view with RMB to pan.\n"
             "- Scroll over the view to zoom.\n"
             "- Use widgets below to manually control zoom and position.\n"
+            "- Hold Ctrl to see summary of highlighted tile.\n"
             "\nIn canvas mode:\n"
             "- Press MMB (mouse wheel) on tile to select it.\n"
             "- Press MMB outside bounds (or on empty tile) to clear selection."
