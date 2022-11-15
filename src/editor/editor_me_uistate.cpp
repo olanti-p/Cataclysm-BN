@@ -7,6 +7,7 @@
 #include "editor_me_file.h"
 #include "editor_me_palette.h"
 #include "editor_me_project.h"
+#include "editor_me_ui_store.h"
 #include "editor_me_history.h"
 #include "editor_me_save_export.h"
 #include "editor_me_state.h"
@@ -103,6 +104,10 @@ void show_ui_control_window( me_state &state )
 
 void run_ui_for_state( me_state &state )
 {
+    if( !state.uistate ) {
+        state.uistate = &get_uistate_for_project( state.project().project_uuid );
+    }
+
     me_project &proj = state.project();
     show_project_ui( state, proj );
 

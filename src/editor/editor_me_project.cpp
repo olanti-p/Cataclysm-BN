@@ -7,6 +7,8 @@
 #include "editor_widgets.h"
 #include "editor_me_uistate.h"
 
+#include <chrono>
+
 namespace editor
 {
 
@@ -98,6 +100,20 @@ void show_project_ui( me_state &state, me_project &project )
     }
 
     ImGui::End();
+}
+
+std::string timestamp_string()
+{
+    using namespace std::chrono;
+    uint64_t ms = duration_cast<milliseconds>( system_clock::now().time_since_epoch() ).count();
+    return string_format( "%u", ms );
+}
+
+std::unique_ptr<me_project> create_empty_project()
+{
+    auto ret = std::make_unique<me_project>();
+    ret->project_uuid = timestamp_string();
+    return ret;
 }
 
 } // namespace editor

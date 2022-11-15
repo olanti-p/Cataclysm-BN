@@ -16,7 +16,7 @@ void show_me_ui( me_state &state )
     run_ui_for_state( state );
 }
 
-me_state::me_state() : me_state( std::make_unique<me_project>() ) { }
+me_state::me_state() : me_state( create_empty_project() ) { }
 
 me_state::me_state( std::unique_ptr<me_project> &&project ) : me_state( std::move( project ),
             nullptr ) { }

@@ -22,6 +22,7 @@ editor_sources = files(
     'editor_me_state_serde.cpp',
     'editor_me_state.cpp',
     'editor_me_title_screen.cpp',
+    'editor_me_ui_store.cpp',
     'editor_me_uistate.cpp',
     'editor_widget_combofilter.cpp',
     'editor_widgets.cpp',

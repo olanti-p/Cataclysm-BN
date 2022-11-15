@@ -12,11 +12,17 @@ struct me_state;
 namespace detail
 {
 struct open_palette {
+    void serialize( JsonOut &jsout ) const;
+    void deserialize( JsonIn &jsin );
+
     uuid_t uuid;
     bool open = true;
 };
 
 struct open_mapping {
+    void serialize( JsonOut &jsout ) const;
+    void deserialize( JsonIn &jsin );
+
     uuid_t palette;
     uuid_t uuid;
     bool open = true;
@@ -24,6 +30,8 @@ struct open_mapping {
 } // namespace detail
 
 struct me_uistate {
+    void serialize( JsonOut &jsout ) const;
+    void deserialize( JsonIn &jsin );
 
     bool do_loop = true; // Setting this to false will quit the editor
     bool show_demo_wnd = false; // Whether to show ImGui Demo window

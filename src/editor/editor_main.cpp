@@ -1,8 +1,10 @@
 #include "editor_assets.h"
+#include "editor_engine.h"
 #include "editor_main.h"
 #include "editor_me_project.h"
-#include "editor_me_title_screen.h"
 #include "editor_me_state.h"
+#include "editor_me_title_screen.h"
+#include "editor_me_ui_store.h"
 #include "editor_me_uistate.h"
 #include "editor_widgets.h"
 
@@ -628,6 +630,12 @@ static editor::editor_state *current_state = nullptr;
 
 void advanced_editor_run()
 {
+    static bool settings_export_initialized = false;
+    if( !settings_export_initialized ) {
+        settings_export_initialized = true;
+        editor::initialize_settings_export();
+    }
+
     {
         editor_state state;
         init_assets( state.assets );
@@ -676,6 +684,8 @@ void advanced_editor_run()
                     state.exit_to_desktop = retval.exit_to_desktop;
                 } else if( retval.make_new ) {
                     state.mapgenedit_state = me_state();
+                    std::string project_uuid = state.mapgenedit_state->project().project_uuid;
+                    set_project_ini_path( project_uuid );
                 } else if( retval.load_existing ) {
                     std::unique_ptr<me_project> f = std::make_unique<me_project>();
                     auto reader = [&]( JsonIn & jsin ) {
@@ -683,6 +693,8 @@ void advanced_editor_run()
                     };
                     if( read_from_file_json( retval.load_path, reader ) ) {
                         state.mapgenedit_state = me_state( std::move( f ), &retval.load_path );
+                        std::string project_uuid = state.mapgenedit_state->project().project_uuid;
+                        set_project_ini_path( project_uuid );
                     } else {
                         state.projects_state->popup_prompt =
                             string_format( "Failed to load file:\n%s\nSee debug.log for details.", retval.load_path );
@@ -696,6 +708,7 @@ void advanced_editor_run()
                 }
             } else if( state.mapgenedit_state && !state.mapgenedit_state->uistate->do_loop ) {
                 state.mapgenedit_state.reset();
+                set_default_ini_path();
             }
         }
 

@@ -10,6 +10,7 @@ namespace editor
 struct me_state;
 
 struct me_project {
+    std::string project_uuid;
     uuid_generator uuid_gen;
     std::vector<me_file> files;
     std::vector<me_palette> palettes;
@@ -31,6 +32,8 @@ struct me_project {
 };
 
 void show_project_ui( me_state &state, me_project &project );
+
+std::unique_ptr<me_project> create_empty_project();
 
 } // namespace editor
 

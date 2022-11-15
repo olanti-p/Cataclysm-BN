@@ -9,6 +9,12 @@
 
 #include "../path_info.h"
 
+#ifdef DebugLog
+#  undef DebugLog
+#endif
+
+#include "imgui_internal.h"
+
 #if !SDL_VERSION_ATLEAST(2,0,17)
 #error This backend requires SDL 2.0.17+ because of SDL_RenderGeometry() function
 #endif
@@ -19,6 +25,26 @@ static std::string ini_file_path;
 
 namespace editor
 {
+void set_default_ini_path()
+{
+    ini_file_path = PATH_INFO::config_dir() + "imgui.ini";
+    ImGuiIO &io = ImGui::GetIO();
+    io.IniFilename = ini_file_path.c_str();
+
+    ImGui::ClearIniSettings();
+    ImGui::LoadIniSettingsFromDisk( io.IniFilename );
+}
+
+void set_project_ini_path( const std::string &project_uuid )
+{
+    ini_file_path = PATH_INFO::config_dir() + "imgui/" + project_uuid + ".ini";
+    ImGuiIO &io = ImGui::GetIO();
+    io.IniFilename = ini_file_path.c_str();
+
+    ImGui::ClearIniSettings();
+    ImGui::LoadIniSettingsFromDisk( io.IniFilename );
+}
+
 bool init_ui( SDL_Window &window_ref, SDL_Renderer &renderer_ref )
 {
     window = &window_ref;
@@ -36,9 +62,7 @@ bool init_ui( SDL_Window &window_ref, SDL_Renderer &renderer_ref )
     ImGui_ImplSDLRenderer_Init( renderer );
 
     // Specify ini file path
-    ini_file_path = PATH_INFO::config_dir() + "imgui.ini";
-    ImGuiIO &io = ImGui::GetIO();
-    io.IniFilename = ini_file_path.c_str();
+    set_default_ini_path();
 
     return true;
 }

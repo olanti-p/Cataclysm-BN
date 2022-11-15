@@ -25,11 +25,12 @@ struct me_state {
     me_state &operator=( me_state && );
 
     pimpl<asset_library> assets;
+    // TODO: roll camera and tools into ui state
     pimpl<me_camera> camera;
     pimpl<me_canvas_tools_state> tools_state;
     pimpl<me_history_state> histate;
     pimpl<me_save_export_state> sestate;
-    pimpl<me_uistate> uistate;
+    me_uistate *uistate = nullptr;
 
     me_project &project();
 

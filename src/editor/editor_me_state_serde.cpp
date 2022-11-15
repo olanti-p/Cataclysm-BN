@@ -662,6 +662,7 @@ void me_project::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
     jsout.member( "project_format_version", PROJECT_FORMAT_VERSION );
+    jsout.member( "project_uuid", project_uuid );
     jsout.member( "uuid_gen", uuid_gen );
     jsout.member( "files", files );
     jsout.member( "palettes", palettes );
@@ -673,6 +674,7 @@ void me_project::deserialize( JsonIn &jsin )
     JsonObject jo = jsin.get_object();
 
     jo.read( "project_format_version", project_load_version_val );
+    jo.read( "project_uuid", project_uuid );
     jo.read( "uuid_gen", uuid_gen );
     jo.read( "files", files );
     jo.read( "palettes", palettes );
