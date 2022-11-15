@@ -235,15 +235,19 @@ static void show_palette_entries( me_state &state, me_palette &palette )
         ImGui::HelpPopup( "Show/hide mappings\nassociated with this symbol." );
 
         int additional_pieces = 0;
+        std::string additional_summary;
         for( const auto &it : list[idx].mapping.pieces ) {
             if( it->get_type() == PieceType::AltTerrain || it->get_type() == PieceType::AltFurniture ) {
                 continue;
             }
             additional_pieces += 1;
+            additional_summary += it->fmt_summary();
+            additional_summary += "\n";
         }
         if( additional_pieces > 0 ) {
             ImGui::SameLine();
             ImGui::Text( "+ %d", additional_pieces );
+            ImGui::HelpPopup( additional_summary.c_str() );
         }
     } )
     .run( list );
