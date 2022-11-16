@@ -367,12 +367,50 @@ std::string me_piece_monster::fmt_data_summary() const
 
 void me_piece_vehicle::show_ui( me_state &state )
 {
-    ImGui::Text( "TODO" );
+    ImGui::HelpMarkerInline( "Vehicle group to spawn from." );
+    if( ImGui::InputId( "group_id", group_id ) ) {
+        state.mark_changed();
+    }
+
+    ImGui::HelpMarkerInline( "Chance to spawn, in percent." );
+    if( ImGui::InputIntRange( "chance (%)", chance ) ) {
+        state.mark_changed( "me-piece-mgroup-chance-input" );
+    }
+
+    ImGui::HelpMarkerInline(
+        "Vehicle status on spawn.\n\nTODO: details"
+    );
+    ImGui::Text( "Initial status:" );
+    if( ImGui::RadioButton( "LightDamage", status == VehicleStatus::LightDamage ) ) {
+        status = VehicleStatus::LightDamage;
+    }
+    if( ImGui::RadioButton( "Undamaged", status == VehicleStatus::Undamaged ) ) {
+        status = VehicleStatus::Undamaged;
+    }
+    if( ImGui::RadioButton( "Disabled", status == VehicleStatus::Disabled ) ) {
+        status = VehicleStatus::Disabled;
+    }
+
+    ImGui::HelpMarkerInline( "Whether to spawn with random percentage of fuel, or a set one." );
+    if( ImGui::Checkbox( "Random fuel amount", &random_fuel_amount ) ) {
+        state.mark_changed();
+    }
+    ImGui::BeginDisabled( random_fuel_amount );
+    ImGui::HelpMarkerInline( "TODO" );
+    if( ImGui::InputIntClamped( "fuel (%)", fuel, 0, 100 ) ) {
+        state.mark_changed( "me-piece-vehicle-fuel-input" );
+    }
+    ImGui::EndDisabled();
+
+    ImGui::Text( "Allowed rotations:" );
+    if( ImGui::VehicleDirSet( allowed_rotations ) ) {
+        state.mark_changed( "me-piece-vehicle-allowed-rotations-input" );
+    }
 }
 
 std::string me_piece_vehicle::fmt_data_summary() const
 {
-    return "TODO";
+    return group_id.data;
 }
 
 void me_piece_item::show_ui( me_state &state )

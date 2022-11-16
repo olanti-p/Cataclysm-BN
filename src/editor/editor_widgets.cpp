@@ -352,6 +352,112 @@ bool InputDuration( const char *label, time_duration &dur, ImGuiInputTextFlags f
     return ret;
 }
 
+bool VehicleDirSet( std::set<int> &data )
+{
+    static std::array<int, 24> button_map = {
+        15 * 15,
+        15 * 16,
+        15 * 17,
+        15 * 18,
+        15 * 19,
+        15 * 20,
+        15 * 21,
+
+        15 * 14,
+        15 * 22,
+
+        15 * 13,
+        15 * 23,
+
+        15 * 12,
+        15 * 0,
+
+        15 * 11,
+        15 * 1,
+
+        15 * 10,
+        15 * 2,
+
+        15 * 9,
+        15 * 8,
+        15 * 7,
+        15 * 6,
+        15 * 5,
+        15 * 4,
+        15 * 3,
+    };
+
+    const float btn_sz_f = ImGui::GetFrameHeight();
+    ImVec2 btn_sz( btn_sz_f, btn_sz_f );
+    ImVec2 btn_spacing( 2.0f, 2.0f );
+
+    bool changed = false;
+
+    const auto add_button = [&]( int i ) {
+        int angle = button_map[ i ];
+        bool is_set = data.count( angle ) != 0;
+
+        if( is_set ) {
+            ImGui::PushStyleColor( ImGuiCol_Button, ImVec4( 0.7f, 0.7f, 0.0f, 1.0f ) );
+            ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4( 1.0f, 1.0f, 0.2f, 1.0f ) );
+            ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4( 1.0f, 1.0f, 0.6f, 1.0f ) );
+        }
+
+        ImGui::PushID( i );
+        ImVec2 pos = ImGui::GetCurrentWindow()->DC.CursorPos;
+        pos.x += btn_sz.x / 2.0f;
+        pos.y += btn_sz.y / 2.0f;
+        if( ImGui::Button( "##toggle_dir", btn_sz ) ) {
+            if( is_set ) {
+                data.erase( angle );
+            } else {
+                data.insert( angle );
+            }
+            changed = true;
+        }
+        ImGui::HelpPopup( string_format( "%d degrees", angle ).c_str() );
+        ImGui::PopID();
+
+        if( is_set ) {
+            ImGui::PopStyleColor( 3 );
+        }
+    };
+
+    ImGui::BeginGroup();
+    ImGui::PushStyleVar( ImGuiStyleVar_ItemSpacing, btn_spacing );
+
+    float btn_pos_right;
+
+    for( int i = 0; i < 7; i++ ) {
+        if( i != 0 ) {
+            ImGui::SameLine();
+        }
+        if( i == 6 ) {
+            btn_pos_right = ImGui::GetCursorPosX();
+        }
+        add_button( i );
+    }
+    for( int i = 0; i < 5; i++ ) {
+        add_button( 7 + i * 2 );
+
+        ImGui::SameLine();
+        ImGui::SetCursorPosX( btn_pos_right );
+
+        add_button( 7 + i * 2 + 1 );
+    }
+    for( int i = 0; i < 7; i++ ) {
+        if( i != 0 ) {
+            ImGui::SameLine();
+        }
+        add_button( 17 + i );
+    }
+
+    ImGui::PopStyleVar();
+    ImGui::EndGroup();
+
+    return changed;
+}
+
 void TextCentered( const std::string &text )
 {
     float wnd_w = ImGui::GetWindowSize().x;

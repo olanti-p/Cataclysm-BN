@@ -116,6 +116,22 @@ std::string enum_to_string<editor::GasPumpFuel>( editor::GasPumpFuel data )
 }
 
 template<>
+std::string enum_to_string<editor::VehicleStatus>( editor::VehicleStatus data )
+{
+    switch( data ) {
+        // *INDENT-OFF*
+        case editor::VehicleStatus::LightDamage: return "LightDamage";
+        case editor::VehicleStatus::Undamaged: return "Undamaged";
+        case editor::VehicleStatus::Disabled: return "Disabled";
+        // *INDENT-ON*
+        case editor::VehicleStatus::_Num:
+            break;
+    }
+    debugmsg( "Invalid editor::VehicleStatus" );
+    abort();
+}
+
+template<>
 std::string enum_to_string<editor::PieceType>( editor::PieceType data )
 {
     switch( data ) {
@@ -341,12 +357,22 @@ void me_piece_monster::deserialize( JsonObject &jsin )
 
 void me_piece_vehicle::serialize( JsonOut &jsout ) const
 {
-    // TODO
+    jsout.member( "group_id", group_id );
+    jsout.member( "chance", chance );
+    jsout.member_as_string( "status", status );
+    jsout.member( "random_fuel_amount", random_fuel_amount );
+    jsout.member( "fuel", fuel );
+    jsout.member( "allowed_rotations", allowed_rotations );
 }
 
 void me_piece_vehicle::deserialize( JsonObject &jsin )
 {
-    // TODO
+    jsin.read( "group_id", group_id );
+    jsin.read( "chance", chance );
+    jsin.read( "status", status );
+    jsin.read( "random_fuel_amount", random_fuel_amount );
+    jsin.read( "fuel", fuel );
+    jsin.read( "allowed_rotations", allowed_rotations );
 }
 
 void me_piece_item::serialize( JsonOut &jsout ) const

@@ -122,10 +122,23 @@ struct me_piece_monster : public me_piece {
     // TODO
 };
 
+enum class VehicleStatus {
+    LightDamage,
+    Undamaged,
+    Disabled,
+
+    _Num,
+};
+
 struct me_piece_vehicle : public me_piece {
     IMPLEMENT_ME_PIECE( me_piece_vehicle, PieceType::Vehicle );
 
-    // TODO
+    vgroup_eid group_id;
+    me_int_range chance;
+    VehicleStatus status = VehicleStatus::LightDamage;
+    bool random_fuel_amount = true;
+    int fuel = 100;
+    std::set<int> allowed_rotations;
 };
 
 struct me_piece_item : public me_piece {
@@ -228,6 +241,11 @@ struct me_piece_alt_terrain : public me_piece {
 template<>
 struct enum_traits<editor::GasPumpFuel> {
     static constexpr editor::GasPumpFuel last = editor::GasPumpFuel::_Num;
+};
+
+template<>
+struct enum_traits<editor::VehicleStatus> {
+    static constexpr editor::VehicleStatus last = editor::VehicleStatus::_Num;
 };
 
 #endif // CATA_SRC_EDITOR_EDITOR_ME_PIECE_IMPL_H

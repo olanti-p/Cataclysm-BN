@@ -12,6 +12,7 @@
 #include "../omdata.h"
 #include "../text_snippets.h"
 #include "../trap.h"
+#include "../vehicle_group.h"
 
 namespace editor
 {
@@ -170,6 +171,18 @@ const std::vector<std::string> &editable_id<trap>::get_all_opts()
         all_opts.reserve( trap::get_all().size() );
         for( const trap &it : trap::get_all() ) {
             all_opts.push_back( it.id.str() );
+        }
+    }
+    return all_opts;
+}
+
+template<>
+const std::vector<std::string> &editable_id<VehicleGroup>::get_all_opts()
+{
+    if( all_opts.empty() ) {
+        all_opts.reserve( vgroups.size() );
+        for( const auto &it : vgroups ) {
+            all_opts.push_back( it.first.str() );
         }
     }
     return all_opts;

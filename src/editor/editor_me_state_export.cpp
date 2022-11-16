@@ -324,7 +324,24 @@ void me_piece_monster::export_func( JsonOut &jo ) const
 
 void me_piece_vehicle::export_func( JsonOut &jo ) const
 {
-    // TODO
+    ee::emit( jo, "vehicle", group_id );
+    ee::emit( jo, "chance", chance );
+    if( status == VehicleStatus::Undamaged ) {
+        ee::emit( jo, "status", 0 );
+    } else if( status == VehicleStatus::Disabled ) {
+        ee::emit( jo, "status", 1 );
+    }
+    if( !random_fuel_amount ) {
+        ee::emit( jo, "fuel", fuel );
+    }
+    std::vector<int> rots;
+    rots.reserve( allowed_rotations.size() );
+    for( int r : allowed_rotations ) {
+        rots.push_back( r );
+    }
+    if( !rots.empty() ) {
+        ee::emit_single_or_array( jo, "rotation", rots );
+    }
 }
 
 void me_piece_item::export_func( JsonOut &jo ) const
