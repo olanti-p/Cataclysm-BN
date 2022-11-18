@@ -82,7 +82,7 @@ void show_file_history( me_history_state &state, bool &show )
 
 void handle_revision_change( me_history_state &state, me_canvas_tools_state &tools )
 {
-    if( tools.ongoing_tool_operation ) {
+    if( tools.has_ongoing_tool_operation() ) {
         return;
     }
     if( ImGui::IsKeyDown( ImGuiKey_LeftCtrl ) && ImGui::IsKeyPressed( ImGuiKey_Z ) ) {

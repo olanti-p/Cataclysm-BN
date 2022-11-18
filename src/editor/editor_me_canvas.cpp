@@ -271,27 +271,29 @@ void show_canvas( me_state &state, me_file *file_ptr )
         if( file.uses_rows() ) {
             // Ensure the brush is in valid state
             const me_palette &pal = *state.project().get_palette_by_uuid( file.base.inline_palette_id );
-            if( !pal.find_entry( tools.brush ) ) {
-                tools.brush = UUID_INVALID;
+            if( tools.get_brush() != UUID_INVALID && !pal.find_entry( tools.get_brush() ) ) {
+                tools.set_brush( UUID_INVALID );
             }
-            if( tools.tool == CanvasTool::Brush && ImGui::IsMouseDown( ImGuiMouseButton_Left ) ) {
+            if( tools.get_tool() == CanvasTool::Brush && ImGui::IsMouseDown( ImGuiMouseButton_Left ) ) {
                 brush_stroke_active = true;
-                tools.ongoing_tool_operation = true;
-                tools.ongoing_brush_stroke = true;
+                if( !tools.has_ongoing_tool_operation() ) {
+                    tools.start_tool_operation();
+                }
                 if( is_mouse_in_bounds ) {
                     const uuid_t &uuid = file.base.get_uuid_at( tile_pos.raw() );
-                    if( uuid != tools.brush ) {
-                        file.base.set_uuid_at( tile_pos.raw(), tools.brush );
-                        tools.brush_stroke_changed_data = true;
+                    if( uuid != tools.get_brush() ) {
+                        file.base.set_uuid_at( tile_pos.raw(), tools.get_brush() );
+                        tools.set_tool_operation_changed_data();
                     }
                 }
             }
-            if( ( tools.tool == CanvasTool::Bucket || tools.tool == CanvasTool::BucketGlobal ) &&
+            if( ( tools.get_tool() == CanvasTool::Bucket || tools.get_tool() == CanvasTool::BucketGlobal ) &&
                 ImGui::IsMouseClicked( ImGuiMouseButton_Left ) ) {
                 if( is_mouse_in_bounds ) {
                     const uuid_t &uuid = file.base.get_uuid_at( tile_pos.raw() );
-                    if( uuid != tools.brush ) {
-                        apply_bucket_tool( file, tools.brush, tile_pos, tools.tool == CanvasTool::BucketGlobal );
+                    if( uuid != tools.get_brush() ) {
+                        apply_bucket_tool( file, tools.get_brush(), tile_pos,
+                                           tools.get_tool() == CanvasTool::BucketGlobal );
                         state.mark_changed();
                     }
                 }
@@ -299,23 +301,21 @@ void show_canvas( me_state &state, me_file *file_ptr )
             if( ImGui::IsMouseClicked( ImGuiMouseButton_Middle ) ) {
                 if( is_mouse_in_bounds ) {
                     const uuid_t &uuid = file.base.get_uuid_at( tile_pos.raw() );
-                    tools.brush = uuid;
+                    tools.set_brush( uuid );
                 } else {
-                    tools.brush = UUID_INVALID;
+                    tools.set_brush( UUID_INVALID );
                 }
             }
         }
     }
 
     if( file.uses_rows() ) {
-        if( tools.tool == CanvasTool::Brush && tools.ongoing_brush_stroke && !brush_stroke_active ) {
+        if( tools.get_tool() == CanvasTool::Brush && tools.has_ongoing_tool_operation() &&
+            !brush_stroke_active ) {
             // Brush stroke ended, queue changes as a single operation
-            if( tools.brush_stroke_changed_data ) {
+            if( tools.end_tool_operation() ) {
                 state.mark_changed();
             }
-            tools.ongoing_brush_stroke = false;
-            tools.ongoing_tool_operation = false;
-            tools.brush_stroke_changed_data = false;
         }
 
         me_palette *pal_ptr = state.project().get_palette_by_uuid( file.base.inline_palette_id );

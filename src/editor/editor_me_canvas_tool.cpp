@@ -17,16 +17,16 @@ void show_toolbar( me_canvas_tools_state &tools, bool &show )
         return;
     }
 
-    if( ImGui::RadioButton( "Brush", tools.tool == CanvasTool::Brush ) ) {
-        tools.tool = CanvasTool::Brush;
+    if( ImGui::RadioButton( "Brush", tools.get_tool() == CanvasTool::Brush ) ) {
+        tools.set_tool( CanvasTool::Brush );
     }
     ImGui::HelpPopup( "Hold LMB to draw with selected tile." );
-    if( ImGui::RadioButton( "Bucket", tools.tool == CanvasTool::Bucket ) ) {
-        tools.tool = CanvasTool::Bucket;
+    if( ImGui::RadioButton( "Bucket", tools.get_tool() == CanvasTool::Bucket ) ) {
+        tools.set_tool( CanvasTool::Bucket );
     }
     ImGui::HelpPopup( "Click LMB to flood fill with selected tile." );
-    if( ImGui::RadioButton( "Bucket (global)", tools.tool == CanvasTool::BucketGlobal ) ) {
-        tools.tool = CanvasTool::BucketGlobal;
+    if( ImGui::RadioButton( "Bucket (global)", tools.get_tool() == CanvasTool::BucketGlobal ) ) {
+        tools.set_tool( CanvasTool::BucketGlobal );
     }
     ImGui::HelpPopup( "Click LMB to replace all such tiles with selected tile." );
 

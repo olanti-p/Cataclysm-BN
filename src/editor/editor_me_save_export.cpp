@@ -16,7 +16,7 @@ namespace editor
 {
 void handle_file_saving( me_state &state )
 {
-    if( state.uistate->tools_state->ongoing_tool_operation ) {
+    if( state.uistate->tools_state->has_ongoing_tool_operation() ) {
         return;
     }
 
@@ -64,7 +64,7 @@ void handle_file_saving( me_state &state )
 
 void handle_file_exporting( me_state &state )
 {
-    if( state.uistate->tools_state->ongoing_tool_operation ) {
+    if( state.uistate->tools_state->has_ongoing_tool_operation() ) {
         return;
     }
 
