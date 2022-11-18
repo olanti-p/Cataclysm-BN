@@ -541,7 +541,7 @@ bool IGFD::Utils::IsDirectoryCanBeOpened( const std::string &name )
             // here, the dir_iter is need else not exception is thrown..
             const auto dir_iter = std::filesystem::directory_iterator( pathName );
             ( void )dir_iter; // for avoid unused warnings
-        } catch( std::exception /*ex*/ ) {
+        } catch( std::exception & /*ex*/ ) {
             // fail so this dir cant be opened
             bExists = false;
         }
