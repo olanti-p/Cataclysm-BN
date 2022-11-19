@@ -7,6 +7,7 @@
 
 #include "editor_me_editable_id.h"
 #include "editor_me_int_range.h"
+#include "editor_me_uuid.h"
 
 #include <memory>
 #include <string>
@@ -42,6 +43,8 @@ struct me_piece {
     virtual ~me_piece() = default;
 
     virtual PieceType get_type() const = 0;
+
+    uuid_t uuid = UUID_INVALID;
 
     virtual std::unique_ptr<me_piece> clone() const = 0;
 

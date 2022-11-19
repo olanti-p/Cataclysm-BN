@@ -14,6 +14,7 @@ void serialize( const std::unique_ptr<editor::me_piece> &ptr, JsonOut &jsout )
 {
     jsout.start_object();
     jsout.member_as_string( "piece_type", ptr->get_type() );
+    jsout.member( "uuid", ptr->uuid );
     ptr->serialize( jsout );
     jsout.end_object();
 }
@@ -24,9 +25,12 @@ void deserialize( std::unique_ptr<editor::me_piece> &ptr, JsonIn &jsin )
 
     editor::PieceType pt;
     jo.read( "piece_type", pt );
+    editor::uuid_t uuid;
+    jo.read( "uuid", uuid );
 
     std::unique_ptr<editor::me_piece> val = editor::make_new_piece( pt );
     val->deserialize( jo );
+    val->uuid = uuid;
     ptr = std::move( val );
 }
 

@@ -23,23 +23,17 @@ map_key pick_available_key( const me_palette &pal )
     return gen();
 }
 
-static std::string fmt_piece_id( editor::me_palette &p, editor::me_palette_entry &entry,
-                                 size_t idx )
-{
-    return string_format( "%d-%d-%d", p.uuid, entry.uuid, idx );
-}
-
-static bool is_expanded( const me_state &state, const std::string &piece_id )
+static bool is_expanded( const me_state &state, const uuid_t &piece_id )
 {
     return state.uistate->expanded_mapping_pieces.count( piece_id ) != 0;
 }
 
-static void expand_piece( me_state &state, const std::string &piece_id )
+static void expand_piece( me_state &state, const uuid_t &piece_id )
 {
     state.uistate->expanded_mapping_pieces.insert( piece_id );
 }
 
-static void collapse_piece( me_state &state, const std::string &piece_id )
+static void collapse_piece( me_state &state, const uuid_t &piece_id )
 {
     state.uistate->expanded_mapping_pieces.erase( piece_id );
 }
@@ -91,16 +85,18 @@ void show_mapping( me_state &state, editor::me_palette &p, editor::me_palette_en
         {
             if( new_piece_type != 0 ) {
                 auto ptr = editor::make_new_piece( piece_opts[new_piece_type - 1].second );
+                uuid_t uuid = state.project().uuid_gen();
+                ptr->uuid = uuid;
                 ptr->init_new();
                 list.push_back( std::move( ptr ) );
-                expand_piece( state, fmt_piece_id( p, entry, list.size() - 1 ) );
+                expand_piece( state, uuid );
                 ret = true;
             }
         }
         return ret;
     } )
     .with_for_each( [&]( size_t idx ) {
-        std::string piece_id = fmt_piece_id( p, entry, idx );
+        const uuid_t &piece_id = list[idx]->uuid;
         if( is_expanded( state, piece_id ) ) {
             if( ImGui::ArrowButton( "##collapse", ImGuiDir_Down ) ) {
                 collapse_piece( state, piece_id );
