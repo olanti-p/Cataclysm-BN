@@ -20,7 +20,7 @@ struct open_palette {
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
 
-    uuid_t uuid;
+    uuid_t uuid = UUID_INVALID;
     bool open = true;
 };
 
@@ -28,8 +28,8 @@ struct open_mapping {
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
 
-    uuid_t palette;
-    uuid_t uuid;
+    uuid_t palette = UUID_INVALID;
+    uuid_t uuid = UUID_INVALID;
     bool open = true;
 };
 } // namespace detail
