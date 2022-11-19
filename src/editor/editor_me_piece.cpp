@@ -81,4 +81,14 @@ bool is_available_as_mapping( PieceType pt )
            );
 }
 
+bool is_available_as_mapobject( PieceType pt )
+{
+    return !(
+               pt == editor::PieceType::AltTerrain ||
+               pt == editor::PieceType::AltFurniture ||
+               pt == editor::PieceType::AltTrap ||
+               pt == editor::PieceType::SealedItem
+           );
+}
+
 } // namespace editor

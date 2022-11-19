@@ -6,6 +6,7 @@
 
 #include "editor_me_uuid.h"
 #include "editor_me_palette.h"
+#include "editor_me_mapobject.h"
 
 struct ImVec4;
 class JsonOut;
@@ -91,6 +92,8 @@ struct me_file {
     me_mapgen_oter oter;
     me_mapgen_update update;
     me_mapgen_nested nested;
+
+    std::vector<me_mapobject> objects;
 
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );

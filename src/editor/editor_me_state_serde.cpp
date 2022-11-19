@@ -633,6 +633,26 @@ void me_palette::deserialize( JsonIn &jsin )
     jo.read( "entries", entries );
 }
 
+void me_mapobject::serialize( JsonOut &jsout ) const
+{
+    jsout.start_object();
+    jsout.member( "x", x );
+    jsout.member( "y", y );
+    jsout.member( "repeat", repeat );
+    jsout.member( "piece", piece );
+    jsout.end_object();
+}
+
+void me_mapobject::deserialize( JsonIn &jsin )
+{
+    JsonObject jo = jsin.get_object();
+
+    jo.read( "x", x );
+    jo.read( "y", y );
+    jo.read( "repeat", repeat );
+    jo.read( "piece", piece );
+}
+
 void me_mapgen_base::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
@@ -725,6 +745,7 @@ void me_file::serialize( JsonOut &jsout ) const
     jsout.member( "oter", oter );
     jsout.member( "update", update );
     jsout.member( "nested", nested );
+    jsout.member( "objects", objects );
     jsout.end_object();
 }
 
@@ -738,6 +759,7 @@ void me_file::deserialize( JsonIn &jsin )
     jo.read( "oter", oter );
     jo.read( "update", update );
     jo.read( "nested", nested );
+    jo.read( "objects", objects );
 }
 
 void me_project::serialize( JsonOut &jsout ) const

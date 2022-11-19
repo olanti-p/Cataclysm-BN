@@ -26,6 +26,7 @@ void emit_val( JsonOut &jo, bool b );
 void emit_val( JsonOut &jo, const char *str );
 void emit_val( JsonOut &jo, const std::string &str );
 void emit_val( JsonOut &jo, const editor::me_piece *piece );
+void emit_val( JsonOut &jo, const editor::me_mapobject *obj );
 template<typename T>
 void emit_val( JsonOut &jo, const editor::editable_id<T> &eid );
 void emit_val( JsonOut &jo, const editor::me_int_range &r );
@@ -93,6 +94,16 @@ void emit_val( JsonOut &jo, const editor::me_piece *piece )
             piece->export_func( jo );
         } );
     }
+}
+
+void emit_val( JsonOut &jo, const editor::me_mapobject *obj )
+{
+    emit_object( jo, [&]() {
+        emit( jo, "x", obj->x );
+        emit( jo, "y", obj->y );
+        emit( jo, "repeat", obj->repeat );
+        obj->piece->export_func( jo );
+    } );
 }
 
 template<typename T>
@@ -476,7 +487,7 @@ std::string get_palette_category( editor::PieceType data )
     abort();
 }
 
-std::string get_placing_category( editor::PieceType data )
+std::string get_object_category( editor::PieceType data )
 {
     switch( data ) {
         // *INDENT-OFF*
@@ -621,6 +632,35 @@ static void emit_file_contents( JsonOut &jo, const editor::me_project &project,
                     } );
                 }
             }
+        }
+
+        for( const auto &it : editor::get_piece_templates() ) {
+            editor::PieceType pt = it->get_type();
+
+            std::string object_cat = get_object_category( pt );
+
+            std::vector<const editor::me_mapobject *> matching_objects;
+
+            for( const editor::me_mapobject &it : file.objects ) {
+                if( it.piece->get_type() == pt ) {
+                    matching_objects.push_back( &it );
+                }
+            }
+
+            if( matching_objects.empty() ) {
+                // Nothing to do
+                continue;
+            }
+
+            if( object_cat.empty() ) {
+                std::cerr << string_format(
+                              "Tried to export piece of type %s as an object.",
+                              io::enum_to_string( pt )
+                          );
+                std::abort();
+            }
+
+            emit_single_or_array( jo, object_cat, matching_objects );
         }
     } );
 }

@@ -32,6 +32,14 @@ struct open_mapping {
     uuid_t uuid = UUID_INVALID;
     bool open = true;
 };
+
+struct open_mapgenobject {
+    void serialize( JsonOut &jsout ) const;
+    void deserialize( JsonIn &jsin );
+
+    uuid_t uuid = UUID_INVALID;
+    bool open = true;
+};
 } // namespace detail
 
 /**
@@ -65,14 +73,17 @@ struct me_uistate {
 
     std::vector<detail::open_palette> open_palettes; // List of open palettes
     std::vector<detail::open_mapping> open_mappings; // List of open mappings
+    std::vector<detail::open_mapgenobject> open_mapgenobjects; // List of open mapgenobjects
 
     pimpl<me_camera> camera;
     pimpl<me_canvas_tools_state> tools_state;
 
     std::set<uuid_t> expanded_mapping_pieces;
+    std::set<uuid_t> expanded_mapobjects;
 
     void toggle_show_palette( uuid_t uuid );
     void toggle_show_mapping( uuid_t palette, uuid_t uuid );
+    void toggle_show_mapobjects( uuid_t uuid );
 };
 
 /**

@@ -47,6 +47,11 @@ void show_project_ui( me_state &state, me_project &project )
         }
         ImGui::HelpPopup( "Show/hide inline palette for this mapgen." );
         ImGui::SameLine();
+        if( ImGui::ImageButton( "toggle_mapobjects", "me_mapobject" ) ) {
+            state.uistate->toggle_show_mapobjects( project.files[idx].uuid );
+        }
+        ImGui::HelpPopup( "Show/hide map objects for this mapgen." );
+        ImGui::SameLine();
         if( ImGui::Selectable(
                 string_format( "Mapgen #%d", idx ).c_str(),
                 state.uistate->active_file_id && *state.uistate->active_file_id == this_uuid )

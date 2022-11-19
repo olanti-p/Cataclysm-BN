@@ -13,6 +13,7 @@ editor_sources = files(
     'editor_me_file.cpp',
     'editor_me_history.cpp',
     'editor_me_map_key_gen.cpp',
+    'editor_me_mapobject.cpp',
     'editor_me_palette.cpp',
     'editor_me_piece_impl.cpp',
     'editor_me_piece.cpp',

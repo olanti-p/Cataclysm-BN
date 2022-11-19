@@ -149,6 +149,22 @@ void open_mapping::deserialize( JsonIn &jsin )
     jo.read( "open", open );
 }
 
+void open_mapgenobject::serialize( JsonOut &jsout ) const
+{
+    jsout.start_object();
+    jsout.member( "uuid", uuid );
+    jsout.member( "open", open );
+    jsout.end_object();
+}
+
+void open_mapgenobject::deserialize( JsonIn &jsin )
+{
+    JsonObject jo = jsin.get_object();
+
+    jo.read( "uuid", uuid );
+    jo.read( "open", open );
+}
+
 } // namespace detail
 
 void me_uistate::serialize( JsonOut &jsout ) const
@@ -164,9 +180,11 @@ void me_uistate::serialize( JsonOut &jsout ) const
     jsout.member( "active_file_id", active_file_id );
     jsout.member( "open_palettes", open_palettes );
     jsout.member( "open_mappings", open_mappings );
+    jsout.member( "open_mapgenobjects", open_mapgenobjects );
     jsout.member( "camera", camera );
     jsout.member( "tools_state", tools_state );
     jsout.member( "expanded_mapping_pieces", expanded_mapping_pieces );
+    jsout.member( "expanded_mapobjects", expanded_mapobjects );
     jsout.end_object();
 }
 
@@ -182,9 +200,11 @@ void me_uistate::deserialize( JsonIn &jsin )
     jo.read( "active_file_id", active_file_id );
     jo.read( "open_palettes", open_palettes );
     jo.read( "open_mappings", open_mappings );
+    jo.read( "open_mapgenobjects", open_mapgenobjects );
     jo.read( "camera", camera );
     jo.read( "tools_state", tools_state );
     jo.read( "expanded_mapping_pieces", expanded_mapping_pieces );
+    jo.read( "expanded_mapobjects", expanded_mapobjects );
 }
 
 void me_camera::serialize( JsonOut &jsout ) const

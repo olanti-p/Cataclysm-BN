@@ -46,6 +46,18 @@ void me_uistate::toggle_show_mapping( uuid_t palette, uuid_t uuid )
     open_mappings.back().palette = palette;
 }
 
+void me_uistate::toggle_show_mapobjects( uuid_t uuid )
+{
+    for( auto &it : open_mapgenobjects ) {
+        if( it.uuid == uuid ) {
+            it.open = false;
+            return;
+        }
+    }
+    open_mapgenobjects.emplace_back();
+    open_mapgenobjects.back().uuid = uuid;
+}
+
 void show_ui_control_window( me_state &state )
 {
     bool keep_open = true;
@@ -173,6 +185,17 @@ void run_ui_for_state( me_state &state )
             it.open = false;
         }
     }
+    for( auto &it : uistate.open_mapgenobjects ) {
+        if( !it.open ) {
+            continue;
+        }
+        me_file *f = proj.get_file_by_uuid( it.uuid );
+        if( f ) {
+            show_mapobjects( state, *f, it.open );
+        } else {
+            it.open = false;
+        }
+    }
     for( auto it = uistate.open_palettes.cbegin(); it != uistate.open_palettes.cend(); ) {
         if( !it->open ) {
             for( auto &mit : uistate.open_mappings ) {
@@ -188,6 +211,13 @@ void run_ui_for_state( me_state &state )
     for( auto it = uistate.open_mappings.cbegin(); it != uistate.open_mappings.cend(); ) {
         if( !it->open ) {
             it = uistate.open_mappings.erase( it );
+        } else {
+            it++;
+        }
+    }
+    for( auto it = uistate.open_mapgenobjects.cbegin(); it != uistate.open_mapgenobjects.cend(); ) {
+        if( !it->open ) {
+            it = uistate.open_mapgenobjects.erase( it );
         } else {
             it++;
         }
