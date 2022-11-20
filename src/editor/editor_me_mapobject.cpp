@@ -25,6 +25,8 @@ me_mapobject &me_mapobject::operator=( const me_mapobject &rhs )
     x = rhs.x;
     y = rhs.y;
     repeat = rhs.repeat;
+    color = rhs.color;
+    visible = rhs.visible;
     piece = rhs.piece->clone();
     return *this;
 }
@@ -110,6 +112,25 @@ void show_mapobjects( me_state &state, me_file &f, bool &show )
         return ret;
     } )
     .with_for_each( [&]( size_t idx ) {
+        if( list[idx].visible ) {
+            if( ImGui::ImageButton( "hide", "me_visible" ) ) {
+                list[idx].visible = false;
+                state.mark_changed();
+            }
+            ImGui::HelpPopup( "Hide." );
+        } else {
+            if( ImGui::ImageButton( "show", "me_hidden" ) ) {
+                list[idx].visible = true;
+                state.mark_changed();
+            }
+            ImGui::HelpPopup( "Show." );
+        }
+        ImGui::SameLine();
+        if( ImGui::ColorEdit4( "MyColor##3", ( float * )&list[idx].color,
+                               ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel ) ) {
+            state.mark_changed( "me-mapobject-color" );
+        }
+        ImGui::SameLine();
         const uuid_t &object_id = list[idx].get_uuid();
         if( is_expanded( state, object_id ) ) {
             if( ImGui::ArrowButton( "##collapse", ImGuiDir_Down ) ) {
@@ -129,7 +150,9 @@ void show_mapobjects( me_state &state, me_file &f, bool &show )
             if( ImGui::InputIntRange( "repeat", list[idx].repeat ) ) {
                 state.mark_changed( "me-mapobject-repeat-input" );
             }
+            ImGui::PushID( "piece" );
             list[idx].piece->show_ui( state );
+            ImGui::PopID();
             ImGui::Separator();
         } else {
             if( ImGui::ArrowButton( "##expand", ImGuiDir_Right ) ) {

@@ -233,17 +233,24 @@ void show_canvas( me_state &state, me_file *file_ptr )
     bool canvas_hovered = ImGui::IsWindowHovered();
     me_canvas_tools_state &tools = *state.uistate->tools_state;
     bool brush_stroke_active = false;
-    const me_palette_entry *show_tooltip_for_entry = nullptr;
+
+    bool show_tooltip = false;
+    const me_palette_entry *tooltip_entry = nullptr;
+    point_abs_etile tooltip_pos;
     if( canvas_hovered ) {
         point_abs_etile tile_pos = get_mouse_tile_pos( cam );
         point_rel_etile mapgensize = file.mapgensize();
         bool is_mouse_in_bounds = tile_pos.x() >= 0 && tile_pos.y() >= 0 && tile_pos.x() < mapgensize.x() &&
                                   tile_pos.y() < mapgensize.y();
 
-        if( is_mouse_in_bounds && ImGui::IsKeyDown( ImGuiKey_ModCtrl ) ) {
-            const uuid_t &uuid = file.base.get_uuid_at( tile_pos.raw() );
-            show_tooltip_for_entry = state.project().get_palette_by_uuid(
-                                         file.base.inline_palette_id )->find_entry( uuid );
+        if( ImGui::IsKeyDown( ImGuiKey_ModCtrl ) ) {
+            show_tooltip = true;
+            tooltip_pos = tile_pos;
+            if( is_mouse_in_bounds ) {
+                const uuid_t &uuid = file.base.get_uuid_at( tile_pos.raw() );
+                tooltip_entry = state.project().get_palette_by_uuid(
+                                    file.base.inline_palette_id )->find_entry( uuid );
+            }
         }
 
         if( ImGui::IsMouseDragging( ImGuiMouseButton_Right ) ) {
@@ -362,18 +369,68 @@ void show_canvas( me_state &state, me_file *file_ptr )
         }
     }
 
+    for( const me_mapobject &obj : file.objects ) {
+        if( !obj.visible ) {
+            continue;
+        }
+
+        point_abs_etile p1( obj.x.min, obj.y.min );
+        point_abs_etile p2( obj.x.max, obj.y.max );
+        ImVec4 col_border = obj.color;
+        ImVec4 col_text = obj.color;
+        col_text.w = 1.0f;
+        ImVec4 col_bg = obj.color;
+        col_bg.w *= 0.4f;
+        highlight_region( draw_list, cam, p1, p2, col_bg, col_border );
+
+        std::string label = obj.piece->fmt_summary();
+        point_abs_epos pos1 = coords::project_combine( p1, point_etile_epos( ETILE_SIZE / 2,
+                              ETILE_SIZE / 2 ) );
+        point_abs_epos pos2 = coords::project_combine( p2, point_etile_epos( ETILE_SIZE / 2,
+                              ETILE_SIZE / 2 ) );
+        point_abs_epos center( ( pos1.raw() + pos2.raw() ) / 2 );
+        point_abs_screen text_center = cam.world_to_screen( center );
+        point_rel_screen text_size( ImGui::CalcTextSize( label.c_str() ) );
+        point_abs_screen text_pos = text_center - text_size.raw() / 2;
+        ImGui::SetCursorPos( text_pos.raw() );
+        ImGui::TextColored( col_text, "%s", label.c_str() );
+    }
+
     if( canvas_hovered ) {
         point_abs_etile tile_pos = get_mouse_tile_pos( cam );
         highlight_tile( draw_list, cam, tile_pos, col_cursor );
     }
 
-    if( show_tooltip_for_entry ) {
-        ImGui::BeginTooltip();
-        const me_palette_entry &e = *show_tooltip_for_entry;
-        for( const auto &it : e.mapping.pieces ) {
-            ImGui::Text( "%s", it->fmt_summary().c_str() );
+    if( show_tooltip ) {
+        std::vector<const me_mapobject *> objects;
+        for( const me_mapobject &obj : file.objects ) {
+            if( obj.x.max < tooltip_pos.x() ||
+                obj.y.max < tooltip_pos.y() ||
+                obj.x.min > tooltip_pos.x() ||
+                obj.y.min > tooltip_pos.y()
+              ) {
+                continue;
+            }
+            objects.push_back( &obj );
         }
-        ImGui::EndTooltip();
+
+        if( tooltip_entry || !objects.empty() ) {
+            ImGui::BeginTooltip();
+            if( tooltip_entry ) {
+                const me_palette_entry &e = *tooltip_entry;
+                for( const auto &it : e.mapping.pieces ) {
+                    ImGui::TextDisabled( "MAP" );
+                    ImGui::SameLine();
+                    ImGui::Text( "%s", it->fmt_summary().c_str() );
+                }
+            }
+            for( const me_mapobject *obj : objects ) {
+                ImGui::TextDisabled( "OBJ" );
+                ImGui::SameLine();
+                ImGui::Text( "%s", obj->piece->fmt_summary().c_str() );
+            }
+            ImGui::EndTooltip();
+        }
     }
 
     ImGui::PopID();

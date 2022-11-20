@@ -3,6 +3,7 @@
 
 #include "editor_me_int_range.h"
 #include "editor_me_uuid.h"
+#include "imgui.h"
 
 #include <memory>
 
@@ -31,6 +32,8 @@ struct me_mapobject {
     me_int_range x;
     me_int_range y;
     me_int_range repeat;
+    ImVec4 color;
+    bool visible = true;
 };
 
 /**

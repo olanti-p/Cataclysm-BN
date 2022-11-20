@@ -639,6 +639,8 @@ void me_mapobject::serialize( JsonOut &jsout ) const
     jsout.member( "x", x );
     jsout.member( "y", y );
     jsout.member( "repeat", repeat );
+    jsout.member( "color", color );
+    jsout.member( "visible", visible );
     jsout.member( "piece", piece );
     jsout.end_object();
 }
@@ -650,6 +652,8 @@ void me_mapobject::deserialize( JsonIn &jsin )
     jo.read( "x", x );
     jo.read( "y", y );
     jo.read( "repeat", repeat );
+    jo.read( "color", color );
+    jo.read( "visible", visible );
     jo.read( "piece", piece );
 }
 
