@@ -2,7 +2,6 @@
 
 ## TODO list:
 
-- Strip out legacy editor code
 - Cut/paste symbols on canvas
 - Import existing mapgens
 - Implement all mapgen pieces

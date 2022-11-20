@@ -27,6 +27,7 @@ struct editor_state;
 
 namespace ImGui
 {
+ImVec4 curses_color_to_imgui( nc_color nc );
 void SymbolColored( const std::string &sym, nc_color col );
 void SymbolColored( int sym, nc_color col );
 void JmapgenInt( const std::string &label, const jmapgen_int &jmi );

@@ -1,13 +1,21 @@
 #include "editor_engine.h"
-#include "editor_main.h"
 
-#include "imgui.h"
+#include "editor_me_app.h"
+#include "editor_me_ui_store.h"
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_sdlrenderer.h"
+#include "imgui.h"
+
+#include "../game.h"
+#include "../ui_manager.h"
+#include "../path_info.h"
+#include "../point.h"
+#include "../output.h"
+#include "../input.h"
+
 #include <stdio.h>
 #include <SDL.h>
-
-#include "../path_info.h"
+#include <thread>
 
 #ifdef DebugLog
 #  undef DebugLog
@@ -22,6 +30,7 @@
 static SDL_Window *window = nullptr;
 static SDL_Renderer *renderer = nullptr;
 static std::string ini_file_path;
+static editor::me_main_app *current_app = nullptr;
 
 namespace editor
 {
@@ -101,7 +110,7 @@ void render_ui()
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
 
-    editor::show_ui();
+    editor::show_app( *current_app );
 
     // Rendering
     ImGui::Render();
@@ -117,4 +126,71 @@ bool process_event( SDL_Event &event )
     ImGui_ImplSDL2_ProcessEvent( &event );
     return true;
 }
+
+bool ui_exists()
+{
+    return current_app != nullptr;
 }
+
+bool show_cata_ui()
+{
+    return !current_app;
+}
+} // namespace editor
+
+point::point( ImVec2 v )
+{
+    x = v.x;
+    y = v.y;
+}
+
+point::operator ImVec2()
+{
+    return ImVec2( x, y );
+}
+
+namespace editor
+{
+void bnme_entry_point()
+{
+    static bool settings_export_initialized = false;
+    if( !settings_export_initialized ) {
+        settings_export_initialized = true;
+        editor::initialize_settings_export();
+    }
+
+    {
+        me_main_app app;
+        current_app = &app;
+
+        init_app( app );
+
+        g->invalidate_main_ui_adaptor();
+        ui_manager::redraw();
+
+        bool do_exit_to_desktop = false;
+
+        for( ;; ) {
+            inp_mngr.get_input_event();
+            std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
+            refresh_display();
+            update_app_state( app );
+            if( app.run_state.do_exit_to_dektop ) {
+                do_exit_to_desktop = true;
+                break;
+            }
+            if( app.run_state.do_exit_to_game ) {
+                break;
+            }
+        }
+        current_app = nullptr;
+
+        if( do_exit_to_desktop ) {
+            std::exit( 0 );
+        }
+    }
+
+    ui_manager::redraw();
+    refresh_display();
+}
+} // namespace editor

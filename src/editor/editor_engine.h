@@ -14,6 +14,8 @@ void render_ui();
 bool process_event( SDL_Event &event );
 bool show_cata_ui();
 bool ui_exists();
+
+void bnme_entry_point();
 }
 
 #endif // CATA_SRC_EDITOR_EDITOR_INIT_H

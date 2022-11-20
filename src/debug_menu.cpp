@@ -105,7 +105,7 @@
 #include "weather_gen.h"
 #include "weighted_list.h"
 
-#include "editor/editor_main.h"
+#include "editor/editor_engine.h"
 
 static const mtype_id mon_generator( "mon_generator" );
 
@@ -1552,7 +1552,7 @@ void debug()
             break;
 
         case DEBUG_ADV_MAP_EDITOR:
-            editor::advanced_editor_run();
+            editor::bnme_entry_point();
             break;
 
         case DEBUG_MAP_EDITOR:

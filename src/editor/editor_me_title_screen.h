@@ -11,7 +11,6 @@ namespace editor
 struct titlescreen_ui_retval {
     bool exit = false;
     bool exit_to_desktop = false;
-    bool legacy_editor = false;
     bool make_new = false;
     bool load_existing = false;
     std::string load_path;

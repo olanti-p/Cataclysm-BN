@@ -2,9 +2,9 @@
 editor_sources = files(
     'editor_assets.cpp',
     'editor_engine.cpp',
-    'editor_main.cpp',
     'editor_mapgen_func.cpp',
     'editor_mapgen_piece.cpp',
+    'editor_me_app.cpp',
     'editor_me_assetlib.cpp',
     'editor_me_camera.cpp',
     'editor_me_canvas_tool.cpp',

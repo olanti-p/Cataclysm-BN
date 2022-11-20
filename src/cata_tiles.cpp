@@ -77,7 +77,7 @@
 #include "weather.h"
 #include "weighted_list.h"
 
-#include "editor/editor_main.h"
+#include "editor/editor_engine.h"
 
 #define dbg(x) DebugLogFL((x),DC::SDL)
 

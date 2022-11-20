@@ -1,5 +1,4 @@
 #include "editor_assets.h"
-#include "editor_main.h"
 #include "editor_widgets.h"
 
 #include "imgui.h"

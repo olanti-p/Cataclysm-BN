@@ -173,7 +173,7 @@
 #include "weather.h"
 #include "worldfactory.h"
 
-#include "editor/editor_main.h"
+#include "editor/editor_engine.h"
 
 class computer;
 
@@ -1557,7 +1557,7 @@ bool game::do_turn()
 
                 if( enter_editor_on_start ) {
                     enter_editor_on_start = false;
-                    editor::advanced_editor_run();
+                    editor::bnme_entry_point();
                     continue;
                 }
 

@@ -1,13 +1,13 @@
 #include "imgui_internal.h"
 
 #include "editor_widgets.h"
-#include "editor_main.h"
 
-#include "../color.h"
-#include "../catacharset.h"
-#include "../mapgen.h"
-#include "../sdltiles.h"
 #include "../cata_tiles.h"
+#include "../catacharset.h"
+#include "../color.h"
+#include "../mapgen.h"
+#include "../sdl_utils.h"
+#include "../sdltiles.h"
 #include "../string_utils.h"
 
 SpriteRef::SpriteRef( const std::string &id )
@@ -62,9 +62,15 @@ ImTextureID SpriteRef::get_tex_id() const
 
 namespace ImGui
 {
+ImVec4 curses_color_to_imgui( nc_color nc )
+{
+    SDL_Color col = curses_color_to_SDL( nc );
+    return ImVec4( col.r, col.g, col.b, col.a );
+}
+
 void SymbolColored( const std::string &sym, nc_color col )
 {
-    ImGui::TextColored( editor::curses_color_to_imgui( col ), "%s", sym.c_str() );
+    ImGui::TextColored( curses_color_to_imgui( col ), "%s", sym.c_str() );
 }
 void SymbolColored( int sym, nc_color col )
 {
