@@ -677,7 +677,11 @@ static void emit_mapgen_contents( JsonOut &jo, const editor::Project &project,
                 std::abort();
             }
 
-            emit_single_or_array( jo, object_cat, matching_objects );
+            emit_array( jo, object_cat, [&]() {
+                for( const editor::me_mapobject *obj : matching_objects ) {
+                    emit_val( jo, obj );
+                }
+            } );
         }
     } );
 }
