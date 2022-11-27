@@ -29,5 +29,6 @@ var classaim__activity__actor =
     [ "loaded_RAS_weapon", "classaim__activity__actor.html#ab984cbfdbe534695d0b536cad108da58", null ],
     [ "reload_requested", "classaim__activity__actor.html#a5a65a1ad1452654bdf0ce924ba8dcf53", null ],
     [ "shifting_view", "classaim__activity__actor.html#ab7b696d1eb458e907dbccf99a5dd54aa", null ],
-    [ "snap_to_target", "classaim__activity__actor.html#a289353e8cf59d999c2e3db1db5d89f12", null ]
+    [ "snap_to_target", "classaim__activity__actor.html#a289353e8cf59d999c2e3db1db5d89f12", null ],
+    [ "stamina_cost_per_shot", "classaim__activity__actor.html#a49a9e27002cf13ee3a9d2bf0884ab7f0", null ]
 ];

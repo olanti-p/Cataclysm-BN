@@ -86,7 +86,7 @@ var classcata__tiles =
     [ "init_draw_zones", "classcata__tiles.html#a6a17ed4a354880ccd65915775cfcd39f", null ],
     [ "init_explosion", "classcata__tiles.html#a4ae8eb030d6dafd87203bc114daf902d", null ],
     [ "init_light", "classcata__tiles.html#a68eb43336124082b2dfd137219ff736b", null ],
-    [ "load_tileset", "classcata__tiles.html#af2a6674c9f17c70e8df6904d66806648", null ],
+    [ "load_tileset", "classcata__tiles.html#acde66799a0630f031dbab73d0d0fdaba", null ],
     [ "lr_generic", "classcata__tiles.html#aa9683d157ee79e2bed3e6a0b710a3750", null ],
     [ "minimap_requires_animation", "classcata__tiles.html#ad65c2b136ad3a50aa44b335a4965521f", null ],
     [ "on_options_changed", "classcata__tiles.html#a1e068b601f19c3b412cc778422ca2bfa", null ],

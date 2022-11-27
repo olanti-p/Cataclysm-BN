@@ -63,6 +63,7 @@ var namespacecata =
     [ "swap", "namespacecata.html#a097b137e977a6b843c0dada2c8b19611", null ],
     [ "swap", "namespacecata.html#a7eac1d1ac3a785f746c9c498089370f2", null ],
     [ "throw_error", "namespacecata.html#a559fbd43812662730f11cb3ee13a9774", null ],
+    [ "unreachable", "namespacecata.html#ab53cf6757bb7d3a1ead8c109eec43ee3", null ],
     [ "value_ptr_equals", "namespacecata.html#a3e8b1530c592c15f0a0e5470707bf350", null ],
     [ "in_place", "namespacecata.html#a85a7019fd055255ce5738aecaa6c0fd9", null ],
     [ "nullopt", "namespacecata.html#ad05314667ac5d05f984aeeef26b9a87f", null ]

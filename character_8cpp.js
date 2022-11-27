@@ -52,6 +52,7 @@ var character_8cpp =
     [ "get_player_character", "character_8cpp.html#a2fcb25d686f4a35fca374c6f71280311", null ],
     [ "get_speedydex_bonus", "character_8cpp.html#acd8074a2353e1244722bbbabb4f0c3cf", null ],
     [ "get_stat_name", "character_8cpp.html#a035c78e847a263690eaab59f16c23b88", null ],
+    [ "has_psy_protection", "character_8cpp.html#ad9592dafb578bdbac6e6945f9dffda42", null ],
     [ "item_armor_enchantment_adjust", "character_8cpp.html#a2a52160b53ff51da3991f3a6d6f20e8b", null ],
     [ "layer_item", "character_8cpp.html#a6ef9222693ad91f337a76eb8faf70171", null ],
     [ "nv_range_from_eye_encumbrance", "character_8cpp.html#ac9e992a7dff11772e270108ad424e4ab", null ],

@@ -10,7 +10,7 @@ var activity__actor__definitions_8h =
     [ "hacking_activity_actor::use_bionic", "structhacking__activity__actor_1_1use__bionic.html", null ],
     [ "migration_cancel_activity_actor", "classmigration__cancel__activity__actor.html", "classmigration__cancel__activity__actor" ],
     [ "move_items_activity_actor", "classmove__items__activity__actor.html", "classmove__items__activity__actor" ],
-    [ "open_gate_activity_actor", "classopen__gate__activity__actor.html", "classopen__gate__activity__actor" ],
+    [ "toggle_gate_activity_actor", "classtoggle__gate__activity__actor.html", "classtoggle__gate__activity__actor" ],
     [ "pickup_activity_actor", "classpickup__activity__actor.html", "classpickup__activity__actor" ],
     [ "stash_activity_actor", "classstash__activity__actor.html", "classstash__activity__actor" ],
     [ "throw_activity_actor", "classthrow__activity__actor.html", "classthrow__activity__actor" ],
