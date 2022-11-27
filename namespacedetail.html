@@ -7935,62 +7935,62 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="debug_8cpp_source.html#l01152">1152</a> of file <a class="el" href="debug_8cpp_source.html">debug.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l01154" name="l01154"></a><span class="lineno"> 1154</span>{</div>
-<div class="line"><a id="l01155" name="l01155"></a><span class="lineno"> 1155</span>    <span class="keywordflow">if</span>( lev == <a class="code hl_enumvalue" href="debug_8h.html#a157bb3f8cadfd404439ad477a19e8515a902b0d55fddef6f8d651fe1035b7d4bd">DL::Error</a> ) {</div>
-<div class="line"><a id="l01156" name="l01156"></a><span class="lineno"> 1156</span>        <a class="code hl_variable" href="debug_8cpp.html#a79825f7113926da477d17181f70d40a4">error_observed</a> = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l01157" name="l01157"></a><span class="lineno"> 1157</span>    }</div>
-<div class="line"><a id="l01158" name="l01158"></a><span class="lineno"> 1158</span> </div>
-<div class="line"><a id="l01159" name="l01159"></a><span class="lineno"> 1159</span>    <span class="keywordflow">if</span>( <a class="code hl_function" href="debug_8cpp.html#aac2a0ea8cfdde47e38976d76d9becc41">checkDebugLevelClass</a>( lev, cl ) ) {</div>
-<div class="line"><a id="l01160" name="l01160"></a><span class="lineno"> 1160</span>        std::ostream &amp;out = <a class="code hl_function" href="debug_8cpp.html#ae960e86d58bd6c32dca6006f4b665a4a">debugFile</a>().<a class="code hl_function" href="structDebugFile.html#af46420802da3af56a8d989dac3ecc0af">get_file</a>();</div>
-<div class="line"><a id="l01161" name="l01161"></a><span class="lineno"> 1161</span> </div>
-<div class="line"><a id="l01162" name="l01162"></a><span class="lineno"> 1162</span>        <a class="code hl_function" href="debug_8cpp.html#a83a7ddf0ed043073e2270178b2aa0e06">output_repetitions</a>( out );</div>
-<div class="line"><a id="l01163" name="l01163"></a><span class="lineno"> 1163</span> </div>
-<div class="line"><a id="l01164" name="l01164"></a><span class="lineno"> 1164</span>        out &lt;&lt; <a class="code hl_function" href="debug_8cpp.html#aeb4049fda277faed5ccb8af4c07be023">get_time</a>() &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
-<div class="line"><a id="l01165" name="l01165"></a><span class="lineno"> 1165</span>        <a class="code hl_function" href="namespaceio.html#a8b3048f54a8bdcedc4260653b3fe6dbe">out &lt;&lt; io::enum_to_string&lt;DL&gt;</a>( lev ) &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
-<div class="line"><a id="l01166" name="l01166"></a><span class="lineno"> 1166</span>        <span class="keywordflow">if</span>( cl != <a class="code hl_enumvalue" href="debug_8h.html#ab427f07a11f49f7146d1db272592d700aa02c83a7dbd96295beaefb72c2bee2de">DC::Main</a> ) {</div>
-<div class="line"><a id="l01167" name="l01167"></a><span class="lineno"> 1167</span>            <a class="code hl_function" href="namespaceio.html#a0410b1157c801e81d38669dccd59aab2">out &lt;&lt; io::enum_to_string&lt;DC&gt;</a>( cl ) &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
-<div class="line"><a id="l01168" name="l01168"></a><span class="lineno"> 1168</span>        }</div>
-<div class="line"><a id="l01169" name="l01169"></a><span class="lineno"> 1169</span>        out &lt;&lt; <span class="stringliteral">&quot;: &quot;</span>;</div>
-<div class="line"><a id="l01170" name="l01170"></a><span class="lineno"> 1170</span>        <span class="keywordflow">if</span>( filename ) {</div>
-<div class="line"><a id="l01171" name="l01171"></a><span class="lineno"> 1171</span>            out &lt;&lt; filename;</div>
-<div class="line"><a id="l01172" name="l01172"></a><span class="lineno"> 1172</span>            <span class="keywordflow">if</span>( <a class="code hl_function" href="mapgen_8cpp.html#a90f1f53dc044e93e7f7f9314cef1bd45">line</a> ) {</div>
-<div class="line"><a id="l01173" name="l01173"></a><span class="lineno"> 1173</span>                out &lt;&lt; <span class="stringliteral">&quot;:&quot;</span> &lt;&lt; <a class="code hl_function" href="mapgen_8cpp.html#a90f1f53dc044e93e7f7f9314cef1bd45">line</a>;</div>
-<div class="line"><a id="l01174" name="l01174"></a><span class="lineno"> 1174</span>            }</div>
-<div class="line"><a id="l01175" name="l01175"></a><span class="lineno"> 1175</span>            <span class="keywordflow">if</span>( funcname ) {</div>
-<div class="line"><a id="l01176" name="l01176"></a><span class="lineno"> 1176</span>                out &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
-<div class="line"><a id="l01177" name="l01177"></a><span class="lineno"> 1177</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l01178" name="l01178"></a><span class="lineno"> 1178</span>                out &lt;&lt; <span class="stringliteral">&quot;: &quot;</span>;</div>
-<div class="line"><a id="l01179" name="l01179"></a><span class="lineno"> 1179</span>            }</div>
-<div class="line"><a id="l01180" name="l01180"></a><span class="lineno"> 1180</span>        }</div>
-<div class="line"><a id="l01181" name="l01181"></a><span class="lineno"> 1181</span>        <span class="keywordflow">if</span>( funcname ) {</div>
-<div class="line"><a id="l01182" name="l01182"></a><span class="lineno"> 1182</span>            out &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; funcname &lt;&lt; <span class="stringliteral">&quot;] &quot;</span>;</div>
-<div class="line"><a id="l01183" name="l01183"></a><span class="lineno"> 1183</span>        }</div>
-<div class="line"><a id="l01184" name="l01184"></a><span class="lineno"> 1184</span> </div>
-<div class="line"><a id="l01185" name="l01185"></a><span class="lineno"> 1185</span>        <span class="comment">// Backtrace on error.</span></div>
-<div class="line"><a id="l01186" name="l01186"></a><span class="lineno"> 1186</span><span class="preprocessor">#if defined(BACKTRACE)</span></div>
-<div class="line"><a id="l01187" name="l01187"></a><span class="lineno"> 1187</span>        <span class="comment">// Push the first retrieved value back by a second so it won&#39;t match.</span></div>
-<div class="line"><a id="l01188" name="l01188"></a><span class="lineno"> 1188</span>        <span class="keyword">static</span> time_t next_backtrace = time( <span class="keyword">nullptr</span> ) - 1;</div>
-<div class="line"><a id="l01189" name="l01189"></a><span class="lineno"> 1189</span>        time_t now = time( <span class="keyword">nullptr</span> );</div>
-<div class="line"><a id="l01190" name="l01190"></a><span class="lineno"> 1190</span>        <span class="keywordflow">if</span>( lev == <a class="code hl_enumvalue" href="debug_8h.html#a157bb3f8cadfd404439ad477a19e8515a902b0d55fddef6f8d651fe1035b7d4bd">DL::Error</a> &amp;&amp; now &gt;= next_backtrace ) {</div>
-<div class="line"><a id="l01191" name="l01191"></a><span class="lineno"> 1191</span>            out &lt;&lt; <span class="stringliteral">&quot;(error message will follow backtrace)&quot;</span>;</div>
-<div class="line"><a id="l01192" name="l01192"></a><span class="lineno"> 1192</span>            debug_write_backtrace( out );</div>
-<div class="line"><a id="l01193" name="l01193"></a><span class="lineno"> 1193</span>            time_t after = time( <span class="keyword">nullptr</span> );</div>
-<div class="line"><a id="l01194" name="l01194"></a><span class="lineno"> 1194</span>            <span class="comment">// Cool down for 60s between backtrace emissions.</span></div>
-<div class="line"><a id="l01195" name="l01195"></a><span class="lineno"> 1195</span>            next_backtrace = after + 60;</div>
-<div class="line"><a id="l01196" name="l01196"></a><span class="lineno"> 1196</span>            out &lt;&lt; <span class="stringliteral">&quot;Backtrace emission took &quot;</span> &lt;&lt; after - now &lt;&lt; <span class="stringliteral">&quot; seconds.&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a id="l01197" name="l01197"></a><span class="lineno"> 1197</span>        }</div>
-<div class="line"><a id="l01198" name="l01198"></a><span class="lineno"> 1198</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l01199" name="l01199"></a><span class="lineno"> 1199</span> </div>
-<div class="line"><a id="l01200" name="l01200"></a><span class="lineno"> 1200</span>        <span class="keywordflow">return</span> DebugLogGuard( out );</div>
-<div class="line"><a id="l01201" name="l01201"></a><span class="lineno"> 1201</span>    }</div>
-<div class="line"><a id="l01202" name="l01202"></a><span class="lineno"> 1202</span> </div>
-<div class="line"><a id="l01203" name="l01203"></a><span class="lineno"> 1203</span>    <span class="keyword">static</span> <a class="code hl_struct" href="structNullBuf.html">NullBuf</a> nullBuf;</div>
-<div class="line"><a id="l01204" name="l01204"></a><span class="lineno"> 1204</span>    <span class="keyword">static</span> std::ostream nullStream( &amp;nullBuf );</div>
-<div class="line"><a id="l01205" name="l01205"></a><span class="lineno"> 1205</span>    <span class="keywordflow">return</span> DebugLogGuard( nullStream );</div>
-<div class="line"><a id="l01206" name="l01206"></a><span class="lineno"> 1206</span>}</div>
+<p class="definition">Definition at line <a class="el" href="debug_8cpp_source.html#l01158">1158</a> of file <a class="el" href="debug_8cpp_source.html">debug.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l01160" name="l01160"></a><span class="lineno"> 1160</span>{</div>
+<div class="line"><a id="l01161" name="l01161"></a><span class="lineno"> 1161</span>    <span class="keywordflow">if</span>( lev == <a class="code hl_enumvalue" href="debug_8h.html#a157bb3f8cadfd404439ad477a19e8515a902b0d55fddef6f8d651fe1035b7d4bd">DL::Error</a> ) {</div>
+<div class="line"><a id="l01162" name="l01162"></a><span class="lineno"> 1162</span>        <a class="code hl_variable" href="debug_8cpp.html#a79825f7113926da477d17181f70d40a4">error_observed</a> = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l01163" name="l01163"></a><span class="lineno"> 1163</span>    }</div>
+<div class="line"><a id="l01164" name="l01164"></a><span class="lineno"> 1164</span> </div>
+<div class="line"><a id="l01165" name="l01165"></a><span class="lineno"> 1165</span>    <span class="keywordflow">if</span>( <a class="code hl_function" href="debug_8cpp.html#aac2a0ea8cfdde47e38976d76d9becc41">checkDebugLevelClass</a>( lev, cl ) ) {</div>
+<div class="line"><a id="l01166" name="l01166"></a><span class="lineno"> 1166</span>        std::ostream &amp;out = <a class="code hl_function" href="debug_8cpp.html#ae960e86d58bd6c32dca6006f4b665a4a">debugFile</a>().<a class="code hl_function" href="structDebugFile.html#af46420802da3af56a8d989dac3ecc0af">get_file</a>();</div>
+<div class="line"><a id="l01167" name="l01167"></a><span class="lineno"> 1167</span> </div>
+<div class="line"><a id="l01168" name="l01168"></a><span class="lineno"> 1168</span>        <a class="code hl_function" href="debug_8cpp.html#a83a7ddf0ed043073e2270178b2aa0e06">output_repetitions</a>( out );</div>
+<div class="line"><a id="l01169" name="l01169"></a><span class="lineno"> 1169</span> </div>
+<div class="line"><a id="l01170" name="l01170"></a><span class="lineno"> 1170</span>        out &lt;&lt; <a class="code hl_function" href="debug_8cpp.html#aeb4049fda277faed5ccb8af4c07be023">get_time</a>() &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
+<div class="line"><a id="l01171" name="l01171"></a><span class="lineno"> 1171</span>        <a class="code hl_function" href="namespaceio.html#a8b3048f54a8bdcedc4260653b3fe6dbe">out &lt;&lt; io::enum_to_string&lt;DL&gt;</a>( lev ) &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
+<div class="line"><a id="l01172" name="l01172"></a><span class="lineno"> 1172</span>        <span class="keywordflow">if</span>( cl != <a class="code hl_enumvalue" href="debug_8h.html#ab427f07a11f49f7146d1db272592d700aa02c83a7dbd96295beaefb72c2bee2de">DC::Main</a> ) {</div>
+<div class="line"><a id="l01173" name="l01173"></a><span class="lineno"> 1173</span>            <a class="code hl_function" href="namespaceio.html#a0410b1157c801e81d38669dccd59aab2">out &lt;&lt; io::enum_to_string&lt;DC&gt;</a>( cl ) &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
+<div class="line"><a id="l01174" name="l01174"></a><span class="lineno"> 1174</span>        }</div>
+<div class="line"><a id="l01175" name="l01175"></a><span class="lineno"> 1175</span>        out &lt;&lt; <span class="stringliteral">&quot;: &quot;</span>;</div>
+<div class="line"><a id="l01176" name="l01176"></a><span class="lineno"> 1176</span>        <span class="keywordflow">if</span>( filename ) {</div>
+<div class="line"><a id="l01177" name="l01177"></a><span class="lineno"> 1177</span>            out &lt;&lt; filename;</div>
+<div class="line"><a id="l01178" name="l01178"></a><span class="lineno"> 1178</span>            <span class="keywordflow">if</span>( <a class="code hl_function" href="mapgen_8cpp.html#a90f1f53dc044e93e7f7f9314cef1bd45">line</a> ) {</div>
+<div class="line"><a id="l01179" name="l01179"></a><span class="lineno"> 1179</span>                out &lt;&lt; <span class="stringliteral">&quot;:&quot;</span> &lt;&lt; <a class="code hl_function" href="mapgen_8cpp.html#a90f1f53dc044e93e7f7f9314cef1bd45">line</a>;</div>
+<div class="line"><a id="l01180" name="l01180"></a><span class="lineno"> 1180</span>            }</div>
+<div class="line"><a id="l01181" name="l01181"></a><span class="lineno"> 1181</span>            <span class="keywordflow">if</span>( funcname ) {</div>
+<div class="line"><a id="l01182" name="l01182"></a><span class="lineno"> 1182</span>                out &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
+<div class="line"><a id="l01183" name="l01183"></a><span class="lineno"> 1183</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l01184" name="l01184"></a><span class="lineno"> 1184</span>                out &lt;&lt; <span class="stringliteral">&quot;: &quot;</span>;</div>
+<div class="line"><a id="l01185" name="l01185"></a><span class="lineno"> 1185</span>            }</div>
+<div class="line"><a id="l01186" name="l01186"></a><span class="lineno"> 1186</span>        }</div>
+<div class="line"><a id="l01187" name="l01187"></a><span class="lineno"> 1187</span>        <span class="keywordflow">if</span>( funcname ) {</div>
+<div class="line"><a id="l01188" name="l01188"></a><span class="lineno"> 1188</span>            out &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; funcname &lt;&lt; <span class="stringliteral">&quot;] &quot;</span>;</div>
+<div class="line"><a id="l01189" name="l01189"></a><span class="lineno"> 1189</span>        }</div>
+<div class="line"><a id="l01190" name="l01190"></a><span class="lineno"> 1190</span> </div>
+<div class="line"><a id="l01191" name="l01191"></a><span class="lineno"> 1191</span>        <span class="comment">// Backtrace on error.</span></div>
+<div class="line"><a id="l01192" name="l01192"></a><span class="lineno"> 1192</span><span class="preprocessor">#if defined(BACKTRACE)</span></div>
+<div class="line"><a id="l01193" name="l01193"></a><span class="lineno"> 1193</span>        <span class="comment">// Push the first retrieved value back by a second so it won&#39;t match.</span></div>
+<div class="line"><a id="l01194" name="l01194"></a><span class="lineno"> 1194</span>        <span class="keyword">static</span> time_t next_backtrace = time( <span class="keyword">nullptr</span> ) - 1;</div>
+<div class="line"><a id="l01195" name="l01195"></a><span class="lineno"> 1195</span>        time_t now = time( <span class="keyword">nullptr</span> );</div>
+<div class="line"><a id="l01196" name="l01196"></a><span class="lineno"> 1196</span>        <span class="keywordflow">if</span>( lev == <a class="code hl_enumvalue" href="debug_8h.html#a157bb3f8cadfd404439ad477a19e8515a902b0d55fddef6f8d651fe1035b7d4bd">DL::Error</a> &amp;&amp; now &gt;= next_backtrace ) {</div>
+<div class="line"><a id="l01197" name="l01197"></a><span class="lineno"> 1197</span>            out &lt;&lt; <span class="stringliteral">&quot;(error message will follow backtrace)&quot;</span>;</div>
+<div class="line"><a id="l01198" name="l01198"></a><span class="lineno"> 1198</span>            debug_write_backtrace( out );</div>
+<div class="line"><a id="l01199" name="l01199"></a><span class="lineno"> 1199</span>            time_t after = time( <span class="keyword">nullptr</span> );</div>
+<div class="line"><a id="l01200" name="l01200"></a><span class="lineno"> 1200</span>            <span class="comment">// Cool down for 60s between backtrace emissions.</span></div>
+<div class="line"><a id="l01201" name="l01201"></a><span class="lineno"> 1201</span>            next_backtrace = after + 60;</div>
+<div class="line"><a id="l01202" name="l01202"></a><span class="lineno"> 1202</span>            out &lt;&lt; <span class="stringliteral">&quot;Backtrace emission took &quot;</span> &lt;&lt; after - now &lt;&lt; <span class="stringliteral">&quot; seconds.&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a id="l01203" name="l01203"></a><span class="lineno"> 1203</span>        }</div>
+<div class="line"><a id="l01204" name="l01204"></a><span class="lineno"> 1204</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l01205" name="l01205"></a><span class="lineno"> 1205</span> </div>
+<div class="line"><a id="l01206" name="l01206"></a><span class="lineno"> 1206</span>        <span class="keywordflow">return</span> DebugLogGuard( out );</div>
+<div class="line"><a id="l01207" name="l01207"></a><span class="lineno"> 1207</span>    }</div>
+<div class="line"><a id="l01208" name="l01208"></a><span class="lineno"> 1208</span> </div>
+<div class="line"><a id="l01209" name="l01209"></a><span class="lineno"> 1209</span>    <span class="keyword">static</span> <a class="code hl_struct" href="structNullBuf.html">NullBuf</a> nullBuf;</div>
+<div class="line"><a id="l01210" name="l01210"></a><span class="lineno"> 1210</span>    <span class="keyword">static</span> std::ostream nullStream( &amp;nullBuf );</div>
+<div class="line"><a id="l01211" name="l01211"></a><span class="lineno"> 1211</span>    <span class="keywordflow">return</span> DebugLogGuard( nullStream );</div>
+<div class="line"><a id="l01212" name="l01212"></a><span class="lineno"> 1212</span>}</div>
 <div class="ttc" id="adebug_8cpp_html_a79825f7113926da477d17181f70d40a4"><div class="ttname"><a href="debug_8cpp.html#a79825f7113926da477d17181f70d40a4">error_observed</a></div><div class="ttdeci">static bool error_observed</div><div class="ttdoc">Set to true when any error is logged.</div><div class="ttdef"><b>Definition:</b> <a href="debug_8cpp_source.html#l00090">debug.cpp:90</a></div></div>
-<div class="ttc" id="adebug_8cpp_html_a83a7ddf0ed043073e2270178b2aa0e06"><div class="ttname"><a href="debug_8cpp.html#a83a7ddf0ed043073e2270178b2aa0e06">output_repetitions</a></div><div class="ttdeci">static void output_repetitions(std::ostream &amp;out)</div><div class="ttdef"><b>Definition:</b> <a href="debug_8cpp_source.html#l01128">debug.cpp:1128</a></div></div>
+<div class="ttc" id="adebug_8cpp_html_a83a7ddf0ed043073e2270178b2aa0e06"><div class="ttname"><a href="debug_8cpp.html#a83a7ddf0ed043073e2270178b2aa0e06">output_repetitions</a></div><div class="ttdeci">static void output_repetitions(std::ostream &amp;out)</div><div class="ttdef"><b>Definition:</b> <a href="debug_8cpp_source.html#l01134">debug.cpp:1134</a></div></div>
 <div class="ttc" id="adebug_8cpp_html_aac2a0ea8cfdde47e38976d76d9becc41"><div class="ttname"><a href="debug_8cpp.html#aac2a0ea8cfdde47e38976d76d9becc41">checkDebugLevelClass</a></div><div class="ttdeci">static bool checkDebugLevelClass(DL lev, DC cl)</div><div class="ttdef"><b>Definition:</b> <a href="debug_8cpp_source.html#l00477">debug.cpp:477</a></div></div>
 <div class="ttc" id="adebug_8cpp_html_ae960e86d58bd6c32dca6006f4b665a4a"><div class="ttname"><a href="debug_8cpp.html#ae960e86d58bd6c32dca6006f4b665a4a">debugFile</a></div><div class="ttdeci">static DebugFile &amp; debugFile()</div><div class="ttdef"><b>Definition:</b> <a href="debug_8cpp_source.html#l00557">debug.cpp:557</a></div></div>
 <div class="ttc" id="adebug_8cpp_html_aeb4049fda277faed5ccb8af4c07be023"><div class="ttname"><a href="debug_8cpp.html#aeb4049fda277faed5ccb8af4c07be023">get_time</a></div><div class="ttdeci">static time_info get_time() noexcept</div><div class="ttdef"><b>Definition:</b> <a href="debug_8cpp_source.html#l00522">debug.cpp:522</a></div></div>
@@ -8001,7 +8001,7 @@ template&lt;typename T &gt; </div>
 <div class="ttc" id="astructDebugFile_html_af46420802da3af56a8d989dac3ecc0af"><div class="ttname"><a href="structDebugFile.html#af46420802da3af56a8d989dac3ecc0af">DebugFile::get_file</a></div><div class="ttdeci">std::ostream &amp; get_file()</div><div class="ttdef"><b>Definition:</b> <a href="debug_8cpp_source.html#l00580">debug.cpp:580</a></div></div>
 <div class="ttc" id="astructNullBuf_html"><div class="ttname"><a href="structNullBuf.html">NullBuf</a></div><div class="ttdef"><b>Definition:</b> <a href="debug_8cpp_source.html#l00500">debug.cpp:500</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="debug_8cpp_source.html#l00477">checkDebugLevelClass()</a>, <a class="el" href="debug_8cpp_source.html#l00557">debugFile()</a>, <a class="el" href="debug_8cpp_source.html#l00668">io::enum_to_string&lt; DC &gt;()</a>, <a class="el" href="debug_8cpp_source.html#l00651">io::enum_to_string&lt; DL &gt;()</a>, <a class="el" href="debug_8h.html#a157bb3f8cadfd404439ad477a19e8515a902b0d55fddef6f8d651fe1035b7d4bd">Error</a>, <a class="el" href="debug_8cpp_source.html#l00090">error_observed</a>, <a class="el" href="debug_8cpp_source.html#l00580">DebugFile::get_file()</a>, <a class="el" href="debug_8cpp_source.html#l00522">get_time()</a>, <a class="el" href="mapgen_8cpp_source.html#l06462">line()</a>, <a class="el" href="debug_8h.html#ab427f07a11f49f7146d1db272592d700aa02c83a7dbd96295beaefb72c2bee2de">Main</a>, and <a class="el" href="debug_8cpp_source.html#l01128">output_repetitions()</a>.</p>
+<p class="reference">References <a class="el" href="debug_8cpp_source.html#l00477">checkDebugLevelClass()</a>, <a class="el" href="debug_8cpp_source.html#l00557">debugFile()</a>, <a class="el" href="debug_8cpp_source.html#l00668">io::enum_to_string&lt; DC &gt;()</a>, <a class="el" href="debug_8cpp_source.html#l00651">io::enum_to_string&lt; DL &gt;()</a>, <a class="el" href="debug_8h.html#a157bb3f8cadfd404439ad477a19e8515a902b0d55fddef6f8d651fe1035b7d4bd">Error</a>, <a class="el" href="debug_8cpp_source.html#l00090">error_observed</a>, <a class="el" href="debug_8cpp_source.html#l00580">DebugFile::get_file()</a>, <a class="el" href="debug_8cpp_source.html#l00522">get_time()</a>, <a class="el" href="mapgen_8cpp_source.html#l06462">line()</a>, <a class="el" href="debug_8h.html#ab427f07a11f49f7146d1db272592d700aa02c83a7dbd96295beaefb72c2bee2de">Main</a>, and <a class="el" href="debug_8cpp_source.html#l01134">output_repetitions()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="debug_8cpp_source.html#l00382">realDebugmsg()</a>.</p>
 
@@ -11133,7 +11133,7 @@ template&lt;typename OutputIt , typename UInt , typename Char , <a class="el" hr
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacedetail.html">detail</a></li>
-    <li class="footer">Generated on Sun Nov 27 2022 20:11:57 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Sun Nov 27 2022 20:47:22 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>
