@@ -1,0 +1,12 @@
+[
+  {
+    "type": "MOD_INFO",
+    "id": "aa_lua_test_a",
+    "name": "Lua Test A",
+    "authors": [ "Olanti" ],
+    "description": "Mod for testing Lua API and loading.",
+    "category": "content",
+    "lua_api_version": 1,
+    "dependencies": [ "bn" ]
+  }
+]
