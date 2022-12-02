@@ -21,6 +21,7 @@ var debug_8h =
       [ "MapMem", "debug_8h.html#ab427f07a11f49f7146d1db272592d700aeaf557ce2a2f2ef9694ca3150f756fa8", null ],
       [ "NPC", "debug_8h.html#ab427f07a11f49f7146d1db272592d700a2bda99597da06a11feafd8760b68aec6", null ],
       [ "SDL", "debug_8h.html#ab427f07a11f49f7146d1db272592d700aa203d5f2c811f85341bed32623f5bdf6", null ],
+      [ "Lua", "debug_8h.html#ab427f07a11f49f7146d1db272592d700a0ae9478a1db9d1e2c48efa49eac1c7c6", null ],
       [ "Num", "debug_8h.html#ab427f07a11f49f7146d1db272592d700ab3e3076d9b3c53bede50d468b647b109", null ]
     ] ],
     [ "DebugOutput", "debug_8h.html#ad23721f303b059caeb1d8a751a39562b", [

@@ -2694,8 +2694,8 @@ $(document).ready(function(){initNavTree('monattack_8cpp_source.html',''); initR
 <div class="line"><a id="l02605" name="l02605"></a><span class="lineno"> 2605</span>    <span class="keywordflow">for</span>( <span class="keyword">auto</span> &amp;i : <a class="code hl_function" href="mapgen_8cpp.html#a90f1f53dc044e93e7f7f9314cef1bd45">line</a> ) {</div>
 <div class="line"><a id="l02606" name="l02606"></a><span class="lineno"> 2606</span>        <span class="comment">// Player can&#39;t be pulled though bars, furniture, cars or creatures</span></div>
 <div class="line"><a id="l02607" name="l02607"></a><span class="lineno"> 2607</span>        <span class="comment">// TODO: Add bashing? Currently a window is enough to prevent grabbing</span></div>
-<div class="line"><a id="l02608" name="l02608"></a><span class="lineno"> 2608</span>        <span class="keywordflow">if</span>( ( !<a class="code hl_variable" href="game_8cpp.html#abeb98e93502d73818b4a73fabe191bc1">g</a>-&gt;is_empty( i ) || here.<a class="code hl_function" href="classmap.html#a1a51a23a59c4341fd4d8f3c4723fd818">obstructed_by_vehicle_rotation</a>( prev_point, i ) ) &amp;&amp;</div>
-<div class="line"><a id="l02609" name="l02609"></a><span class="lineno"> 2609</span>            i != z-&gt;<a class="code hl_function" href="classmonster.html#a55d95177d49525c0da7649f135a6306d">pos</a>() &amp;&amp; i != target-&gt;<a class="code hl_function" href="classCreature.html#a45926a7ba63ccc9be744f87a4d540b7d">pos</a>() ) {</div>
+<div class="line"><a id="l02608" name="l02608"></a><span class="lineno"> 2608</span>        <span class="keywordflow">if</span>( ( !<a class="code hl_variable" href="game_8cpp.html#abeb98e93502d73818b4a73fabe191bc1">g</a>-&gt;is_empty( i ) &amp;&amp; i != z-&gt;<a class="code hl_function" href="classmonster.html#a55d95177d49525c0da7649f135a6306d">pos</a>() &amp;&amp; i != target-&gt;<a class="code hl_function" href="classCreature.html#a45926a7ba63ccc9be744f87a4d540b7d">pos</a>() ) ||</div>
+<div class="line"><a id="l02609" name="l02609"></a><span class="lineno"> 2609</span>            here.<a class="code hl_function" href="classmap.html#a1a51a23a59c4341fd4d8f3c4723fd818">obstructed_by_vehicle_rotation</a>( prev_point, i ) ) {</div>
 <div class="line"><a id="l02610" name="l02610"></a><span class="lineno"> 2610</span>            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a id="l02611" name="l02611"></a><span class="lineno"> 2611</span>        }</div>
 <div class="line"><a id="l02612" name="l02612"></a><span class="lineno"> 2612</span>        prev_point = i;</div>
@@ -6682,7 +6682,7 @@ $(document).ready(function(){initNavTree('monattack_8cpp_source.html',''); initR
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="monattack_8cpp.html">monattack.cpp</a></li>
-    <li class="footer">Generated on Tue Nov 29 2022 17:44:48 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Fri Dec 2 2022 22:51:01 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

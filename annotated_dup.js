@@ -149,6 +149,8 @@ var annotated_dup =
       [ "is_instance_of", "structcata_1_1is__instance__of.html", null ],
       [ "is_instance_of< TMPL< T >, TMPL >", "structcata_1_1is__instance__of_3_01TMPL_3_01T_01_4_00_01TMPL_01_4.html", null ],
       [ "list", "classcata_1_1list.html", "classcata_1_1list" ],
+      [ "lua_state", "structcata_1_1lua__state.html", "structcata_1_1lua__state" ],
+      [ "lua_state_deleter", "structcata_1_1lua__state__deleter.html", "structcata_1_1lua__state__deleter" ],
       [ "nullopt_t", "structcata_1_1nullopt__t.html", "structcata_1_1nullopt__t" ],
       [ "optional", "classcata_1_1optional.html", "classcata_1_1optional" ],
       [ "poly_serialized", "classcata_1_1poly__serialized.html", "classcata_1_1poly__serialized" ],

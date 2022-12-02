@@ -3767,7 +3767,7 @@ Intelligence decreases chance of being paralyzed by fear attack
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacesounds.html#af6b3d144906d9ccfda6824fb87e46aa3a69a256025f66e4ce5d15c9dd7225d357">sounds::activity</a>, <a class="el" href="monster_8cpp_source.html#l02918">monster::get_hp()</a>, <a class="el" href="monster_8cpp_source.html#l02908">monster::get_hp_max()</a>, <a class="el" href="monster_8cpp_source.html#l01640">monster::heal()</a>, <a class="el" href="calendar_8cpp_source.html#l00490">calendar::once_every()</a>, <a class="el" href="monster_8cpp_source.html#l00256">monster::pos()</a>, and <a class="el" href="sounds_8cpp_source.html#l00177">sounds::sound()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="monstergenerator_8cpp_source.html#l00520">MonsterGenerator::init_attack()</a>, <a class="el" href="gamemode__defense_8cpp_source.html#l00223">defense_game::init_map()</a>, and <a class="el" href="text__snippets_8cpp_source.html#l00150">snippet_library::random_from_category()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="monstergenerator_8cpp_source.html#l00520">MonsterGenerator::init_attack()</a>, <a class="el" href="gamemode__defense_8cpp_source.html#l00223">defense_game::init_map()</a>, and <a class="el" href="text__snippets_8cpp_source.html#l00152">snippet_library::random_from_category()</a>.</p>
 
 </div>
 </div>
@@ -5820,8 +5820,8 @@ Strength increases resistance to pull_metal_weapon special attack Melee increase
 <div class="line"><a id="l02605" name="l02605"></a><span class="lineno"> 2605</span>    <span class="keywordflow">for</span>( <span class="keyword">auto</span> &amp;i : <a class="code hl_function" href="mapgen_8cpp.html#a90f1f53dc044e93e7f7f9314cef1bd45">line</a> ) {</div>
 <div class="line"><a id="l02606" name="l02606"></a><span class="lineno"> 2606</span>        <span class="comment">// Player can&#39;t be pulled though bars, furniture, cars or creatures</span></div>
 <div class="line"><a id="l02607" name="l02607"></a><span class="lineno"> 2607</span>        <span class="comment">// TODO: Add bashing? Currently a window is enough to prevent grabbing</span></div>
-<div class="line"><a id="l02608" name="l02608"></a><span class="lineno"> 2608</span>        <span class="keywordflow">if</span>( ( !<a class="code hl_variable" href="game_8cpp.html#abeb98e93502d73818b4a73fabe191bc1">g</a>-&gt;is_empty( i ) || here.<a class="code hl_function" href="classmap.html#a1a51a23a59c4341fd4d8f3c4723fd818">obstructed_by_vehicle_rotation</a>( prev_point, i ) ) &amp;&amp;</div>
-<div class="line"><a id="l02609" name="l02609"></a><span class="lineno"> 2609</span>            i != z-&gt;<a class="code hl_function" href="classmonster.html#a55d95177d49525c0da7649f135a6306d">pos</a>() &amp;&amp; i != target-&gt;<a class="code hl_function" href="classCreature.html#a45926a7ba63ccc9be744f87a4d540b7d">pos</a>() ) {</div>
+<div class="line"><a id="l02608" name="l02608"></a><span class="lineno"> 2608</span>        <span class="keywordflow">if</span>( ( !<a class="code hl_variable" href="game_8cpp.html#abeb98e93502d73818b4a73fabe191bc1">g</a>-&gt;is_empty( i ) &amp;&amp; i != z-&gt;<a class="code hl_function" href="classmonster.html#a55d95177d49525c0da7649f135a6306d">pos</a>() &amp;&amp; i != target-&gt;<a class="code hl_function" href="classCreature.html#a45926a7ba63ccc9be744f87a4d540b7d">pos</a>() ) ||</div>
+<div class="line"><a id="l02609" name="l02609"></a><span class="lineno"> 2609</span>            here.<a class="code hl_function" href="classmap.html#a1a51a23a59c4341fd4d8f3c4723fd818">obstructed_by_vehicle_rotation</a>( prev_point, i ) ) {</div>
 <div class="line"><a id="l02610" name="l02610"></a><span class="lineno"> 2610</span>            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a id="l02611" name="l02611"></a><span class="lineno"> 2611</span>        }</div>
 <div class="line"><a id="l02612" name="l02612"></a><span class="lineno"> 2612</span>        prev_point = i;</div>
@@ -8095,7 +8095,7 @@ Dexterity increases chance judo-throwing a monster Unarmed increases chance of j
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="translations_8h_source.html#l00116">_</a>, <a class="el" href="damage_8cpp_source.html#l00041">damage_instance::add_damage()</a>, <a class="el" href="monster_8cpp_source.html#l01831">monster::add_effect()</a>, <a class="el" href="creature_8h_source.html#l00593">Creature::add_msg_if_player()</a>, <a class="el" href="monster_8cpp_source.html#l01660">monster::apply_damage()</a>, <a class="el" href="monster_8cpp_source.html#l01013">monster::attack_target()</a>, <a class="el" href="creature_8cpp_source.html#l01839">Creature::check_dead_state()</a>, <a class="el" href="character_8cpp_source.html#l08468">Character::deal_damage()</a>, <a class="el" href="character_8h_source.html#l00248">Character::dex_cur</a>, <a class="el" href="damage_8h_source.html#l00030">DT_ELECTRIC</a>, <a class="el" href="monattack_8cpp.html#a08481f62adb6937636ea44b855311037">effect_downed</a>, <a class="el" href="character_8cpp_source.html#l03356">Character::get_skill_level()</a>, <a class="el" href="monattack_8cpp_source.html#l00275">is_adjacent()</a>, <a class="el" href="classCreature.html#a8c833068edbe464c195c15084ab544f0">Creature::is_elec_immune()</a>, <a class="el" href="martialarts_8cpp_source.html#l01176">Character::is_throw_immune()</a>, <a class="el" href="enums_8h_source.html#l00260">m_good</a>, <a class="el" href="mtype_8h_source.html#l00288">mtype::melee_skill</a>, <a class="el" href="rng_8cpp_source.html#l00065">one_in()</a>, <a class="el" href="artifact_8cpp_source.html#l00032">rng()</a>, <a class="el" href="creature_8cpp_source.html#l00202">Creature::sees()</a>, <a class="el" href="monattack_8cpp.html#ad22b82ceedf236ed05df55e661444c76">skill_unarmed</a>, <a class="el" href="mtype_8h_source.html#l00324">mtype::sp_defense</a>, <a class="el" href="monster_8h_source.html#l00481">monster::type</a>, and <a class="el" href="mondefense_8cpp_source.html#l00048">mdefense::zapback()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="monattack_8cpp_source.html#l05194">bio_op_takedown()</a>, <a class="el" href="monattack_8cpp_source.html#l02689">grab()</a>, and <a class="el" href="game_8cpp_source.html#l10935">game::update_stair_monsters()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="monattack_8cpp_source.html#l05194">bio_op_takedown()</a>, <a class="el" href="monattack_8cpp_source.html#l02689">grab()</a>, and <a class="el" href="game_8cpp_source.html#l10754">game::update_stair_monsters()</a>.</p>
 
 </div>
 </div>
@@ -8528,7 +8528,7 @@ Dexterity increases chance judo-throwing a monster Unarmed increases chance of j
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacemattack.html">mattack</a></li>
-    <li class="footer">Generated on Tue Nov 29 2022 17:45:29 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Fri Dec 2 2022 22:51:45 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>
