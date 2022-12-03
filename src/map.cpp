@@ -6985,66 +6985,17 @@ void map::saven( const tripoint &grid )
     MAPBUFFER.add_submap( abs, submap_to_save );
 }
 
-// Optimized mapgen function that only works properly for very simple overmap types
-// Does not create or require a temporary map and does its own saving
-static void generate_uniform( const tripoint &p, const ter_id &terrain_type )
-{
-    dbg( DL::Info ) << "generate_uniform p: " << p
-                    << "  terrain_type: " << terrain_type.id().str();
-
-    for( int xd = 0; xd <= 1; xd++ ) {
-        for( int yd = 0; yd <= 1; yd++ ) {
-            submap *sm = new submap();
-            sm->is_uniform = true;
-            sm->set_all_ter( terrain_type );
-            sm->last_touched = calendar::turn;
-            MAPBUFFER.add_submap( p + point( xd, yd ), sm );
-        }
-    }
-}
-
 void map::loadn( const tripoint &grid, const bool update_vehicles )
 {
-    // Cache empty overmap types
-    static const oter_id rock( "empty_rock" );
-    static const oter_id air( "open_air" );
-
-    const tripoint grid_abs_sub = abs_sub.xy() + grid;
+    const tripoint_abs_sm grid_abs_sub( abs_sub.xy() + grid );
     const size_t gridn = get_nonant( grid );
 
     const int old_abs_z = abs_sub.z; // Ugly, but necessary at the moment
     abs_sub.z = grid.z;
 
-    submap *tmpsub = MAPBUFFER.lookup_submap( grid_abs_sub );
-    if( tmpsub == nullptr ) {
-        // It doesn't exist; we must generate it!
-        dbg( DL::Info ) << "map::loadn: Missing mapbuffer data.  Regenerating.";
-
-        // Each overmap square is two nonants; to prevent overlap, generate only at
-        //  squares divisible by 2.
-        // TODO: fix point types
-        const tripoint_abs_omt grid_abs_omt( sm_to_omt_copy( grid_abs_sub ) );
-        const tripoint grid_abs_sub_rounded = omt_to_sm_copy( grid_abs_omt.raw() );
-
-        const oter_id terrain_type = overmap_buffer.ter( grid_abs_omt );
-
-        // Short-circuit if the map tile is uniform
-        // TODO: Replace with json mapgen functions.
-        if( terrain_type == air ) {
-            generate_uniform( grid_abs_sub_rounded, t_open_air );
-        } else if( terrain_type == rock ) {
-            generate_uniform( grid_abs_sub_rounded, t_rock );
-        } else {
-            tinymap tmp_map;
-            tmp_map.generate( grid_abs_sub_rounded, calendar::turn );
-        }
-
-        // This is the same call to MAPBUFFER as above!
-        tmpsub = MAPBUFFER.lookup_submap( grid_abs_sub );
-        if( tmpsub == nullptr ) {
-            debugmsg( "failed to generate a submap at %s", grid_abs_sub.to_string() );
-            return;
-        }
+    submap *tmpsub = map_funcs::fetch_or_generate_submap( grid_abs_sub );
+    if( !tmpsub ) {
+        return;
     }
 
     // New submap changes the content of the map and all caches must be recalculated
@@ -7056,7 +7007,7 @@ void map::loadn( const tripoint &grid, const bool update_vehicles )
     set_suspension_cache_dirty( grid.z );
     setsubmap( gridn, tmpsub );
     if( !tmpsub->active_items.empty() ) {
-        submaps_with_active_items.emplace( grid_abs_sub );
+        submaps_with_active_items.emplace( grid_abs_sub.raw() );
     }
     if( tmpsub->field_count > 0 ) {
         get_cache( grid.z ).field_cache.set( grid.x + grid.y * MAPSIZE );

@@ -43,6 +43,7 @@
 #include "enums.h"
 #include "faction.h"
 #include "filesystem.h"
+#include "fstream_utils.h"
 #include "game.h"
 #include "game_constants.h"
 #include "game_inventory.h"
@@ -55,7 +56,9 @@
 #include "magic.h"
 #include "map.h"
 #include "map_extras.h"
+#include "map_functions.h"
 #include "map_iterator.h"
+#include "mapbuffer.h"
 #include "mapgen.h"
 #include "mapgendata.h"
 #include "martialarts.h"
@@ -75,6 +78,7 @@
 #include "overmap.h"
 #include "overmap_ui.h"
 #include "overmapbuffer.h"
+#include "path_info.h"
 #include "pimpl.h"
 #include "player.h"
 #include "pldata.h"
@@ -82,6 +86,7 @@
 #include "popup.h"
 #include "recipe_dictionary.h"
 #include "rng.h"
+#include "submap.h"
 #include "sounds.h"
 #include "stomach.h"
 #include "string_formatter.h"
@@ -181,6 +186,7 @@ enum debug_menu_index {
     DEBUG_HOUR_TIMER,
     DEBUG_NESTED_MAPGEN,
     DEBUG_RESET_IGNORED_MESSAGES,
+    DEBUG_TEST_OVERMAP_MAPGEN,
 };
 
 class mission_debug
@@ -238,6 +244,7 @@ static int info_uilist( bool display_all_entries = true )
             { uilist_entry( DEBUG_TEST_WEATHER, true, 'W', _( "Test weather" ) ) },
             { uilist_entry( DEBUG_TEST_MAP_EXTRA_DISTRIBUTION, true, 'e', _( "Test map extra list" ) ) },
             { uilist_entry( DEBUG_RESET_IGNORED_MESSAGES, true, 'I', _( "Reset ignored debug messages" ) ) },
+            { uilist_entry( DEBUG_TEST_OVERMAP_MAPGEN, true, 'O', _( "Test overmap-sized map mapgen (long)" ) ) },
         };
         uilist_initializer.insert( uilist_initializer.begin(), debug_only_options.begin(),
                                    debug_only_options.end() );
@@ -1336,6 +1343,70 @@ void benchmark( const int max_difference, bench_kind kind )
              difference / 1000.0, 1000.0 * draw_counter / static_cast<double>( difference ) );
 }
 
+static void debug_test_overmap_mapgen()
+{
+    // Get avatar's overmap pos
+    point_abs_om av_om;
+    tripoint_abs_ms av_pos( get_map().getabs( get_avatar().pos() ) );
+    coords::coord_point<tripoint, coords::origin::overmap, coords::ms> _unused;
+    std::tie( av_om, _unused ) = coords::project_remain<coords::om>( av_pos );
+
+    int iterations = 0;
+
+    std::unordered_map<itype const *, int> item_count;
+
+    const auto process_submap_data = [&]( submap * sm ) {
+        iterations += 1;
+        for( int y = 0; y < SEEY; y++ ) {
+            for( int x = 0; x < SEEX; x++ ) {
+                auto &items = sm->get_items( point( x, y ) );
+                for( const item &it : items ) {
+                    int c = it.count();
+                    auto res = item_count.insert( std::make_pair( it.type, c ) );
+                    if( !res.second ) {
+                        res.first->second += c;
+                    }
+                }
+            }
+        }
+    };
+
+    for( int y = 0; y < OMAPY; y++ ) {
+        for( int x = 0; x < OMAPX; x++ ) {
+            for( int z = -OVERMAP_DEPTH; z <= OVERMAP_HEIGHT; z++ ) {
+                tripoint_om_omt p_omt( x, y, z );
+                tripoint_abs_omt p_omt_abs = coords::project_combine( av_om, p_omt );
+                tripoint_abs_sm p_sm = coords::project_to<coords::sm>( p_omt_abs );
+                for( int sy = 0; sy < 2; sy++ ) {
+                    for( int sx = 0; sx < 2; sx++ ) {
+                        tripoint_abs_sm p = p_sm + point( sx, sy );
+                        submap *sm = map_funcs::fetch_or_generate_submap( p );
+                        process_submap_data( sm );
+                    }
+                }
+            }
+        }
+        // Dump unused submaps to disk
+        if( y % 5 == 0 ) {
+            //debugmsg("Iterations: %d, saving...", iterations);
+            g->save();
+            //debugmsg("Done!");
+        }
+    }
+
+    std::string out_path = PATH_INFO::config_dir() + "overmapgen_test.txt";
+
+    write_to_file( out_path,
+    [&]( std::ostream & s ) {
+        s << "Submaps checked: " << iterations << std::endl;
+        for( const auto &it : item_count ) {
+            s << it.first->get_id().str() << "\t" << it.second << std::endl;
+        }
+    } );
+
+    popup( "Done! See output file for results\n%s", out_path );
+}
+
 void debug()
 {
     bool debug_menu_has_hotkey = hotkey_for_action( ACTION_DEBUG, false ) != -1;
@@ -2044,6 +2115,9 @@ void debug()
             break;
         case DEBUG_RESET_IGNORED_MESSAGES:
             debug_reset_ignored_messages();
+            break;
+        case DEBUG_TEST_OVERMAP_MAPGEN:
+            debug_test_overmap_mapgen();
             break;
     }
     m.invalidate_map_cache( g->get_levz() );
