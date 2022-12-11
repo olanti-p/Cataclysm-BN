@@ -1123,8 +1123,6 @@ var hierarchy =
     [ "lockpicking_open_result", "structlockpicking__open__result.html", null ],
     [ "look_around_result", "structlook__around__result.html", null ],
     [ "lru_cache< Key, Value >", "classlru__cache.html", null ],
-    [ "cata::lua_state", "structcata_1_1lua__state.html", null ],
-    [ "cata::lua_state_deleter", "structcata_1_1lua__state__deleter.html", null ],
     [ "ma_buff", "classma__buff.html", null ],
     [ "ma_requirements", "structma__requirements.html", null ],
     [ "ma_technique", "classma__technique.html", null ],

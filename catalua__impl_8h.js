@@ -1,7 +1,0 @@
-var catalua__impl_8h =
-[
-    [ "cata::lua_state", "structcata_1_1lua__state.html", "structcata_1_1lua__state" ],
-    [ "CATA_SRC_CATALUA_IMPL_H", "catalua__impl_8h.html#aebd6525f635f6aca4ddfe5b1ada26df8", null ],
-    [ "make_lua_state", "catalua__impl_8h.html#a32609a9200bd4c0bc611c32db5153410", null ],
-    [ "run_lua_script", "catalua__impl_8h.html#a649a91e852aeabded1d8686ceb8fb262", null ]
-];
