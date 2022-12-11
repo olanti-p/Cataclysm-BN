@@ -471,11 +471,11 @@ VisitResponse visitable<map_cursor>::visit_items(
     auto cur = static_cast<map_cursor *>( this );
     map &here = get_map();
     // skip inaccessible items
-    if( here.has_flag( "SEALED", *cur ) && !here.has_flag( "LIQUIDCONT", *cur ) ) {
+    if( here.has_flag( "SEALED", cur->pos() ) && !here.has_flag( "LIQUIDCONT", cur->pos() ) ) {
         return VisitResponse::NEXT;
     }
 
-    for( item &e : here.i_at( *cur ) ) {
+    for( item &e : here.i_at( cur->pos() ) ) {
         if( visit_internal( func, &e ) == VisitResponse::ABORT ) {
             return VisitResponse::ABORT;
         }
@@ -719,14 +719,14 @@ std::list<item> visitable<map_cursor>::remove_items_with( const
     }
 
     map &here = get_map();
-    if( !here.inbounds( *cur ) ) {
+    if( !here.inbounds( cur->pos() ) ) {
         debugmsg( "cannot remove items from map: cursor out-of-bounds" );
         return res;
     }
 
     // fetch the appropriate item stack
     point offset;
-    submap *sub = here.get_submap_at( *cur, offset );
+    submap *sub = here.get_submap_at( cur->pos(), offset );
     cata::colony<item> &stack = sub->get_items( offset );
 
     for( auto iter = stack.begin(); iter != stack.end(); ) {
@@ -752,7 +752,7 @@ std::list<item> visitable<map_cursor>::remove_items_with( const
             ++iter;
         }
     }
-    here.update_submap_active_item_status( *cur );
+    here.update_submap_active_item_status( cur->pos() );
     return res;
 }
 

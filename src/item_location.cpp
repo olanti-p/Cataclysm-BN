@@ -190,13 +190,13 @@ class item_location::impl::item_on_map : public item_location::impl
         }
 
         tripoint position() const override {
-            return cur;
+            return cur.pos();
         }
 
         std::string describe( const Character *ch ) const override {
-            std::string res = get_map().name( cur );
+            std::string res = get_map().name( cur.pos() );
             if( ch ) {
-                res += std::string( " " ) += direction_suffix( ch->pos(), cur );
+                res += std::string( " " ) += direction_suffix( ch->pos(), cur.pos() );
             }
             return res;
         }
@@ -226,7 +226,7 @@ class item_location::impl::item_on_map : public item_location::impl
             }
 
             int mv = dynamic_cast<const player *>( &ch )->item_handling_cost( obj, true, MAP_HANDLING_PENALTY );
-            mv += 100 * rl_dist( ch.pos(), cur );
+            mv += 100 * rl_dist( ch.pos(), cur.pos() );
 
             // TODO: handle unpacking costs
 

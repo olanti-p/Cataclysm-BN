@@ -1062,7 +1062,7 @@ void character_edit_menu( Character &c )
                                            //~ translation should not exceed 4 console cells
                                            right_justify( _( "MAX" ), 4 ) );
                 uile.enabled = false;
-                uile.force_color = c_light_blue;
+                uile.text_color = c_light_blue;
                 uiles.emplace_back( uile );
             }
             int retval = 0;

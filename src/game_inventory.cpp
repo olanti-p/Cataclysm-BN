@@ -473,7 +473,7 @@ class disassemble_inventory_preset : public pickup_inventory_preset
         }
 
         bool is_shown( const item_location &loc ) const override {
-            return get_recipe( loc );
+            return !get_recipe( loc ).is_null();
         }
 
         std::string get_denial( const item_location &loc ) const override {

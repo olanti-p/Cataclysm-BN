@@ -1,15 +1,10 @@
 #include "catch/catch.hpp"
 
+#include "cata_assert.h"
 #include "catacharset.h"
 #include "map_setup_helpers.h"
 #include "state_helpers.h"
 #include "string_formatter.h"
-
-static void cata_assert( bool expr )
-{
-    assert( expr );
-    ( void ) expr;
-}
 
 namespace map_helpers
 {

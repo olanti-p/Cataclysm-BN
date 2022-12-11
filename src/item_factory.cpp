@@ -515,7 +515,7 @@ void Item_factory::finalize_pre( itype &obj )
                 use_function( "TOGGLE_HEATS_FOOD", &iuse::toggle_heats_food );
             cauterize_actor cauterize;
             cauterize.flame = false;
-            obj.use_methods["cauterize"] = cauterize.clone();
+            obj.use_methods["cauterize"] = use_function( cauterize.clone() );
             obj.item_tags.emplace( "HEATS_FOOD_USING_CHARGES" );
         }
 

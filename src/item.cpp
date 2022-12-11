@@ -7663,8 +7663,11 @@ ret_val<bool> item::is_gunmod_compatible( const item &mod ) const
 
         // TODO: Get rid of the "archery"->"bow" hack
     } else if( !mod.type->gunmod->usable.count( gun_type() ) &&
-               !mod.type->gunmod->usable.count( typeId().str() ) &&
-               !( gun_skill() == skill_archery && mod.type->gunmod->usable.count( bow_hack_str ) > 0 ) ) {
+               !mod.type->gunmod->usable.count( gun_type_type( typeId().str() ) ) &&
+               !(
+                   gun_skill() == skill_archery &&
+                   mod.type->gunmod->usable.count( gun_type_type( bow_hack_str ) ) > 0
+               ) ) {
         return ret_val<bool>::make_failure( _( "cannot have a %s" ), mod.tname() );
 
     } else if( typeId() == itype_hand_crossbow &&

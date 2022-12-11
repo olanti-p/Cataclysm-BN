@@ -14,7 +14,7 @@ class map_cursor : public visitable<map_cursor>
 
     public:
         map_cursor( const tripoint &pos );
-        operator tripoint() const;
+        tripoint pos() const;
 };
 
 class map_selector : public visitable<map_selector>
