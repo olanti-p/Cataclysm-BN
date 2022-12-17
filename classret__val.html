@@ -410,12 +410,12 @@ template&lt;class... A, typename S  = std::string, typename  = is_convertible_to
 
 <p class="definition">Definition at line <a class="el" href="ret__val_8h_source.html#l00056">56</a> of file <a class="el" href="ret__val_8h_source.html">ret_val.h</a>.</p>
 <div class="fragment"><div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>                                                                          {</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="classret__val.html#ad395557949d0f96cfb5ba4ddda43232e">ret_val</a>( <a class="code hl_function" href="string__formatter_8h.html#a9b089d0b697443b096063219dab08ef5">string_format</a>( <a class="code hl_variable" href="classret__val.html#a9722b3f0310c665f17761e848720430a">msg</a>, std::forward&lt;A&gt;( args )... ), <a class="code hl_variable" href="classret__val.html#aa6dd5587e2e979546d20a92a4464babe">val</a>, <span class="keyword">false</span> );</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="classret__val.html#ad395557949d0f96cfb5ba4ddda43232e">ret_val</a>( <a class="code hl_function" href="string__formatter_8h.html#a8964099387da2f95396c67566bafce3d">string_format</a>( <a class="code hl_variable" href="classret__val.html#a9722b3f0310c665f17761e848720430a">msg</a>, std::forward&lt;A&gt;( args )... ), <a class="code hl_variable" href="classret__val.html#aa6dd5587e2e979546d20a92a4464babe">val</a>, <span class="keyword">false</span> );</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        }</div>
 <div class="ttc" id="aclassret__val_html_ad395557949d0f96cfb5ba4ddda43232e"><div class="ttname"><a href="classret__val.html#ad395557949d0f96cfb5ba4ddda43232e">ret_val::ret_val</a></div><div class="ttdeci">ret_val()=delete</div></div>
-<div class="ttc" id="astring__formatter_8h_html_a9b089d0b697443b096063219dab08ef5"><div class="ttname"><a href="string__formatter_8h.html#a9b089d0b697443b096063219dab08ef5">string_format</a></div><div class="ttdeci">std::string string_format(std::string format, Args &amp;&amp;...args)</div><div class="ttdoc">Simple wrapper over string_formatter::parse.</div><div class="ttdef"><b>Definition:</b> <a href="string__formatter_8h_source.html#l00418">string_formatter.h:418</a></div></div>
+<div class="ttc" id="astring__formatter_8h_html_a8964099387da2f95396c67566bafce3d"><div class="ttname"><a href="string__formatter_8h.html#a8964099387da2f95396c67566bafce3d">string_format</a></div><div class="ttdeci">std::string string_format(std::string_view format, Args &amp;&amp;...args)</div><div class="ttdoc">Simple wrapper over string_formatter::parse.</div><div class="ttdef"><b>Definition:</b> <a href="string__formatter_8h_source.html#l00431">string_formatter.h:431</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="ret__val_8h_source.html#l00090">ret_val&lt; T &gt;::msg</a>, <a class="el" href="classret__val.html#ad395557949d0f96cfb5ba4ddda43232e">ret_val&lt; T &gt;::ret_val()</a>, <a class="el" href="string__formatter_8h_source.html#l00418">string_format()</a>, and <a class="el" href="ret__val_8h_source.html#l00091">ret_val&lt; T &gt;::val</a>.</p>
+<p class="reference">References <a class="el" href="ret__val_8h_source.html#l00090">ret_val&lt; T &gt;::msg</a>, <a class="el" href="classret__val.html#ad395557949d0f96cfb5ba4ddda43232e">ret_val&lt; T &gt;::ret_val()</a>, <a class="el" href="string__formatter_8h_source.html#l00431">string_format()</a>, and <a class="el" href="ret__val_8h_source.html#l00091">ret_val&lt; T &gt;::val</a>.</p>
 
 </div>
 </div>
@@ -550,10 +550,10 @@ template&lt;class... A, typename S  = std::string, typename  = is_convertible_to
 
 <p class="definition">Definition at line <a class="el" href="ret__val_8h_source.html#l00051">51</a> of file <a class="el" href="ret__val_8h_source.html">ret_val.h</a>.</p>
 <div class="fragment"><div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>                                                                          {</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="classret__val.html#ad395557949d0f96cfb5ba4ddda43232e">ret_val</a>( <a class="code hl_function" href="string__formatter_8h.html#a9b089d0b697443b096063219dab08ef5">string_format</a>( <a class="code hl_variable" href="classret__val.html#a9722b3f0310c665f17761e848720430a">msg</a>, std::forward&lt;A&gt;( args )... ), <a class="code hl_variable" href="classret__val.html#aa6dd5587e2e979546d20a92a4464babe">val</a>, <span class="keyword">true</span> );</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="classret__val.html#ad395557949d0f96cfb5ba4ddda43232e">ret_val</a>( <a class="code hl_function" href="string__formatter_8h.html#a8964099387da2f95396c67566bafce3d">string_format</a>( <a class="code hl_variable" href="classret__val.html#a9722b3f0310c665f17761e848720430a">msg</a>, std::forward&lt;A&gt;( args )... ), <a class="code hl_variable" href="classret__val.html#aa6dd5587e2e979546d20a92a4464babe">val</a>, <span class="keyword">true</span> );</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        }</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="ret__val_8h_source.html#l00090">ret_val&lt; T &gt;::msg</a>, <a class="el" href="classret__val.html#ad395557949d0f96cfb5ba4ddda43232e">ret_val&lt; T &gt;::ret_val()</a>, <a class="el" href="string__formatter_8h_source.html#l00418">string_format()</a>, and <a class="el" href="ret__val_8h_source.html#l00091">ret_val&lt; T &gt;::val</a>.</p>
+<p class="reference">References <a class="el" href="ret__val_8h_source.html#l00090">ret_val&lt; T &gt;::msg</a>, <a class="el" href="classret__val.html#ad395557949d0f96cfb5ba4ddda43232e">ret_val&lt; T &gt;::ret_val()</a>, <a class="el" href="string__formatter_8h_source.html#l00431">string_format()</a>, and <a class="el" href="ret__val_8h_source.html#l00091">ret_val&lt; T &gt;::val</a>.</p>
 
 </div>
 </div>
@@ -797,7 +797,7 @@ template&lt;typename T &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classret__val.html">ret_val</a></li>
-    <li class="footer">Generated on Sun Dec 11 2022 17:23:08 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Sat Dec 17 2022 22:50:26 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

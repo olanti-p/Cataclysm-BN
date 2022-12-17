@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['b_0',['b',['../structcata__libintl_1_1PlfNode.html#ae4ce93dcac0d4177f27f033261852941',1,'cata_libintl::PlfNode::b()'],['../magic_8cpp.html#aa93a189fb7bbbf87be54bcc7bd11bb6f',1,'b():&#160;magic.cpp']]],
-  ['b_1',['B',['../classtileset__loader.html#ac360ca5bb6b22dd42d6f98b0adff0cdb',1,'tileset_loader']]],
+  ['b_0',['B',['../classtileset__loader.html#ac360ca5bb6b22dd42d6f98b0adff0cdb',1,'tileset_loader']]],
+  ['b_1',['b',['../magic_8cpp.html#aa93a189fb7bbbf87be54bcc7bd11bb6f',1,'b():&#160;magic.cpp'],['../structcata__libintl_1_1PlfNode.html#ae4ce93dcac0d4177f27f033261852941',1,'cata_libintl::PlfNode::b()']]],
   ['b_5fis_5fhigher_5ftrait_5fof_5fa_2',['b_is_higher_trait_of_a',['../mutation_8cpp.html#a4027c6d115ac6f65b1c7f7d6f80399dc',1,'b_is_higher_trait_of_a(const trait_id &amp;trait_a, const trait_id &amp;trait_b):&#160;mutation.cpp'],['../mutation_8h.html#a4027c6d115ac6f65b1c7f7d6f80399dc',1,'b_is_higher_trait_of_a(const trait_id &amp;trait_a, const trait_id &amp;trait_b):&#160;mutation.cpp']]],
   ['b_5fis_5flower_5ftrait_5fof_5fa_3',['b_is_lower_trait_of_a',['../mutation_8cpp.html#a6fc1d12103e2755d028e7c966dbfa573',1,'b_is_lower_trait_of_a(const trait_id &amp;trait_a, const trait_id &amp;trait_b):&#160;mutation.cpp'],['../mutation_8h.html#a6fc1d12103e2755d028e7c966dbfa573',1,'b_is_lower_trait_of_a(const trait_id &amp;trait_a, const trait_id &amp;trait_b):&#160;mutation.cpp']]],
   ['baby_5fcount_4',['baby_count',['../structmtype.html#a067238f4291179596bd5a657768faf5e',1,'mtype']]],
@@ -587,8 +587,8 @@ var searchData=
   ['border_5fpoint_5fchance_584',['border_point_chance',['../structforest__trail__settings.html#a560e252b17009faf9398e42b5708def4',1,'forest_trail_settings']]],
   ['border_5fspace_585',['BORDER_SPACE',['../input_8h.html#a1c30c1154c0f4fedbb6d0583d7839527',1,'input.h']]],
   ['border_5fwidth_586',['border_width',['../classMessages_1_1dialog.html#aa831896c92fdfeba0303316c20948606',1,'Messages::dialog::border_width()'],['../popup_8cpp.html#a4967e9ff73b19203211c87880f9fdb58',1,'border_width():&#160;popup.cpp']]],
-  ['both_587',['BOTH',['../bodypart_8h.html#ae70ba95c272bf8b7296bc0df8bcd03e4a6328e5e3186c227a021ef2ff77e40197',1,'bodypart.h']]],
-  ['both_588',['both',['../weather__type_8h.html#ae8decd3daf4ed96986e06992ea70d17daf6cb3e816496528d4187db53bc66567f',1,'weather_type.h']]],
+  ['both_587',['both',['../weather__type_8h.html#ae8decd3daf4ed96986e06992ea70d17daf6cb3e816496528d4187db53bc66567f',1,'weather_type.h']]],
+  ['both_588',['BOTH',['../bodypart_8h.html#ae70ba95c272bf8b7296bc0df8bcd03e4a6328e5e3186c227a021ef2ff77e40197',1,'bodypart.h']]],
   ['bottom_589',['bottom',['../structborder__helper_1_1border__connection.html#ac70a7abcc27745b7896ba3e53dc7a4ea',1,'border_helper::border_connection']]],
   ['bound_5fmod_5fto_5fvals_590',['bound_mod_to_vals',['../cata__utility_8cpp.html#a83338e5cfd99aac60a46f68a518b1bc2',1,'bound_mod_to_vals(int val, int mod, int max, int min):&#160;cata_utility.cpp'],['../cata__utility_8h.html#a83338e5cfd99aac60a46f68a518b1bc2',1,'bound_mod_to_vals(int val, int mod, int max, int min):&#160;cata_utility.cpp']]],
   ['boundaries_591',['boundaries',['../structdetail_1_1boundaries.html',1,'detail']]],

@@ -1,5 +1,14 @@
 var NAVTREEINDEX151 =
 {
+"structmut__attack.html":[36,0,659],
+"structmut__attack.html#a14c15da79fa92bd55ff9ce35229e73ba":[36,0,659,1],
+"structmut__attack.html#a1e1bae905c75a0b2f3d1394f9824dc6d":[36,0,659,3],
+"structmut__attack.html#a38cdb81bd4c6477f0f1c70b118e7973a":[36,0,659,7],
+"structmut__attack.html#a3ebdea939f8a67c44c3a50e78d066287":[36,0,659,5],
+"structmut__attack.html#a4fe8391fd96b60f5f3bca3566c776eb5":[36,0,659,4],
+"structmut__attack.html#a97ff3ce1548b7ab01281f6fa942d45cf":[36,0,659,2],
+"structmut__attack.html#ab7406ba339ea28e1e899a167c5d32a19":[36,0,659,6],
+"structmut__attack.html#ac5f6c240a85d791e635b89e42b309c7f":[36,0,659,8],
 "structmut__attack.html#af9694fc8d1f462ba12894f6b9b35f109":[36,0,659,0],
 "structmut__transform.html":[36,0,660],
 "structmut__transform.html#a9265a7560d81903c5ba7f06e38e558e4":[36,0,660,0],
@@ -240,14 +249,5 @@ var NAVTREEINDEX151 =
 "structnote__color.html#a5b13480ff463948685181426f226bae6":[36,0,677,1],
 "structnote__color.html#a827a10be059585ddd6f93ecf0875e6fb":[36,0,677,0],
 "structnpc__chatbin.html":[36,0,679],
-"structnpc__chatbin.html#a083175cd6d6a4cc4e77135c79dd4f518":[36,0,679,6],
-"structnpc__chatbin.html#a2306d095b58cd0469ebbbd0645d4da3f":[36,0,679,0],
-"structnpc__chatbin.html#a37064831275bcbf121d57770e24c7f4a":[36,0,679,5],
-"structnpc__chatbin.html#a4b0e60a7c7f0371b12ce8b9c889ae188":[36,0,679,3],
-"structnpc__chatbin.html#a639940a9d29a697bec5c09acc2a8da39":[36,0,679,9],
-"structnpc__chatbin.html#a6badc35e703d29f340f0f9c3d66b6e78":[36,0,679,7],
-"structnpc__chatbin.html#a99b51df0b9772ea2166968a03d1d4317":[36,0,679,8],
-"structnpc__chatbin.html#ab55d86d667d7ecbe05192775439d361e":[36,0,679,2],
-"structnpc__chatbin.html#ac16d0e05b42274232123ab95cfefc54d":[36,0,679,11],
-"structnpc__chatbin.html#ad4ff04c6043c0b02634eb2ff5351f351":[36,0,679,4]
+"structnpc__chatbin.html#a083175cd6d6a4cc4e77135c79dd4f518":[36,0,679,6]
 };

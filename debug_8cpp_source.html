@@ -273,11 +273,11 @@ $(document).ready(function(){initNavTree('debug_8cpp_source.html',''); initResiz
 <div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        <span class="keyword">const</span> <span class="keywordtype">char</span> *repetition_string =</div>
 <div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>            <a class="code hl_define" href="translations_8h.html#aa829053017e23ef22d44dccecba63a34">_</a>( <span class="stringliteral">&quot;Excessive error repetition detected.  Please file a bug report at https://github.com/cataclysmbnteam/Cataclysm-BN/issues&quot;</span> );</div>
 <div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>        <span class="comment">// try to prepend repetition string if we are forcing the display. Right now that&#39;s the only reason for this prompt to display.</span></div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>        std::string pre = force ? <a class="code hl_function" href="string__formatter_8h.html#a9b089d0b697443b096063219dab08ef5">string_format</a>(</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>        std::string pre = force ? <a class="code hl_function" href="string__formatter_8h.html#a8964099387da2f95396c67566bafce3d">string_format</a>(</div>
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>                              <span class="stringliteral">&quot;            %s\n&quot;</span>,</div>
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>                              repetition_string</div>
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>                          ) : <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="string__formatter_8h.html#a9b089d0b697443b096063219dab08ef5">string_format</a>(</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="string__formatter_8h.html#a8964099387da2f95396c67566bafce3d">string_format</a>(</div>
 <div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>                   <span class="stringliteral">&quot;%s&quot;</span></div>
 <div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>                   <span class="stringliteral">&quot; DEBUG    : %s\n\n&quot;</span></div>
 <div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>                   <span class="stringliteral">&quot; FUNCTION : %s\n&quot;</span></div>
@@ -291,7 +291,7 @@ $(document).ready(function(){initNavTree('debug_8cpp_source.html',''); initResiz
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span> </div>
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span><span class="preprocessor">#if defined(BACKTRACE)</span></div>
 <div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    std::string backtrace_instructions =</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        <a class="code hl_function" href="string__formatter_8h.html#a9b089d0b697443b096063219dab08ef5">string_format</a>(</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        <a class="code hl_function" href="string__formatter_8h.html#a8964099387da2f95396c67566bafce3d">string_format</a>(</div>
 <div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>            <a class="code hl_define" href="translations_8h.html#aa829053017e23ef22d44dccecba63a34">_</a>( <span class="stringliteral">&quot;See %s for a full stack backtrace&quot;</span> ),</div>
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>            <a class="code hl_function" href="namespacePATH__INFO.html#a0769936b87cc06bbb1aa1afa04aad43e">PATH_INFO::debug</a>()</div>
 <div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>        );</div>
@@ -306,7 +306,7 @@ $(document).ready(function(){initNavTree('debug_8cpp_source.html',''); initResiz
 <div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    };</div>
 <div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    <a class="code hl_function" href="computer__session_8cpp.html#a36d52922f16af18517878be2c1ed2ab0">init_window</a>( <a class="code hl_namespace" href="namespaceui.html">ui</a> );</div>
 <div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>    <a class="code hl_namespace" href="namespaceui.html">ui</a>.on_screen_resize( <a class="code hl_function" href="computer__session_8cpp.html#a36d52922f16af18517878be2c1ed2ab0">init_window</a> );</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    <span class="keyword">const</span> std::string <a class="code hl_variable" href="namespacemapgen__defer.html#a616ad2c7ee2eb002b683b41b04a888c1">message</a> = <a class="code hl_function" href="string__formatter_8h.html#a9b089d0b697443b096063219dab08ef5">string_format</a>(</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    <span class="keyword">const</span> std::string <a class="code hl_variable" href="namespacemapgen__defer.html#a616ad2c7ee2eb002b683b41b04a888c1">message</a> = <a class="code hl_function" href="string__formatter_8h.html#a8964099387da2f95396c67566bafce3d">string_format</a>(</div>
 <div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>                                    <span class="stringliteral">&quot;\n\n&quot;</span> <span class="comment">// Looks nicer with some space</span></div>
 <div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>                                    <span class="stringliteral">&quot; %s\n&quot;</span> <span class="comment">// translated user string: error notification</span></div>
 <div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>                                    <span class="stringliteral">&quot; -----------------------------------------------------------\n&quot;</span></div>
@@ -1393,7 +1393,7 @@ $(document).ready(function(){initNavTree('debug_8cpp_source.html',''); initResiz
 <div class="line"><a id="l01304" name="l01304"></a><span class="lineno"> 1304</span>        } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l01305" name="l01305"></a><span class="lineno"> 1305</span>            value = std::string( buffer.data() );</div>
 <div class="line"><a id="l01306" name="l01306"></a><span class="lineno"> 1306</span>        }</div>
-<div class="line"><a id="l01307" name="l01307"></a><span class="lineno"> 1307</span>        output.append( <a class="code hl_function" href="string__formatter_8h.html#a9b089d0b697443b096063219dab08ef5">string_format</a>( <span class="stringliteral">&quot;%s: %s; &quot;</span>, entry.second, value ) );</div>
+<div class="line"><a id="l01307" name="l01307"></a><span class="lineno"> 1307</span>        output.append( <a class="code hl_function" href="string__formatter_8h.html#a8964099387da2f95396c67566bafce3d">string_format</a>( <span class="stringliteral">&quot;%s: %s; &quot;</span>, entry.second, value ) );</div>
 <div class="line"><a id="l01308" name="l01308"></a><span class="lineno"> 1308</span>    }</div>
 <div class="line"><a id="l01309" name="l01309"></a><span class="lineno"> 1309</span>    <span class="keywordflow">return</span> output;</div>
 <div class="line"><a id="l01310" name="l01310"></a><span class="lineno"> 1310</span>}</div>
@@ -1466,7 +1466,7 @@ $(document).ready(function(){initNavTree('debug_8cpp_source.html',''); initResiz
 <div class="line"><a id="l01377" name="l01377"></a><span class="lineno"> 1377</span>            command_result.erase( std::remove( command_result.begin(), command_result.end(), <span class="charliteral">&#39;\n&#39;</span> ),</div>
 <div class="line"><a id="l01378" name="l01378"></a><span class="lineno"> 1378</span>                                  command_result.end() );</div>
 <div class="line"><a id="l01379" name="l01379"></a><span class="lineno"> 1379</span>        }</div>
-<div class="line"><a id="l01380" name="l01380"></a><span class="lineno"> 1380</span>        output.append( <a class="code hl_function" href="string__formatter_8h.html#a9b089d0b697443b096063219dab08ef5">string_format</a>( <span class="stringliteral">&quot;%s: %s; &quot;</span>, entry.second, command_result ) );</div>
+<div class="line"><a id="l01380" name="l01380"></a><span class="lineno"> 1380</span>        output.append( <a class="code hl_function" href="string__formatter_8h.html#a8964099387da2f95396c67566bafce3d">string_format</a>( <span class="stringliteral">&quot;%s: %s; &quot;</span>, entry.second, command_result ) );</div>
 <div class="line"><a id="l01381" name="l01381"></a><span class="lineno"> 1381</span>    }</div>
 <div class="line"><a id="l01382" name="l01382"></a><span class="lineno"> 1382</span>    <span class="keywordflow">return</span> output;</div>
 <div class="line"><a id="l01383" name="l01383"></a><span class="lineno"> 1383</span>}</div>
@@ -1540,7 +1540,7 @@ $(document).ready(function(){initNavTree('debug_8cpp_source.html',''); initResiz
 <div class="line"><a id="l01451" name="l01451"></a><span class="lineno"> 1451</span>                RTL_OSVERSIONINFOW os_version_info = RTL_OSVERSIONINFOW();</div>
 <div class="line"><a id="l01452" name="l01452"></a><span class="lineno"> 1452</span>                os_version_info.dwOSVersionInfoSize = <span class="keyword">sizeof</span>( RTL_OSVERSIONINFOW );</div>
 <div class="line"><a id="l01453" name="l01453"></a><span class="lineno"> 1453</span>                <span class="keywordflow">if</span>( rtl_get_version_func.p( &amp;os_version_info ) == 0 ) { <span class="comment">// NT_STATUS_SUCCESS = 0</span></div>
-<div class="line"><a id="l01454" name="l01454"></a><span class="lineno"> 1454</span>                    output.append( <a class="code hl_function" href="string__formatter_8h.html#a9b089d0b697443b096063219dab08ef5">string_format</a>( <span class="stringliteral">&quot;%i.%i %i&quot;</span>, os_version_info.dwMajorVersion,</div>
+<div class="line"><a id="l01454" name="l01454"></a><span class="lineno"> 1454</span>                    output.append( <a class="code hl_function" href="string__formatter_8h.html#a8964099387da2f95396c67566bafce3d">string_format</a>( <span class="stringliteral">&quot;%i.%i %i&quot;</span>, os_version_info.dwMajorVersion,</div>
 <div class="line"><a id="l01455" name="l01455"></a><span class="lineno"> 1455</span>                                                  os_version_info.dwMinorVersion, os_version_info.dwBuildNumber ) );</div>
 <div class="line"><a id="l01456" name="l01456"></a><span class="lineno"> 1456</span>                }</div>
 <div class="line"><a id="l01457" name="l01457"></a><span class="lineno"> 1457</span>            }</div>
@@ -1772,7 +1772,7 @@ $(document).ready(function(){initNavTree('debug_8cpp_source.html',''); initResiz
 <div class="ttc" id="apoint_8h_html"><div class="ttname"><a href="point_8h.html">point.h</a></div></div>
 <div class="ttc" id="apoint_8h_html_a0ee2195dcb488ae55fbf4316f5011172"><div class="ttname"><a href="point_8h.html#a0ee2195dcb488ae55fbf4316f5011172">point_zero</a></div><div class="ttdeci">static constexpr point point_zero</div><div class="ttdef"><b>Definition:</b> <a href="point_8h_source.html#l00274">point.h:274</a></div></div>
 <div class="ttc" id="asdl__wrappers_8h_html"><div class="ttname"><a href="sdl__wrappers_8h.html">sdl_wrappers.h</a></div></div>
-<div class="ttc" id="astring__formatter_8h_html_a9b089d0b697443b096063219dab08ef5"><div class="ttname"><a href="string__formatter_8h.html#a9b089d0b697443b096063219dab08ef5">string_format</a></div><div class="ttdeci">std::string string_format(std::string format, Args &amp;&amp;...args)</div><div class="ttdoc">Simple wrapper over string_formatter::parse.</div><div class="ttdef"><b>Definition:</b> <a href="string__formatter_8h_source.html#l00418">string_formatter.h:418</a></div></div>
+<div class="ttc" id="astring__formatter_8h_html_a8964099387da2f95396c67566bafce3d"><div class="ttname"><a href="string__formatter_8h.html#a8964099387da2f95396c67566bafce3d">string_format</a></div><div class="ttdeci">std::string string_format(std::string_view format, Args &amp;&amp;...args)</div><div class="ttdoc">Simple wrapper over string_formatter::parse.</div><div class="ttdef"><b>Definition:</b> <a href="string__formatter_8h_source.html#l00431">string_formatter.h:431</a></div></div>
 <div class="ttc" id="astring__utils_8cpp_html_a325b20c0f964a52577cd24a651d5bda7"><div class="ttname"><a href="string__utils_8cpp.html#a325b20c0f964a52577cd24a651d5bda7">string_split</a></div><div class="ttdeci">std::vector&lt; std::string &gt; string_split(const std::string &amp;text_in, char delim_in)</div><div class="ttdoc">Split string by delimiter.</div><div class="ttdef"><b>Definition:</b> <a href="string__utils_8cpp_source.html#l00103">string_utils.cpp:103</a></div></div>
 <div class="ttc" id="astring__utils_8cpp_html_a836373abd77ef65988abf2bcbff6929a"><div class="ttname"><a href="string__utils_8cpp.html#a836373abd77ef65988abf2bcbff6929a">string_ends_with</a></div><div class="ttdeci">bool string_ends_with(const std::string &amp;s1, const std::string &amp;s2)</div><div class="ttdoc">Returns true if s1 ends with s2.</div><div class="ttdef"><b>Definition:</b> <a href="string__utils_8cpp_source.html#l00084">string_utils.cpp:84</a></div></div>
 <div class="ttc" id="astring__utils_8h_html"><div class="ttname"><a href="string__utils_8h.html">string_utils.h</a></div></div>
@@ -1831,7 +1831,7 @@ $(document).ready(function(){initNavTree('debug_8cpp_source.html',''); initResiz
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="debug_8cpp.html">debug.cpp</a></li>
-    <li class="footer">Generated on Sun Dec 11 2022 17:22:29 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Sat Dec 17 2022 22:49:50 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

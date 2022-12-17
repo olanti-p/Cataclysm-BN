@@ -370,15 +370,15 @@ Private Attributes</h2></td></tr>
 <div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>    std::string <a class="code hl_variable" href="namespacecata_1_1hash64__detail.html#a5ca825db6fd06946302c60daa97333e4">ret</a>;</div>
 <div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>    <span class="keywordtype">size_t</span> i = 0;</div>
 <div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>    <span class="keywordflow">for</span>( <span class="keyword">const</span> <a class="code hl_struct" href="structtransform__queue__entry.html">transform_queue_entry</a> &amp;q : <a class="code hl_variable" href="classgrid__furn__transform__queue.html#aa2710c9c5652fbbdc4b7e629a3811968">queue</a> ) {</div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>        <a class="code hl_variable" href="namespacecata_1_1hash64__detail.html#a5ca825db6fd06946302c60daa97333e4">ret</a> += <a class="code hl_function" href="string__formatter_8h.html#a9b089d0b697443b096063219dab08ef5">string_format</a>( <span class="stringliteral">&quot;% 2d: %s %s \&quot;%s\&quot;\n&quot;</span>, i, q.p.to_string(), q.id, q.msg );</div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>        <a class="code hl_variable" href="namespacecata_1_1hash64__detail.html#a5ca825db6fd06946302c60daa97333e4">ret</a> += <a class="code hl_function" href="string__formatter_8h.html#a8964099387da2f95396c67566bafce3d">string_format</a>( <span class="stringliteral">&quot;% 2d: %s %s \&quot;%s\&quot;\n&quot;</span>, i, q.p.to_string(), q.id, q.msg );</div>
 <div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>        i++;</div>
 <div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>    }</div>
 <div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="namespacecata_1_1hash64__detail.html#a5ca825db6fd06946302c60daa97333e4">ret</a>;</div>
 <div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>}</div>
 <div class="ttc" id="anamespacecata_1_1hash64__detail_html_a5ca825db6fd06946302c60daa97333e4"><div class="ttname"><a href="namespacecata_1_1hash64__detail.html#a5ca825db6fd06946302c60daa97333e4">cata::hash64_detail::ret</a></div><div class="ttdeci">T ret</div><div class="ttdef"><b>Definition:</b> <a href="hash__utils_8h_source.html#l00097">hash_utils.h:97</a></div></div>
-<div class="ttc" id="astring__formatter_8h_html_a9b089d0b697443b096063219dab08ef5"><div class="ttname"><a href="string__formatter_8h.html#a9b089d0b697443b096063219dab08ef5">string_format</a></div><div class="ttdeci">std::string string_format(std::string format, Args &amp;&amp;...args)</div><div class="ttdoc">Simple wrapper over string_formatter::parse.</div><div class="ttdef"><b>Definition:</b> <a href="string__formatter_8h_source.html#l00418">string_formatter.h:418</a></div></div>
+<div class="ttc" id="astring__formatter_8h_html_a8964099387da2f95396c67566bafce3d"><div class="ttname"><a href="string__formatter_8h.html#a8964099387da2f95396c67566bafce3d">string_format</a></div><div class="ttdeci">std::string string_format(std::string_view format, Args &amp;&amp;...args)</div><div class="ttdoc">Simple wrapper over string_formatter::parse.</div><div class="ttdef"><b>Definition:</b> <a href="string__formatter_8h_source.html#l00431">string_formatter.h:431</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="distribution__grid_8h_source.html#l00091">queue</a>, <a class="el" href="hash__utils_8h_source.html#l00097">cata::hash64_detail::ret</a>, and <a class="el" href="string__formatter_8h_source.html#l00418">string_format()</a>.</p>
+<p class="reference">References <a class="el" href="distribution__grid_8h_source.html#l00091">queue</a>, <a class="el" href="hash__utils_8h_source.html#l00097">cata::hash64_detail::ret</a>, and <a class="el" href="string__formatter_8h_source.html#l00431">string_format()</a>.</p>
 
 </div>
 </div>
@@ -419,7 +419,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classgrid__furn__transform__queue.html">grid_furn_transform_queue</a></li>
-    <li class="footer">Generated on Sun Dec 11 2022 17:22:57 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Sat Dec 17 2022 22:50:16 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

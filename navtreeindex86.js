@@ -1,11 +1,5 @@
 var NAVTREEINDEX86 =
 {
-"fungal__effects_8h_source.html":[37,0,1,227],
-"game_8cpp.html":[37,0,1,228],
-"game_8cpp.html#a02a4844a7fb68c13a34dc40b0a9e94d8":[37,0,1,228,62],
-"game_8cpp.html#a08481f62adb6937636ea44b855311037":[37,0,1,228,51],
-"game_8cpp.html#a09c667a72022d7e0ee0b851560831e04":[37,0,1,228,67],
-"game_8cpp.html#a09e952ef4d27618e2f60ec737a8d1bae":[37,0,1,228,47],
 "game_8cpp.html#a0a50e3fbf57e70bfac50331092ff8ad1":[37,0,1,228,64],
 "game_8cpp.html#a0b49aa7d4b07c448f7546ba24fb6b233":[37,0,1,228,52],
 "game_8cpp.html#a0ca3c45189cc16ae9501f8d77ef97050":[37,0,1,228,94],
@@ -249,5 +243,11 @@ var NAVTREEINDEX86 =
 "game__inventory_8cpp.html#af557f83ca09615da5b2ff84b924e01c0":[37,0,1,231,47],
 "game__inventory_8cpp_source.html":[37,0,1,231],
 "game__inventory_8h.html":[37,0,1,232],
-"game__inventory_8h.html#a0de2b203e47ecc2c48ca3efbe7c70ffb":[37,0,1,232,10]
+"game__inventory_8h.html#a0de2b203e47ecc2c48ca3efbe7c70ffb":[37,0,1,232,10],
+"game__inventory_8h.html#a19584da88b2dd326b414ecbbaf291bd8":[37,0,1,232,4],
+"game__inventory_8h.html#a19c7cbf1d16b6047663babee50f9dad4":[37,0,1,232,2],
+"game__inventory_8h.html#a233578a2d65d51f06b773ae57531fb3b":[37,0,1,232,28],
+"game__inventory_8h.html#a444b5ce5e2f2fef0a2856bbb88d05162":[37,0,1,232,26],
+"game__inventory_8h.html#a4f9083bc5b84c895d3827baf95c6b5e5":[37,0,1,232,5],
+"game__inventory_8h.html#a51f32de30b709ad3ba55254a21af6a1b":[37,0,1,232,21]
 };
