@@ -41,6 +41,7 @@ var classavatar =
     [ "invoke_item", "classavatar.html#a4dbec601ddf5ba1b6059b20785dfc329", null ],
     [ "invoke_item", "classavatar.html#ac35cfc0c48c3bf919285c1d0ed405733", null ],
     [ "is_avatar", "classavatar.html#a307d119b86042c59a7d72ad3807e1f34", null ],
+    [ "is_hallucination", "classavatar.html#a621d90eb0133fd89ca099e0ad75b31ad", null ],
     [ "kill_xp", "classavatar.html#a0135d98dc093e782429c6f1a08a78f38", null ],
     [ "kill_xp_for_next_point", "classavatar.html#a953d369d61963924274fce043af1a61a", null ],
     [ "load", "classavatar.html#a57c40f9a4bb6a99c6d572f014b510cbe", null ],

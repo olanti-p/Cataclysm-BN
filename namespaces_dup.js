@@ -263,6 +263,9 @@ var namespaces_dup =
       [ "wield", "namespaceavatar__action.html#a26845c63bf68ad9462172186e3b75cf6", null ],
       [ "wield", "namespaceavatar__action.html#a4237c55ad7f626915cdb297d52841b8f", null ]
     ] ],
+    [ "avatar_funcs", "namespaceavatar__funcs.html", [
+      [ "try_to_sleep", "namespaceavatar__funcs.html#a916f182d460c34fb5df1804432a4505d", null ]
+    ] ],
     [ "base_camps", "namespacebase__camps.html", "namespacebase__camps" ],
     [ "behavior", "namespacebehavior.html", "namespacebehavior" ],
     [ "calendar", "namespacecalendar.html", [
@@ -314,22 +317,17 @@ var namespaces_dup =
       [ "upgrade_stat_prompt", "namespacecharacter__display.html#a006a82c12d14823acc830f2c8c664040", null ]
     ] ],
     [ "character_effects", "namespacecharacter__effects.html", [
+      [ "calc_focus_change", "namespacecharacter__effects.html#a8cb6340e4be4183a0afdaaed94697f48", null ],
+      [ "calc_focus_equilibrium", "namespacecharacter__effects.html#a348a59edad17e65299198523574cc447", null ],
+      [ "calc_morale_fatigue_cap", "namespacecharacter__effects.html#a5d4ec2a0341f0f2a3e6271dd35b406fd", null ],
       [ "get_kcal_speed_penalty", "namespacecharacter__effects.html#a6d9d51c28a272ae26ed493d1471cf072", null ],
       [ "get_pain_penalty", "namespacecharacter__effects.html#a8f18c1c2508870515d5c36a3ea255498", null ],
-      [ "get_thirst_speed_penalty", "namespacecharacter__effects.html#a69e2f87b5391a5aec01672c98cdfb57c", null ]
+      [ "get_thirst_speed_penalty", "namespacecharacter__effects.html#a69e2f87b5391a5aec01672c98cdfb57c", null ],
+      [ "intimidation", "namespacecharacter__effects.html#a1a2430252e3decd22ab5b9c6f28651bc", null ],
+      [ "talk_skill", "namespacecharacter__effects.html#a01dda73797f825700bc236dce287412e", null ],
+      [ "vomit_mod", "namespacecharacter__effects.html#ad01a6f352e0abd8cbedbc36d90b766b7", null ]
     ] ],
-    [ "character_funcs", "namespacecharacter__funcs.html", [
-      [ "can_see_fine_details", "namespacecharacter__funcs.html#a813a9decd34980fe53f38ba18ffd6374", null ],
-      [ "can_see_fine_details", "namespacecharacter__funcs.html#a68c0c236c653e5217f1436bfadd54664", null ],
-      [ "estimate_effect_dur", "namespacecharacter__funcs.html#a470b862a6936cbfbd1e80a46b78f1914", null ],
-      [ "fine_detail_vision_mod", "namespacecharacter__funcs.html#adda4d5fd10b7216c49a0f9b6010de579", null ],
-      [ "fine_detail_vision_mod", "namespacecharacter__funcs.html#a03ea116da570af10c630e0fe3a7ea6fc", null ],
-      [ "get_book_fun_for", "namespacecharacter__funcs.html#aaa9f2cc376f03128e0a486a90c7376fa", null ],
-      [ "is_fun_to_read", "namespacecharacter__funcs.html#a862df11441bba358b82fa47ce88ebe85", null ],
-      [ "siphon", "namespacecharacter__funcs.html#adaa760a90e1a9cc452c7b756bcde2a60", null ],
-      [ "FINE_VISION_PERFECT", "namespacecharacter__funcs.html#a4e103652bd1f087acad98fa135eca4a4", null ],
-      [ "FINE_VISION_THRESHOLD", "namespacecharacter__funcs.html#ac767ac632c0c783c8615f5e920cc938e", null ]
-    ] ],
+    [ "character_funcs", "namespacecharacter__funcs.html", "namespacecharacter__funcs" ],
     [ "character_weight_category", "namespacecharacter__weight__category.html", [
       [ "emaciated", "namespacecharacter__weight__category.html#ae41f48d3a0de12bbab86abc5d741f978", null ],
       [ "morbidly_obese", "namespacecharacter__weight__category.html#a8be790615c5a48bdf4fb02fd551f8a17", null ],
@@ -1283,6 +1281,12 @@ var namespaces_dup =
       [ "has_same_type_trait", "namespacenewcharacter.html#afb61e70aaafdc82eaa9f84a4afda5609", null ],
       [ "random_bad_trait", "namespacenewcharacter.html#a0b0639d19bcb26127689efdad21c6835", null ],
       [ "random_good_trait", "namespacenewcharacter.html#af26bc6eecdfca795bacbc3ac398f4578", null ]
+    ] ],
+    [ "npc_ai", "namespacenpc__ai.html", [
+      [ "gun_value", "namespacenpc__ai.html#a9019036bc8d7314e1bb9fb1624afb429", null ],
+      [ "melee_value", "namespacenpc__ai.html#a15c5ded877137a648d04762228055b66", null ],
+      [ "unarmed_value", "namespacenpc__ai.html#a64daf871b45496787e445f932f4381d3", null ],
+      [ "weapon_value", "namespacenpc__ai.html#a14d62aa6c1fc78bcfe3c3bb845d913cd", null ]
     ] ],
     [ "npc_factions", "namespacenpc__factions.html", [
       [ "relationship", "namespacenpc__factions.html#af09ec48d0dc133795062d1424c486686", [

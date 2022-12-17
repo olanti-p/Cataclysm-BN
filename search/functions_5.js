@@ -206,7 +206,7 @@ var searchData=
   ['enumerate_5funmet_5frequirements_203',['enumerate_unmet_requirements',['../classCharacter.html#a7de97d7b6c31fdddbedb114f63627db3',1,'Character']]],
   ['enumerate_5fvehicles_204',['enumerate_vehicles',['../classvehicle.html#a3e9cbe7f2f60c477981d2a67e079d640',1,'vehicle']]],
   ['env_5fsurgery_5fbonus_205',['env_surgery_bonus',['../classCharacter.html#a0e99571430f32a1393a78dbfd4573f6e',1,'Character']]],
-  ['environmental_5frevert_5feffect_206',['environmental_revert_effect',['../classplayer.html#a658ed278951f4cd052b928ff76f151af',1,'player']]],
+  ['environmental_5frevert_5feffect_206',['environmental_revert_effect',['../classCharacter.html#a2d0693f6056f737b0308d79857247f4b',1,'Character']]],
   ['enzlave_5factor_207',['enzlave_actor',['../classenzlave__actor.html#adfba4cbc44b21e928fc3eca0cd4c26e9',1,'enzlave_actor']]],
   ['eol_208',['eol',['../namespacecata__files.html#ac508f2089c295862c8f8b03d93d9a86c',1,'cata_files']]],
   ['epilogue_209',['epilogue',['../classfaction.html#a58c19572150b09f91506bd43d59d3589',1,'faction']]],

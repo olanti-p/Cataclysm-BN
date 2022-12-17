@@ -170,7 +170,7 @@ var searchData=
   ['power_5flevel_167',['power_level',['../classCharacter.html#a371a5a2cec8c477d326b6053adaf2526',1,'Character']]],
   ['power_5fover_5ftime_168',['power_over_time',['../structbionic__data.html#a549c82c85814902632e177babf76104c',1,'bionic_data']]],
   ['power_5fto_5fdmg_5fmult_169',['power_to_dmg_mult',['../namespaceexplosion__handler.html#a9c14d4b89fb43f26bd681e7bb4ba7dab',1,'explosion_handler']]],
-  ['powered_170',['powered',['../structbionic.html#addbda67a07e927ca959d4a77ecd5a593',1,'bionic::powered()'],['../structCharacter_1_1trait__data.html#af126bc821664a50c8b99caa7af0c1848',1,'Character::trait_data::powered()']]],
+  ['powered_170',['powered',['../structbionic.html#addbda67a07e927ca959d4a77ecd5a593',1,'bionic::powered()'],['../structchar__trait__data.html#a1037027f4236d070edca84863fe943b6',1,'char_trait_data::powered()']]],
   ['powerful_5fknockback_171',['powerful_knockback',['../classma__technique.html#ad7e5d0aa834c8dc12c8da2ec6b8c5063',1,'ma_technique']]],
   ['powers_5fof_5f10_5f64_172',['powers_of_10_64',['../structdetail_1_1basic__data.html#af96e9577860aafd41ab25b38dc2e2097',1,'detail::basic_data']]],
   ['powers_5fof_5f5_5f64_173',['powers_of_5_64',['../structdetail_1_1basic__data.html#aafd8306e67ebafd885adfd3190fcd231',1,'detail::basic_data']]],

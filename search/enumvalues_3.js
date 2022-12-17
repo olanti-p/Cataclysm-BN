@@ -102,7 +102,7 @@ var searchData=
   ['cmm_5fwalk_99',['CMM_WALK',['../character_8h.html#af749573d20b6327d21f9588ebdd5b19ba7bf92261bd9be1bced9caa8354c3203d',1,'character.h']]],
   ['coke_100',['COKE',['../pldata_8h.html#abffc2f52fa6cfeac2e388c6de0ac295baccafb1ecc36ef9e0c27e3252102b0253',1,'pldata.h']]],
   ['combat_101',['combat',['../namespacesounds.html#af6b3d144906d9ccfda6824fb87e46aa3ac222ae0d4e9c59bd254b72521b9e74ed',1,'sounds']]],
-  ['comfortable_102',['comfortable',['../classCharacter.html#a764126d3e4c9f9450d6d9e40ec00d946aff52b9c1eee2349b5099deb92b8307ed',1,'Character']]],
+  ['comfortable_102',['comfortable',['../namespacecharacter__funcs.html#a8614d6647ae110ba51944af26b80ecb7aff52b9c1eee2349b5099deb92b8307ed',1,'character_funcs']]],
   ['compact_5famigara_5flog_103',['COMPACT_AMIGARA_LOG',['../computer_8h.html#a15e56cfb989e3db6887a8d1e0e94137da7aaeccec1e51e3e5c9b89b1854b154af',1,'computer.h']]],
   ['compact_5famigara_5fstart_104',['COMPACT_AMIGARA_START',['../computer_8h.html#a15e56cfb989e3db6887a8d1e0e94137da86747f702829796558ceefb01511f597',1,'computer.h']]],
   ['compact_5fblood_5fanal_105',['COMPACT_BLOOD_ANAL',['../computer_8h.html#a15e56cfb989e3db6887a8d1e0e94137dad28db413a0558f2c7e4f9845dddc5456',1,'computer.h']]],

@@ -152,7 +152,7 @@ var searchData=
   ['fallback_5flanguage_149',['fallback_language',['../language_8cpp.html#a4fe60ee9f7d7aafc89757f88de392aa9',1,'language.cpp']]],
   ['falsetext_150',['falsetext',['../structtalk__response.html#a5dd76a67b6ee2b8144626c3a6dd8a0ab',1,'talk_response']]],
   ['fancy_151',['fancy',['../structplayer__morale_1_1body__part__data.html#a61ad41a22450cfc5f841009b0700e011',1,'player_morale::body_part_data']]],
-  ['fatigue_152',['fatigue',['../classCharacter.html#ab6b7ed7a6cd9f83c9c6547bd84a2ea04',1,'Character::fatigue()'],['../structmutation__branch.html#ac0b680896d3134f7bb0dfb4bac02f6ce',1,'mutation_branch::fatigue()'],['../structneeds__rates.html#ab8a844d3dc4743475c8435e250aea0b3',1,'needs_rates::fatigue()']]],
+  ['fatigue_152',['fatigue',['../structneeds__rates.html#ab8a844d3dc4743475c8435e250aea0b3',1,'needs_rates::fatigue()'],['../classCharacter.html#ab6b7ed7a6cd9f83c9c6547bd84a2ea04',1,'Character::fatigue()'],['../structmutation__branch.html#ac0b680896d3134f7bb0dfb4bac02f6ce',1,'mutation_branch::fatigue()']]],
   ['fatigue_5flevel_5fstrs_153',['fatigue_level_strs',['../character_8h.html#a15d4164a3b970a7efb21def77e704d3c',1,'character.h']]],
   ['fatigue_5fmod_154',['fatigue_mod',['../structislot__comestible.html#a82f9d567b3efb4a5f9a0665432f32094',1,'islot_comestible']]],
   ['fatigue_5fmodifier_155',['fatigue_modifier',['../structmutation__branch.html#a606436681f61b99a42c0ed77d5e3128d',1,'mutation_branch']]],

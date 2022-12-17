@@ -199,6 +199,9 @@ var annotated_dup =
     [ "catacurses", "namespacecatacurses.html", [
       [ "window", "classcatacurses_1_1window.html", "classcatacurses_1_1window" ]
     ] ],
+    [ "character_funcs", "namespacecharacter__funcs.html", [
+      [ "comfort_response_t", "structcharacter__funcs_1_1comfort__response__t.html", "structcharacter__funcs_1_1comfort__response__t" ]
+    ] ],
     [ "coords", "namespacecoords.html", [
       [ "coord_point", "classcoords_1_1coord__point.html", "classcoords_1_1coord__point" ],
       [ "project_to_impl", "structcoords_1_1project__to__impl.html", null ],
@@ -310,6 +313,7 @@ var annotated_dup =
       [ "locale_ref", "classdetail_1_1locale__ref.html", "classdetail_1_1locale__ref" ],
       [ "make_unsigned_or_bool", "structdetail_1_1make__unsigned__or__bool.html", null ],
       [ "make_unsigned_or_bool< bool >", "structdetail_1_1make__unsigned__or__bool_3_01bool_01_4.html", "structdetail_1_1make__unsigned__or__bool_3_01bool_01_4" ],
+      [ "mutations_ui_result", "structdetail_1_1mutations__ui__result.html", "structdetail_1_1mutations__ui__result" ],
       [ "named_arg", "structdetail_1_1named__arg.html", "structdetail_1_1named__arg" ],
       [ "named_arg_info", "structdetail_1_1named__arg__info.html", "structdetail_1_1named__arg__info" ],
       [ "named_arg_value", "structdetail_1_1named__arg__value.html", "structdetail_1_1named__arg__value" ],
@@ -558,6 +562,7 @@ var annotated_dup =
     [ "centroid", "structcentroid.html", "structcentroid" ],
     [ "change_scent_iuse", "classchange__scent__iuse.html", "classchange__scent__iuse" ],
     [ "char_encumbrance_data", "structchar__encumbrance__data.html", "structchar__encumbrance__data" ],
+    [ "char_trait_data", "structchar__trait__data.html", "structchar__trait__data" ],
     [ "Character", "classCharacter.html", "classCharacter" ],
     [ "character_id", "classcharacter__id.html", "classcharacter__id" ],
     [ "character_martial_arts", "classcharacter__martial__arts.html", "classcharacter__martial__arts" ],
@@ -1083,6 +1088,7 @@ var annotated_dup =
     [ "mutagen_iv_actor", "classmutagen__iv__actor.html", "classmutagen__iv__actor" ],
     [ "mutation_branch", "structmutation__branch.html", "structmutation__branch" ],
     [ "mutation_category_trait", "structmutation__category__trait.html", "structmutation__category__trait" ],
+    [ "mutation_collection", "structmutation__collection.html", null ],
     [ "mutation_type", "structmutation__type.html", "structmutation__type" ],
     [ "mvwzstr", "structmvwzstr.html", "structmvwzstr" ],
     [ "navigation_mode_data", "structnavigation__mode__data.html", "structnavigation__mode__data" ],
