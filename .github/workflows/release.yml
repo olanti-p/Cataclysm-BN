@@ -61,7 +61,7 @@ jobs:
           body: |
             ${{ steps.build_changelog.outputs.changelog }}
             These are the outputs for the experimental build of commit [${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
-          draft: false
+          draft: true
           prerelease: false
   builds:
     needs: release
