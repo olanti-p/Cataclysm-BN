@@ -61,15 +61,15 @@ jobs:
 
     - name: Update core packages
       run: |
-        pacman -Syyu
+        pacman -Syyu --noconfirm --noprogressbar
 
     - name: Update remaining packages
       run: |
-        pacman -Su
+        pacman -Su --noconfirm --noprogressbar
 
     - name: Install dependencies
       run: |
-        pacman -S git make mingw-w64-x86_64-{astyle,ccache,gcc,libmad,libwebp,pkg-config,SDL2} mingw-w64-x86_64-SDL2_{image,mixer,ttf}
+        pacman -S --noconfirm --noprogressbar git make mingw-w64-x86_64-{astyle,ccache,gcc,libmad,libwebp,pkg-config,SDL2} mingw-w64-x86_64-SDL2_{image,mixer,ttf}
 
     - name: Build
       run: |
