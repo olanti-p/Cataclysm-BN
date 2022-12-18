@@ -63,7 +63,6 @@ jobs:
         install: |
           git
           make
-          mingw-w64-x86_64-astyle
           mingw-w64-x86_64-gcc
           mingw-w64-x86_64-libmad
           mingw-w64-x86_64-libwebp
@@ -73,13 +72,13 @@ jobs:
           mingw-w64-x86_64-SDL2_mixer
           mingw-w64-x86_64-SDL2_ttf
 
+    - name: Install python3 polib
+      run: |
+        pip3 install polib
+
     - name: Build
       run: |
-        make -j$((`nproc`+0)) TILES=1 SOUND=1 
-
-    - name: Compile .mo files for localization
-      run: |
-          make localization
+        make -j$((`nproc`+0)) DYNAMIC_LINKING=1 TILES=1 SOUND=1 LANGUAGES=all LINTJSON=0 ASTYLE=0
 
     - name: Run tests
       run: |
