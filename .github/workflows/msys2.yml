@@ -63,7 +63,6 @@ jobs:
         install: |
           git
           make
-          python-pip
           mingw-w64-x86_64-gcc
           mingw-w64-x86_64-libmad
           mingw-w64-x86_64-libwebp
@@ -72,10 +71,6 @@ jobs:
           mingw-w64-x86_64-SDL2_image
           mingw-w64-x86_64-SDL2_mixer
           mingw-w64-x86_64-SDL2_ttf
-
-    - name: Install python3 polib
-      run: |
-        pip install polib
 
     - name: Build
       run: |
