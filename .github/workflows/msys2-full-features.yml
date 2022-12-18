@@ -60,7 +60,18 @@ jobs:
       uses: msys2/setup-msys2@v2
       with:
         update: true
-        install: git make mingw-w64-x86_64-{astyle,ccache,gcc,libmad,libwebp,pkg-config,SDL2} mingw-w64-x86_64-SDL2_{image,mixer,ttf}
+        install:
+          - git
+          - make
+          - mingw-w64-x86_64-astyle
+          - mingw-w64-x86_64-gcc
+          - mingw-w64-x86_64-libmad
+          - mingw-w64-x86_64-libwebp
+          - mingw-w64-x86_64-pkg-config
+          - mingw-w64-x86_64-SDL2
+          - mingw-w64-x86_64-SDL2_image
+          - mingw-w64-x86_64-SDL2_mixer
+          - mingw-w64-x86_64-SDL2-ttf
 
     - name: Build
       run: |
