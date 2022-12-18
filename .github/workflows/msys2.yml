@@ -74,7 +74,7 @@ jobs:
 
     - name: Install python3 polib
       run: |
-        pip3 install polib
+        pip install polib
 
     - name: Build
       run: |
