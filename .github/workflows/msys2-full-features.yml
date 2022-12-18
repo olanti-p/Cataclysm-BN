@@ -1,0 +1,84 @@
+name: Cataclysm Windows build (MSYS2)
+
+on:
+  push:
+    branches:
+    - upload
+    paths-ignore:
+    - 'android/**'
+    - 'build-data/osx/**'
+    - 'doc/**'
+    - 'doxygen_doc/**'
+    - 'gfx/**'
+    - 'lang/**'
+    - 'lgtm/**'
+    - 'msvc-object_creator/**'
+    - 'object_creator/**'
+    - 'tools/**'
+    - '!tools/format/**'
+    - 'utilities/**'
+  pull_request:
+    branches:
+    - upload
+    paths-ignore:
+    - 'android/**'
+    - 'build-data/osx/**'
+    - 'doc/**'
+    - 'doxygen_doc/**'
+    - 'gfx/**'
+    - 'lang/**'
+    - 'lgtm/**'
+    - 'msvc-object_creator/**'
+    - 'object_creator/**'
+    - 'tools/**'
+    - '!tools/format/**'
+    - 'utilities/**'
+
+# We only care about the latest revision of a PR, so cancel previous instances.
+concurrency:
+  group: msys2-build-${{ github.event.pull_request.number || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  build_catatclysm:
+    name: Build
+    runs-on: windows-2019
+    if: github.event.pull_request.draft == false
+
+    defaults:
+      run:
+        shell: msys2 {0}
+
+    steps:
+    - name: checkout repository
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
+
+    - name: Setup MSYS2
+      # Will by default install MINGW64
+      uses: msys2/setup-msys2@v2
+
+    - name: Update core packages
+      run: |
+        pacman -Syyu
+
+    - name: Update remaining packages
+      run: |
+        pacman -Su
+
+    - name: Install dependencies
+      run: |
+        pacman -S git make mingw-w64-x86_64-{astyle,ccache,gcc,libmad,libwebp,pkg-config,SDL2} mingw-w64-x86_64-SDL2_{image,mixer,ttf}
+
+    - name: Build
+      run: |
+        make -j$((`nproc`+0)) TILES=1 SOUND=1 
+
+    - name: Compile .mo files for localization
+      run: |
+          make localization
+
+    - name: Run tests
+      run: |
+          .\tests\cata_test.exe --rng-seed time
