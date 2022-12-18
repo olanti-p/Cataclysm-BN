@@ -58,8 +58,9 @@ jobs:
     - name: Setup MSYS2
       # Will by default install MINGW64
       uses: msys2/setup-msys2@v2
-      update: true
-      install: git make mingw-w64-x86_64-{astyle,ccache,gcc,libmad,libwebp,pkg-config,SDL2} mingw-w64-x86_64-SDL2_{image,mixer,ttf}
+      with:
+        update: true
+        install: git make mingw-w64-x86_64-{astyle,ccache,gcc,libmad,libwebp,pkg-config,SDL2} mingw-w64-x86_64-SDL2_{image,mixer,ttf}
 
     - name: Build
       run: |
