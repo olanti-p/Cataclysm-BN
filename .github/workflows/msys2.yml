@@ -63,6 +63,7 @@ jobs:
         install: |
           git
           make
+          python-pip
           mingw-w64-x86_64-gcc
           mingw-w64-x86_64-libmad
           mingw-w64-x86_64-libwebp
