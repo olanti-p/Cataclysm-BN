@@ -12,7 +12,7 @@
   {
     "type": "om_connection_piece",
     "id": "subway_piece_end",
-    "terrains": [ [ [ 0, 0, 0 ], "subway_piece_end_north" ] ],
+    "terrain": "subway_piece_end_north",
     "connections": [ [ [ [ 0, 0, 0 ], "s", "subway_tunnel" ] ] ],
     "placements": [ { "locations": [ [ [ 0, 0, 0 ], "subterranean_subway" ] ], "basic_cost": 6 } ],
     "allowed_rotations": [ "n", "e", "s", "w" ]
@@ -20,7 +20,7 @@
   {
     "type": "om_connection_piece",
     "id": "subway_piece_straight",
-    "terrains": [ [ [ 0, 0, 0 ], "subway_piece_straight_north" ] ],
+    "terrain": "subway_piece_straight_north",
     "connections": [ [ [ [ 0, 0, 0 ], "s", "subway_tunnel" ], [ [ 0, 0, 0 ], "n", "subway_tunnel" ] ] ],
     "placements": [ { "locations": [ [ [ 0, 0, 0 ], "subterranean_subway" ] ], "basic_cost": 5 } ],
     "allowed_rotations": [ "n", "e" ]
@@ -28,7 +28,7 @@
   {
     "type": "om_connection_piece",
     "id": "subway_piece_bend",
-    "terrains": [ [ [ 0, 0, 0 ], "subway_piece_bend_north" ] ],
+    "terrain": "subway_piece_bend_north",
     "connections": [ [ [ [ 0, 0, 0 ], "n", "subway_tunnel" ], [ [ 0, 0, 0 ], "e", "subway_tunnel" ] ] ],
     "placements": [ { "locations": [ [ [ 0, 0, 0 ], "subterranean_subway" ] ], "basic_cost": 5 } ],
     "allowed_rotations": [ "n", "e", "s", "w" ]
@@ -36,12 +36,7 @@
   {
     "type": "om_connection_piece",
     "id": "subway_piece_bend_big",
-    "terrains": [
-      [ [ 0, 0, 0 ], "subway_piece_bend_a1_north" ],
-      [ [ 0, 1, 0 ], "subway_piece_bend_a2_north" ],
-      [ [ 1, 0, 0 ], "subway_piece_bend_b1_north" ],
-      [ [ 1, 1, 0 ], "subway_piece_bend_b2_north" ]
-    ],
+    "terrain": "subway_piece_bend_a1_north",
     "connections": [ [ [ [ 0, 0, 0 ], "n", "subway_tunnel" ], [ [ 1, 1, 0 ], "e", "subway_tunnel" ] ] ],
     "placements": [
       {
@@ -59,7 +54,7 @@
   {
     "type": "om_connection_piece",
     "id": "subway_piece_omni",
-    "terrains": [ [ [ 0, 0, 0 ], "subway_piece_omni_north" ] ],
+    "terrain": "subway_piece_omni_north",
     "connections": [
       [
         [ [ 0, 0, 0 ], "n", "subway_tunnel" ],

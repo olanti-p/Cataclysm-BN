@@ -144,7 +144,7 @@ const om_connection_piece *overmap_connection::pick_linear_piece_for( const oter
             return &piece.obj();
         }
         for( const omcp_placement &place : piece->placements ) {
-            if( place.locations.front().loc->test( t ) ) {
+            if( place.location->test( t ) ) {
                 return &piece.obj();
             }
         }
@@ -206,27 +206,12 @@ void overmap_connection::finalize()
     }
 }
 
-static void deserialize( omcp_location &obj, JsonIn &jsin )
-{
-    jsin.start_array();
-    jsin.read( obj.pos );
-    jsin.read( obj.loc );
-    jsin.end_array();
-}
-
 static void deserialize( omcp_placement &obj, JsonIn &jsin )
 {
     JsonObject jso = jsin.get_object();
 
     jso.read( "basic_cost", obj.basic_cost );
-    if( jso.has_member( "location" ) ) {
-        omcp_location loc;
-        loc.pos = tripoint_zero;
-        jso.read( "location", loc.loc );
-        obj.locations.push_back( std::move( loc ) );
-    } else {
-        jso.read( "locations", obj.locations );
-    }
+    jso.read( "location", obj.location );
 }
 
 static om_direction::type read_dir( JsonIn &jsin )
@@ -261,14 +246,6 @@ static void deserialize( omcp_connection &obj, JsonIn &jsin )
     jsin.read( obj.exits );
 }
 
-static void deserialize( omcp_terrain &obj, JsonIn &jsin )
-{
-    jsin.start_array();
-    jsin.read( obj.pos );
-    jsin.read( obj.terrain );
-    jsin.end_array();
-}
-
 void om_connection_piece::load( const JsonObject &jo, const std::string & )
 {
     optional( jo, was_loaded, "is_linear", is_linear );
@@ -277,7 +254,7 @@ void om_connection_piece::load( const JsonObject &jo, const std::string & )
         mandatory( jo, was_loaded, "terrain", linear_terrain );
         mandatory( jo, was_loaded, "conn_type", linear_conn_type );
     } else {
-        mandatory( jo, was_loaded, "terrains", terrains );
+        mandatory( jo, was_loaded, "terrain", terrain );
         mandatory( jo, was_loaded, "connections", connections );
 
         if( jo.has_member( "allowed_rotations" ) ) {
@@ -299,14 +276,9 @@ void om_connection_piece::check() const
         debugmsg( "In conn piece %s, terrain must be linear.", id );
     }
     if( !is_linear ) {
-        if( terrains.empty() ) {
-            debugmsg( "Conn piece %s has no terrains.", id );
-        }
-        for( const omcp_terrain &ter : terrains ) {
-            if( !ter.terrain.is_valid() ) {
-                debugmsg( "Conn piece %s refers to invalid overmap terrain '%s'.  Did you specify wrong rotation suffix?",
-                          id, ter.terrain );
-            }
+        if( !terrain.is_valid() ) {
+            debugmsg( "Conn piece %s refers to invalid overmap terrain '%s'.  Did you specify wrong rotation suffix?",
+                      id, terrain );
         }
         for( size_t idx = 0; idx < placements.size(); idx++ ) {
             const omcp_placement &placement = placements[idx];
@@ -314,21 +286,8 @@ void om_connection_piece::check() const
                 debugmsg( "In conn piece %s, basic_cost must be >= 1 at placement_idx=%d (got %d)",
                           id, idx, placement.basic_cost );
             }
-            if( placement.locations.size() != terrains.size() ) {
-                debugmsg( "In conn piece %s, number of locations must match number of terrains at placement_idx=%d",
-                          id, idx );
-            } else {
-                for( size_t loc_idx = 0; loc_idx < placement.locations.size(); loc_idx++ ) {
-                    const omcp_location &loc = placement.locations[loc_idx];
-                    const omcp_terrain &ter = terrains[loc_idx];
-                    if( loc.pos != ter.pos ) {
-                        debugmsg( "In conn piece %s, location pos doesn't match terrain pos at placement_idx=%d loc_idx=%d",
-                                  id, idx, loc_idx );
-                    }
-                    if( !loc.loc.is_valid() ) {
-                        debugmsg( "Conn piece %s refers to invalid overmap location '%s'.", id, loc.loc );
-                    }
-                }
+            if( !placement.location.is_valid() ) {
+                debugmsg( "Conn piece %s refers to invalid overmap location '%s'.", id, placement.location );
             }
         }
     }

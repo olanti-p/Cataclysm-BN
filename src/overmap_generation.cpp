@@ -99,29 +99,14 @@ static cata::optional<int> test_can_place_at(
     const overmap &om,
     const om_connection_piece &piece,
     const tripoint &pos,
-    om_direction::type dir
+    om_direction::type /*dir*/
 )
 {
-    const int num_ters = static_cast<int>( piece.terrains.size() );
     for( const omcp_placement &placement : piece.placements ) {
         bool placement_ok = true;
-        if( piece.is_linear ) {
-            const omcp_location &location = placement.locations.front();
-            const oter_id &ter = om.ter( tripoint_om_omt( pos ) );
-            if( !location.loc->test( ter ) ) {
-                placement_ok = false;
-            }
-        } else {
-            for( int i = 0; i < num_ters; i++ ) {
-                const omcp_location &location = placement.locations[i];
-                const omcp_terrain &terrain = piece.terrains[i];
-                tripoint_om_omt ter_pos( pos + om_direction::rotate( terrain.pos, dir ) );
-                const oter_id &ter = om.ter( ter_pos );
-                if( !location.loc->test( ter ) ) {
-                    placement_ok = false;
-                    break;
-                }
-            }
+        const oter_id &ter = om.ter( tripoint_om_omt( pos ) );
+        if( !placement.location->test( ter ) ) {
+            placement_ok = false;
         }
         if( placement_ok ) {
             return placement.basic_cost;
@@ -137,22 +122,15 @@ static bool test_already_placed_at(
     om_direction::type dir
 )
 {
-    const int num_ters = static_cast<int>( piece.terrains.size() );
-
     if( piece.is_linear ) {
         const oter_id &ter = om.ter( tripoint_om_omt( pos ) );
         if( ter->get_type_id() != piece.linear_terrain ) {
             return false;
         }
     } else {
-        for( int i = 0; i < num_ters; i++ ) {
-            const omcp_terrain &terrain = piece.terrains[i];
-            tripoint_om_omt ter_pos( pos + om_direction::rotate( terrain.pos, dir ) );
-            oter_id desired_oter = terrain.terrain->get_rotated( dir );
-            const oter_id &ter = om.ter( ter_pos );
-            if( ter != desired_oter ) {
-                return false;
-            }
+        const oter_id &ter = om.ter( tripoint_om_omt( pos ) );
+        if( ter != piece.terrain->get_rotated( dir ) ) {
+            return false;
         }
     }
 
@@ -176,17 +154,8 @@ do_reverse_piece_lookup( const overmap_connection &connection )
             reverse_lookup_res rlr;
             rlr.piece_idx = piece_idx;
             rlr.dir = dir;
-            if( piece.is_linear ) {
-                rlr.rel_pos = point();
-                ret.push_back( rlr );
-            } else {
-                const int num_ters = static_cast<int>( piece.terrains.size() );
-                for( int i = 0; i < num_ters; i++ ) {
-                    const omcp_terrain &terrain = piece.terrains[i];
-                    rlr.rel_pos = -om_direction::rotate( terrain.pos, dir ).xy();
-                    ret.push_back( rlr );
-                }
-            }
+            rlr.rel_pos = point();
+            ret.push_back( rlr );
         }
     }
     return ret;
@@ -608,16 +577,12 @@ check_nodes_conflict(
     if( piece_a.is_linear ) {
         pts_a.emplace( a.pos );
     } else {
-        for( const omcp_terrain &ter : piece_a.terrains ) {
-            pts_a.emplace( om_direction::rotate( ter.pos.xy(), a.rot ) + a.pos );
-        }
+        pts_a.emplace( om_direction::rotate( point(), a.rot ) + a.pos );
     }
     if( piece_b.is_linear ) {
         pts_b.emplace( b.pos );
     } else {
-        for( const omcp_terrain &ter : piece_b.terrains ) {
-            pts_b.emplace( om_direction::rotate( ter.pos.xy(), b.rot ) + b.pos );
-        }
+        pts_b.emplace( om_direction::rotate( point(), b.rot ) + b.pos );
     }
     for( const point &p : pts_a ) {
         if( pts_b.count( p ) != 0 ) {
@@ -1084,9 +1049,9 @@ overmap_generation::lay_out_connection(
         pseudo_goal.pos = dest.raw().xy();
         pseudo_goal.piece_idx = PIECE_IDX_GOAL;
 
-        if( true ) {
+        if( false ) {
             nodes = find_path_greedy( pseudo_start, pseudo_goal, placements, connection );
-        } else if( true ) {
+        } else if( false ) {
             nodes = find_path_dijkstra( start_nodes, end_nodes, placements,
                                         connection );
         } else {
@@ -1323,12 +1288,10 @@ void overmap_generation::build_connection(
         }
 
         if( !piece.is_linear ) {
-            for( const omcp_terrain &ter : piece.terrains ) {
-                tripoint_om_omt ter_pos =
-                    tripoint_om_omt( om_direction::rotate( ter.pos, node.rot ) + node.pos.raw() );
-                oter_id tid = ter.terrain->get_rotated( node.rot );
-                om.ter_set( ter_pos, tid );
-            }
+            tripoint_om_omt ter_pos =
+                tripoint_om_omt( om_direction::rotate( point(), node.rot ) + node.pos.raw() );
+            oter_id tid = piece.terrain->get_rotated( node.rot );
+            om.ter_set( ter_pos, tid );
         } else {
             // TODO: connect to nearby unconnected roads
             size_t line = line_none;

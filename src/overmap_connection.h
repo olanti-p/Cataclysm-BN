@@ -14,18 +14,11 @@ class JsonObject;
 class JsonIn;
 struct overmap_location;
 
-class omcp_location
-{
-    public:
-        tripoint pos;
-        overmap_location_id loc;
-};
-
 class omcp_placement
 {
     public:
         int basic_cost = 0;
-        std::vector<omcp_location> locations;
+        overmap_location_id location;
 };
 
 class omcp_connection_exit
@@ -42,13 +35,6 @@ class omcp_connection
         std::vector<omcp_connection_exit> exits;
 };
 
-class omcp_terrain
-{
-    public:
-        tripoint pos;
-        oter_str_id terrain;
-};
-
 class om_connection_piece
 {
     public:
@@ -62,7 +48,7 @@ class om_connection_piece
         std::string linear_conn_type;
 
         std::vector<omcp_placement> placements;
-        std::vector<omcp_terrain> terrains;
+        oter_str_id terrain;
         std::vector<omcp_connection> connections;
 
         std::vector<om_direction::type> allowed_rotations;

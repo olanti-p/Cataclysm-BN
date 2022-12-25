@@ -32,7 +32,7 @@
   {
     "type": "om_connection_piece",
     "id": "basic_railroad_bridge",
-    "terrains": [ [ [ 0, 0, 0 ], "railroad_bridge_north" ] ],
+    "terrain": "railroad_bridge_north",
     "connections": [ [ [ [ 0, 0, 0 ], "n", "railroad" ], [ [ 0, 0, 0 ], "s", "railroad" ] ] ],
     "placements": [ { "locations": [ [ [ 0, 0, 0 ], "water" ] ], "basic_cost": 120 } ],
     "allowed_rotations": [ "n", "e" ]

@@ -26,7 +26,7 @@
   {
     "type": "om_connection_piece",
     "id": "railroad_level_crossing",
-    "terrains": [ [ [ 0, 0, 0 ], "railroad_level_crossing_north" ] ],
+    "terrain": "railroad_level_crossing_north",
     "connections": [
       [ [ [ 0, 0, 0 ], "e", "road" ], [ [ 0, 0, 0 ], "w", "road" ] ],
       [ [ [ 0, 0, 0 ], "n", "railroad" ], [ [ 0, 0, 0 ], "s", "railroad" ] ]
@@ -37,7 +37,7 @@
   {
     "type": "om_connection_piece",
     "id": "road_with_manhole",
-    "terrains": [ [ [ 0, 0, 0 ], "road_nesw_manhole" ] ],
+    "terrain": "road_nesw_manhole",
     "connections": [
       [
         [ [ 0, 0, 0 ], "n", "road" ],
@@ -52,7 +52,7 @@
   {
     "type": "om_connection_piece",
     "id": "basic_bridge",
-    "terrains": [ [ [ 0, 0, 0 ], "bridge_north" ] ],
+    "terrain": "bridge_north",
     "connections": [ [ [ [ 0, 0, 0 ], "n", "road" ], [ [ 0, 0, 0 ], "s", "road" ] ] ],
     "placements": [ { "locations": [ [ [ 0, 0, 0 ], "water" ] ], "basic_cost": 20 } ],
     "allowed_rotations": [ "n", "e" ]
@@ -60,14 +60,14 @@
   {
     "type": "om_connection_piece",
     "id": "basic_bridge_elevated",
-    "terrains": [ [ [ 0, 0, 0 ], "bridge_under_north" ], [ [ 0, 0, 1 ], "bridge_road_north" ] ],
+    "terrain": "bridge_under_north",
     "connections": [ [ [ [ 0, 0, 0 ], "n", "bridge_overhead" ], [ [ 0, 0, 0 ], "s", "bridge_overhead" ] ] ],
     "placements": [ { "locations": [ [ [ 0, 0, 0 ], "water" ], [ [ 0, 0, 1 ], "open_air" ] ], "basic_cost": 20 } ]
   },
   {
     "type": "om_connection_piece",
     "id": "bridge_ramp",
-    "terrains": [ [ [ 0, 0, 0 ], "bridgehead_ground_north" ], [ [ 0, 0, 1 ], "bridgehead_ramp_north" ] ],
+    "terrain": "bridgehead_ground_north",
     "connections": [ [ [ [ 0, 0, 0 ], "n", "road" ], [ [ 0, 0, 0 ], "s", "bridge_overhead" ] ] ],
     "placements": [
       {
