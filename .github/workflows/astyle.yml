@@ -30,7 +30,7 @@ jobs:
           fetch-depth: 1
 
       - name: install dependencies
-        run: sudo apt-get install astyle
+        run: sudo apt-get install astyle curl
 
       - name: astyle check
         run: make astyle-check
