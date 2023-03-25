@@ -44,6 +44,7 @@ var iuse__actor_8cpp =
     [ "itype_brazier", "iuse__actor_8cpp.html#a2d87fd497d36d3b6b4c389a34059eb89", null ],
     [ "itype_char_smoker", "iuse__actor_8cpp.html#a6b7f507ab36a908d229ead684bab1961", null ],
     [ "itype_fire", "iuse__actor_8cpp.html#aa5ffa4fd2e1363b9474c32c3a47a6df9", null ],
+    [ "itype_stock_small", "iuse__actor_8cpp.html#ab7ce978bded656b37e2f084abb760b68", null ],
     [ "itype_syringe", "iuse__actor_8cpp.html#ac94da8d391815c77827574ea45ba553b", null ],
     [ "minimal_volume_to_cut", "iuse__actor_8cpp.html#a85c8bf6677ec54fa0d27a262ff7cc796", null ],
     [ "qual_LOCKPICK", "iuse__actor_8cpp.html#ab78ab4891ee6307746c1e74a8b77de8d", null ],
