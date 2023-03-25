@@ -66,7 +66,7 @@ action_id action_from_key( char ch )
 }
 
 std::string action_ident( action_id act )
-{
+  {
     switch( act ) {
         case ACTION_PAUSE:
             return "pause";
