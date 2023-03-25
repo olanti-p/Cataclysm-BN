@@ -220,9 +220,8 @@ achievement_completion achievement::time_bound::completed() const
         case achievement_comparison::less_equal:
             if( now <= target() ) {
                 return achievement_completion::completed;
-            } else {
+            } else 
                 return achievement_completion::failed;
-            }
         case achievement_comparison::greater_equal:
             if( now >= target() ) {
                 return achievement_completion::completed;
