@@ -22,7 +22,7 @@ void DeterminismCheck::registerMatchers( MatchFinder *Finder )
     Finder->addMatcher(
         callExpr(
             callee(
-                  functionDecl(
+                functionDecl(
                     anyOf( hasName( "::rand" ), hasName( "::srand" ), hasName( "::random" ),
                            hasName( "::srandom" ), hasName( "::drand48" ),
                            hasName( "::erand48" ), hasName( "::lrand48" ), hasName( "::mrand48" ),
