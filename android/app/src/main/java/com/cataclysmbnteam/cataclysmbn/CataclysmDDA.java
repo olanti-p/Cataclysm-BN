@@ -1,4 +1,4 @@
-package com.cleverraven.cataclysmdda;
+package com.cataclysmbnteam.cataclysmbn;
 
 import org.libsdl.app.SDLActivity;
 
@@ -11,7 +11,9 @@ import android.widget.Toast;
 import android.content.res.Configuration;
 
 public class CataclysmDDA extends SDLActivity {
-    private static final String TAG = "CDDA";
+    private static final String TAG = "CBN";
+
+    private NativeUI nativeUI = new NativeUI(CataclysmDDA.this);
 
     public void vibrate(int duration) {
         try {
@@ -56,5 +58,13 @@ public class CataclysmDDA extends SDLActivity {
 
     public boolean getDefaultSetting(final String settingsName, boolean defaultValue) {
         return PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean(settingsName, defaultValue);
+    }
+
+    public String getSystemLang() {
+        return getResources().getConfiguration().locale.toLanguageTag().replace('-', '_');
+    }
+
+    public NativeUI getNativeUI() {
+        return nativeUI;
     }
 }
