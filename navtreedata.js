@@ -260,17 +260,17 @@ var NAVTREEINDEX =
 "structnode__address.html#adde13860b07cc6e072ec4da0faa27522",
 "structovermap__connection_1_1cache.html#a74f74516fe6cbcf25eaeddde3951dd0b",
 "structpickup_1_1act__item.html#a01db50f093e0dea2f37f74c2c738c8fd",
-"structquality__requirement.html#a2638ad43f609584bcba75132b6189818",
-"structrider__data.html#a8ba9154f946b884a877bc4aa69fd9471",
-"structsubmap_1_1cosmetic__t.html#a441c59ad980d00c525b7e9e56cdf69cd",
-"structtripoint.html#a07ecb5e49ce255c639090f40f8ed4002",
-"structvehicle__prototype.html#a2f9a4329cf18e776b4169213c18fc67f",
-"suffer_8cpp.html#a81b633e679725d3a23cfed0548dd0a17",
-"trap_8h.html#a2cec40861f35486a7e5b2ca27c1a3f66",
-"units__angle_8h.html#a1bd284bde31c6b9124add6c8362c8a90",
-"veh__type_8h.html#aa3ff66a8c100c3deb40dfa70f1eb307ea3140fae054e4ead8de3f3c96b13df546",
-"vehicle__use_8cpp.html#a39ad5e6128d1cd982830d65b95094a60",
-"wisheffect_8cpp.html#a46422819ca5b0ee740207ca9a8073b7a"
+"structquality__requirement.html#a131c1c42b3f8a21eb307cbdf69992612",
+"structrider__data.html",
+"structsubmap_1_1cosmetic__t.html#a1ae10ddd1d4c1b5a3f1df4fe9f6211f5",
+"structtripoint.html",
+"structvehicle__prototype.html#a123c0e494a2efe0a8bdac7c87ea28ea3",
+"suffer_8cpp.html#a81707ec1cf7fcb6e2f65ac0a3e6d2373",
+"trap_8h.html#a2bc5f8810fc5377703e36ba6602d3039",
+"units__angle_8h.html#a068cd98efba5fd1fbb936ce3597db23d",
+"veh__type_8h.html#aa3ff66a8c100c3deb40dfa70f1eb307ea2f8c1c03ebea1d9daec3dd65612515e6",
+"vehicle__use_8cpp.html#a398ef54be46ee27b157365a389e9d4e5",
+"wisheffect_8cpp.html#a398b9466bc6b83e21776ed37900b20ca"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

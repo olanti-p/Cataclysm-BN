@@ -1,5 +1,6 @@
 var NAVTREEINDEX159 =
 {
+"structtripoint.html":[36,0,948],
 "structtripoint.html#a07ecb5e49ce255c639090f40f8ed4002":[36,0,948,10],
 "structtripoint.html#a1574f5dd845eee2b29843fbb8360b64f":[36,0,948,9],
 "structtripoint.html#a202ff1fa006b5d3b7762a2c3e28fcccb":[36,0,948,4],
@@ -84,10 +85,10 @@ var NAVTREEINDEX159 =
 "structunits_1_1quantity__details.html":[35,0,181,6],
 "structunits_1_1quantity__details.html#a18afff63c04e33bd175226e03c5f1a8c":[35,0,181,6,0],
 "structunits_1_1quantity__details.html#a18afff63c04e33bd175226e03c5f1a8c":[36,0,38,6,0],
-"structunits_1_1quantity__details_3_01temperature__in__millidegree__celsius__tag_01_4.html":[36,0,38,7],
 "structunits_1_1quantity__details_3_01temperature__in__millidegree__celsius__tag_01_4.html":[35,0,181,7],
-"structunits_1_1quantity__details_3_01temperature__in__millidegree__celsius__tag_01_4.html#aa9409daa47b9f4751bef865fe7d20536":[36,0,38,7,0],
+"structunits_1_1quantity__details_3_01temperature__in__millidegree__celsius__tag_01_4.html":[36,0,38,7],
 "structunits_1_1quantity__details_3_01temperature__in__millidegree__celsius__tag_01_4.html#aa9409daa47b9f4751bef865fe7d20536":[35,0,181,7,0],
+"structunits_1_1quantity__details_3_01temperature__in__millidegree__celsius__tag_01_4.html#aa9409daa47b9f4751bef865fe7d20536":[36,0,38,7,0],
 "structuse__function.html":[36,0,964],
 "structuse__function.html#a0a7b024c835762b855093e4373957127":[36,0,964,8],
 "structuse__function.html#a3a8ed2d7affc5880ca4a988e6b173139":[36,0,964,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX159 =
 "structvehicle__profile.html#a7e0d8388338e8a81a49cc3b42a540ba9":[36,0,979,1],
 "structvehicle__profile.html#a91ee48aafc0cec7de4aabd6c572843e2":[36,0,979,2],
 "structvehicle__prototype.html":[36,0,980],
-"structvehicle__prototype.html#a06a6007fba7df08c566fa470dd07385c":[36,0,980,13],
-"structvehicle__prototype.html#a123c0e494a2efe0a8bdac7c87ea28ea3":[36,0,980,2]
+"structvehicle__prototype.html#a06a6007fba7df08c566fa470dd07385c":[36,0,980,13]
 };
