@@ -1,5 +1,16 @@
 var NAVTREEINDEX146 =
 {
+"structexplosion__handler_1_1queued__explosion.html#a69ce8c3f7f160d5ef7b1fcbf939424bf":[36,0,24,1,7],
+"structexplosion__handler_1_1queued__explosion.html#a69ce8c3f7f160d5ef7b1fcbf939424bf":[35,0,106,2,7],
+"structexplosion__handler_1_1queued__explosion.html#a6d11f790c8ea33b29a74f80dfe88459b":[35,0,106,2,0],
+"structexplosion__handler_1_1queued__explosion.html#a6d11f790c8ea33b29a74f80dfe88459b":[36,0,24,1,0],
+"structexplosion__handler_1_1queued__explosion.html#a88b8f9fb1519b3e8f8a8bdfd9c654981":[36,0,24,1,2],
+"structexplosion__handler_1_1queued__explosion.html#a88b8f9fb1519b3e8f8a8bdfd9c654981":[35,0,106,2,2],
+"structexplosion__handler_1_1queued__explosion.html#af289e1457f8cb11635569bf3a8e1405a":[36,0,24,1,8],
+"structexplosion__handler_1_1queued__explosion.html#af289e1457f8cb11635569bf3a8e1405a":[35,0,106,2,8],
+"structexplosion__handler_1_1queued__explosion.html#afd8ffbc8b33f0cb6d347ed5e8393dfe5":[35,0,106,2,3],
+"structexplosion__handler_1_1queued__explosion.html#afd8ffbc8b33f0cb6d347ed5e8393dfe5":[36,0,24,1,3],
+"structexplosion__tile.html":[36,0,327],
 "structexplosion__tile.html#a3913e01b48d9560ff9646892d3a52bc4":[36,0,327,0],
 "structexplosion__tile.html#a8e5e952903f0261c909f4dc1768e948e":[36,0,327,1],
 "structextended__photo__def.html":[36,0,328],
@@ -238,16 +249,5 @@ var NAVTREEINDEX146 =
 "structformatter_3_01detail_1_1bigint_01_4.html#a03db5975c09b3a25c246b7da52403023":[36,0,366,1],
 "structformatter_3_01detail_1_1bigint_01_4.html#aa92eb8c69612d8a2734be99373ecb8c2":[36,0,366,0],
 "structformatter_3_01void_01_5_00_01Char_01_4.html":[36,0,368],
-"structformatter_3_01void_01_5_00_01Char_01_4.html#ad65a1d23126765982b101ee86da7e5b8":[36,0,368,0],
-"structfour__quadrants.html":[36,0,369],
-"structfour__quadrants.html#a085963fb395433c0805b9395f2c7f0d1":[36,0,369,0],
-"structfour__quadrants.html#a12e2585a184311d6d9d1f3880b951c0f":[36,0,369,8],
-"structfour__quadrants.html#a466776a898b9b5a904793af6b66a55ae":[36,0,369,5],
-"structfour__quadrants.html#a5dc911d82fd0bf5944ca9a2f63c408fa":[36,0,369,2],
-"structfour__quadrants.html#a6be61ce40dace1c2740a625619fdab5a":[36,0,369,1],
-"structfour__quadrants.html#a7e466a55f60545e3036a87a6bf6405f5":[36,0,369,3],
-"structfour__quadrants.html#ab867faa10881dfdeda84efa46a203c67":[36,0,369,9],
-"structfour__quadrants.html#abb1134d454e3579657526eec102a880e":[36,0,369,10],
-"structfour__quadrants.html#adf374a1e433a6c53d858b945910a73fb":[36,0,369,7],
-"structfour__quadrants.html#afae50c31c7090720351a0ba8863aa7b9":[36,0,369,4]
+"structformatter_3_01void_01_5_00_01Char_01_4.html#ad65a1d23126765982b101ee86da7e5b8":[36,0,368,0]
 };

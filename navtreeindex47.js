@@ -223,15 +223,15 @@ var NAVTREEINDEX47 =
 "classjmapgen__alternativly.html":[36,0,495],
 "classjmapgen__alternativly.html#a0ccf0881f4e33284f2b38cd36327f955":[36,0,495,3],
 "classjmapgen__alternativly.html#a5884f89c3637f23756016c827558a362":[36,0,495,1],
-"classjmapgen__alternativly.html#a6b24af2aa121ba7c17829a30b9c52171":[36,0,495,2],
 "classjmapgen__alternativly.html#a902fa1bf9780f851691780636869dbb6":[36,0,495,0],
+"classjmapgen__alternativly.html#aa9c2d94326a8609617e65e1c4b881c02":[36,0,495,2],
 "classjmapgen__computer.html":[36,0,496],
 "classjmapgen__computer.html#a190317453b843ac78624fb04b1e7169f":[36,0,496,3],
-"classjmapgen__computer.html#a5620f5ecb170c367ba8264ce164f4aeb":[36,0,496,2],
 "classjmapgen__computer.html#a5d14ae6bc90e74e20a45a0edd2919ac2":[36,0,496,6],
 "classjmapgen__computer.html#a5d9609eb927e700a4c5571e689f3b8b4":[36,0,496,7],
 "classjmapgen__computer.html#a61e8be089243dd50d0dd2802820baa2a":[36,0,496,5],
 "classjmapgen__computer.html#a629a924b94638846268fcd373dd7dc45":[36,0,496,8],
+"classjmapgen__computer.html#a6d9430030970258b74862a090f0681bb":[36,0,496,2],
 "classjmapgen__computer.html#aab71eebcc5b5bdd606ea59132f78408a":[36,0,496,1],
 "classjmapgen__computer.html#ae5784a1eb21783b74c70bc96dc489744":[36,0,496,4],
 "classjmapgen__computer.html#af33fe9017f28ee9a1fc6ddb7beaf732e":[36,0,496,0],
@@ -247,7 +247,7 @@ var NAVTREEINDEX47 =
 "classjmapgen__field.html#afcfc470004709b5ded1794dc8d1e37d1":[36,0,498,3],
 "classjmapgen__furniture.html":[36,0,499],
 "classjmapgen__furniture.html#a2b685abdef1778cde4adb994bca443b7":[36,0,499,1],
+"classjmapgen__furniture.html#a52b43768b5b90b38423948be1b928b15":[36,0,499,3],
 "classjmapgen__furniture.html#a70e2d27389b272b86529cbefa5d95cda":[36,0,499,2],
-"classjmapgen__furniture.html#a7674c175894f894ffa4cf30e0c771766":[36,0,499,0],
-"classjmapgen__furniture.html#a8be2aa8b5c7c523a34e7d0189ee5755e":[36,0,499,3]
+"classjmapgen__furniture.html#a7674c175894f894ffa4cf30e0c771766":[36,0,499,0]
 };

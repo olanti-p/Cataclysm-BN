@@ -304,8 +304,8 @@ Private Types</h2></td></tr>
 <div class="line"><a id="l04351" name="l04351"></a><span class="lineno"> 4351</span>    <span class="keywordflow">for</span>( <span class="keyword">const</span> <a class="code hl_class" href="classJsonMember.html">JsonMember</a> <a class="code hl_variable" href="namespacemapgen__defer.html#a640e58e4d234e3f1e2ddbfff8fd665ce">member</a> : jo.<a class="code hl_function" href="classJsonObject.html#a0cd609c1bb7527609e6025d54f427a5c">get_object</a>( <span class="stringliteral">&quot;input_history&quot;</span> ) ) {</div>
 <div class="line"><a id="l04352" name="l04352"></a><span class="lineno"> 4352</span>        std::vector&lt;std::string&gt; &amp;v = <a class="code hl_function" href="classuistatedata.html#af8a3fc3e501c6dd5fdffb3062f842570">gethistory</a>( <a class="code hl_variable" href="namespacemapgen__defer.html#a640e58e4d234e3f1e2ddbfff8fd665ce">member</a>.name() );</div>
 <div class="line"><a id="l04353" name="l04353"></a><span class="lineno"> 4353</span>        v.clear();</div>
-<div class="line"><a id="l04354" name="l04354"></a><span class="lineno"> 4354</span>        <span class="keywordflow">for</span>( <span class="keyword">const</span> std::string <a class="code hl_function" href="mapgen_8cpp.html#a90f1f53dc044e93e7f7f9314cef1bd45">line</a> : <a class="code hl_variable" href="namespacemapgen__defer.html#a640e58e4d234e3f1e2ddbfff8fd665ce">member</a>.get_array() ) {</div>
-<div class="line"><a id="l04355" name="l04355"></a><span class="lineno"> 4355</span>            v.push_back( <a class="code hl_function" href="mapgen_8cpp.html#a90f1f53dc044e93e7f7f9314cef1bd45">line</a> );</div>
+<div class="line"><a id="l04354" name="l04354"></a><span class="lineno"> 4354</span>        <span class="keywordflow">for</span>( <span class="keyword">const</span> std::string <a class="code hl_function" href="mapgen_8cpp.html#a7a9bb2e98af3268deb7dd8fda06a7d2e">line</a> : <a class="code hl_variable" href="namespacemapgen__defer.html#a640e58e4d234e3f1e2ddbfff8fd665ce">member</a>.get_array() ) {</div>
+<div class="line"><a id="l04355" name="l04355"></a><span class="lineno"> 4355</span>            v.push_back( <a class="code hl_function" href="mapgen_8cpp.html#a7a9bb2e98af3268deb7dd8fda06a7d2e">line</a> );</div>
 <div class="line"><a id="l04356" name="l04356"></a><span class="lineno"> 4356</span>        }</div>
 <div class="line"><a id="l04357" name="l04357"></a><span class="lineno"> 4357</span>    }</div>
 <div class="line"><a id="l04358" name="l04358"></a><span class="lineno"> 4358</span>    <span class="comment">// fetch list_item settings from input_history</span></div>
@@ -353,12 +353,12 @@ Private Types</h2></td></tr>
 <div class="ttc" id="aclassuistatedata_html_ae03c273143ed03b47610a7a202e244e9"><div class="ttname"><a href="classuistatedata.html#ae03c273143ed03b47610a7a202e244e9">uistatedata::adv_inv_container_location</a></div><div class="ttdeci">int adv_inv_container_location</div><div class="ttdef"><b>Definition:</b> <a href="uistate_8h_source.html#l00095">uistate.h:95</a></div></div>
 <div class="ttc" id="aclassuistatedata_html_aebca1a70dbc4100098b56ec55213940e"><div class="ttname"><a href="classuistatedata.html#aebca1a70dbc4100098b56ec55213940e">uistatedata::list_item_downvote</a></div><div class="ttdeci">std::string list_item_downvote</div><div class="ttdef"><b>Definition:</b> <a href="uistate_8h_source.html#l00119">uistate.h:119</a></div></div>
 <div class="ttc" id="aclassuistatedata_html_af8a3fc3e501c6dd5fdffb3062f842570"><div class="ttname"><a href="classuistatedata.html#af8a3fc3e501c6dd5fdffb3062f842570">uistatedata::gethistory</a></div><div class="ttdeci">std::vector&lt; std::string &gt; &amp; gethistory(const std::string &amp;id)</div><div class="ttdef"><b>Definition:</b> <a href="uistate_8h_source.html#l00157">uistate.h:157</a></div></div>
-<div class="ttc" id="amapgen_8cpp_html_a90f1f53dc044e93e7f7f9314cef1bd45"><div class="ttname"><a href="mapgen_8cpp.html#a90f1f53dc044e93e7f7f9314cef1bd45">line</a></div><div class="ttdeci">void line(map *m, const ter_id &amp;type, const point &amp;p1, const point &amp;p2)</div><div class="ttdef"><b>Definition:</b> <a href="mapgen_8cpp_source.html#l06485">mapgen.cpp:6485</a></div></div>
+<div class="ttc" id="amapgen_8cpp_html_a7a9bb2e98af3268deb7dd8fda06a7d2e"><div class="ttname"><a href="mapgen_8cpp.html#a7a9bb2e98af3268deb7dd8fda06a7d2e">line</a></div><div class="ttdeci">void line(map *m, const ter_id &amp;type, point p1, point p2)</div><div class="ttdef"><b>Definition:</b> <a href="mapgen_8cpp_source.html#l06492">mapgen.cpp:6492</a></div></div>
 <div class="ttc" id="anamespacedebug__menu_html"><div class="ttname"><a href="namespacedebug__menu.html">debug_menu</a></div><div class="ttdef"><b>Definition:</b> <a href="avatar_8h_source.html#l00030">avatar.h:31</a></div></div>
 <div class="ttc" id="anamespacemapgen__defer_html_a640e58e4d234e3f1e2ddbfff8fd665ce"><div class="ttname"><a href="namespacemapgen__defer.html#a640e58e4d234e3f1e2ddbfff8fd665ce">mapgen_defer::member</a></div><div class="ttdeci">std::string member</div><div class="ttdef"><b>Definition:</b> <a href="mapgen_8cpp_source.html#l00410">mapgen.cpp:410</a></div></div>
 <div class="ttc" id="astructadvanced__inv__save__state_html_a5c5ab3c2ea7df5df956dd02755dd5b82"><div class="ttname"><a href="structadvanced__inv__save__state.html#a5c5ab3c2ea7df5df956dd02755dd5b82">advanced_inv_save_state::deserialize</a></div><div class="ttdeci">void deserialize(const JsonObject &amp;jo, const std::string &amp;prefix)</div><div class="ttdef"><b>Definition:</b> <a href="savegame__json_8cpp_source.html#l04218">savegame_json.cpp:4218</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="json_8cpp_source.html#l00349">JsonObject::get_int()</a>, <a class="el" href="json_8cpp_source.html#l00428">JsonObject::get_object()</a>, <a class="el" href="mapgen_8cpp_source.html#l06485">line()</a>, <a class="el" href="mapgen_8cpp_source.html#l00410">mapgen_defer::member</a>, and <a class="el" href="json_8h_source.html#l00942">JsonObject::read()</a>.</p>
+<p class="reference">References <a class="el" href="json_8cpp_source.html#l00349">JsonObject::get_int()</a>, <a class="el" href="json_8cpp_source.html#l00428">JsonObject::get_object()</a>, <a class="el" href="mapgen_8cpp_source.html#l06492">line()</a>, <a class="el" href="mapgen_8cpp_source.html#l00410">mapgen_defer::member</a>, and <a class="el" href="json_8h_source.html#l00942">JsonObject::read()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="game_8cpp_source.html#l02532">game::load()</a>.</p>
 
@@ -746,7 +746,7 @@ Private Types</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="uistate_8h_source.html#l00138">138</a> of file <a class="el" href="uistate_8h_source.html">uistate.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="recipe__dictionary_8cpp_source.html#l00249">recipe_subset::empty_category()</a>, <a class="el" href="recipe__dictionary_8cpp_source.html#l00118">recipe_subset::favorite()</a>, <a class="el" href="recipe_8cpp_source.html#l00609">recipe::result_name()</a>, and <a class="el" href="crafting__gui_8cpp_source.html#l00163">select_crafting_recipe()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="recipe__dictionary_8cpp_source.html#l00249">recipe_subset::empty_category()</a>, <a class="el" href="recipe__dictionary_8cpp_source.html#l00118">recipe_subset::favorite()</a>, <a class="el" href="recipe_8cpp_source.html#l00612">recipe::result_name()</a>, and <a class="el" href="crafting__gui_8cpp_source.html#l00163">select_crafting_recipe()</a>.</p>
 
 </div>
 </div>
@@ -1332,7 +1332,7 @@ Private Types</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classuistatedata.html">uistatedata</a></li>
-    <li class="footer">Generated on Sat Mar 25 2023 09:20:27 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Thu Mar 30 2023 17:02:09 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

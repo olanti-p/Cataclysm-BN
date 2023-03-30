@@ -387,8 +387,8 @@ Variables</h2></td></tr>
 <div class="line"><a id="l01369" name="l01369"></a><span class="lineno"> 1369</span>    zone.reserve( 3 * maxdepth );</div>
 <div class="line"><a id="l01370" name="l01370"></a><span class="lineno"> 1370</span>    <a class="code hl_struct" href="structtripoint.html">tripoint</a> previous = bashee;</div>
 <div class="line"><a id="l01371" name="l01371"></a><span class="lineno"> 1371</span>    <span class="keywordflow">for</span>( <span class="keyword">const</span> <a class="code hl_struct" href="structtripoint.html">tripoint</a> &amp;p : path ) {</div>
-<div class="line"><a id="l01372" name="l01372"></a><span class="lineno"> 1372</span>        std::vector&lt;point&gt; swath = <a class="code hl_function" href="line_8cpp.html#ad3bc8422edaedcbc2d6c471b1d3168fc">squares_in_direction</a>( previous.<a class="code hl_function" href="structtripoint.html#accc0725c936dbebb2486f969f39e2e5f">xy</a>(), p.xy() );</div>
-<div class="line"><a id="l01373" name="l01373"></a><span class="lineno"> 1373</span>        <span class="keywordflow">for</span>( <span class="keyword">const</span> <a class="code hl_struct" href="structpoint.html">point</a> &amp;q : swath ) {</div>
+<div class="line"><a id="l01372" name="l01372"></a><span class="lineno"> 1372</span>        std::vector&lt;point&gt; swath = <a class="code hl_function" href="line_8cpp.html#a1a892ef073bda14e92be0d545d2e406b">squares_in_direction</a>( previous.<a class="code hl_function" href="structtripoint.html#accc0725c936dbebb2486f969f39e2e5f">xy</a>(), p.xy() );</div>
+<div class="line"><a id="l01373" name="l01373"></a><span class="lineno"> 1373</span>        <span class="keywordflow">for</span>( <a class="code hl_struct" href="structpoint.html">point</a> q : swath ) {</div>
 <div class="line"><a id="l01374" name="l01374"></a><span class="lineno"> 1374</span>            zone.push_back( <a class="code hl_struct" href="structtripoint.html">tripoint</a>( q, bashee.<a class="code hl_variable" href="structtripoint.html#ac944c0e329b5eba2602f7a52f66bbbb9">z</a> ) );</div>
 <div class="line"><a id="l01375" name="l01375"></a><span class="lineno"> 1375</span>        }</div>
 <div class="line"><a id="l01376" name="l01376"></a><span class="lineno"> 1376</span> </div>
@@ -396,8 +396,8 @@ Variables</h2></td></tr>
 <div class="line"><a id="l01378" name="l01378"></a><span class="lineno"> 1378</span>    }</div>
 <div class="line"><a id="l01379" name="l01379"></a><span class="lineno"> 1379</span>    <span class="keywordflow">return</span> zone;</div>
 <div class="line"><a id="l01380" name="l01380"></a><span class="lineno"> 1380</span>}</div>
+<div class="ttc" id="aline_8cpp_html_a1a892ef073bda14e92be0d545d2e406b"><div class="ttname"><a href="line_8cpp.html#a1a892ef073bda14e92be0d545d2e406b">squares_in_direction</a></div><div class="ttdeci">std::vector&lt; point &gt; squares_in_direction(point p1, point p2)</div><div class="ttdef"><b>Definition:</b> <a href="line_8cpp_source.html#l00588">line.cpp:588</a></div></div>
 <div class="ttc" id="aline_8cpp_html_accf3261606d25eb707e59c395290b74a"><div class="ttname"><a href="line_8cpp.html#accf3261606d25eb707e59c395290b74a">continue_line</a></div><div class="ttdeci">std::vector&lt; tripoint &gt; continue_line(const std::vector&lt; tripoint &gt; &amp;line, const int distance)</div><div class="ttdef"><b>Definition:</b> <a href="line_8cpp_source.html#l00408">line.cpp:408</a></div></div>
-<div class="ttc" id="aline_8cpp_html_ad3bc8422edaedcbc2d6c471b1d3168fc"><div class="ttname"><a href="line_8cpp.html#ad3bc8422edaedcbc2d6c471b1d3168fc">squares_in_direction</a></div><div class="ttdeci">std::vector&lt; point &gt; squares_in_direction(const point &amp;p1, const point &amp;p2)</div><div class="ttdef"><b>Definition:</b> <a href="line_8cpp_source.html#l00588">line.cpp:588</a></div></div>
 <div class="ttc" id="aline_8h_html_a3621d2006812bd84f3ed6999b38f90a3"><div class="ttname"><a href="line_8h.html#a3621d2006812bd84f3ed6999b38f90a3">direction</a></div><div class="ttdeci">direction</div><div class="ttdef"><b>Definition:</b> <a href="line_8h_source.html#l00039">line.h:39</a></div></div>
 <div class="ttc" id="astructpoint_html"><div class="ttname"><a href="structpoint.html">point</a></div><div class="ttdef"><b>Definition:</b> <a href="point_8h_source.html#l00035">point.h:35</a></div></div>
 <div class="ttc" id="astructtripoint_html_ac944c0e329b5eba2602f7a52f66bbbb9"><div class="ttname"><a href="structtripoint.html#ac944c0e329b5eba2602f7a52f66bbbb9">tripoint::z</a></div><div class="ttdeci">int z</div><div class="ttdef"><b>Definition:</b> <a href="point_8h_source.html#l00138">point.h:138</a></div></div>
@@ -1048,7 +1048,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="monmove_8cpp.html">monmove.cpp</a></li>
-    <li class="footer">Generated on Sat Mar 25 2023 09:20:05 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Thu Mar 30 2023 17:01:46 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

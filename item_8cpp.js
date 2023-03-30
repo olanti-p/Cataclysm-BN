@@ -184,7 +184,6 @@ var item_8cpp =
     [ "qual_LIFT", "item_8cpp.html#a5ffeadef52daa921bcfd6024526f8feb", null ],
     [ "rapid_strike", "item_8cpp.html#a7043b1627f48fc57af9071f847d93338", null ],
     [ "ROBOT", "item_8cpp.html#a135e6e9db2959a942d96fb4c338fa696", null ],
-    [ "skill_cooking", "item_8cpp.html#ad0e39d29af45ea0a03f280197b35ca72", null ],
     [ "skill_survival", "item_8cpp.html#ac038c6319122de04af85fb88e6618601", null ],
     [ "skill_unarmed", "item_8cpp.html#ad22b82ceedf236ed05df55e661444c76", null ],
     [ "skill_weapon", "item_8cpp.html#a35f2f8386cafac888b1488869514370c", null ],

@@ -105,8 +105,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a48f95025ad7c2b375f1f7e2ec62256e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52094564ee6ba8fb55b74f6913c9a0bf"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structconstruction.html#a52094564ee6ba8fb55b74f6913c9a0bf">adjusted_time</a> () const</td></tr>
 <tr class="separator:a52094564ee6ba8fb55b74f6913c9a0bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afebcbd46e4ba11350e29da4bd1b06038"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structconstruction.html#afebcbd46e4ba11350e29da4bd1b06038">print_time</a> (const <a class="el" href="classcatacurses_1_1window.html">catacurses::window</a> &amp;w, const <a class="el" href="structpoint.html">point</a> &amp;, int width, <a class="el" href="classnc__color.html">nc_color</a> col) const</td></tr>
-<tr class="separator:afebcbd46e4ba11350e29da4bd1b06038"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c201168ab8b7b3b9edbda8a732d2018"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structconstruction.html#a9c201168ab8b7b3b9edbda8a732d2018">print_time</a> (const <a class="el" href="classcatacurses_1_1window.html">catacurses::window</a> &amp;w, <a class="el" href="structpoint.html">point</a>, int width, <a class="el" href="classnc__color.html">nc_color</a> col) const</td></tr>
+<tr class="separator:a9c201168ab8b7b3b9edbda8a732d2018"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4cf13ccacaf22360ae7c3922bdbbca9a"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structconstruction.html#a4cf13ccacaf22360ae7c3922bdbbca9a">get_folded_time_string</a> (int width) const</td></tr>
 <tr class="separator:a4cf13ccacaf22360ae7c3922bdbbca9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad7c75ab4b42d656e538ee720801aa96b"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structconstruction.html#ad7c75ab4b42d656e538ee720801aa96b">time_scale</a> () const</td></tr>
@@ -659,8 +659,8 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="afebcbd46e4ba11350e29da4bd1b06038" name="afebcbd46e4ba11350e29da4bd1b06038"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afebcbd46e4ba11350e29da4bd1b06038">&#9670;&nbsp;</a></span>print_time()</h2>
+<a id="a9c201168ab8b7b3b9edbda8a732d2018" name="a9c201168ab8b7b3b9edbda8a732d2018"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c201168ab8b7b3b9edbda8a732d2018">&#9670;&nbsp;</a></span>print_time()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -674,7 +674,7 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structpoint.html">point</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structpoint.html">point</a>&#160;</td>
           <td class="paramname"><em>p</em>, </td>
         </tr>
         <tr>
@@ -700,9 +700,9 @@ Private Member Functions</h2></td></tr>
 <p class="definition">Definition at line <a class="el" href="construction_8cpp_source.html#l01794">1794</a> of file <a class="el" href="construction_8cpp_source.html">construction.cpp</a>.</p>
 <div class="fragment"><div class="line"><a id="l01796" name="l01796"></a><span class="lineno"> 1796</span>{</div>
 <div class="line"><a id="l01797" name="l01797"></a><span class="lineno"> 1797</span>    std::string text = <a class="code hl_function" href="structconstruction.html#ab277019211fcf8e122cd9ba0f011568d">get_time_string</a>();</div>
-<div class="line"><a id="l01798" name="l01798"></a><span class="lineno"> 1798</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="output_8cpp.html#ab9659cbe9ec23a2efd813f795cb7fb73">fold_and_print</a>( w, p, width, col, text );</div>
+<div class="line"><a id="l01798" name="l01798"></a><span class="lineno"> 1798</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="output_8cpp.html#a8fe6897b9287a349d2eb4159b864afe8">fold_and_print</a>( w, p, width, col, text );</div>
 <div class="line"><a id="l01799" name="l01799"></a><span class="lineno"> 1799</span>}</div>
-<div class="ttc" id="aoutput_8cpp_html_ab9659cbe9ec23a2efd813f795cb7fb73"><div class="ttname"><a href="output_8cpp.html#ab9659cbe9ec23a2efd813f795cb7fb73">fold_and_print</a></div><div class="ttdeci">int fold_and_print(const catacurses::window &amp;w, const point &amp;begin, int width, const nc_color &amp;base_color, const std::string &amp;text, const char split)</div><div class="ttdoc">Fold and print text in the given window.</div><div class="ttdef"><b>Definition:</b> <a href="output_8cpp_source.html#l00299">output.cpp:299</a></div></div>
+<div class="ttc" id="aoutput_8cpp_html_a8fe6897b9287a349d2eb4159b864afe8"><div class="ttname"><a href="output_8cpp.html#a8fe6897b9287a349d2eb4159b864afe8">fold_and_print</a></div><div class="ttdeci">int fold_and_print(const catacurses::window &amp;w, point begin, int width, const nc_color &amp;base_color, const std::string &amp;text, const char split)</div><div class="ttdoc">Fold and print text in the given window.</div><div class="ttdef"><b>Definition:</b> <a href="output_8cpp_source.html#l00299">output.cpp:299</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="output_8cpp_source.html#l00299">fold_and_print()</a>, and <a class="el" href="construction_8cpp_source.html#l01838">get_time_string()</a>.</p>
 
@@ -1168,7 +1168,7 @@ Private Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="structconstruction.html">construction</a></li>
-    <li class="footer">Generated on Sat Mar 25 2023 09:20:11 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Thu Mar 30 2023 17:01:53 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

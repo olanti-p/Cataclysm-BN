@@ -1,5 +1,15 @@
 var NAVTREEINDEX111 =
 {
+"namespaceMapExtras.html#ab1ffd65b5286d1af2a3bcfdf9a19cbdd":[35,0,125,37],
+"namespaceMapExtras.html#abcc7ff03f78ad0890e4e19ae2fe62dea":[35,0,125,47],
+"namespaceMapExtras.html#ac8adf478046a612a1aaa697b379e38d0":[35,0,125,33],
+"namespaceMapExtras.html#acbd998b3e0e1df2dac30a6315c327949":[35,0,125,42],
+"namespaceMapExtras.html#ad17df336eccf09e846f838ca7455d679":[35,0,125,4],
+"namespaceMapExtras.html#ad6366142312b997e22c0d855e1ac5c26":[35,0,125,26],
+"namespaceMapExtras.html#ad77d49603eceafe76f11a79b79d294e7":[35,0,125,2],
+"namespaceMapExtras.html#ad8c58b77220d9d7e3ea3e3804018ffaf":[35,0,125,18],
+"namespaceMapExtras.html#ae78c51d4e0589fc237eac6163d0c60f2":[35,0,125,13],
+"namespaceMapExtras.html#ae92fe5dc842411974d793ff3c587a048":[35,0,125,21],
 "namespaceMapExtras.html#aeaacc194cef94ac3296d7f788a9e3330":[35,0,125,8],
 "namespaceMapExtras.html#af17faec8749aea26a69de82c7338385f":[35,0,125,30],
 "namespaceMapExtras.html#afb316525883a5c53815d8ec64ec10c8b":[35,0,125,39],
@@ -239,15 +249,5 @@ var NAVTREEINDEX111 =
 "namespaceactivity__handlers_1_1repair__activity__hack_1_1anonymous__namespace_02activity__handlers_8cpp_03.html#ae227ad1d32d2996b9aaa33ed96232eae":[35,0,2,0,0,1],
 "namespacealign.html":[35,0,3],
 "namespacealign.html#aff2772e23f6ac91520e57d4b3ac0c759":[35,0,3,0],
-"namespacealign.html#aff2772e23f6ac91520e57d4b3ac0c759a3282b06f67c5e15c0eaeb515ef8f86fd":[35,0,3,0,1],
-"namespacealign.html#aff2772e23f6ac91520e57d4b3ac0c759a4ba1498ecf6f0de5baac670a264e43eb":[35,0,3,0,0],
-"namespacealign.html#aff2772e23f6ac91520e57d4b3ac0c759a522cfe706bd4170b4fded79ff55e4bc4":[35,0,3,0,3],
-"namespacealign.html#aff2772e23f6ac91520e57d4b3ac0c759a5bf95244357d6164916bfe6e0ccfbc79":[35,0,3,0,2],
-"namespacealign.html#aff2772e23f6ac91520e57d4b3ac0c759af95ea74b65a6ce7cade89d4db5ab5d1b":[35,0,3,0,4],
-"namespaceammo__effects.html":[35,0,4],
-"namespaceammo__effects.html#a266026a76ad1cf3377d0b7c6efc36dd7":[35,0,4,3],
-"namespaceammo__effects.html#a46b4d380a5d6bcd43196d7fad5a35c06":[35,0,4,1],
-"namespaceammo__effects.html#a4d5efb64e5f2478906409402bc8454a3":[35,0,4,0],
-"namespaceammo__effects.html#a560c6af9060cf2ac239095f84f408e1a":[35,0,4,4],
-"namespaceammo__effects.html#ac865017e83604b57024c38c4e93d56bf":[35,0,4,2]
+"namespacealign.html#aff2772e23f6ac91520e57d4b3ac0c759a3282b06f67c5e15c0eaeb515ef8f86fd":[35,0,3,0,1]
 };

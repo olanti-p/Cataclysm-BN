@@ -1,5 +1,16 @@
 var NAVTREEINDEX121 =
 {
+"namespacespell__detail.html#aecae8daa3162adfa31392f7400a9cf41":[35,0,168,3],
+"namespacespell__effect.html":[35,0,169],
+"namespacespell__effect.html#a025c386d19f6366b440c998b9d35a6af":[35,0,169,6],
+"namespacespell__effect.html#a063a7d84b97197ffd7caba9f6f6e7c36":[35,0,169,25],
+"namespacespell__effect.html#a0e09e84c2b7a257a455b3e9fc3593b4b":[35,0,169,21],
+"namespacespell__effect.html#a1046d781ac5cfb3381c95ce1d965f06b":[35,0,169,4],
+"namespacespell__effect.html#a23cac54dff54c06895ee6a486bdd91e8":[35,0,169,3],
+"namespacespell__effect.html#a2664427c4eee090b72a108bbcaad0569":[35,0,169,24],
+"namespacespell__effect.html#a2dfd6a1bcb07c5dc38f66bc5078b883c":[35,0,169,16],
+"namespacespell__effect.html#a377a074da70df6b24b1b3774af619e59":[35,0,169,0],
+"namespacespell__effect.html#a4df2a86c4b7ba408de7513e9a1cbf2ef":[35,0,169,19],
 "namespacespell__effect.html#a5190e06459a4d2190d8d029a4fba6d09":[35,0,169,2],
 "namespacespell__effect.html#a572acfb9ae05c3cdd9f2827512a7a2d4":[35,0,169,8],
 "namespacespell__effect.html#a60706ce2352423a49ebd4d43dacbd12f":[35,0,169,7],
@@ -238,16 +249,5 @@ var NAVTREEINDEX121 =
 "namespaceui_1_1omap.html#a6e3c94aa877e09d66ed3b868594c64a0":[35,0,179,0,7],
 "namespaceui_1_1omap.html#a9c1e7b2cc97be5072b464abfe6a7bb63":[35,0,179,0,3],
 "namespaceui_1_1omap.html#a9c77634aea7f1a23166fc4b32b272561":[35,0,179,0,9],
-"namespaceui_1_1omap.html#ab710d23f3ce42785879cb934f2f0327b":[35,0,179,0,2],
-"namespaceui_1_1omap.html#ab8f5795aa88f807d4b900dd529a9fd9c":[35,0,179,0,10],
-"namespaceui_1_1omap.html#ac881c4f9f5a5ca52b12c9a043ac56952":[35,0,179,0,1],
-"namespaceui_1_1omap.html#ad68c1619bc21d621ef7529d2e0e2e65d":[35,0,179,0,4],
-"namespaceui__manager.html":[35,0,180],
-"namespaceui__manager.html#a5496220e43b7d5f1b3cbbebe6cf1f83d":[35,0,180,2],
-"namespaceui__manager.html#a93b4bb0f95c5d3a9be3b28ba09878fcc":[35,0,180,0],
-"namespaceui__manager.html#aaa801bfcb6ef4eb737e70c793df08da9":[35,0,180,3],
-"namespaceui__manager.html#ae38f3a918052ef286ee60daac47f52d4":[35,0,180,1],
-"namespaceunits.html":[35,0,181],
-"namespaceunits.html#a02cd314e028c7c9b30313c8de875ab63":[35,0,181,46],
-"namespaceunits.html#a0467e74cf266a5244ebf3edf49cd97b1":[35,0,181,71]
+"namespaceui_1_1omap.html#ab710d23f3ce42785879cb934f2f0327b":[35,0,179,0,2]
 };

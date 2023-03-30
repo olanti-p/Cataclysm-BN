@@ -1,5 +1,15 @@
 var NAVTREEINDEX158 =
 {
+"structsubmap_1_1cosmetic__t.html#a441c59ad980d00c525b7e9e56cdf69cd":[36,0,893,0,0],
+"structsubmap_1_1cosmetic__t.html#af0b43b5998946b56b5251c12fc843084":[36,0,893,0,1],
+"structsupports__proportional.html":[36,0,894],
+"structsupports__proportional_3_01T_00_01cata_1_1void__t_3_01decltype_07std_1_1declval_3_01T_01_65a900226014ad1185c6b766ea4e24245.html":[36,0,896],
+"structsupports__proportional_3_01bool_01_4.html":[36,0,895],
+"structsupports__relative.html":[36,0,897],
+"structsupports__relative_3_01T_00_01cata_1_1void__t_3_01decltype_07std_1_1declval_3_01T_01_6_01_50ce8d93c8242fc4603fa58eb9774b45.html":[36,0,900],
+"structsupports__relative_3_01bool_01_4.html":[36,0,898],
+"structsupports__relative_3_01std_1_1string_01_4.html":[36,0,899],
+"structtalk__data.html":[36,0,903],
 "structtalk__data.html#a4c096230dc94ba876a2b520222366cd4":[36,0,903,1],
 "structtalk__data.html#aaf0761d9f9f285671261868efb7f801c":[36,0,903,0],
 "structtalk__data.html#adc24ab6abf7fb3236382587d805d40c5":[36,0,903,2],
@@ -239,15 +249,5 @@ var NAVTREEINDEX158 =
 "structtrap.html#af528369ecffbd6666b411fbbb466bc4e":[36,0,947,24],
 "structtrap.html#afefc8440f9684bc6694c3c14dc59a727":[36,0,947,3],
 "structtrap.html#afffbc9e94465251d8486a7a7ff31e76c":[36,0,947,8],
-"structtripoint.html":[36,0,948],
-"structtripoint.html#a0a4b2fe58ce3efb698e12130c81c04ab":[36,0,948,14],
-"structtripoint.html#a1574f5dd845eee2b29843fbb8360b64f":[36,0,948,10],
-"structtripoint.html#a202ff1fa006b5d3b7762a2c3e28fcccb":[36,0,948,4],
-"structtripoint.html#a2e41003bfa8a7df6ff611195e3e3956e":[36,0,948,3],
-"structtripoint.html#a3b4df21721672a1e5c1309fb14033e69":[36,0,948,5],
-"structtripoint.html#a3d1c6888aacefb97f834c6578de24990":[36,0,948,12],
-"structtripoint.html#a551e98137628599ece2b816d61dd1eba":[36,0,948,15],
-"structtripoint.html#a5751a4b3f6ebcc909af3a009856a2743":[36,0,948,7],
-"structtripoint.html#a6654f1d94fd65ca267b0a84abd77ef3c":[36,0,948,13],
-"structtripoint.html#a6c743d84bcbdf0553af508e0d0051e4a":[36,0,948,0]
+"structtripoint.html":[36,0,948]
 };

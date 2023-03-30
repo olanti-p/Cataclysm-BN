@@ -10,7 +10,7 @@ var iuse__actor_8cpp =
     [ "get_item_location", "iuse__actor_8cpp.html#a60c08def16c09e8f7c035cf471e4c42f", null ],
     [ "get_patient", "iuse__actor_8cpp.html#a1a83704531ed46dc0d0530f41377c227", null ],
     [ "has_neighbor", "iuse__actor_8cpp.html#a81e18c8e1fd6ef79c566b9857e852433", null ],
-    [ "is_solid_neighbor", "iuse__actor_8cpp.html#af353287a229bdbed1b4e2061343ae543", null ],
+    [ "is_solid_neighbor", "iuse__actor_8cpp.html#a30bb58e13a4cd9458eb6155cd5cb1d5c", null ],
     [ "load_effect_data", "iuse__actor_8cpp.html#af9424173e4dd2e968f60195f984283b5", null ],
     [ "pick_part_to_heal", "iuse__actor_8cpp.html#a6adfa0528195381a4900dba03c2190b8", null ],
     [ "place_and_add_as_known", "iuse__actor_8cpp.html#a64871597076c7960078cdef1b8eeda3d", null ],

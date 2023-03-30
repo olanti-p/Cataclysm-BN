@@ -92,16 +92,16 @@ $(document).ready(function(){initNavTree('namespaceCellularAutomata.html',''); i
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a0e75d0a4380996da33f3200f42f35e46"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceCellularAutomata.html#a0e75d0a4380996da33f3200f42f35e46">neighbor_count</a> (const std::vector&lt; std::vector&lt; int &gt; &gt; &amp;cells, const <a class="el" href="structpoint.html">point</a> &amp;size, const <a class="el" href="structpoint.html">point</a> &amp;p)</td></tr>
-<tr class="memdesc:a0e75d0a4380996da33f3200f42f35e46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the number of alive neighbors by looking at the Moore neighborhood (3x3 grid of cells).  <a href="namespaceCellularAutomata.html#a0e75d0a4380996da33f3200f42f35e46">More...</a><br /></td></tr>
-<tr class="separator:a0e75d0a4380996da33f3200f42f35e46"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7cad9f62c294f80ca741010f4b9b6f7b"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceCellularAutomata.html#a7cad9f62c294f80ca741010f4b9b6f7b">generate_cellular_automaton</a> (const <a class="el" href="structpoint.html">point</a> &amp;size, const int alive, const int iterations, const int birth_limit, const int stasis_limit)</td></tr>
-<tr class="memdesc:a7cad9f62c294f80ca741010f4b9b6f7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a cellular automaton using the provided parameters.  <a href="namespaceCellularAutomata.html#a7cad9f62c294f80ca741010f4b9b6f7b">More...</a><br /></td></tr>
-<tr class="separator:a7cad9f62c294f80ca741010f4b9b6f7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32e295db5ab5a34d5fbe65d7fb0924e0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceCellularAutomata.html#a32e295db5ab5a34d5fbe65d7fb0924e0">neighbor_count</a> (const std::vector&lt; std::vector&lt; int &gt; &gt; &amp;cells, <a class="el" href="structpoint.html">point</a> size, <a class="el" href="structpoint.html">point</a> p)</td></tr>
+<tr class="memdesc:a32e295db5ab5a34d5fbe65d7fb0924e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the number of alive neighbors by looking at the Moore neighborhood (3x3 grid of cells).  <a href="namespaceCellularAutomata.html#a32e295db5ab5a34d5fbe65d7fb0924e0">More...</a><br /></td></tr>
+<tr class="separator:a32e295db5ab5a34d5fbe65d7fb0924e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c29382ca123e486076190e1266ac2c0"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceCellularAutomata.html#a4c29382ca123e486076190e1266ac2c0">generate_cellular_automaton</a> (<a class="el" href="structpoint.html">point</a> size, const int alive, const int iterations, const int birth_limit, const int stasis_limit)</td></tr>
+<tr class="memdesc:a4c29382ca123e486076190e1266ac2c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a cellular automaton using the provided parameters.  <a href="namespaceCellularAutomata.html#a4c29382ca123e486076190e1266ac2c0">More...</a><br /></td></tr>
+<tr class="separator:a4c29382ca123e486076190e1266ac2c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a7cad9f62c294f80ca741010f4b9b6f7b" name="a7cad9f62c294f80ca741010f4b9b6f7b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7cad9f62c294f80ca741010f4b9b6f7b">&#9670;&nbsp;</a></span>generate_cellular_automaton()</h2>
+<a id="a4c29382ca123e486076190e1266ac2c0" name="a4c29382ca123e486076190e1266ac2c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c29382ca123e486076190e1266ac2c0">&#9670;&nbsp;</a></span>generate_cellular_automaton()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -109,7 +109,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">std::vector&lt; std::vector&lt; int &gt; &gt; CellularAutomata::generate_cellular_automaton </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structpoint.html">point</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structpoint.html">point</a>&#160;</td>
           <td class="paramname"><em>size</em>, </td>
         </tr>
         <tr>
@@ -187,7 +187,7 @@ Functions</h2></td></tr>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>                }</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                <span class="comment">// Count our neighors.</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>                <span class="keyword">const</span> <span class="keywordtype">int</span> neighbors = <a class="code hl_function" href="namespaceCellularAutomata.html#a0e75d0a4380996da33f3200f42f35e46">neighbor_count</a>( current, <a class="code hl_variable" href="namespaceom__direction.html#af97f9dbddaa758278662da3478826c61">size</a>, <a class="code hl_struct" href="structpoint.html">point</a>( i, j ) );</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>                <span class="keyword">const</span> <span class="keywordtype">int</span> neighbors = <a class="code hl_function" href="namespaceCellularAutomata.html#a32e295db5ab5a34d5fbe65d7fb0924e0">neighbor_count</a>( current, <a class="code hl_variable" href="namespaceom__direction.html#af97f9dbddaa758278662da3478826c61">size</a>, <a class="code hl_struct" href="structpoint.html">point</a>( i, j ) );</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>                <span class="comment">// Dead and &gt; birth_limit neighbors, so become alive.</span></div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>                <span class="keywordflow">if</span>( ( current[i][j] == 0 ) &amp;&amp; ( neighbors &gt; birth_limit ) ) {</div>
@@ -211,7 +211,7 @@ Functions</h2></td></tr>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keywordflow">return</span> current;</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>}</div>
 <div class="ttc" id="acalendar_8cpp_html_a359120c15f92d54a49fec9de7bcb571f"><div class="ttname"><a href="calendar_8cpp.html#a359120c15f92d54a49fec9de7bcb571f">x_in_y</a></div><div class="ttdeci">bool x_in_y(const time_duration &amp;a, const time_duration &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="calendar_8cpp_source.html#l00521">calendar.cpp:521</a></div></div>
-<div class="ttc" id="anamespaceCellularAutomata_html_a0e75d0a4380996da33f3200f42f35e46"><div class="ttname"><a href="namespaceCellularAutomata.html#a0e75d0a4380996da33f3200f42f35e46">CellularAutomata::neighbor_count</a></div><div class="ttdeci">int neighbor_count(const std::vector&lt; std::vector&lt; int &gt; &gt; &amp;cells, const point &amp;size, const point &amp;p)</div><div class="ttdoc">Calculates the number of alive neighbors by looking at the Moore neighborhood (3x3 grid of cells).</div><div class="ttdef"><b>Definition:</b> <a href="cellular__automata_8cpp_source.html#l00003">cellular_automata.cpp:3</a></div></div>
+<div class="ttc" id="anamespaceCellularAutomata_html_a32e295db5ab5a34d5fbe65d7fb0924e0"><div class="ttname"><a href="namespaceCellularAutomata.html#a32e295db5ab5a34d5fbe65d7fb0924e0">CellularAutomata::neighbor_count</a></div><div class="ttdeci">int neighbor_count(const std::vector&lt; std::vector&lt; int &gt; &gt; &amp;cells, point size, point p)</div><div class="ttdoc">Calculates the number of alive neighbors by looking at the Moore neighborhood (3x3 grid of cells).</div><div class="ttdef"><b>Definition:</b> <a href="cellular__automata_8cpp_source.html#l00003">cellular_automata.cpp:3</a></div></div>
 <div class="ttc" id="anamespacecata_html_a097b137e977a6b843c0dada2c8b19611"><div class="ttname"><a href="namespacecata.html#a097b137e977a6b843c0dada2c8b19611">cata::swap</a></div><div class="ttdeci">void swap(colony&lt; element_type, element_allocator_type, element_skipfield_type &gt; &amp;a, colony&lt; element_type, element_allocator_type, element_skipfield_type &gt; &amp;b) COLONY_NOEXCEPT_SWAP(element_allocator_type)</div><div class="ttdoc">Swaps colony A's contents with that of colony B.</div><div class="ttdef"><b>Definition:</b> <a href="colony_8h_source.html#l03496">colony.h:3496</a></div></div>
 <div class="ttc" id="anamespaceom__direction_html_af97f9dbddaa758278662da3478826c61"><div class="ttname"><a href="namespaceom__direction.html#af97f9dbddaa758278662da3478826c61">om_direction::size</a></div><div class="ttdeci">const size_t size</div><div class="ttdef"><b>Definition:</b> <a href="om__direction_8h_source.html#l00027">om_direction.h:27</a></div></div>
 <div class="ttc" id="astructpoint_html"><div class="ttname"><a href="structpoint.html">point</a></div><div class="ttdef"><b>Definition:</b> <a href="point_8h_source.html#l00035">point.h:35</a></div></div>
@@ -222,8 +222,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a0e75d0a4380996da33f3200f42f35e46" name="a0e75d0a4380996da33f3200f42f35e46"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0e75d0a4380996da33f3200f42f35e46">&#9670;&nbsp;</a></span>neighbor_count()</h2>
+<a id="a32e295db5ab5a34d5fbe65d7fb0924e0" name="a32e295db5ab5a34d5fbe65d7fb0924e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32e295db5ab5a34d5fbe65d7fb0924e0">&#9670;&nbsp;</a></span>neighbor_count()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -237,13 +237,13 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structpoint.html">point</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structpoint.html">point</a>&#160;</td>
           <td class="paramname"><em>size</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structpoint.html">point</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structpoint.html">point</a>&#160;</td>
           <td class="paramname"><em>p</em>&#160;</td>
         </tr>
         <tr>
@@ -300,7 +300,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceCellularAutomata.html">CellularAutomata</a></li>
-    <li class="footer">Generated on Sat Mar 25 2023 09:20:32 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Thu Mar 30 2023 17:02:14 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

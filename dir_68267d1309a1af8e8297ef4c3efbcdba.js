@@ -165,6 +165,8 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "debug.h", "debug_8h.html", "debug_8h" ],
     [ "debug_menu.cpp", "debug__menu_8cpp.html", "debug__menu_8cpp" ],
     [ "debug_menu.h", "debug__menu_8h.html", "debug__menu_8h" ],
+    [ "demangle.cpp", "demangle_8cpp.html", "demangle_8cpp" ],
+    [ "demangle.h", "demangle_8h.html", "demangle_8h" ],
     [ "dependency_tree.cpp", "dependency__tree_8cpp.html", "dependency__tree_8cpp" ],
     [ "dependency_tree.h", "dependency__tree_8h.html", "dependency__tree_8h" ],
     [ "descriptions.cpp", "descriptions_8cpp.html", "descriptions_8cpp" ],

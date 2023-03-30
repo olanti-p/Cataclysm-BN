@@ -244,10 +244,10 @@ var NAVTREEINDEX39 =
 "classgame.html#a61f882783d55204dfb52502ca1d5d9db":[36,0,374,280],
 "classgame.html#a6285f497dc3639ea15b0e3d98b4acd54":[36,0,374,328],
 "classgame.html#a62fef6f2015aa290379c0f3027aa87b1":[36,0,374,134],
+"classgame.html#a63ce6a899a9d853915465374ffc3b28a":[36,0,374,229],
 "classgame.html#a6403813d8010af8a5a5cf7ee5546c823":[36,0,374,115],
 "classgame.html#a644d3812709620462cfb7495eadf7b21":[36,0,374,246],
 "classgame.html#a649ea02933ae6b4b0db9cc854f2f50f3":[36,0,374,277],
 "classgame.html#a64a9cae4c72d38cfad37d6590d2d7628":[36,0,374,214],
-"classgame.html#a6528bf084666be5c0f18af0c443d5d68":[36,0,374,40],
-"classgame.html#a6546b1ff65a4e183513050f7554a2fa9":[36,0,374,22]
+"classgame.html#a6528bf084666be5c0f18af0c443d5d68":[36,0,374,40]
 };

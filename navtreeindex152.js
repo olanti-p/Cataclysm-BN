@@ -1,5 +1,16 @@
 var NAVTREEINDEX152 =
 {
+"structmtype.html#afd1e4788ac98f8ec3c606a8b2dd406c1":[36,0,661,73],
+"structmtype.html#afd6fda2b39b95e1be14ae9d089e85c0f":[36,0,661,6],
+"structmtype__special__attack.html":[36,0,662],
+"structmtype__special__attack.html#a03f1dfacf218b62efc9bbd87acb45dfd":[36,0,662,3],
+"structmtype__special__attack.html#a1f1220193bf05d7a279375caa830ff72":[36,0,662,0],
+"structmtype__special__attack.html#a2334274954bcf6c4385cfc70b74ca179":[36,0,662,4],
+"structmtype__special__attack.html#a2b6af7ee04ffa74e4902019973994e8b":[36,0,662,5],
+"structmtype__special__attack.html#a68050297c73cf38c2c306f20e3a748a4":[36,0,662,1],
+"structmtype__special__attack.html#adc5ef1d92a8d72b94a06bc5f91a1f1e0":[36,0,662,2],
+"structmtype__special__attack.html#af78275ea7ae5940622bb9b7b4eee17b2":[36,0,662,6],
+"structmut__attack.html":[36,0,664],
 "structmut__attack.html#a14c15da79fa92bd55ff9ce35229e73ba":[36,0,664,1],
 "structmut__attack.html#a1e1bae905c75a0b2f3d1394f9824dc6d":[36,0,664,3],
 "structmut__attack.html#a38cdb81bd4c6477f0f1c70b118e7973a":[36,0,664,7],
@@ -238,16 +249,5 @@ var NAVTREEINDEX152 =
 "structnode__address.html#a0ffafc5d0b0e8bccdf6b2c243fd91287":[36,0,680,2],
 "structnode__address.html#a1185adc23056aa029873abb921e22440":[36,0,680,3],
 "structnode__address.html#a69acad8bad8d6c6dfb444632e8973c19":[36,0,680,4],
-"structnode__address.html#ab251b0b2bfb50ad14394ff43880a29c3":[36,0,680,0],
-"structnode__address.html#adde13860b07cc6e072ec4da0faa27522":[36,0,680,1],
-"structnode__address__hasher.html":[36,0,681],
-"structnode__address__hasher.html#a25621fe040df276ddbf33de67d85b98c":[36,0,681,0],
-"structnode__data.html":[36,0,682],
-"structnode__data.html#a881d0ab05790d7a076bc404fdd823de1":[36,0,682,1],
-"structnode__data.html#ac3aff1810fa3ee7c253ade89152d02a5":[36,0,682,0],
-"structnote__color.html":[36,0,683],
-"structnote__color.html#a5b13480ff463948685181426f226bae6":[36,0,683,1],
-"structnote__color.html#a827a10be059585ddd6f93ecf0875e6fb":[36,0,683,0],
-"structnpc__chatbin.html":[36,0,685],
-"structnpc__chatbin.html#a083175cd6d6a4cc4e77135c79dd4f518":[36,0,685,6]
+"structnode__address.html#ab251b0b2bfb50ad14394ff43880a29c3":[36,0,680,0]
 };

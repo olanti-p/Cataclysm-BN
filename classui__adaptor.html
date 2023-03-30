@@ -139,9 +139,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aae52e80c928fa76affccc3b60d415982"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classui__adaptor.html#aae52e80c928fa76affccc3b60d415982">position_from_window</a> (const <a class="el" href="classcatacurses_1_1window.html">catacurses::window</a> &amp;win)</td></tr>
 <tr class="memdesc:aae52e80c928fa76affccc3b60d415982"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the position and size of the UI to that of <code>win</code>.  <a href="classui__adaptor.html#aae52e80c928fa76affccc3b60d415982">More...</a><br /></td></tr>
 <tr class="separator:aae52e80c928fa76affccc3b60d415982"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6aa8e52d6fe399f60da61e428f1f721"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classui__adaptor.html#af6aa8e52d6fe399f60da61e428f1f721">position</a> (const <a class="el" href="structpoint.html">point</a> &amp;topleft, const <a class="el" href="structpoint.html">point</a> &amp;size)</td></tr>
-<tr class="memdesc:af6aa8e52d6fe399f60da61e428f1f721"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the position and size of the UI to that of an imaginary <code><a class="el" href="classcatacurses_1_1window.html" title="A wrapper over a pointer to a curses window.">catacurses::window</a></code> in normal font, except that the size can be zero.  <a href="classui__adaptor.html#af6aa8e52d6fe399f60da61e428f1f721">More...</a><br /></td></tr>
-<tr class="separator:af6aa8e52d6fe399f60da61e428f1f721"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b03e4f9b6c3e7b180ec85cc0d7b4bf8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classui__adaptor.html#a3b03e4f9b6c3e7b180ec85cc0d7b4bf8">position</a> (<a class="el" href="structpoint.html">point</a> topleft, <a class="el" href="structpoint.html">point</a> size)</td></tr>
+<tr class="memdesc:a3b03e4f9b6c3e7b180ec85cc0d7b4bf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the position and size of the UI to that of an imaginary <code><a class="el" href="classcatacurses_1_1window.html" title="A wrapper over a pointer to a curses window.">catacurses::window</a></code> in normal font, except that the size can be zero.  <a href="classui__adaptor.html#a3b03e4f9b6c3e7b180ec85cc0d7b4bf8">More...</a><br /></td></tr>
+<tr class="separator:a3b03e4f9b6c3e7b180ec85cc0d7b4bf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37e0f0811d9460640b86442a1facc87d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classui__adaptor.html#a37e0f0811d9460640b86442a1facc87d">on_redraw</a> (const <a class="el" href="classui__adaptor.html#a0b1cb5fdb03979bd672369acda9cdfb6">redraw_callback_t</a> &amp;fun)</td></tr>
 <tr class="memdesc:a37e0f0811d9460640b86442a1facc87d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set redraw and resize callbacks.  <a href="classui__adaptor.html#a37e0f0811d9460640b86442a1facc87d">More...</a><br /></td></tr>
 <tr class="separator:a37e0f0811d9460640b86442a1facc87d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -200,7 +200,7 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="comment">// Things to do when the game window changes size</span></div>
 <div class="line"><a class="code hl_namespace" href="namespaceui.html">ui</a>.on_screen_resize( [&amp;]( <a class="code hl_class" href="classui__adaptor.html">ui_adaptor</a> &amp; <a class="code hl_namespace" href="namespaceui.html">ui</a> ) {</div>
 <div class="line">    <span class="comment">// Create an ncurses window</span></div>
-<div class="line">    win = <a class="code hl_function" href="namespacecatacurses.html#a576fd20080b8f49e27acf97af45b374b">catacurses::newwin</a>( <a class="code hl_variable" href="output_8cpp.html#a000abea6447dfafd5f9b787aa6753609">TERMX</a> / 2, <a class="code hl_variable" href="output_8cpp.html#a567a63be8cb70cc3eb47bf8affced8e5">TERMY</a> / 2, <a class="code hl_struct" href="structpoint.html">point</a>( <a class="code hl_variable" href="output_8cpp.html#a000abea6447dfafd5f9b787aa6753609">TERMX</a> / 4, <a class="code hl_variable" href="output_8cpp.html#a567a63be8cb70cc3eb47bf8affced8e5">TERMY</a> / 4 ) );</div>
+<div class="line">    win = <a class="code hl_function" href="namespacecatacurses.html#a46f283ad0553e1f25b069e41c3a6bd3f">catacurses::newwin</a>( <a class="code hl_variable" href="output_8cpp.html#a000abea6447dfafd5f9b787aa6753609">TERMX</a> / 2, <a class="code hl_variable" href="output_8cpp.html#a567a63be8cb70cc3eb47bf8affced8e5">TERMY</a> / 2, <a class="code hl_struct" href="structpoint.html">point</a>( <a class="code hl_variable" href="output_8cpp.html#a000abea6447dfafd5f9b787aa6753609">TERMX</a> / 4, <a class="code hl_variable" href="output_8cpp.html#a567a63be8cb70cc3eb47bf8affced8e5">TERMY</a> / 4 ) );</div>
 <div class="line">    <span class="comment">// The window passed to this call must contain all the space the redraw</span></div>
 <div class="line">    <span class="comment">// callback draws to, to ensure proper refreshing when resizing or exiting</span></div>
 <div class="line">    <span class="comment">// from other UIs.</span></div>
@@ -213,7 +213,7 @@ Private Attributes</h2></td></tr>
 <div class="line">    <span class="comment">// Clear UI area</span></div>
 <div class="line">    <a class="code hl_function" href="namespacecatacurses.html#ace2ce3990cb812fb83adf6e4ea1f9e8e">werase</a>( win );</div>
 <div class="line">    <span class="comment">// Print things</span></div>
-<div class="line">    <a class="code hl_function" href="namespacecatacurses.html#abde9c157650e464f0a27441d81c84644">mvwprintw</a>( win, <a class="code hl_variable" href="point_8h.html#a0ee2195dcb488ae55fbf4316f5011172">point_zero</a>, <span class="stringliteral">&quot;Hello World!&quot;</span> );</div>
+<div class="line">    <a class="code hl_function" href="namespacecatacurses.html#abe25c16ff9629ebead2700627a024798">mvwprintw</a>( win, <a class="code hl_variable" href="point_8h.html#a0ee2195dcb488ae55fbf4316f5011172">point_zero</a>, <span class="stringliteral">&quot;Hello World!&quot;</span> );</div>
 <div class="line">    <span class="comment">// Write to frame buffer</span></div>
 <div class="line">    <a class="code hl_function" href="namespacecatacurses.html#aa9823d249c21fa50daf277957fabb175">wnoutrefresh</a>( win );</div>
 <div class="line">} );</div>
@@ -237,9 +237,9 @@ Private Attributes</h2></td></tr>
 <div class="ttc" id="aclassinput__context_html"><div class="ttname"><a href="classinput__context.html">input_context</a></div><div class="ttdoc">Represents a context in which a set of actions can be performed.</div><div class="ttdef"><b>Definition:</b> <a href="input_8h_source.html#l00385">input.h:386</a></div></div>
 <div class="ttc" id="aclassui__adaptor_html"><div class="ttname"><a href="classui__adaptor.html">ui_adaptor</a></div><div class="ttdoc">Adaptor between UI code and the UI management system.</div><div class="ttdef"><b>Definition:</b> <a href="ui__manager_8h_source.html#l00064">ui_manager.h:65</a></div></div>
 <div class="ttc" id="adialogue_8h_html_abfef6960b077f40e23bc00055370cc71a0639a24a99be1d60fe688dd938b7eca8"><div class="ttname"><a href="dialogue_8h.html#abfef6960b077f40e23bc00055370cc71a0639a24a99be1d60fe688dd938b7eca8">action</a></div><div class="ttdeci">@ action</div><div class="ttdef"><b>Definition:</b> <a href="dialogue_8h_source.html#l00037">dialogue.h:36</a></div></div>
-<div class="ttc" id="anamespacecatacurses_html_a576fd20080b8f49e27acf97af45b374b"><div class="ttname"><a href="namespacecatacurses.html#a576fd20080b8f49e27acf97af45b374b">catacurses::newwin</a></div><div class="ttdeci">window newwin(int nlines, int ncols, const point &amp;begin)</div><div class="ttdef"><b>Definition:</b> <a href="ncurses__def_8cpp_source.html#l00034">ncurses_def.cpp:34</a></div></div>
+<div class="ttc" id="anamespacecatacurses_html_a46f283ad0553e1f25b069e41c3a6bd3f"><div class="ttname"><a href="namespacecatacurses.html#a46f283ad0553e1f25b069e41c3a6bd3f">catacurses::newwin</a></div><div class="ttdeci">window newwin(int nlines, int ncols, point begin)</div><div class="ttdef"><b>Definition:</b> <a href="ncurses__def_8cpp_source.html#l00034">ncurses_def.cpp:34</a></div></div>
 <div class="ttc" id="anamespacecatacurses_html_aa9823d249c21fa50daf277957fabb175"><div class="ttname"><a href="namespacecatacurses.html#aa9823d249c21fa50daf277957fabb175">catacurses::wnoutrefresh</a></div><div class="ttdeci">void wnoutrefresh(const window &amp;win)</div><div class="ttdef"><b>Definition:</b> <a href="ncurses__def_8cpp_source.html#l00043">ncurses_def.cpp:43</a></div></div>
-<div class="ttc" id="anamespacecatacurses_html_abde9c157650e464f0a27441d81c84644"><div class="ttname"><a href="namespacecatacurses.html#abde9c157650e464f0a27441d81c84644">catacurses::mvwprintw</a></div><div class="ttdeci">void mvwprintw(const window &amp;win, const point &amp;p, const std::string &amp;text)</div><div class="ttdef"><b>Definition:</b> <a href="ncurses__def_8cpp_source.html#l00103">ncurses_def.cpp:103</a></div></div>
+<div class="ttc" id="anamespacecatacurses_html_abe25c16ff9629ebead2700627a024798"><div class="ttname"><a href="namespacecatacurses.html#abe25c16ff9629ebead2700627a024798">catacurses::mvwprintw</a></div><div class="ttdeci">void mvwprintw(const window &amp;win, point p, const std::string &amp;text)</div><div class="ttdef"><b>Definition:</b> <a href="ncurses__def_8cpp_source.html#l00103">ncurses_def.cpp:103</a></div></div>
 <div class="ttc" id="anamespacecatacurses_html_ace2ce3990cb812fb83adf6e4ea1f9e8e"><div class="ttname"><a href="namespacecatacurses.html#ace2ce3990cb812fb83adf6e4ea1f9e8e">catacurses::werase</a></div><div class="ttdeci">void werase(const window &amp;win)</div><div class="ttdef"><b>Definition:</b> <a href="ncurses__def_8cpp_source.html#l00053">ncurses_def.cpp:53</a></div></div>
 <div class="ttc" id="anamespaceui__manager_html_ae38f3a918052ef286ee60daac47f52d4"><div class="ttname"><a href="namespaceui__manager.html#ae38f3a918052ef286ee60daac47f52d4">ui_manager::redraw</a></div><div class="ttdeci">void redraw()</div><div class="ttdoc">Invalidate the top window and redraw all invalidated windows.</div><div class="ttdef"><b>Definition:</b> <a href="ui__manager_8cpp_source.html#l00389">ui_manager.cpp:389</a></div></div>
 <div class="ttc" id="anamespaceui_html"><div class="ttname"><a href="namespaceui.html">ui</a></div><div class="ttdef"><b>Definition:</b> <a href="overmap__ui_8h_source.html#l00016">overmap_ui.h:17</a></div></div>
@@ -854,8 +854,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="af6aa8e52d6fe399f60da61e428f1f721" name="af6aa8e52d6fe399f60da61e428f1f721"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af6aa8e52d6fe399f60da61e428f1f721">&#9670;&nbsp;</a></span>position()</h2>
+<a id="a3b03e4f9b6c3e7b180ec85cc0d7b4bf8" name="a3b03e4f9b6c3e7b180ec85cc0d7b4bf8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b03e4f9b6c3e7b180ec85cc0d7b4bf8">&#9670;&nbsp;</a></span>position()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -863,13 +863,13 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">void ui_adaptor::position </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structpoint.html">point</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structpoint.html">point</a>&#160;</td>
           <td class="paramname"><em>topleft</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structpoint.html">point</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structpoint.html">point</a>&#160;</td>
           <td class="paramname"><em>size</em>&#160;</td>
         </tr>
         <tr>
@@ -928,7 +928,7 @@ Private Attributes</h2></td></tr>
 <p class="definition">Definition at line <a class="el" href="ui__manager_8cpp_source.html#l00092">92</a> of file <a class="el" href="ui__manager_8cpp_source.html">ui_manager.cpp</a>.</p>
 <div class="fragment"><div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>{</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="keywordflow">if</span>( !win ) {</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        <a class="code hl_function" href="classui__adaptor.html#af6aa8e52d6fe399f60da61e428f1f721">position</a>( <a class="code hl_variable" href="point_8h.html#a0ee2195dcb488ae55fbf4316f5011172">point_zero</a>, <a class="code hl_variable" href="point_8h.html#a0ee2195dcb488ae55fbf4316f5011172">point_zero</a> );</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        <a class="code hl_function" href="classui__adaptor.html#a3b03e4f9b6c3e7b180ec85cc0d7b4bf8">position</a>( <a class="code hl_variable" href="point_8h.html#a0ee2195dcb488ae55fbf4316f5011172">point_zero</a>, <a class="code hl_variable" href="point_8h.html#a0ee2195dcb488ae55fbf4316f5011172">point_zero</a> );</div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        <span class="keyword">const</span> <a class="code hl_struct" href="structrectangle.html">rectangle&lt;point&gt;</a> old_dimensions = <a class="code hl_variable" href="classui__adaptor.html#ae983b5ab574c4215b081fbca9dc5a622">dimensions</a>;</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        <span class="comment">// ensure position is updated before calling invalidate</span></div>
@@ -944,7 +944,7 @@ Private Attributes</h2></td></tr>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        <a class="code hl_function" href="namespaceui__manager.html#a93b4bb0f95c5d3a9be3b28ba09878fcc">ui_manager::invalidate</a>( old_dimensions, <span class="keyword">false</span> );</div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    }</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>}</div>
-<div class="ttc" id="aclassui__adaptor_html_af6aa8e52d6fe399f60da61e428f1f721"><div class="ttname"><a href="classui__adaptor.html#af6aa8e52d6fe399f60da61e428f1f721">ui_adaptor::position</a></div><div class="ttdeci">void position(const point &amp;topleft, const point &amp;size)</div><div class="ttdoc">Set the position and size of the UI to that of an imaginary catacurses::window in normal font,...</div><div class="ttdef"><b>Definition:</b> <a href="ui__manager_8cpp_source.html#l00112">ui_manager.cpp:112</a></div></div>
+<div class="ttc" id="aclassui__adaptor_html_a3b03e4f9b6c3e7b180ec85cc0d7b4bf8"><div class="ttname"><a href="classui__adaptor.html#a3b03e4f9b6c3e7b180ec85cc0d7b4bf8">ui_adaptor::position</a></div><div class="ttdeci">void position(point topleft, point size)</div><div class="ttdoc">Set the position and size of the UI to that of an imaginary catacurses::window in normal font,...</div><div class="ttdef"><b>Definition:</b> <a href="ui__manager_8cpp_source.html#l00112">ui_manager.cpp:112</a></div></div>
 <div class="ttc" id="anamespacecatacurses_html_a3e3320f426a1343cb1effcaf648d2d1a"><div class="ttname"><a href="namespacecatacurses.html#a3e3320f426a1343cb1effcaf648d2d1a">catacurses::getbegx</a></div><div class="ttdeci">int getbegx(const window &amp;win)</div><div class="ttdef"><b>Definition:</b> <a href="ncurses__def_8cpp_source.html#l00068">ncurses_def.cpp:68</a></div></div>
 <div class="ttc" id="anamespacecatacurses_html_a929fe85d472028f52d8a5cdfc0d35017"><div class="ttname"><a href="namespacecatacurses.html#a929fe85d472028f52d8a5cdfc0d35017">catacurses::getmaxx</a></div><div class="ttdeci">int getmaxx(const window &amp;win)</div><div class="ttdef"><b>Definition:</b> <a href="ncurses__def_8cpp_source.html#l00058">ncurses_def.cpp:58</a></div></div>
 <div class="ttc" id="anamespacecatacurses_html_aa2debb3330f9739012d1d11db8db31d2"><div class="ttname"><a href="namespacecatacurses.html#aa2debb3330f9739012d1d11db8db31d2">catacurses::getbegy</a></div><div class="ttdeci">int getbegy(const window &amp;win)</div><div class="ttdef"><b>Definition:</b> <a href="ncurses__def_8cpp_source.html#l00073">ncurses_def.cpp:73</a></div></div>
@@ -1145,7 +1145,7 @@ Private Attributes</h2></td></tr>
 <div class="fragment"><div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>{</div>
 <div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    <a class="code hl_function" href="classui__adaptor.html#abf55c7afc0d78d45a35788575f4c3cd5">on_screen_resize</a>( <span class="keyword">nullptr</span> );</div>
 <div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    <a class="code hl_function" href="classui__adaptor.html#a37e0f0811d9460640b86442a1facc87d">on_redraw</a>( <span class="keyword">nullptr</span> );</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    <a class="code hl_function" href="classui__adaptor.html#af6aa8e52d6fe399f60da61e428f1f721">position</a>( <a class="code hl_variable" href="point_8h.html#a0ee2195dcb488ae55fbf4316f5011172">point_zero</a>, <a class="code hl_variable" href="point_8h.html#a0ee2195dcb488ae55fbf4316f5011172">point_zero</a> );</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    <a class="code hl_function" href="classui__adaptor.html#a3b03e4f9b6c3e7b180ec85cc0d7b4bf8">position</a>( <a class="code hl_variable" href="point_8h.html#a0ee2195dcb488ae55fbf4316f5011172">point_zero</a>, <a class="code hl_variable" href="point_8h.html#a0ee2195dcb488ae55fbf4316f5011172">point_zero</a> );</div>
 <div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>}</div>
 <div class="ttc" id="aclassui__adaptor_html_a37e0f0811d9460640b86442a1facc87d"><div class="ttname"><a href="classui__adaptor.html#a37e0f0811d9460640b86442a1facc87d">ui_adaptor::on_redraw</a></div><div class="ttdeci">void on_redraw(const redraw_callback_t &amp;fun)</div><div class="ttdoc">Set redraw and resize callbacks.</div><div class="ttdef"><b>Definition:</b> <a href="ui__manager_8cpp_source.html#l00127">ui_manager.cpp:127</a></div></div>
 <div class="ttc" id="aclassui__adaptor_html_abf55c7afc0d78d45a35788575f4c3cd5"><div class="ttname"><a href="classui__adaptor.html#abf55c7afc0d78d45a35788575f4c3cd5">ui_adaptor::on_screen_resize</a></div><div class="ttdeci">void on_screen_resize(const screen_resize_callback_t &amp;fun)</div><div class="ttdef"><b>Definition:</b> <a href="ui__manager_8cpp_source.html#l00132">ui_manager.cpp:132</a></div></div>
@@ -1388,7 +1388,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classui__adaptor.html">ui_adaptor</a></li>
-    <li class="footer">Generated on Sat Mar 25 2023 09:20:27 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Thu Mar 30 2023 17:02:09 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

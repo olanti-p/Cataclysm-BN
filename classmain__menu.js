@@ -16,7 +16,7 @@ var classmain__menu =
     [ "on_error", "classmain__menu.html#a91f3f83a697cb86a7fe23c7d5ebc30af", null ],
     [ "on_move", "classmain__menu.html#af19a3ed7ae3bff8998357490bc360d1b", null ],
     [ "opening_screen", "classmain__menu.html#a1325b0d0775f52828b57c31e7f0a116b", null ],
-    [ "print_menu", "classmain__menu.html#a07f8ebf39264602e4b715515695fe80e", null ],
+    [ "print_menu", "classmain__menu.html#a36ca232b21e326c5ffc4ce97e47a2094", null ],
     [ "print_menu_items", "classmain__menu.html#a6344d28667fc6efbdfe227898ae747f3", null ],
     [ "world_tab", "classmain__menu.html#a89f4266ce71dc6ec19cc1ee6d935bd3d", null ],
     [ "ctxt", "classmain__menu.html#a088dac3416c18271eff6ea74466af758", null ],
