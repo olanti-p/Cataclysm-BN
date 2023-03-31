@@ -11,6 +11,9 @@
 #include "point.h"
 #include "worldfactory.h"
 #include "enums.h"
+#include "memory_fast.h"
+
+class ui_adaptor;
 
 class main_menu
 {
@@ -24,12 +27,15 @@ class main_menu
         std::vector<std::string> mmenu_title;
         std::string mmenu_motd;
         std::string mmenu_credits;
-        std::vector<std::string> vMenuItems; // MOTD, New Game, Load Game, etc.
-        std::vector<std::string> vWorldSubItems;
-        std::vector< std::vector<std::string> > vWorldHotkeys;
-        std::vector<std::string> vSettingsSubItems;
-        std::vector< std::vector<std::string> > vSettingsHotkeys;
-        std::vector< std::vector<std::string> > vMenuHotkeys; // hotkeys for the vMenuItems
+        std::vector<std::string> entries_main;
+        std::vector<std::string> entries_new_game;
+        std::vector<std::string> entries_world;
+        std::vector<std::string> entries_settings;
+        std::vector<std::string> hints_new_game;
+        std::vector< std::vector<std::string> > hotkeys_main;
+        std::vector< std::vector<std::string> > hotkeys_new_game;
+        std::vector< std::vector<std::string> > hotkeys_world;
+        std::vector< std::vector<std::string> > hotkeys_settings;
         std::string vdaytip; //tip of the day
 
         /**
@@ -44,6 +50,13 @@ class main_menu
         // Play a sound whenever the user moves left or right in the main menu or its tabs
         void on_move() const;
 
+        // Handle left/right movement within a layer.
+        // Returns true if movement happened
+        bool move_left_right( const std::string &action, int &sel, int num );
+        // Handle up/down movement within a layer.
+        // Returns true if movement happened
+        bool move_up_down( const std::string &action, int &sel, int num );
+
         // Flag to be set when first entering an error condition, cleared when leaving it
         // Used to prevent error sound from playing repeatedly at input polling rate
         bool errflag = false;
@@ -52,11 +65,17 @@ class main_menu
         // Clears errflag
         void clear_error();
 
-        // Tab functions. They return whether a game was started or not. The ones that can never
-        // start a game have a void return type.
-        bool new_character_tab();
-        bool load_character_tab( bool transfer = false );
-        void world_tab();
+        std::unique_ptr<ui_adaptor> make_ui_layer();
+
+        bool do_main_layer();
+        bool do_new_game_layer();
+        bool do_new_game_from_preset_layer();
+        bool do_load_world_layer();
+        bool do_load_character_layer();
+        void do_world_list_layer();
+        bool do_world_action_layer();
+        bool do_special_layer();
+        void do_settings_layer();
 
         /*
          * Load character templates from template folder
@@ -66,11 +85,22 @@ class main_menu
         // These variables are shared between @opening_screen and the tab functions.
         // TODO: But this is an ugly short-term solution.
         input_context ctxt;
-        int sel1 = 1;
+
+        int layer = 0;
+        int sel_main = 0;
+        int sel_new_game = 0;
+        int sel_preset = 0;
+        int sel_load_world = 0;
+        int sel_load_character = 0;
+        int sel_settings = 0;
+        int sel_world_list = 0;
+        int sel_world_action = 0;
+        int sel_special = 0;
+        int text_scroll_pos = 0;
+
+        std::string selected_world;
+
         int sel2 = 1;
-        int sel3 = 1;
-        int sel4 = 1;
-        int layer = 1;
         point LAST_TERM;
         catacurses::window w_open;
         point menu_offset;
