@@ -9,6 +9,7 @@
 #include <memory>
 #include <vector>
 #include <string>
+#include <string_view>
 
 #include "options.h"
 #include "pimpl.h"
@@ -169,6 +170,8 @@ void load_world_option( const JsonObject &jo );
 
 //load external option from json
 void load_external_option( const JsonObject &jo );
+
+bool is_world_name_reserved( std::string_view s );
 
 extern std::unique_ptr<worldfactory> world_generator;
 

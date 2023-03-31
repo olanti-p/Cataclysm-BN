@@ -8,6 +8,7 @@
 #include <iterator>
 #include <memory>
 #include <set>
+#include <string_view>
 #include <unordered_map>
 #include <utility>
 
@@ -40,6 +41,10 @@ using namespace std::placeholders;
 
 // single instance of world generator
 std::unique_ptr<worldfactory> world_generator;
+
+constexpr std::string_view WORLD_NAME_TUTORIAL = "_CATA_GM_TUTORIAL";
+constexpr std::string_view WORLD_NAME_DEFENSE = "_CATA_GM_DEFENSE";
+constexpr std::string_view WORLD_NAME_LEGACY = "save";
 
 save_t::save_t( const std::string &name )
     : name( name )
@@ -183,19 +188,18 @@ WORLDPTR worldfactory::make_new_world( special_game_id special_type )
     std::string worldname;
     switch( special_type ) {
         case SGAME_TUTORIAL:
-            worldname = "TUTORIAL";
+            worldname = WORLD_NAME_TUTORIAL;
             break;
         case SGAME_DEFENSE:
-            worldname = "DEFENSE";
+            worldname = WORLD_NAME_DEFENSE;
             break;
         default:
             return nullptr;
     }
 
-    // Look through all worlds and see if a world named worldname already exists. If so, then just return it instead of
-    // making a new world.
+    // Special gamemodes are not designed to be saved and loaded.
     if( has_world( worldname ) ) {
-        return all_worlds[worldname].get();
+        delete_world( worldname, true );
     }
 
     std::unique_ptr<WORLD> special_world = std::make_unique<WORLD>();
@@ -343,7 +347,9 @@ std::vector<std::string> worldfactory::all_worldnames() const
 {
     std::vector<std::string> result;
     for( auto &elem : all_worlds ) {
-        result.push_back( elem.first );
+        if( !is_world_name_reserved( elem.first ) ) {
+            result.push_back( elem.first );
+        }
     }
     return result;
 }
@@ -354,7 +360,7 @@ WORLDPTR worldfactory::pick_world( bool show_prompt )
 
     // Filter out special worlds (TUTORIAL | DEFENSE) from world_names.
     for( std::vector<std::string>::iterator it = world_names.begin(); it != world_names.end(); ) {
-        if( *it == "TUTORIAL" || *it == "DEFENSE" ) {
+        if( is_world_name_reserved( *it ) ) {
             it = world_names.erase( it );
         } else {
             ++it;
@@ -1552,7 +1558,7 @@ bool worldfactory::valid_worldname( const std::string &name, bool automated )
 {
     std::string msg;
 
-    if( name == "save" || name == "TUTORIAL" || name == "DEFENSE" ) {
+    if( is_world_name_reserved( name ) ) {
         msg = string_format( _( "%s is a reserved name!" ), name );
     } else if( !has_world( name ) ) {
         return true;
@@ -1723,4 +1729,9 @@ void worldfactory::delete_world( const std::string &worldname, const bool delete
     } else {
         get_world( worldname )->world_saves.clear();
     }
+}
+
+bool is_world_name_reserved( std::string_view s )
+{
+    return s == WORLD_NAME_LEGACY || s == WORLD_NAME_TUTORIAL || s == WORLD_NAME_DEFENSE;
 }

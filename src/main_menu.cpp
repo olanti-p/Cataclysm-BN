@@ -1028,14 +1028,8 @@ bool main_menu::load_character_tab( bool transfer )
                     int line = menu_offset.y - 2 - i;
                     std::string world_name = all_worldnames[i];
                     int savegames_count = world_generator->get_world( world_name )->world_saves.size();
-                    nc_color color1, color2;
-                    if( world_name == "TUTORIAL" || world_name == "DEFENSE" ) {
-                        color1 = c_light_cyan;
-                        color2 = h_light_cyan;
-                    } else {
-                        color1 = c_white;
-                        color2 = h_white;
-                    }
+                    nc_color color1 = c_white;
+                    nc_color color2 = h_white;
                     mvwprintz( w_open, offset + point( extra_w / 2 + menu_offset.x, line ),
                                ( sel2 == i ? color2 : color1 ), "%s (%d)",
                                world_name, savegames_count );
@@ -1214,14 +1208,8 @@ void main_menu::world_tab()
                 for( auto it = all_worldnames.begin(); it != all_worldnames.end(); ++it, i++ ) {
                     int savegames_count = world_generator->get_world( *it )->world_saves.size();
                     int line = menu_offset.y - 2 - i;
-                    nc_color color1, color2;
-                    if( *it == "TUTORIAL" || *it == "DEFENSE" ) {
-                        color1 = c_light_cyan;
-                        color2 = h_light_cyan;
-                    } else {
-                        color1 = c_white;
-                        color2 = h_white;
-                    }
+                    nc_color color1 = c_white;
+                    nc_color color2 = h_white;
                     mvwprintz( w_open, point( 25 + menu_offset.x + extra_w / 2, line ),
                                ( sel2 == i ? color2 : color1 ), "%s (%d)", ( *it ).c_str(), savegames_count );
                 }
