@@ -1,5 +1,16 @@
 var NAVTREEINDEX78 =
 {
+"coordinate__conversions_8h.html#ad1ca17bea3d4e8bbd38de078f5d504bf":[37,0,1,138,6],
+"coordinate__conversions_8h.html#ad558a698e000f590ffe3e9442aaacb97":[37,0,1,138,31],
+"coordinate__conversions_8h.html#ad6e15390a5d14111c11ca82eee42ddd9":[37,0,1,138,39],
+"coordinate__conversions_8h.html#ae0f8959f48d18b1bb7927eab4d411763":[37,0,1,138,55],
+"coordinate__conversions_8h.html#aef2b53a99183b4a66a06d519fd389f8f":[37,0,1,138,51],
+"coordinate__conversions_8h.html#af1d8b5adff5e01c0f221f5f0fcbd8a02":[37,0,1,138,26],
+"coordinate__conversions_8h.html#af202c3b6b6e041cd923d7cb4539962a5":[37,0,1,138,12],
+"coordinate__conversions_8h.html#af5f4321dfecabaaf53b4552654be3589":[37,0,1,138,35],
+"coordinate__conversions_8h.html#afd9cab8dbb0f87758a714a35857bceb0":[37,0,1,138,53],
+"coordinate__conversions_8h_source.html":[37,0,1,138],
+"coordinates_8cpp.html":[37,0,1,139],
 "coordinates_8cpp_source.html":[37,0,1,139],
 "coordinates_8h.html":[37,0,1,140],
 "coordinates_8h.html#a00be0762df7b46da965e55caffac53db":[37,0,1,140,38],
@@ -238,16 +249,5 @@ var NAVTREEINDEX78 =
 "creature_8cpp.html#aa3f7307ad230ecea38f95a4ff0b8ee05":[37,0,1,149,18],
 "creature_8cpp.html#aa629b07204a26cf4e57eabe425b3d5c4":[37,0,1,149,15],
 "creature_8cpp.html#aaafb2b8608b5451879424ff739fedd41":[37,0,1,149,27],
-"creature_8cpp.html#ab16f8be4be2050986e76d2cb0cff7609":[37,0,1,149,28],
-"creature_8cpp.html#ab5bc741878d9b8001686d7776457d9f9":[37,0,1,149,7],
-"creature_8cpp.html#ac95fd54d69ea350ea463a719fa7f3550":[37,0,1,149,20],
-"creature_8cpp.html#aca5c34a4efa7eb7aad971e0c6ad33441":[37,0,1,149,5],
-"creature_8cpp.html#ad1df0ca2944a94c3ad796e8baada33ae":[37,0,1,149,29],
-"creature_8cpp.html#add935ef55b63a9bd124cf2410ab40749":[37,0,1,149,1],
-"creature_8cpp.html#af042bc3e3b1ea1c57a42ee323ad284a8":[37,0,1,149,2],
-"creature_8cpp.html#af079f6d5681dabcbc1c4ee804c0ba556":[37,0,1,149,21],
-"creature_8cpp.html#af33c8c4aad3591a2af08650aa0e3e991":[37,0,1,149,4],
-"creature_8cpp.html#af942404faa709adb06cec47e2cc2604c":[37,0,1,149,13],
-"creature_8cpp.html#afc8900d83dd4d83ef6ea32b9661faba7":[37,0,1,149,12],
-"creature_8cpp.html#afcfa82c36c0dc2d76cd19d622c2b6ab4":[37,0,1,149,23]
+"creature_8cpp.html#ab16f8be4be2050986e76d2cb0cff7609":[37,0,1,149,28]
 };

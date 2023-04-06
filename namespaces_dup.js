@@ -162,7 +162,8 @@ var namespaces_dup =
     [ "anonymous_namespace{martialarts.cpp}", "namespaceanonymous__namespace_02martialarts_8cpp_03.html", [
       [ "ma_buffs", "namespaceanonymous__namespace_02martialarts_8cpp_03.html#ad4fb4a84fae57a9c40c693ca2701b45c", null ],
       [ "ma_techniques", "namespaceanonymous__namespace_02martialarts_8cpp_03.html#aae3f3de3b7baac697dfacb78ad4a80ea", null ],
-      [ "martialarts", "namespaceanonymous__namespace_02martialarts_8cpp_03.html#adf8fd9cfd1bea36da26edfc99075b372", null ]
+      [ "martialarts", "namespaceanonymous__namespace_02martialarts_8cpp_03.html#adf8fd9cfd1bea36da26edfc99075b372", null ],
+      [ "weapon_category_factory", "namespaceanonymous__namespace_02martialarts_8cpp_03.html#a47e8666a1e458f8836fd4beb7c2e00b7", null ]
     ] ],
     [ "anonymous_namespace{material.cpp}", "namespaceanonymous__namespace_02material_8cpp_03.html", [
       [ "material_data", "namespaceanonymous__namespace_02material_8cpp_03.html#a7ca756e3448d6202a95086c3d2fa0005", null ]

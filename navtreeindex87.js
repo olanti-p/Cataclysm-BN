@@ -1,5 +1,17 @@
 var NAVTREEINDEX87 =
 {
+"game_8cpp.html#a54866802dc0559c9eb2eff8c226f96df":[37,0,1,241,5],
+"game_8cpp.html#a55196f69c27db25b3c2fd63e13f543be":[37,0,1,241,19],
+"game_8cpp.html#a55717f512921183ce304b4024c20015c":[37,0,1,241,82],
+"game_8cpp.html#a58c14933d94a161c5ab89203559897ff":[37,0,1,241,25],
+"game_8cpp.html#a5b71bd47668c89065c1db3c86a86544c":[37,0,1,241,54],
+"game_8cpp.html#a5d21811af069fd0cc93b29e2a02ec3a9":[37,0,1,241,6],
+"game_8cpp.html#a63e5739b23bda74126ceb8fbb66e502b":[37,0,1,241,40],
+"game_8cpp.html#a63ffed3b9bbe4bc83b4001d5bbd0c469":[37,0,1,241,72],
+"game_8cpp.html#a65ddd7508f2edf2ddfff675468007187":[37,0,1,241,24],
+"game_8cpp.html#a6bf1394e103efe8661fc75163e3482c3":[37,0,1,241,57],
+"game_8cpp.html#a6eb37d378921cc922c2e747c40ae3c73":[37,0,1,241,35],
+"game_8cpp.html#a707e8da9d64458d355edec0344efbc00":[37,0,1,241,73],
 "game_8cpp.html#a713cf755f5921541e3f4dca001e47fd1":[37,0,1,241,29],
 "game_8cpp.html#a72d1fc749e644310b0165bfdd920288b":[37,0,1,241,28],
 "game_8cpp.html#a74abddcaf98d4f59d99c051a421bee67":[37,0,1,241,59],
@@ -237,17 +249,5 @@ var NAVTREEINDEX87 =
 "game__inventory_8h.html#abfe0107db269ec17344fc0735092fd53":[37,0,1,245,13],
 "game__inventory_8h.html#ad63bc52f7850b19adbd24bd6870fb8e6":[37,0,1,245,21],
 "game__inventory_8h.html#ad6927d270b2c7b9c9d1bf0fd5b286932":[37,0,1,245,7],
-"game__inventory_8h.html#af2bce96088c12c8ef1fe5b7037ce4710":[37,0,1,245,31],
-"game__inventory_8h.html#af7d31e1e849ba97bb8b40f1f36b09ed6":[37,0,1,245,11],
-"game__inventory_8h.html#af8902d51ff7c825b3c669a19ab466e7e":[37,0,1,245,19],
-"game__inventory_8h.html#afa10471cb9da38879b1ff7b59ca3b2e8":[37,0,1,245,29],
-"game__inventory_8h.html#afcd21533c95fdd4cedcd8b592f531f57":[37,0,1,245,14],
-"game__inventory_8h_source.html":[37,0,1,245],
-"game__ui_8cpp.html":[37,0,1,246],
-"game__ui_8cpp.html#a186f6f3286ef23e637b16fc11f887897":[37,0,1,246,0],
-"game__ui_8cpp.html#a1f3b92598b7c181d58189bf9b2bcfa32":[37,0,1,246,5],
-"game__ui_8cpp.html#a4e2890583dc25aefad7035a8b4b083c3":[37,0,1,246,2],
-"game__ui_8cpp.html#acc7747b29d65a37284c810af838f1e9d":[37,0,1,246,3],
-"game__ui_8cpp.html#ad75a1116fce8f061299267e20268ca48":[37,0,1,246,1],
-"game__ui_8cpp.html#af729cae5556ed8992b1221d3479b9cf2":[37,0,1,246,4]
+"game__inventory_8h.html#af2bce96088c12c8ef1fe5b7037ce4710":[37,0,1,245,31]
 };

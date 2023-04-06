@@ -94,6 +94,7 @@ $(document).ready(function(){initNavTree('functions_a.html',''); initResizable()
 <li>A_HOSTILE&#160;:&#160;<a class="el" href="classCreature.html#a8a475630b3289c468bd06cf114008217a8972817fc4b645a5fee948a7ab4d3cc2">Creature</a></li>
 <li>A_NEUTRAL&#160;:&#160;<a class="el" href="classCreature.html#a8a475630b3289c468bd06cf114008217a19028b9cbf5de71e700a5d8964fabab8">Creature</a></li>
 <li>abandon_camp()&#160;:&#160;<a class="el" href="classbasecamp.html#a97c51d3d8f5e08e3740d315116ac5843">basecamp</a></li>
+<li>abort_if_no_targets&#160;:&#160;<a class="el" href="classaim__activity__actor.html#a14fa61e3a66db776b55f75a6dba7f67d">aim_activity_actor</a></li>
 <li>aborted&#160;:&#160;<a class="el" href="classaim__activity__actor.html#a064e415f122aefc25c29b9d3eee4fa4e">aim_activity_actor</a></li>
 <li>above&#160;:&#160;<a class="el" href="classjmapgen__nested_1_1neighborhood__check.html#aec1c5d01f43bd8cfe71d034afc847250">jmapgen_nested::neighborhood_check</a>, <a class="el" href="classmapgendata.html#a11f652a009a0ef20667c9e5cac5d38b2">mapgendata</a></li>
 <li>abs()&#160;:&#160;<a class="el" href="structpoint.html#afb447f6b720e999dcd3789b54ef2cca3">point</a>, <a class="el" href="structtripoint.html#a2e41003bfa8a7df6ff611195e3e3956e">tripoint</a></li>
@@ -130,7 +131,7 @@ $(document).ready(function(){initNavTree('functions_a.html',''); initResizable()
 <li>acid_resist()&#160;:&#160;<a class="el" href="classitem.html#a9b91d51ced70c7329b6c37bdc4c845d5">item</a>, <a class="el" href="classmaterial__type.html#a1140507b0f897c7b0d64b273cfef89df">material_type</a></li>
 <li>acidic&#160;:&#160;<a class="el" href="structw__point.html#a142a166349f910f8903f84698f0dc565">w_point</a>, <a class="el" href="structweather__requirements.html#abaacfc44fbeb487209ac7ce57d6a7be8">weather_requirements</a>, <a class="el" href="structweather__type.html#aaae01bd8265eee84e7ad2f5db6e42f34">weather_type</a></li>
 <li>act&#160;:&#160;<a class="el" href="structtrap.html#a5b38533ac3a1c9c1f6a6844d0ee04a91">trap</a></li>
-<li>act_item()&#160;:&#160;<a class="el" href="structpickup_1_1act__item.html#ad233ca81505ddb07f37bb57d5c47d37c">pickup::act_item</a></li>
+<li>act_item()&#160;:&#160;<a class="el" href="structpickup_1_1act__item.html#ade6eccda785d91195645fa32980ef5f6">pickup::act_item</a></li>
 <li>act_on_map()&#160;:&#160;<a class="el" href="classvehicle.html#a8a79185fd4b15560f76504af979b0bba">vehicle</a></li>
 <li>action&#160;:&#160;<a class="el" href="structaction__entry.html#af96e47381b722214ce0d9b79a4513fd4">action_entry</a>, <a class="el" href="classaim__activity__actor.html#ae287f1e168ac9ea8cfc16f0f55d323ef">aim_activity_actor</a>, <a class="el" href="structbase__camps_1_1miss__data.html#ad5685eea5843815966246cd95887632a">base_camps::miss_data</a>, <a class="el" href="structcomputer__option.html#a639cfcea06be1fe2cfa9b9cbeb0456ec">computer_option</a>, <a class="el" href="structinventory__input.html#a303f1d9aa2d542ee87b9418165a6725e">inventory_input</a>, <a class="el" href="structquery__popup_1_1query__option.html#a755b114b9fe6c04077f9975af865c866">query_popup::query_option</a>, <a class="el" href="structquery__popup_1_1result.html#a319891694f37a6970df28ca2279cf851">query_popup::result</a>, <a class="el" href="structranged_1_1aim__type.html#aa6e78a117e47abf518d7ad5de1495166">ranged::aim_type</a></li>
 <li>action_aim()&#160;:&#160;<a class="el" href="classtarget__ui.html#a6c0468c35f79fb501be1a3a50b4081d4">target_ui</a></li>
@@ -719,7 +720,7 @@ $(document).ready(function(){initNavTree('functions_a.html',''); initResizable()
 <li>ask_when_deleting&#160;:&#160;<a class="el" href="classovermap__ui_1_1map__notes__callback.html#a6c00a38bf0b132ff5eec98449f93ac53">overmap_ui::map_notes_callback</a></li>
 <li>assert_format()&#160;:&#160;<a class="el" href="classquery__popup.html#a0549c08472324ca2d4de05155539e1df">query_popup</a></li>
 <li>assess_danger()&#160;:&#160;<a class="el" href="classnpc.html#a66fcb50d8997cc5410d66dbd9bc7c4df">npc</a></li>
-<li>assign()&#160;:&#160;<a class="el" href="classcata_1_1list.html#a9ec6badb36b1bde0fffd560a0ecd8d5f">cata::list&lt; element_type, element_allocator_type &gt;</a>, <a class="el" href="classdetail_1_1bigint.html#adba655f5459f4109b598f3a4fb62e987">detail::bigint</a>, <a class="el" href="classdetail_1_1fp.html#ae9897c87291aa84aa3a909d8bfea69e1">detail::fp</a>, <a class="el" href="classmission.html#a73db28cfc6ce144c509690a4eb639802">mission</a></li>
+<li>assign()&#160;:&#160;<a class="el" href="classcata_1_1list.html#a9ec6badb36b1bde0fffd560a0ecd8d5f">cata::list&lt; element_type, element_allocator_type &gt;</a>, <a class="el" href="classdetail_1_1bigint.html#adba655f5459f4109b598f3a4fb62e987">detail::bigint</a>, <a class="el" href="classdetail_1_1fp.html#a0750d409ae2f9eae45be8a07ff8a8f0f">detail::fp</a>, <a class="el" href="classmission.html#a73db28cfc6ce144c509690a4eb639802">mission</a></li>
 <li>assign_activity()&#160;:&#160;<a class="el" href="classCharacter.html#af7d50915d362a56eeff40bc6b392326d">Character</a></li>
 <li>assign_empty_invlet()&#160;:&#160;<a class="el" href="classinventory.html#aaad56f923ec6824aadf028d8ba1ba89d">inventory</a></li>
 <li>assign_mission_id()&#160;:&#160;<a class="el" href="classgame.html#af880ea0fd9f3da2d7dacb7a6229f2112">game</a></li>
@@ -737,7 +738,7 @@ $(document).ready(function(){initNavTree('functions_a.html',''); initResizable()
 <li>ate()&#160;:&#160;<a class="el" href="classstomach__contents.html#ab0635b5ccc625698cfddd481ef45c9a4">stomach_contents</a></li>
 <li>ate_separator&#160;:&#160;<a class="el" href="classJsonIn.html#aed7809664240df9337e8083b1ade669a">JsonIn</a></li>
 <li>atk_effs&#160;:&#160;<a class="el" href="structmtype.html#a3158ff5c7431a8ac988154990c9a23ea">mtype</a></li>
-<li>atm_menu()&#160;:&#160;<a class="el" href="classanonymous__namespace_02iexamine_8cpp_03_1_1atm__menu.html#aaa01f170ed9b38b7f20fd289a819111f">anonymous_namespace{iexamine.cpp}::atm_menu</a></li>
+<li>atm_menu()&#160;:&#160;<a class="el" href="classanonymous__namespace_02iexamine_8cpp_03_1_1atm__menu.html#a90a00b80f1e07854b4f2b1c24febf3b2">anonymous_namespace{iexamine.cpp}::atm_menu</a></li>
 <li>attach()&#160;:&#160;<a class="el" href="classvehicle.html#afcda297420787b2b84c48b8004e7ddb4">vehicle</a></li>
 <li>attached&#160;:&#160;<a class="el" href="classvehicle.html#aa53f50e88fd2c25b39ec89ff534b5fcd">vehicle</a></li>
 <li>attack_at()&#160;:&#160;<a class="el" href="classmonster.html#a32a4800fc20a7d229c66cce32ce9e417">monster</a></li>
@@ -792,7 +793,7 @@ $(document).ready(function(){initNavTree('functions_a.html',''); initResizable()
 <li>available_mods&#160;:&#160;<a class="el" href="structartifact__armor__form__datum.html#ab6fd03e3aaeaa0457dfa123a2d9b0e0d">artifact_armor_form_datum</a></li>
 <li>available_subtiles&#160;:&#160;<a class="el" href="structtile__type.html#afdce3fa4361373a841391a76cdb8905f">tile_type</a></li>
 <li>available_upgrades()&#160;:&#160;<a class="el" href="classbasecamp.html#a31d8539d346ce3f250f879e2db976ec1">basecamp</a>, <a class="el" href="structbionic__data.html#a12166a7456e1c3c46c027e1d90d6a565">bionic_data</a></li>
-<li>avatar()&#160;:&#160;<a class="el" href="classavatar.html#a88bb46be41a2d8a1ccda560fe9ca3872">avatar</a></li>
+<li>avatar()&#160;:&#160;<a class="el" href="classavatar.html#a60941def788f6943e161c762cf1ce997">avatar</a></li>
 <li>avatar_message&#160;:&#160;<a class="el" href="classma__technique.html#afa2af258091a77f769ba8dea06f4e450">ma_technique</a></li>
 <li>average_damage_dealt()&#160;:&#160;<a class="el" href="classnpc.html#a0764f3bbdc903b94bf57fdc2b75cd3e9">npc</a></li>
 <li>average_dps()&#160;:&#160;<a class="el" href="classitem.html#a96c8a18aef6da2f8d876178a3d21dfb0">item</a></li>
@@ -813,7 +814,7 @@ $(document).ready(function(){initNavTree('functions_a.html',''); initResizable()
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Mar 30 2023 17:08:24 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Thu Apr 6 2023 21:03:46 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

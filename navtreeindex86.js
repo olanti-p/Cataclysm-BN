@@ -1,5 +1,17 @@
 var NAVTREEINDEX86 =
 {
+"fmtlib__format_8h.html#afb60b2e682c8f4b99435f497a18270ca":[37,0,1,232,121],
+"fmtlib__format_8h.html#afd66552886bd15890422e2a710d48a60":[37,0,1,232,200],
+"fmtlib__format_8h.html#afdc0d7b145d58d8d40beb9cefccd8d0d":[37,0,1,232,205],
+"fmtlib__format_8h.html#aff1934913abfcecda823e3da8cefd714":[37,0,1,232,213],
+"fmtlib__format_8h.html#aff2772e23f6ac91520e57d4b3ac0c759":[37,0,1,232,109],
+"fmtlib__format_8h.html#aff2772e23f6ac91520e57d4b3ac0c759a3282b06f67c5e15c0eaeb515ef8f86fd":[37,0,1,232,109,1],
+"fmtlib__format_8h.html#aff2772e23f6ac91520e57d4b3ac0c759a4ba1498ecf6f0de5baac670a264e43eb":[37,0,1,232,109,0],
+"fmtlib__format_8h.html#aff2772e23f6ac91520e57d4b3ac0c759a522cfe706bd4170b4fded79ff55e4bc4":[37,0,1,232,109,3],
+"fmtlib__format_8h.html#aff2772e23f6ac91520e57d4b3ac0c759a5bf95244357d6164916bfe6e0ccfbc79":[37,0,1,232,109,2],
+"fmtlib__format_8h.html#aff2772e23f6ac91520e57d4b3ac0c759af95ea74b65a6ce7cade89d4db5ab5d1b":[37,0,1,232,109,4],
+"fmtlib__format_8h.html#aff49b0789f61b488af21cc010bfd70c4":[37,0,1,232,173],
+"fmtlib__format_8h.html#aff4b427a124a81b718d7bb9a845d1d59":[37,0,1,232,229],
 "fmtlib__format_8h.html#afff9299aba0ea4694c55cddeec0d2ae4":[37,0,1,232,268],
 "fmtlib__format_8h_source.html":[37,0,1,232],
 "fmtlib__ostream_8h.html":[37,0,1,233],
@@ -237,17 +249,5 @@ var NAVTREEINDEX86 =
 "game_8cpp.html#a43d9760cb023b8fc3daf91cc037c3856":[37,0,1,241,14],
 "game_8cpp.html#a49bc164f30e64702250d2cbea09bf86c":[37,0,1,241,1],
 "game_8cpp.html#a4c303473857d8183325e5f2a0c641633":[37,0,1,241,9],
-"game_8cpp.html#a4f940be105e2ae32877c09cce523b3ad":[37,0,1,241,78],
-"game_8cpp.html#a54866802dc0559c9eb2eff8c226f96df":[37,0,1,241,5],
-"game_8cpp.html#a55196f69c27db25b3c2fd63e13f543be":[37,0,1,241,19],
-"game_8cpp.html#a55717f512921183ce304b4024c20015c":[37,0,1,241,82],
-"game_8cpp.html#a58c14933d94a161c5ab89203559897ff":[37,0,1,241,25],
-"game_8cpp.html#a5b71bd47668c89065c1db3c86a86544c":[37,0,1,241,54],
-"game_8cpp.html#a5d21811af069fd0cc93b29e2a02ec3a9":[37,0,1,241,6],
-"game_8cpp.html#a63e5739b23bda74126ceb8fbb66e502b":[37,0,1,241,40],
-"game_8cpp.html#a63ffed3b9bbe4bc83b4001d5bbd0c469":[37,0,1,241,72],
-"game_8cpp.html#a65ddd7508f2edf2ddfff675468007187":[37,0,1,241,24],
-"game_8cpp.html#a6bf1394e103efe8661fc75163e3482c3":[37,0,1,241,57],
-"game_8cpp.html#a6eb37d378921cc922c2e747c40ae3c73":[37,0,1,241,35],
-"game_8cpp.html#a707e8da9d64458d355edec0344efbc00":[37,0,1,241,73]
+"game_8cpp.html#a4f940be105e2ae32877c09cce523b3ad":[37,0,1,241,78]
 };
