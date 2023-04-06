@@ -10,7 +10,6 @@ on:
     - 'doxygen_doc/**'
     - 'gfx/**'
     - 'lang/**'
-    - 'lgtm/**'
     - 'msvc-object_creator/**'
     - 'object_creator/**'
     - 'tools/**'
