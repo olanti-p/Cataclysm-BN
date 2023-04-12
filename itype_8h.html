@@ -96,19 +96,20 @@ $(document).ready(function(){initNavTree('itype_8h.html',''); initResizable(); }
 <code>#include &lt;iosfwd&gt;</code><br />
 <code>#include &lt;map&gt;</code><br />
 <code>#include &lt;memory&gt;</code><br />
+<code>#include &lt;optional&gt;</code><br />
 <code>#include &lt;set&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
 <code>#include &lt;unordered_set&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &quot;<a class="el" href="bodypart_8h_source.html">bodypart.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="calendar_8h_source.html">calendar.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="catalua__type__operators_8h_source.html">catalua_type_operators.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="color_8h_source.html">color.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="damage_8h_source.html">damage.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="enums_8h_source.html">enums.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="explosion_8h_source.html">explosion.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="game__constants_8h_source.html">game_constants.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="iuse_8h_source.html">iuse.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="optional_8h_source.html">optional.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="pldata_8h_source.html">pldata.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="shape_8h_source.html">shape.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="stomach_8h_source.html">stomach.h</a>&quot;</code><br />
@@ -239,15 +240,15 @@ Enumerations</h2></td></tr>
 <tr><td class="fieldname"><a id="afc401f615ea14e8e1ee24cf7068b7716aa76e4df6fe28cbd3f3c95e56f20637a5" name="afc401f615ea14e8e1ee24cf7068b7716aa76e4df6fe28cbd3f3c95e56f20637a5"></a>num_condition_types&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="itype_8h_source.html#l00807">807</a> of file <a class="el" href="itype_8h_source.html">itype.h</a>.</p>
-<div class="fragment"><div class="line"><a id="l00807" name="l00807"></a><span class="lineno">  807</span>                    {</div>
-<div class="line"><a id="l00808" name="l00808"></a><span class="lineno">  808</span>    <a class="code hl_enumvalue" href="itype_8h.html#afc401f615ea14e8e1ee24cf7068b7716a391ad3dbcf1f6d5c27590a7e511a1667">FLAG</a>,</div>
-<div class="line"><a id="l00809" name="l00809"></a><span class="lineno">  809</span>    <a class="code hl_enumvalue" href="itype_8h.html#afc401f615ea14e8e1ee24cf7068b7716a0232b08080d33dfe8f01eb0b16c09492">COMPONENT_ID</a>,</div>
-<div class="line"><a id="l00810" name="l00810"></a><span class="lineno">  810</span>    <a class="code hl_enumvalue" href="itype_8h.html#afc401f615ea14e8e1ee24cf7068b7716aa76e4df6fe28cbd3f3c95e56f20637a5">num_condition_types</a></div>
-<div class="line"><a id="l00811" name="l00811"></a><span class="lineno">  811</span>};</div>
-<div class="ttc" id="aitype_8h_html_afc401f615ea14e8e1ee24cf7068b7716a0232b08080d33dfe8f01eb0b16c09492"><div class="ttname"><a href="itype_8h.html#afc401f615ea14e8e1ee24cf7068b7716a0232b08080d33dfe8f01eb0b16c09492">COMPONENT_ID</a></div><div class="ttdeci">@ COMPONENT_ID</div><div class="ttdef"><b>Definition:</b> <a href="itype_8h_source.html#l00809">itype.h:809</a></div></div>
-<div class="ttc" id="aitype_8h_html_afc401f615ea14e8e1ee24cf7068b7716a391ad3dbcf1f6d5c27590a7e511a1667"><div class="ttname"><a href="itype_8h.html#afc401f615ea14e8e1ee24cf7068b7716a391ad3dbcf1f6d5c27590a7e511a1667">FLAG</a></div><div class="ttdeci">@ FLAG</div><div class="ttdef"><b>Definition:</b> <a href="itype_8h_source.html#l00808">itype.h:808</a></div></div>
-<div class="ttc" id="aitype_8h_html_afc401f615ea14e8e1ee24cf7068b7716aa76e4df6fe28cbd3f3c95e56f20637a5"><div class="ttname"><a href="itype_8h.html#afc401f615ea14e8e1ee24cf7068b7716aa76e4df6fe28cbd3f3c95e56f20637a5">num_condition_types</a></div><div class="ttdeci">@ num_condition_types</div><div class="ttdef"><b>Definition:</b> <a href="itype_8h_source.html#l00811">itype.h:810</a></div></div>
+<p class="definition">Definition at line <a class="el" href="itype_8h_source.html#l00808">808</a> of file <a class="el" href="itype_8h_source.html">itype.h</a>.</p>
+<div class="fragment"><div class="line"><a id="l00808" name="l00808"></a><span class="lineno">  808</span>                    {</div>
+<div class="line"><a id="l00809" name="l00809"></a><span class="lineno">  809</span>    <a class="code hl_enumvalue" href="itype_8h.html#afc401f615ea14e8e1ee24cf7068b7716a391ad3dbcf1f6d5c27590a7e511a1667">FLAG</a>,</div>
+<div class="line"><a id="l00810" name="l00810"></a><span class="lineno">  810</span>    <a class="code hl_enumvalue" href="itype_8h.html#afc401f615ea14e8e1ee24cf7068b7716a0232b08080d33dfe8f01eb0b16c09492">COMPONENT_ID</a>,</div>
+<div class="line"><a id="l00811" name="l00811"></a><span class="lineno">  811</span>    <a class="code hl_enumvalue" href="itype_8h.html#afc401f615ea14e8e1ee24cf7068b7716aa76e4df6fe28cbd3f3c95e56f20637a5">num_condition_types</a></div>
+<div class="line"><a id="l00812" name="l00812"></a><span class="lineno">  812</span>};</div>
+<div class="ttc" id="aitype_8h_html_afc401f615ea14e8e1ee24cf7068b7716a0232b08080d33dfe8f01eb0b16c09492"><div class="ttname"><a href="itype_8h.html#afc401f615ea14e8e1ee24cf7068b7716a0232b08080d33dfe8f01eb0b16c09492">COMPONENT_ID</a></div><div class="ttdeci">@ COMPONENT_ID</div><div class="ttdef"><b>Definition:</b> <a href="itype_8h_source.html#l00810">itype.h:810</a></div></div>
+<div class="ttc" id="aitype_8h_html_afc401f615ea14e8e1ee24cf7068b7716a391ad3dbcf1f6d5c27590a7e511a1667"><div class="ttname"><a href="itype_8h.html#afc401f615ea14e8e1ee24cf7068b7716a391ad3dbcf1f6d5c27590a7e511a1667">FLAG</a></div><div class="ttdeci">@ FLAG</div><div class="ttdef"><b>Definition:</b> <a href="itype_8h_source.html#l00809">itype.h:809</a></div></div>
+<div class="ttc" id="aitype_8h_html_afc401f615ea14e8e1ee24cf7068b7716aa76e4df6fe28cbd3f3c95e56f20637a5"><div class="ttname"><a href="itype_8h.html#afc401f615ea14e8e1ee24cf7068b7716aa76e4df6fe28cbd3f3c95e56f20637a5">num_condition_types</a></div><div class="ttdeci">@ num_condition_types</div><div class="ttdef"><b>Definition:</b> <a href="itype_8h_source.html#l00812">itype.h:811</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -257,7 +258,7 @@ Enumerations</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="itype_8h.html">itype.h</a></li>
-    <li class="footer">Generated on Thu Apr 6 2023 21:03:03 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Wed Apr 12 2023 18:51:40 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

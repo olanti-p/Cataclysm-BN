@@ -11,7 +11,7 @@ var consumption_8cpp =
     [ "compute_default_effective_kcal", "consumption_8cpp.html#a5520025e157ffa952692c4a52c4ef27f", null ],
     [ "compute_default_effective_nutrients", "consumption_8cpp.html#a35172e0dcda755fa8faef625bda972f3", null ],
     [ "compute_default_effective_vitamins", "consumption_8cpp.html#a6644222f405b1e26a2095f76c0678670", null ],
-    [ "find_food_heater", "consumption_8cpp.html#a4637bd22fd149e8cbd782c93737ddf53", null ],
+    [ "find_food_heater", "consumption_8cpp.html#a5929f488aceea680c4980f0881161314", null ],
     [ "flag_ALLERGEN_EGG", "consumption_8cpp.html#a444e9abf6e0fe7e86f4b8bfedf6466b1", null ],
     [ "flag_ALLERGEN_FRUIT", "consumption_8cpp.html#a5c5d95582274018a683ad59398c9e69d", null ],
     [ "flag_ALLERGEN_JUNK", "consumption_8cpp.html#a2d861a0c4ca4d6d868785f9c37589ca3", null ],

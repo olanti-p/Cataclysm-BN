@@ -116,6 +116,8 @@ var action_8h =
       [ "ACTION_DISTRACTION_MANAGER", "action_8h.html#a14769f0512c139a614db195c6477c667afb84619a35c17b80d416806915bafd74", null ],
       [ "ACTION_TOGGLE_FULLSCREEN", "action_8h.html#a14769f0512c139a614db195c6477c667a85b28d7dace2de119936440a1687505a", null ],
       [ "ACTION_DEBUG", "action_8h.html#a14769f0512c139a614db195c6477c667a26b3a93ce939d3b494cae52860b06e1d", null ],
+      [ "ACTION_LUA_CONSOLE", "action_8h.html#a14769f0512c139a614db195c6477c667abad5647e4e0229650ece0fe7fa4a79fd", null ],
+      [ "ACTION_LUA_RELOAD", "action_8h.html#a14769f0512c139a614db195c6477c667a135dc3a015e6888833fdf7a019ec99cb", null ],
       [ "ACTION_DISPLAY_SCENT", "action_8h.html#a14769f0512c139a614db195c6477c667ac6a2622e05b532456fa5a12949d5ba7a", null ],
       [ "ACTION_DISPLAY_SCENT_TYPE", "action_8h.html#a14769f0512c139a614db195c6477c667a8d4ed6671b471662169fdf1696f2e540", null ],
       [ "ACTION_TOGGLE_DEBUG_MODE", "action_8h.html#a14769f0512c139a614db195c6477c667aecace526bf8969f1bf4ad02f74cee18b", null ],
@@ -153,10 +155,10 @@ var action_8h =
     [ "can_examine_at", "action_8h.html#a94a31fd918d8b7be091df4e1e842d37e", null ],
     [ "can_interact_at", "action_8h.html#a2d41a6245e41bee178e0cb88724d99b5", null ],
     [ "can_move_vertical_at", "action_8h.html#aadeb6ee0d1a00e757725c9433661028d", null ],
-    [ "choose_adjacent", "action_8h.html#a5cbffb790707a2990e497f7dc2a001c5", null ],
-    [ "choose_adjacent_highlight", "action_8h.html#a55e88aad5e8f4a40aeb34dc775a2efa4", null ],
-    [ "choose_adjacent_highlight", "action_8h.html#ac210719a7dbadd7bdb1aa2a1283daeef", null ],
-    [ "choose_direction", "action_8h.html#a2c2e18ed453653a5eb15a86dcbc4e65b", null ],
+    [ "choose_adjacent", "action_8h.html#aa04d25626e929bd5f13fd96af751a53c", null ],
+    [ "choose_adjacent_highlight", "action_8h.html#ab6ec306d588c66777ec75929bbfd5c02", null ],
+    [ "choose_adjacent_highlight", "action_8h.html#a1ee4c4dbc674b9060961dff04eea6288", null ],
+    [ "choose_direction", "action_8h.html#a6639b4498737a6d257b90d59102e49b0", null ],
     [ "get_delta_from_movement_action", "action_8h.html#a87c9fe5e8c23e7982a71a3ef5bb98dfd", null ],
     [ "get_movement_action_from_delta", "action_8h.html#a657e5eec353f5597a92c9a74a77ab3f0", null ],
     [ "handle_action_menu", "action_8h.html#af532029e96fc903e50a2694e3eebd351", null ],
@@ -168,5 +170,5 @@ var action_8h =
     [ "press_x", "action_8h.html#a167bc4612d9c708d5d474c1f1cbe1ca1", null ],
     [ "press_x", "action_8h.html#aac9c64f5d4bf2f4806bbab0c45464631", null ],
     [ "press_x", "action_8h.html#a84601324bda30723a85f9b5c7ca238d4", null ],
-    [ "press_x_if_bound", "action_8h.html#a11e3be94cd26cb15c85494e3dd55c10a", null ]
+    [ "press_x_if_bound", "action_8h.html#ae4f3a0b4112a259538d0498a6760fd98", null ]
 ];

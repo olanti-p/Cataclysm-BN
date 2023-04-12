@@ -19,7 +19,7 @@ var structbionic__data =
     [ "canceled_mutations", "structbionic__data.html#a34730d34effdb5300aef25989a590304", null ],
     [ "capacity", "structbionic__data.html#a46dddebc77b6ae7d8879c8b12fe02d4f", null ],
     [ "charge_time", "structbionic__data.html#a92d5d99933b7daf27c6d312914fedd6a", null ],
-    [ "coverage_power_gen_penalty", "structbionic__data.html#a7c26e50de571229aa41ded269a2aab3a", null ],
+    [ "coverage_power_gen_penalty", "structbionic__data.html#a9d0dd96b2cc803e481dc764d796f91ba", null ],
     [ "cut_protec", "structbionic__data.html#a234cff789bc72433ebcca4e4da4f48f4", null ],
     [ "description", "structbionic__data.html#a20cd35d6f814b0e7ec9fd32e312664ce", null ],
     [ "enchantments", "structbionic__data.html#a54d7bec814556f7a0f1cfa8123558eda", null ],

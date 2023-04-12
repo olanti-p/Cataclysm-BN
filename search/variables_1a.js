@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['z_0',['z',['../structtripoint.html#ac944c0e329b5eba2602f7a52f66bbbb9',1,'tripoint::z()'],['../structrl__vec3d.html#a34d9b966f9e2d549f770c13cdb346400',1,'rl_vec3d::z()'],['../structcentroid.html#acfdc20b2226cfa48606834602cdcfc1e',1,'centroid::z()'],['../structweather__gen__common.html#a6f1ee453145a136587cc4a9191effd51',1,'weather_gen_common::z()'],['../structmission__target__params.html#a49d73a06c5b157a935def4682708c597',1,'mission_target_params::z()']]],
+  ['z_0',['z',['../structtripoint.html#ac944c0e329b5eba2602f7a52f66bbbb9',1,'tripoint::z()'],['../structrl__vec3d.html#a34d9b966f9e2d549f770c13cdb346400',1,'rl_vec3d::z()'],['../structcentroid.html#acfdc20b2226cfa48606834602cdcfc1e',1,'centroid::z()'],['../structweather__gen__common.html#a6f1ee453145a136587cc4a9191effd51',1,'weather_gen_common::z()'],['../structmission__target__params.html#ae3132fb064262d53324a4e2e932a3a49',1,'mission_target_params::z()']]],
   ['z_5fcamp_5fstorage_1',['z_camp_storage',['../activity__item__handling_8cpp.html#a4cabe01230e35e6bb1cdd5682c942b42',1,'activity_item_handling.cpp']]],
   ['z_5forder_2',['z_order',['../classvpart__info.html#a16ca9b50254b09e4fb3968a70c57330a',1,'vpart_info']]],
   ['z_5foverlay_5fvalues_3',['z_overlay_values',['../classtileset.html#aca086eeb4a94606a77aeb3613832ef68',1,'tileset']]],
@@ -14,7 +14,7 @@ var searchData=
   ['zombie_11',['ZOMBIE',['../overmap_8cpp.html#a4e2730248c54d4d07fa7e215efb35d1a',1,'ZOMBIE():&#160;overmap.cpp'],['../activity__handlers_8cpp.html#a4e2730248c54d4d07fa7e215efb35d1a',1,'ZOMBIE():&#160;activity_handlers.cpp'],['../computer__session_8cpp.html#a4e2730248c54d4d07fa7e215efb35d1a',1,'ZOMBIE():&#160;computer_session.cpp'],['../iuse_8cpp.html#a4e2730248c54d4d07fa7e215efb35d1a',1,'ZOMBIE():&#160;iuse.cpp'],['../iuse__actor_8cpp.html#a4e2730248c54d4d07fa7e215efb35d1a',1,'ZOMBIE():&#160;iuse_actor.cpp'],['../monattack_8cpp.html#a4e2730248c54d4d07fa7e215efb35d1a',1,'ZOMBIE():&#160;monattack.cpp'],['../mondeath_8cpp.html#a4e2730248c54d4d07fa7e215efb35d1a',1,'ZOMBIE():&#160;mondeath.cpp'],['../monexamine_8cpp.html#a4e2730248c54d4d07fa7e215efb35d1a',1,'ZOMBIE():&#160;monexamine.cpp'],['../monmove_8cpp.html#a4e2730248c54d4d07fa7e215efb35d1a',1,'ZOMBIE():&#160;monmove.cpp'],['../monster_8cpp.html#a4e2730248c54d4d07fa7e215efb35d1a',1,'ZOMBIE():&#160;monster.cpp']]],
   ['zombies_12',['zombies',['../structdefense__game.html#abfb10a66d6c6289e016313d1111545c8',1,'defense_game']]],
   ['zombify_5finto_13',['zombify_into',['../structmtype.html#a2e7e15bb4c03b2e0a3e487f13d25e9bf',1,'mtype']]],
-  ['zone_5f_14',['zone_',['../classitem__category.html#a887c0f298b8d234217127268b12d3d5e',1,'item_category']]],
+  ['zone_5f_14',['zone_',['../classitem__category.html#a1ea85f5664503f22c7184a09bbb70435',1,'item_category']]],
   ['zone_5fcamp_5ffood_15',['zone_CAMP_FOOD',['../clzones_8cpp.html#af47ddffc1089f555ff1824e694e180db',1,'clzones.cpp']]],
   ['zone_5fconstruction_5fblueprint_16',['zone_CONSTRUCTION_BLUEPRINT',['../clzones_8cpp.html#a9a1372d948f8b5214df9487b8a13fcc7',1,'clzones.cpp']]],
   ['zone_5fend_17',['zone_end',['../classcata__tiles.html#a983d336806b1c913a7efb457824f7d4a',1,'cata_tiles']]],

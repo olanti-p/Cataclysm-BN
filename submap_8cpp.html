@@ -119,7 +119,7 @@ Functions</h2></td></tr>
 <tr class="separator:a2ff8b1d4e9aff7d65b90a0daf67ae291"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a764d8e5a2a71dd56dafdd4c404573510"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structcosmetic__find__result.html">cosmetic_find_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="submap_8cpp.html#a764d8e5a2a71dd56dafdd4c404573510">make_result</a> (bool <a class="el" href="magic_8cpp.html#aa93a189fb7bbbf87be54bcc7bd11bb6f">b</a>, int ndx)</td></tr>
 <tr class="separator:a764d8e5a2a71dd56dafdd4c404573510"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6cf782320c7df763f41a0443010a7afa"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structcosmetic__find__result.html">cosmetic_find_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="submap_8cpp.html#a6cf782320c7df763f41a0443010a7afa">find_cosmetic</a> (const std::vector&lt; <a class="el" href="structsubmap_1_1cosmetic__t.html">submap::cosmetic_t</a> &gt; &amp;cosmetics, <a class="el" href="structpoint.html">point</a> p, const std::string &amp;<a class="el" href="enums_8h.html#ac7c2392f800a8be2feb093ef5fe48d40af3725cafa78eb43cc647b405bb6ecfab">type</a>)</td></tr>
+<tr class="memitem:a6cf782320c7df763f41a0443010a7afa"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structcosmetic__find__result.html">cosmetic_find_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="submap_8cpp.html#a6cf782320c7df763f41a0443010a7afa">find_cosmetic</a> (const std::vector&lt; <a class="el" href="structsubmap_1_1cosmetic__t.html">submap::cosmetic_t</a> &gt; &amp;cosmetics, <a class="el" href="structpoint.html">point</a> p, const std::string &amp;type)</td></tr>
 <tr class="separator:a6cf782320c7df763f41a0443010a7afa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
@@ -227,16 +227,15 @@ Variables</h2></td></tr>
 <p class="definition">Definition at line <a class="el" href="submap_8cpp_source.html#l00107">107</a> of file <a class="el" href="submap_8cpp_source.html">submap.cpp</a>.</p>
 <div class="fragment"><div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>{</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="keywordflow">for</span>( <span class="keywordtype">size_t</span> i = 0; i &lt; cosmetics.size(); ++i ) {</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        <span class="keywordflow">if</span>( cosmetics[i].pos == p &amp;&amp; cosmetics[i].<a class="code hl_enumvalue" href="enums_8h.html#ac7c2392f800a8be2feb093ef5fe48d40af3725cafa78eb43cc647b405bb6ecfab">type</a> == <a class="code hl_enumvalue" href="enums_8h.html#ac7c2392f800a8be2feb093ef5fe48d40af3725cafa78eb43cc647b405bb6ecfab">type</a> ) {</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        <span class="keywordflow">if</span>( cosmetics[i].pos == p &amp;&amp; cosmetics[i].type == type ) {</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="submap_8cpp.html#a764d8e5a2a71dd56dafdd4c404573510">make_result</a>( <span class="keyword">true</span>, i );</div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        }</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    }</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="submap_8cpp.html#a764d8e5a2a71dd56dafdd4c404573510">make_result</a>( <span class="keyword">false</span>, -1 );</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>}</div>
-<div class="ttc" id="aenums_8h_html_ac7c2392f800a8be2feb093ef5fe48d40af3725cafa78eb43cc647b405bb6ecfab"><div class="ttname"><a href="enums_8h.html#ac7c2392f800a8be2feb093ef5fe48d40af3725cafa78eb43cc647b405bb6ecfab">type</a></div><div class="ttdeci">@ type</div><div class="ttdef"><b>Definition:</b> <a href="enums_8h_source.html#l00075">enums.h:75</a></div></div>
 <div class="ttc" id="asubmap_8cpp_html_a764d8e5a2a71dd56dafdd4c404573510"><div class="ttname"><a href="submap_8cpp.html#a764d8e5a2a71dd56dafdd4c404573510">make_result</a></div><div class="ttdeci">static cosmetic_find_result make_result(bool b, int ndx)</div><div class="ttdef"><b>Definition:</b> <a href="submap_8cpp_source.html#l00100">submap.cpp:100</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="submap_8cpp_source.html#l00100">make_result()</a>, and <a class="el" href="enums_8h_source.html#l00075">type</a>.</p>
+<p class="reference">References <a class="el" href="submap_8cpp_source.html#l00100">make_result()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="submap_8cpp_source.html#l00144">submap::delete_graffiti()</a>, <a class="el" href="submap_8cpp_source.html#l00183">submap::delete_signage()</a>, <a class="el" href="submap_8cpp_source.html#l00123">submap::get_graffiti()</a>, <a class="el" href="submap_8cpp_source.html#l00161">submap::get_signage()</a>, <a class="el" href="submap_8cpp_source.html#l00118">submap::has_graffiti()</a>, <a class="el" href="submap_8cpp_source.html#l00153">submap::has_signage()</a>, <a class="el" href="submap_8cpp_source.html#l00132">submap::set_graffiti()</a>, and <a class="el" href="submap_8cpp_source.html#l00172">submap::set_signage()</a>.</p>
 
@@ -326,7 +325,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="submap_8cpp.html">submap.cpp</a></li>
-    <li class="footer">Generated on Thu Apr 6 2023 21:03:07 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Wed Apr 12 2023 18:51:44 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

@@ -55,6 +55,7 @@ var namespacedebug__menu =
       [ "DEBUG_PRINT_FACTION_INFO", "namespacedebug__menu.html#a7457e58c3bc9fcf28b9c23cdab4df970aa0b32ef30438f07ee4d42eaa6b657259", null ],
       [ "DEBUG_PRINT_NPC_MAGIC", "namespacedebug__menu.html#a7457e58c3bc9fcf28b9c23cdab4df970a23f3d487fd434e63e784427a94fb75c8", null ],
       [ "DEBUG_QUIT_NOSAVE", "namespacedebug__menu.html#a7457e58c3bc9fcf28b9c23cdab4df970ad7dfbaf8e855b57e90b022bc0728470c", null ],
+      [ "DEBUG_LUA_CONSOLE", "namespacedebug__menu.html#a7457e58c3bc9fcf28b9c23cdab4df970af9190804b4d8780ffb90bf46ba401ccb", null ],
       [ "DEBUG_TEST_WEATHER", "namespacedebug__menu.html#a7457e58c3bc9fcf28b9c23cdab4df970a98457336f30d07ea9d1f363610c62fd2", null ],
       [ "DEBUG_SAVE_SCREENSHOT", "namespacedebug__menu.html#a7457e58c3bc9fcf28b9c23cdab4df970af89c0ba34ced12aa3216085b8a0b4557", null ],
       [ "DEBUG_BUG_REPORT", "namespacedebug__menu.html#a7457e58c3bc9fcf28b9c23cdab4df970a14c3e3bf15581326b080bd8a4a1ac06a", null ],
@@ -97,7 +98,7 @@ var namespacedebug__menu =
     [ "wishbionics", "namespacedebug__menu.html#a7ef7b4a54ffab1064ea54225ca4320ad", null ],
     [ "wishitem", "namespacedebug__menu.html#a50b303065b4f4d68e35243048390e4e4", null ],
     [ "wishitem", "namespacedebug__menu.html#ab88e02906e27d769939acdbe9a8b7a91", null ],
-    [ "wishmonster", "namespacedebug__menu.html#aabb3e6bfde09e4a05bce3511eab1ba22", null ],
+    [ "wishmonster", "namespacedebug__menu.html#a325cd0dde9a0b3bdf532592c710db21f", null ],
     [ "wishmutate", "namespacedebug__menu.html#a354dd71d540c6a9228eed7c1c681d1b9", null ],
     [ "wishskill", "namespacedebug__menu.html#a5dc4d9bb3df433a7371c7d9ae874e547", null ]
 ];

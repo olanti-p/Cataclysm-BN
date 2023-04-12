@@ -110,8 +110,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a01d1dc7609c885fff0930a5a7fc39a5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a227838f8868e1f945f7ebfefaf966dd2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structexplosion__data.html#a227838f8868e1f945f7ebfefaf966dd2">fire</a> = false</td></tr>
 <tr class="separator:a227838f8868e1f945f7ebfefaf966dd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab30acfa0f7f4574a640174cdc04ac6e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcata_1_1optional.html">cata::optional</a>&lt; <a class="el" href="structprojectile.html">projectile</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structexplosion__data.html#aab30acfa0f7f4574a640174cdc04ac6e">fragment</a></td></tr>
-<tr class="separator:aab30acfa0f7f4574a640174cdc04ac6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6b795c0523e217319f464066c7d42f4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="generic__factory_8h.html#a1159dbaba81931271dbfe5b9c7f041b3">std::optional</a>&lt; <a class="el" href="structprojectile.html">projectile</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structexplosion__data.html#ad6b795c0523e217319f464066c7d42f4">fragment</a></td></tr>
+<tr class="separator:ad6b795c0523e217319f464066c7d42f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
@@ -142,10 +142,10 @@ Public Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="explosion_8cpp_source.html#l01320">1320</a> of file <a class="el" href="explosion_8cpp_source.html">explosion.cpp</a>.</p>
 <div class="fragment"><div class="line"><a id="l01321" name="l01321"></a><span class="lineno"> 1321</span>{</div>
-<div class="line"><a id="l01322" name="l01322"></a><span class="lineno"> 1322</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="structexplosion__data.html#a41e8db58a26672fb26266f9693bd8044">damage</a> &gt; 0 || <a class="code hl_variable" href="structexplosion__data.html#aab30acfa0f7f4574a640174cdc04ac6e">fragment</a>;</div>
+<div class="line"><a id="l01322" name="l01322"></a><span class="lineno"> 1322</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="structexplosion__data.html#a41e8db58a26672fb26266f9693bd8044">damage</a> &gt; 0 || <a class="code hl_variable" href="structexplosion__data.html#ad6b795c0523e217319f464066c7d42f4">fragment</a>;</div>
 <div class="line"><a id="l01323" name="l01323"></a><span class="lineno"> 1323</span>}</div>
 <div class="ttc" id="astructexplosion__data_html_a41e8db58a26672fb26266f9693bd8044"><div class="ttname"><a href="structexplosion__data.html#a41e8db58a26672fb26266f9693bd8044">explosion_data::damage</a></div><div class="ttdeci">int damage</div><div class="ttdef"><b>Definition:</b> <a href="explosion_8h_source.html#l00015">explosion.h:15</a></div></div>
-<div class="ttc" id="astructexplosion__data_html_aab30acfa0f7f4574a640174cdc04ac6e"><div class="ttname"><a href="structexplosion__data.html#aab30acfa0f7f4574a640174cdc04ac6e">explosion_data::fragment</a></div><div class="ttdeci">cata::optional&lt; projectile &gt; fragment</div><div class="ttdef"><b>Definition:</b> <a href="explosion_8h_source.html#l00018">explosion.h:18</a></div></div>
+<div class="ttc" id="astructexplosion__data_html_ad6b795c0523e217319f464066c7d42f4"><div class="ttname"><a href="structexplosion__data.html#ad6b795c0523e217319f464066c7d42f4">explosion_data::fragment</a></div><div class="ttdeci">std::optional&lt; projectile &gt; fragment</div><div class="ttdef"><b>Definition:</b> <a href="explosion_8h_source.html#l00018">explosion.h:18</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -168,7 +168,7 @@ Public Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="explosion_8cpp_source.html#l01315">1315</a> of file <a class="el" href="explosion_8cpp_source.html">explosion.cpp</a>.</p>
 <div class="fragment"><div class="line"><a id="l01316" name="l01316"></a><span class="lineno"> 1316</span>{</div>
-<div class="line"><a id="l01317" name="l01317"></a><span class="lineno"> 1317</span>    <span class="keywordflow">return</span> std::max&lt;int&gt;( <a class="code hl_variable" href="structexplosion__data.html#a01d1dc7609c885fff0930a5a7fc39a5a">radius</a>, <a class="code hl_variable" href="structexplosion__data.html#aab30acfa0f7f4574a640174cdc04ac6e">fragment</a> ? <a class="code hl_variable" href="structexplosion__data.html#aab30acfa0f7f4574a640174cdc04ac6e">fragment</a>-&gt;range : 0 ) + 1;</div>
+<div class="line"><a id="l01317" name="l01317"></a><span class="lineno"> 1317</span>    <span class="keywordflow">return</span> std::max&lt;int&gt;( <a class="code hl_variable" href="structexplosion__data.html#a01d1dc7609c885fff0930a5a7fc39a5a">radius</a>, <a class="code hl_variable" href="structexplosion__data.html#ad6b795c0523e217319f464066c7d42f4">fragment</a> ? <a class="code hl_variable" href="structexplosion__data.html#ad6b795c0523e217319f464066c7d42f4">fragment</a>-&gt;range : 0 ) + 1;</div>
 <div class="line"><a id="l01318" name="l01318"></a><span class="lineno"> 1318</span>}</div>
 <div class="ttc" id="astructexplosion__data_html_a01d1dc7609c885fff0930a5a7fc39a5a"><div class="ttname"><a href="structexplosion__data.html#a01d1dc7609c885fff0930a5a7fc39a5a">explosion_data::radius</a></div><div class="ttdeci">float radius</div><div class="ttdef"><b>Definition:</b> <a href="explosion_8h_source.html#l00016">explosion.h:16</a></div></div>
 </div><!-- fragment -->
@@ -215,14 +215,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aab30acfa0f7f4574a640174cdc04ac6e" name="aab30acfa0f7f4574a640174cdc04ac6e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aab30acfa0f7f4574a640174cdc04ac6e">&#9670;&nbsp;</a></span>fragment</h2>
+<a id="ad6b795c0523e217319f464066c7d42f4" name="ad6b795c0523e217319f464066c7d42f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6b795c0523e217319f464066c7d42f4">&#9670;&nbsp;</a></span>fragment</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classcata_1_1optional.html">cata::optional</a>&lt;<a class="el" href="structprojectile.html">projectile</a>&gt; explosion_data::fragment</td>
+          <td class="memname"><a class="el" href="generic__factory_8h.html#a1159dbaba81931271dbfe5b9c7f041b3">std::optional</a>&lt;<a class="el" href="structprojectile.html">projectile</a>&gt; explosion_data::fragment</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -261,7 +261,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="structexplosion__data.html">explosion_data</a></li>
-    <li class="footer">Generated on Thu Apr 6 2023 21:03:15 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Wed Apr 12 2023 18:51:52 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

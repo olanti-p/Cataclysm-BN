@@ -47,6 +47,7 @@ var debug__menu_8cpp =
       [ "DEBUG_PRINT_FACTION_INFO", "debug__menu_8cpp.html#a7457e58c3bc9fcf28b9c23cdab4df970aa0b32ef30438f07ee4d42eaa6b657259", null ],
       [ "DEBUG_PRINT_NPC_MAGIC", "debug__menu_8cpp.html#a7457e58c3bc9fcf28b9c23cdab4df970a23f3d487fd434e63e784427a94fb75c8", null ],
       [ "DEBUG_QUIT_NOSAVE", "debug__menu_8cpp.html#a7457e58c3bc9fcf28b9c23cdab4df970ad7dfbaf8e855b57e90b022bc0728470c", null ],
+      [ "DEBUG_LUA_CONSOLE", "debug__menu_8cpp.html#a7457e58c3bc9fcf28b9c23cdab4df970af9190804b4d8780ffb90bf46ba401ccb", null ],
       [ "DEBUG_TEST_WEATHER", "debug__menu_8cpp.html#a7457e58c3bc9fcf28b9c23cdab4df970a98457336f30d07ea9d1f363610c62fd2", null ],
       [ "DEBUG_SAVE_SCREENSHOT", "debug__menu_8cpp.html#a7457e58c3bc9fcf28b9c23cdab4df970af89c0ba34ced12aa3216085b8a0b4557", null ],
       [ "DEBUG_BUG_REPORT", "debug__menu_8cpp.html#a7457e58c3bc9fcf28b9c23cdab4df970a14c3e3bf15581326b080bd8a4a1ac06a", null ],
