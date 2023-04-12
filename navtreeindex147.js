@@ -1,5 +1,7 @@
 var NAVTREEINDEX147 =
 {
+"structevent__statistic__count.html#a6b37a8ad9a954c01b712c7a5f6ce8177":[36,0,316,3],
+"structevent__statistic__count.html#a73b0fa73f400f4d04d8eb36fecb784e6":[36,0,316,2],
 "structevent__statistic__count.html#ad3e6f1cbccbf3aef04fd45af6edd5093":[36,0,316,7],
 "structevent__statistic__count.html#ad59dfe031d6fa22ab78f9cf58a90700d":[36,0,316,6],
 "structevent__statistic__count.html#ae5050435ec9a5a13ff266042a01c67ad":[36,0,316,8],
@@ -247,7 +249,5 @@ var NAVTREEINDEX147 =
 "structfield__type.html#a55f3b15bfbbad84b798de3e3bc6c70d9":[36,0,342,10],
 "structfield__type.html#a56afdea6073a57b9c8bf43aa6cdaed6a":[36,0,342,26],
 "structfield__type.html#a5b08ae2a01c1e82e7cb22785d735d5e9":[36,0,342,41],
-"structfield__type.html#a5fb79ce2363759ad2da0f0df6e071b94":[36,0,342,36],
-"structfield__type.html#a66dc0bda39304885aeabbd4f3712ae92":[36,0,342,25],
-"structfield__type.html#a6858d9c79de54cf8d952241c2ed579f0":[36,0,342,55]
+"structfield__type.html#a5fb79ce2363759ad2da0f0df6e071b94":[36,0,342,36]
 };

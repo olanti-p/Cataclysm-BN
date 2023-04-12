@@ -1,5 +1,6 @@
 var NAVTREEINDEX20 =
 {
+"classSkillLevel.html#a5c06a00bf4f73f47dd79db306fe6a8f1":[36,0,854,15],
 "classSkillLevel.html#a65deb2e2cc1a98eae681426916146279":[36,0,854,10],
 "classSkillLevel.html#a6945eb6f70333499e51fd1366de1293a":[36,0,854,16],
 "classSkillLevel.html#a6fb12286a01d109e0ae2c5fa23e23dd3":[36,0,854,7],
@@ -248,6 +249,5 @@ var NAVTREEINDEX20 =
 "classactivity__type.html#ad92938fe43dae0b166b017a0d4afde61":[36,0,56,10],
 "classactivity__type.html#aec24eaa563774761b523b97bbd1a7e42":[36,0,56,16],
 "classactmenu__cb.html":[36,0,57],
-"classactmenu__cb.html#a402239450e2fce84fde08f1c1b33384a":[36,0,57,2],
-"classactmenu__cb.html#a4c706171687789fdc2bbce040e8f233d":[36,0,57,3]
+"classactmenu__cb.html#a402239450e2fce84fde08f1c1b33384a":[36,0,57,2]
 };

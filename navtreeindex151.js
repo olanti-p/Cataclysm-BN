@@ -1,5 +1,7 @@
 var NAVTREEINDEX151 =
 {
+"structjmapgen__objects.html#a416f0749d991b022d8698b373da28d5f":[36,0,513,4],
+"structjmapgen__objects.html#a41c55acb74b0b002b642ba0f25c76984":[36,0,513,6],
 "structjmapgen__objects.html#a42d3ea727e2b1226f75b975b49c21be1":[36,0,513,8],
 "structjmapgen__objects.html#a4a4094ff1cca9a9ad0518b9667a30182":[36,0,513,13],
 "structjmapgen__objects.html#a573a70a619220b128f5221b14b0eb948":[36,0,513,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX151 =
 "structmap__data__common__t.html#aaa7f70d692cb6d2c65af2168f50a2371":[36,0,586,40],
 "structmap__data__common__t.html#ab1bb1d5a66346b4b0541d42827c91b8a":[36,0,586,39],
 "structmap__data__common__t.html#abe453aa773093e47fb1060ec30e2cd17":[36,0,586,41],
-"structmap__data__common__t.html#ac070b2f1bfda284c7d07c04d05b3f699":[36,0,586,30],
-"structmap__data__common__t.html#ac26e9d666a954ef6d1c42dd697780481":[36,0,586,29],
-"structmap__data__common__t.html#acd4a4be3dd9f4eec5eb629b3506231ee":[36,0,586,22]
+"structmap__data__common__t.html#ac070b2f1bfda284c7d07c04d05b3f699":[36,0,586,30]
 };

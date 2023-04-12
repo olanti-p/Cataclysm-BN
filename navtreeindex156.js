@@ -1,5 +1,7 @@
 var NAVTREEINDEX156 =
 {
+"structovermap__special__placement.html#a56b9f74e16ca69fc54ac4c8f883e0c94":[36,0,730,1],
+"structovermap__special__spawns.html":[36,0,731],
 "structovermap__special__spawns.html#a5e31bdf6b8e0d7a14ea1c5a0fb129338":[36,0,731,2],
 "structovermap__special__spawns.html#aae696410e83c37ac5b9a07fc08d0dff0":[36,0,731,0],
 "structovermap__special__spawns.html#adbcc56344f6c0bef883e62aad2091ae9":[36,0,731,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX156 =
 "structplant__data.html#a72c22b266b8978498b6d394c8125dc96":[36,0,758,0],
 "structplant__data.html#a7390560c2fe5daedd5e6cb7ae9fb7a56":[36,0,758,2],
 "structplant__data.html#acad3da75526d691a71e97df4c30304e7":[36,0,758,1],
-"structplayer__morale_1_1body__part__data.html":[36,0,761,0],
-"structplayer__morale_1_1body__part__data.html#a0264037fad22166937e4e6c3b2e340aa":[36,0,761,0,0],
-"structplayer__morale_1_1body__part__data.html#a35d773161766a259d9d27088bf017d29":[36,0,761,0,1]
+"structplayer__morale_1_1body__part__data.html":[36,0,761,0]
 };

@@ -1,5 +1,7 @@
 var NAVTREEINDEX134 =
 {
+"simple__pathfinding_8h.html":[37,0,1,605],
+"simple__pathfinding_8h.html#a21fea0f310cb84db892b52e393aa7976":[37,0,1,605,6],
 "simple__pathfinding_8h.html#a45e4d3da5c89dcb1e59d772cbbbd59a6":[37,0,1,605,10],
 "simple__pathfinding_8h.html#a91d31c9fc8b3bbc7dfdb4450145a7413":[37,0,1,605,5],
 "simple__pathfinding_8h.html#aa2df47c1365ddacd8ab4ab969089ef64":[37,0,1,605,8],
@@ -247,7 +249,5 @@ var NAVTREEINDEX134 =
 "string__formatter_8h.html#aa85b3824b5464d7cf432103ae8e1ca1f":[37,0,1,625,25],
 "string__formatter_8h.html#aac20eb73bc05a5d2c3f94345247a588c":[37,0,1,625,12],
 "string__formatter_8h.html#ad2ac384e14bf09aa47a6e57e29693f2a":[37,0,1,625,1],
-"string__formatter_8h.html#ada06c21be7a2b01efa8b7bbb8d03bb6e":[37,0,1,625,28],
-"string__formatter_8h.html#afb28482ebaeeaaacce0dda41d99605b7":[37,0,1,625,10],
-"string__formatter_8h.html#gaf6c1b09e9154ca0f0018624028929df5":[37,0,1,625,24]
+"string__formatter_8h.html#ada06c21be7a2b01efa8b7bbb8d03bb6e":[37,0,1,625,28]
 };

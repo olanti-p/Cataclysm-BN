@@ -1,5 +1,6 @@
 var NAVTREEINDEX80 =
 {
+"cuboid__rectangle_8h_source.html":[37,0,1,176],
 "cursesdef_8h.html":[37,0,1,177],
 "cursesdef_8h.html#a03121643695b0c990aed0a0b0408e85f":[37,0,1,177,27],
 "cursesdef_8h.html#a07c5180048f87110c547f58341b04812":[37,0,1,177,28],
@@ -248,6 +249,5 @@ var NAVTREEINDEX80 =
 "debug__menu_8cpp.html#a7457e58c3bc9fcf28b9c23cdab4df970afe4e0190b7c826153ff9d6d2cc1aaa58":[37,0,1,184,1,1],
 "debug__menu_8cpp.html#a789b862fc6bd9c2edfc45a532398d1d7":[37,0,1,184,9],
 "debug__menu_8cpp.html#a7ee08848af5ea09ea0bcfc849cc34f4d":[37,0,1,184,3],
-"debug__menu_8cpp.html#a831952bf86e67914a8f0234cc7badabf":[37,0,1,184,15],
-"debug__menu_8cpp.html#a9fae725d7f0131e4f2d66ccfe33f4605":[37,0,1,184,4]
+"debug__menu_8cpp.html#a831952bf86e67914a8f0234cc7badabf":[37,0,1,184,15]
 };

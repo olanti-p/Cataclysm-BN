@@ -1,5 +1,7 @@
 var NAVTREEINDEX139 =
 {
+"structcata_1_1event__detail_1_1event__spec_3_01event__type_1_1gains__mutation_01_4.html":[35,0,73,1,42],
+"structcata_1_1event__detail_1_1event__spec_3_01event__type_1_1gains__mutation_01_4.html#a68f207ba9777607f2618c55304707626":[36,0,14,0,42,0],
 "structcata_1_1event__detail_1_1event__spec_3_01event__type_1_1gains__mutation_01_4.html#a68f207ba9777607f2618c55304707626":[35,0,73,1,42,0],
 "structcata_1_1event__detail_1_1event__spec_3_01event__type_1_1gains__skill__level_01_4.html":[36,0,14,0,43],
 "structcata_1_1event__detail_1_1event__spec_3_01event__type_1_1gains__skill__level_01_4.html":[35,0,73,1,43],
@@ -247,7 +249,5 @@ var NAVTREEINDEX139 =
 "structcata_1_1tuple__hash__detail_1_1Impl_3_01Tuple_00_010_01_4.html":[35,0,73,3,1],
 "structcata_1_1tuple__hash__detail_1_1Impl_3_01Tuple_00_010_01_4.html#af34f507be45213f00bd6720348fcad6e":[35,0,73,3,1,0],
 "structcata_1_1tuple__hash__detail_1_1Impl_3_01Tuple_00_010_01_4.html#af34f507be45213f00bd6720348fcad6e":[36,0,14,1,1,0],
-"structcata__ifstream.html":[36,0,136],
-"structcata__ifstream.html#a08a36d7d99426115c1ca396f5104df29":[36,0,136,6],
-"structcata__ifstream.html#a2b639293f02e5ce46085d68e39041382":[36,0,136,12]
+"structcata__ifstream.html":[36,0,136]
 };

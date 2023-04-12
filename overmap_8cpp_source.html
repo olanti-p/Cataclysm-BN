@@ -3448,11 +3448,11 @@ $(document).ready(function(){initNavTree('overmap_8cpp_source.html',''); initRes
 <div class="line"><a id="l03359" name="l03359"></a><span class="lineno"> 3359</span>    generated_lab.push_back( p );</div>
 <div class="line"><a id="l03360" name="l03360"></a><span class="lineno"> 3360</span> </div>
 <div class="line"><a id="l03361" name="l03361"></a><span class="lineno"> 3361</span>    <span class="keyword">const</span> <span class="keyword">auto</span> is_same_lab = [&amp;]( <span class="keyword">const</span> <a class="code hl_class" href="classcoords_1_1coord__point.html">tripoint_om_omt</a> &amp; p ) {</div>
-<div class="line"><a id="l03362" name="l03362"></a><span class="lineno"> 3362</span>        <span class="keyword">const</span> std::set&lt;oter_id&gt; <a class="code hl_typedef" href="namespaceluna_1_1detail.html#ab987e8cc8760a3fdb6e45646b453276c">types</a> = {{</div>
+<div class="line"><a id="l03362" name="l03362"></a><span class="lineno"> 3362</span>        <span class="keyword">const</span> std::set&lt;oter_id&gt; types = {{</div>
 <div class="line"><a id="l03363" name="l03363"></a><span class="lineno"> 3363</span>                labt, labt_stairs, labt_core, labt_finale, labt_ants, labt_ants_stairs</div>
 <div class="line"><a id="l03364" name="l03364"></a><span class="lineno"> 3364</span>            }</div>
 <div class="line"><a id="l03365" name="l03365"></a><span class="lineno"> 3365</span>        };</div>
-<div class="line"><a id="l03366" name="l03366"></a><span class="lineno"> 3366</span>        <span class="keywordflow">return</span> <a class="code hl_typedef" href="namespaceluna_1_1detail.html#ab987e8cc8760a3fdb6e45646b453276c">types</a>.count( <a class="code hl_function" href="classovermap.html#a9e25d23d53cbf2270939de3c9968ca8e">ter</a>( p ) ) &gt; 0;</div>
+<div class="line"><a id="l03366" name="l03366"></a><span class="lineno"> 3366</span>        <span class="keywordflow">return</span> types.count( <a class="code hl_function" href="classovermap.html#a9e25d23d53cbf2270939de3c9968ca8e">ter</a>( p ) ) &gt; 0;</div>
 <div class="line"><a id="l03367" name="l03367"></a><span class="lineno"> 3367</span>    };</div>
 <div class="line"><a id="l03368" name="l03368"></a><span class="lineno"> 3368</span> </div>
 <div class="line"><a id="l03369" name="l03369"></a><span class="lineno"> 3369</span>    <span class="comment">// maintain a list of potential new lab tiles</span></div>
@@ -5480,7 +5480,6 @@ $(document).ready(function(){initNavTree('overmap_8cpp_source.html',''); initRes
 <div class="ttc" id="anamespaceio_html"><div class="ttname"><a href="namespaceio.html">io</a></div><div class="ttdef"><b>Definition:</b> <a href="achievement_8cpp_source.html#l00070">achievement.cpp:71</a></div></div>
 <div class="ttc" id="anamespaceio_html_a43c03e982785cb8effb5ceae96fadc81"><div class="ttname"><a href="namespaceio.html#a43c03e982785cb8effb5ceae96fadc81">io::enum_to_string&lt; ot_match_type &gt;</a></div><div class="ttdeci">std::string enum_to_string&lt; ot_match_type &gt;(ot_match_type data)</div><div class="ttdef"><b>Definition:</b> <a href="overmap_8cpp_source.html#l04991">overmap.cpp:4991</a></div></div>
 <div class="ttc" id="anamespaceio_html_ac293a4de69bb907a477d435a0d0eb8e3"><div class="ttname"><a href="namespaceio.html#ac293a4de69bb907a477d435a0d0eb8e3">io::enum_to_string&lt; lab_type &gt;</a></div><div class="ttdeci">std::string enum_to_string&lt; lab_type &gt;(lab_type data)</div><div class="ttdef"><b>Definition:</b> <a href="overmap_8cpp_source.html#l00341">overmap.cpp:341</a></div></div>
-<div class="ttc" id="anamespaceluna_1_1detail_html_ab987e8cc8760a3fdb6e45646b453276c"><div class="ttname"><a href="namespaceluna_1_1detail.html#ab987e8cc8760a3fdb6e45646b453276c">luna::detail::types</a></div><div class="ttdeci">sol::types&lt; Args... &gt; types</div><div class="ttdef"><b>Definition:</b> <a href="catalua__luna_8h_source.html#l00082">catalua_luna.h:82</a></div></div>
 <div class="ttc" id="anamespacemapgen__defer_html_a616ad2c7ee2eb002b683b41b04a888c1"><div class="ttname"><a href="namespacemapgen__defer.html#a616ad2c7ee2eb002b683b41b04a888c1">mapgen_defer::message</a></div><div class="ttdeci">std::string message</div><div class="ttdef"><b>Definition:</b> <a href="mapgen_8cpp_source.html#l00419">mapgen.cpp:419</a></div></div>
 <div class="ttc" id="anamespaceom__direction_html"><div class="ttname"><a href="namespaceom__direction.html">om_direction</a></div><div class="ttdoc">Direction on the overmap.</div><div class="ttdef"><b>Definition:</b> <a href="mapgendata_8h_source.html#l00015">mapgendata.h:16</a></div></div>
 <div class="ttc" id="anamespaceom__direction_html_a0fdbb3cc8e25454026b9ab57f9b91c69"><div class="ttname"><a href="namespaceom__direction.html#a0fdbb3cc8e25454026b9ab57f9b91c69">om_direction::random</a></div><div class="ttdeci">type random()</div><div class="ttdoc">Returns a random direction.</div><div class="ttdef"><b>Definition:</b> <a href="overmap_8cpp_source.html#l04218">overmap.cpp:4218</a></div></div>
@@ -5822,7 +5821,7 @@ $(document).ready(function(){initNavTree('overmap_8cpp_source.html',''); initRes
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="overmap_8cpp.html">overmap.cpp</a></li>
-    <li class="footer">Generated on Wed Apr 12 2023 22:57:14 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Wed Apr 12 2023 23:44:21 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

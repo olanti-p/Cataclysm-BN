@@ -1,5 +1,6 @@
 var NAVTREEINDEX108 =
 {
+"monattack_8h.html#a016e0e9bd24e2c55f0945833701c2a26":[37,0,1,442,5],
 "monattack_8h.html#a07af5ccfe3022a9bb301db9b8bccae57":[37,0,1,442,53],
 "monattack_8h.html#a07e7a3e862e11a5c5992b3c3d1e78280":[37,0,1,442,39],
 "monattack_8h.html#a0df2e46cfb1cdde166037df0d6a8c55c":[37,0,1,442,82],
@@ -248,6 +249,5 @@ var NAVTREEINDEX108 =
 "monexamine_8h.html#af7c79c1c022f82da8a1cedeceb969aeb":[37,0,1,448,24],
 "monexamine_8h_source.html":[37,0,1,448],
 "monfaction_8cpp.html":[37,0,1,449],
-"monfaction_8cpp.html#a62b935108d6dbcd581afc927984b97af":[37,0,1,449,1],
-"monfaction_8cpp.html#a6d08ee2d759b96e6e3b7e41efd41a797":[37,0,1,449,3]
+"monfaction_8cpp.html#a62b935108d6dbcd581afc927984b97af":[37,0,1,449,1]
 };

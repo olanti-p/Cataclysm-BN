@@ -1,5 +1,7 @@
 var NAVTREEINDEX158 =
 {
+"structreader__detail_1_1handler_3_01enum__bitset_3_01E_01_4_01_4.html#a76962c49167a8ba9edf51123ecda60a1":[36,0,36,1,1],
+"structreader__detail_1_1handler_3_01enum__bitset_3_01E_01_4_01_4.html#a76962c49167a8ba9edf51123ecda60a1":[35,0,160,1,1],
 "structreader__detail_1_1handler_3_01enum__bitset_3_01E_01_4_01_4.html#a7b9e5d7ca88e789b2cfb5fdb1ef89f8a":[35,0,160,1,2],
 "structreader__detail_1_1handler_3_01enum__bitset_3_01E_01_4_01_4.html#a7b9e5d7ca88e789b2cfb5fdb1ef89f8a":[36,0,36,1,2],
 "structreader__detail_1_1handler_3_01enum__bitset_3_01E_01_4_01_4.html#ade2bd1576deb5a4c0dfae9eae4455f85":[36,0,36,1,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX158 =
 "structscored__address.html#ac1b4476089f5e6f5f431e879b126cafa":[36,0,831,2],
 "structseason__modifier.html":[36,0,835],
 "structseason__modifier.html#a431f81e8a4e90b613532d42318dfe447":[36,0,835,1],
-"structseason__modifier.html#ac0a250ccfc5fe6f2405000497f8756c2":[36,0,835,0],
-"structshockwave__data.html":[36,0,847],
-"structshockwave__data.html#a0868d830d2b70e8c71b2751b5f234b9d":[36,0,847,1]
+"structseason__modifier.html#ac0a250ccfc5fe6f2405000497f8756c2":[36,0,835,0]
 };

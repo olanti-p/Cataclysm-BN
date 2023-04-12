@@ -1,5 +1,7 @@
 var NAVTREEINDEX159 =
 {
+"structshockwave__data.html":[36,0,847],
+"structshockwave__data.html#a0868d830d2b70e8c71b2751b5f234b9d":[36,0,847,1],
 "structshockwave__data.html#a5fb0851219044e8943ec76cf67980458":[36,0,847,3],
 "structshockwave__data.html#aa782b552547b19659a2abbab4aff1584":[36,0,847,2],
 "structshockwave__data.html#aec5392fc59f6c21a9c7bf36b6b4c72d0":[36,0,847,4],
@@ -247,7 +249,5 @@ var NAVTREEINDEX159 =
 "structtalk__response.html":[36,0,910],
 "structtalk__response.html#a04ab6d99176d921f37482f8a8adb5956":[36,0,910,4],
 "structtalk__response.html#a14b39e3cef1a8083579f2cc033f82bf0":[36,0,910,7],
-"structtalk__response.html#a44a669e1b41824179618ba1121a5a54f":[36,0,910,5],
-"structtalk__response.html#a523306165171388dc0e4a1aae486466f":[36,0,910,14],
-"structtalk__response.html#a5dd76a67b6ee2b8144626c3a6dd8a0ab":[36,0,910,6]
+"structtalk__response.html#a44a669e1b41824179618ba1121a5a54f":[36,0,910,5]
 };

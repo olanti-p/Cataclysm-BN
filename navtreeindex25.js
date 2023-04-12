@@ -1,5 +1,6 @@
 var NAVTREEINDEX25 =
 {
+"classbehavior_1_1strategy__t.html#a7ced61c442d8e8d4118a5906dfbf8ee7":[36,0,13,8,0],
 "classbehavior_1_1tree.html":[35,0,71,9],
 "classbehavior_1_1tree.html":[36,0,13,9],
 "classbehavior_1_1tree.html#a1bc592e4ec2c37fd3f00388b94de98bb":[35,0,71,9,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX25 =
 "classcata_1_1colony.html#a090a32f48709b54695871a4cbe3c6a5d":[35,0,73,8,55],
 "classcata_1_1colony.html#a090a32f48709b54695871a4cbe3c6a5d":[36,0,14,6,55],
 "classcata_1_1colony.html#a0d1d2e6ffd0978d6bf300ffc33aa3cc5":[35,0,73,8,33],
-"classcata_1_1colony.html#a0d1d2e6ffd0978d6bf300ffc33aa3cc5":[36,0,14,6,33],
-"classcata_1_1colony.html#a0dbe29ef26bf3de77517c8fbe8237108":[36,0,14,6,85]
+"classcata_1_1colony.html#a0d1d2e6ffd0978d6bf300ffc33aa3cc5":[36,0,14,6,33]
 };

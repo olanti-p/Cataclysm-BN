@@ -1,5 +1,6 @@
 var NAVTREEINDEX99 =
 {
+"magic__teleporter__list_8h.html":[37,0,1,372],
 "magic__teleporter__list_8h.html#ae407c1483213bae0854969c6b4b5b242":[37,0,1,372,1],
 "magic__teleporter__list_8h_source.html":[37,0,1,372],
 "magic__ter__fur__transform_8cpp.html":[37,0,1,373],
@@ -248,6 +249,5 @@ var NAVTREEINDEX99 =
 "map__extras_8h.html#a3d3cbcad4bf4e520fb37cb34f14df3c1":[37,0,1,382,3],
 "map__extras_8h.html#a47324764742089540b2504fa73f04a8f":[37,0,1,382,6],
 "map__extras_8h.html#a74b50820095cb92b70356b1b530a25cd":[37,0,1,382,4],
-"map__extras_8h.html#aac381941ec2d1e00ca333fc39c373833":[37,0,1,382,8],
-"map__extras_8h.html#aae1131a695ae356dc5befc7301600410":[37,0,1,382,9]
+"map__extras_8h.html#aac381941ec2d1e00ca333fc39c373833":[37,0,1,382,8]
 };

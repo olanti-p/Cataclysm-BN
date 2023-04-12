@@ -1,5 +1,7 @@
 var NAVTREEINDEX155 =
 {
+"structnpc__opinion.html#a544114b24a1332d5fc31b1ec814684bd":[36,0,694,8],
+"structnpc__opinion.html#a9732c70ea8fd35cc133c425b70158394":[36,0,694,0],
 "structnpc__opinion.html#ac3e3687fbefeca03878ed52f641d4bf7":[36,0,694,7],
 "structnpc__opinion.html#ad3164c3f59f022a0d38a1eb69ec837a4":[36,0,694,4],
 "structnpc__opinion.html#ae30f2e7ca0b4c62ba71c648c63921d67":[36,0,694,6],
@@ -247,7 +249,5 @@ var NAVTREEINDEX155 =
 "structovermap__special__connection.html#af4995adf51a0c8127d145da108e23029":[36,0,729,5],
 "structovermap__special__connection.html#afcf558b79eb33c0285a620f2d59ecefd":[36,0,729,1],
 "structovermap__special__placement.html":[36,0,730],
-"structovermap__special__placement.html#a55347294df77224490a7d8bdf0aea87a":[36,0,730,0],
-"structovermap__special__placement.html#a56b9f74e16ca69fc54ac4c8f883e0c94":[36,0,730,1],
-"structovermap__special__spawns.html":[36,0,731]
+"structovermap__special__placement.html#a55347294df77224490a7d8bdf0aea87a":[36,0,730,0]
 };

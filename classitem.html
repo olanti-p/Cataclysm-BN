@@ -3428,9 +3428,9 @@ template&lt;typename... Args&gt; </div>
 <p class="definition">Definition at line <a class="el" href="item_8cpp_source.html#l07646">7646</a> of file <a class="el" href="item_8cpp_source.html">item.cpp</a>.</p>
 <div class="fragment"><div class="line"><a id="l07647" name="l07647"></a><span class="lineno"> 7647</span>{</div>
 <div class="line"><a id="l07648" name="l07648"></a><span class="lineno"> 7648</span>    <span class="keywordflow">if</span>( <a class="code hl_function" href="classitem.html#adce43f2490a85e2dc212a26ce5ded4fc">is_magazine</a>() || <a class="code hl_function" href="classitem.html#a2912b2e15a4eec07a5070fffbbd152e8">is_gun</a>() || <a class="code hl_function" href="classitem.html#a59a03649a0636c70e776054db688564a">is_tool</a>() ) {</div>
-<div class="line"><a id="l07649" name="l07649"></a><span class="lineno"> 7649</span>        <span class="keyword">const</span> std::set&lt;ammotype&gt; &amp;<a class="code hl_typedef" href="namespaceluna_1_1detail.html#ab987e8cc8760a3fdb6e45646b453276c">types</a> = <a class="code hl_function" href="classitem.html#ac4f8c31c6aa17560f8f523290d568436">ammo_types</a>();</div>
-<div class="line"><a id="l07650" name="l07650"></a><span class="lineno"> 7650</span>        <span class="keywordflow">if</span>( !<a class="code hl_typedef" href="namespaceluna_1_1detail.html#ab987e8cc8760a3fdb6e45646b453276c">types</a>.empty() ) {</div>
-<div class="line"><a id="l07651" name="l07651"></a><span class="lineno"> 7651</span>            <span class="keywordflow">return</span> <a class="code hl_typedef" href="type__id_8h.html#a4a240e1107e45f10d64b78f1b5f58d59">ammotype</a>( *<a class="code hl_typedef" href="namespaceluna_1_1detail.html#ab987e8cc8760a3fdb6e45646b453276c">types</a>.begin() )-&gt;<a class="code hl_function" href="classammunition__type.html#a3c5d67ec1974c9a43d79c0ab3e7f979a">name</a>();</div>
+<div class="line"><a id="l07649" name="l07649"></a><span class="lineno"> 7649</span>        <span class="keyword">const</span> std::set&lt;ammotype&gt; &amp;types = <a class="code hl_function" href="classitem.html#ac4f8c31c6aa17560f8f523290d568436">ammo_types</a>();</div>
+<div class="line"><a id="l07650" name="l07650"></a><span class="lineno"> 7650</span>        <span class="keywordflow">if</span>( !types.empty() ) {</div>
+<div class="line"><a id="l07651" name="l07651"></a><span class="lineno"> 7651</span>            <span class="keywordflow">return</span> <a class="code hl_typedef" href="type__id_8h.html#a4a240e1107e45f10d64b78f1b5f58d59">ammotype</a>( *types.begin() )-&gt;<a class="code hl_function" href="classammunition__type.html#a3c5d67ec1974c9a43d79c0ab3e7f979a">name</a>();</div>
 <div class="line"><a id="l07652" name="l07652"></a><span class="lineno"> 7652</span>        }</div>
 <div class="line"><a id="l07653" name="l07653"></a><span class="lineno"> 7653</span>    }</div>
 <div class="line"><a id="l07654" name="l07654"></a><span class="lineno"> 7654</span>    <span class="keywordflow">if</span>( <a class="code hl_function" href="classitem.html#ac3cc4d74d020cbd36ae490cbe88f9152">is_ammo</a>() ) {</div>
@@ -3439,7 +3439,6 @@ template&lt;typename... Args&gt; </div>
 <div class="line"><a id="l07657" name="l07657"></a><span class="lineno"> 7657</span>    <span class="keywordflow">return</span> <span class="stringliteral">&quot;&quot;</span>;</div>
 <div class="line"><a id="l07658" name="l07658"></a><span class="lineno"> 7658</span>}</div>
 <div class="ttc" id="aclassammunition__type_html_a3c5d67ec1974c9a43d79c0ab3e7f979a"><div class="ttname"><a href="classammunition__type.html#a3c5d67ec1974c9a43d79c0ab3e7f979a">ammunition_type::name</a></div><div class="ttdeci">std::string name() const</div><div class="ttdef"><b>Definition:</b> <a href="ammo_8cpp_source.html#l00079">ammo.cpp:79</a></div></div>
-<div class="ttc" id="anamespaceluna_1_1detail_html_ab987e8cc8760a3fdb6e45646b453276c"><div class="ttname"><a href="namespaceluna_1_1detail.html#ab987e8cc8760a3fdb6e45646b453276c">luna::detail::types</a></div><div class="ttdeci">sol::types&lt; Args... &gt; types</div><div class="ttdef"><b>Definition:</b> <a href="catalua__luna_8h_source.html#l00082">catalua_luna.h:82</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="item_8cpp_source.html#l07588">ammo_type()</a>, <a class="el" href="item_8cpp_source.html#l07565">ammo_types()</a>, <a class="el" href="item_8cpp_source.html#l06582">is_ammo()</a>, <a class="el" href="item_8cpp_source.html#l06517">is_gun()</a>, <a class="el" href="item_8cpp_source.html#l06557">is_magazine()</a>, <a class="el" href="item_8cpp_source.html#l06953">is_tool()</a>, and <a class="el" href="ammo_8cpp_source.html#l00079">ammunition_type::name()</a>.</p>
 
@@ -26367,7 +26366,7 @@ Strength determines which weapons can be wielded with one hand
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classitem.html">item</a></li>
-    <li class="footer">Generated on Wed Apr 12 2023 22:57:39 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Wed Apr 12 2023 23:44:40 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

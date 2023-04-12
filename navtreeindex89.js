@@ -1,5 +1,6 @@
 var NAVTREEINDEX89 =
 {
+"gamemode__defense_8cpp.html#a42f0f25143abe5e86b5b06844bf04c12":[37,0,1,271,12],
 "gamemode__defense_8cpp.html#a4d2dbc99d8c3672916c08aabff312e91":[37,0,1,271,7],
 "gamemode__defense_8cpp.html#a4e23e64852e8ca64da0132c32c40ea70":[37,0,1,271,13],
 "gamemode__defense_8cpp.html#a585c8d78a042ac7b55f130b623461165":[37,0,1,271,16],
@@ -248,6 +249,5 @@ var NAVTREEINDEX89 =
 "globals_type_b.html":[37,1,3,2],
 "globals_type_c.html":[37,1,3,3],
 "globals_type_d.html":[37,1,3,4],
-"globals_type_e.html":[37,1,3,5],
-"globals_type_f.html":[37,1,3,6]
+"globals_type_e.html":[37,1,3,5]
 };

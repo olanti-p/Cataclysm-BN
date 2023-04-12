@@ -1,5 +1,7 @@
 var NAVTREEINDEX136 =
 {
+"structactive__tiles_1_1furn__transform.html":[35,0,0,0],
+"structactive__tiles_1_1furn__transform.html":[36,0,0,0],
 "structactive__tiles_1_1furn__transform.html#a0fb640b8ceb16d47e9850260a7f3ca0c":[35,0,0,0,0],
 "structactive__tiles_1_1furn__transform.html#a0fb640b8ceb16d47e9850260a7f3ca0c":[36,0,0,0,0],
 "structactive__tiles_1_1furn__transform.html#a3f0665429ac03736a48c6f82e7a8b62e":[35,0,0,0,2],
@@ -247,7 +249,5 @@ var NAVTREEINDEX136 =
 "structartifact__armor__form__datum.html#aa573a726b614936956de1bd352523a7e":[36,0,78,5],
 "structartifact__armor__form__datum.html#aa6a46fca757e88d14d81da89a22db9ab":[36,0,78,7],
 "structartifact__armor__form__datum.html#ab6fd03e3aaeaa0457dfa123a2d9b0e0d":[36,0,78,0],
-"structartifact__armor__form__datum.html#ab78dabe4d3c92c88c51fdf6f0a094915":[36,0,78,15],
-"structartifact__armor__form__datum.html#ac4479fa576b51467aa7e6ea7f5635d43":[36,0,78,10],
-"structartifact__armor__form__datum.html#acd8f6c27bfe68c20e6888f7592c95553":[36,0,78,8]
+"structartifact__armor__form__datum.html#ab78dabe4d3c92c88c51fdf6f0a094915":[36,0,78,15]
 };

@@ -1,5 +1,7 @@
 var NAVTREEINDEX140 =
 {
+"structcata__ifstream.html#a08a36d7d99426115c1ca396f5104df29":[36,0,136,6],
+"structcata__ifstream.html#a2b639293f02e5ce46085d68e39041382":[36,0,136,12],
 "structcata__ifstream.html#a51245834ddb3ea35e401e927e8687990":[36,0,136,5],
 "structcata__ifstream.html#a633c7036758450aae51117637d1dde89":[36,0,136,0],
 "structcata__ifstream.html#a7195d2116c324701d4886768b3294ad8":[36,0,136,7],
@@ -247,7 +249,5 @@ var NAVTREEINDEX140 =
 "structcity__settings.html#a54dcb5b3d7718c2dda5315cf769422be":[36,0,152,7],
 "structcity__settings.html#a8460b5b37c295dc424b3b3795845d37d":[36,0,152,8],
 "structcity__settings.html#a91dc2c563c12eaeea51d16ee9451dad8":[36,0,152,5],
-"structcity__settings.html#a98fd07102383438a81386d96c024d321":[36,0,152,3],
-"structcity__settings.html#a9dd5b8cc2ae5e3326ca275c25b8dfd78":[36,0,152,4],
-"structcity__settings.html#abb910a7a986fa690ccad31142511747b":[36,0,152,0]
+"structcity__settings.html#a98fd07102383438a81386d96c024d321":[36,0,152,3]
 };

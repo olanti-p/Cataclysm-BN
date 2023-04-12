@@ -1,5 +1,7 @@
 var NAVTREEINDEX157 =
 {
+"structplayer__morale_1_1body__part__data.html#a0264037fad22166937e4e6c3b2e340aa":[36,0,761,0,0],
+"structplayer__morale_1_1body__part__data.html#a35d773161766a259d9d27088bf017d29":[36,0,761,0,1],
 "structplayer__morale_1_1body__part__data.html#a61ad41a22450cfc5f841009b0700e011":[36,0,761,0,3],
 "structplayer__morale_1_1body__part__data.html#a7b43f3edebe1fe63057563d3488bd13e":[36,0,761,0,4],
 "structplayer__morale_1_1body__part__data.html#ab8d3e8f4e4726cdb5ffde4c045b49ab9":[36,0,761,0,2],
@@ -247,7 +249,5 @@ var NAVTREEINDEX157 =
 "structreader__detail_1_1handler_3_01enum__bitset_3_01E_01_4_01_4.html":[35,0,160,1],
 "structreader__detail_1_1handler_3_01enum__bitset_3_01E_01_4_01_4.html":[36,0,36,1],
 "structreader__detail_1_1handler_3_01enum__bitset_3_01E_01_4_01_4.html#a391302cf8a1145c627564acd6d77b842":[36,0,36,1,3],
-"structreader__detail_1_1handler_3_01enum__bitset_3_01E_01_4_01_4.html#a391302cf8a1145c627564acd6d77b842":[35,0,160,1,3],
-"structreader__detail_1_1handler_3_01enum__bitset_3_01E_01_4_01_4.html#a76962c49167a8ba9edf51123ecda60a1":[36,0,36,1,1],
-"structreader__detail_1_1handler_3_01enum__bitset_3_01E_01_4_01_4.html#a76962c49167a8ba9edf51123ecda60a1":[35,0,160,1,1]
+"structreader__detail_1_1handler_3_01enum__bitset_3_01E_01_4_01_4.html#a391302cf8a1145c627564acd6d77b842":[35,0,160,1,3]
 };

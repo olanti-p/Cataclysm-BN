@@ -1,5 +1,7 @@
 var NAVTREEINDEX149 =
 {
+"structhealing__options.html#a39fe12726a8c7fcdf89a83247682a628":[36,0,401,1],
+"structhealing__options.html#a46674f47eb19395e6d4e233e5f8f304c":[36,0,401,6],
 "structhealing__options.html#a4aadc33c41923e1c2c3f1fcd2d5aa560":[36,0,401,0],
 "structhealing__options.html#a7c1818fa5ab0f75183dccc0ce48dd117":[36,0,401,8],
 "structhealing__options.html#a8c7e48cc7294f8a08563eeb4874c070e":[36,0,401,2],
@@ -247,7 +249,5 @@ var NAVTREEINDEX149 =
 "structislot__gunmod.html#a2c64a6cd256743ea8dc6df58e3c4f1fa":[36,0,461,14],
 "structislot__gunmod.html#a68bd7a7bad991d610455edfea54d27f1":[36,0,461,9],
 "structislot__gunmod.html#a68e25ba70cbdc4cd7b5dcc674af50d4a":[36,0,461,13],
-"structislot__gunmod.html#a7c89f77c624e7b37f5ccb1856ec62de1":[36,0,461,5],
-"structislot__gunmod.html#a7d484bba5d9bb2fe12574795ae457e96":[36,0,461,4],
-"structislot__gunmod.html#aa0768daa468887578a7a75bfe33e76c4":[36,0,461,2]
+"structislot__gunmod.html#a7c89f77c624e7b37f5ccb1856ec62de1":[36,0,461,5]
 };

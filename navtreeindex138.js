@@ -1,5 +1,7 @@
 var NAVTREEINDEX138 =
 {
+"structbody__part__type.html#ab88f4c72186cad27609e877dd46d2c33":[36,0,121,21],
+"structbody__part__type.html#ab965a2d80e40c863a5d614bb1ab8f61f":[36,0,121,20],
 "structbody__part__type.html#abe22ff7c5563ccdd6a2066485ca418fe":[36,0,121,22],
 "structbody__part__type.html#aced09a5212248c20b1e6ad204b08433f":[36,0,121,6],
 "structbody__part__type.html#ad09cff4f647251242cee63b9347c105f":[36,0,121,15],
@@ -247,7 +249,5 @@ var NAVTREEINDEX138 =
 "structcata_1_1event__detail_1_1event__spec_3_01event__type_1_1gains__addiction_01_4.html":[35,0,73,1,41],
 "structcata_1_1event__detail_1_1event__spec_3_01event__type_1_1gains__addiction_01_4.html#a7b5e63a8addab13a6b5e00d9e06a0666":[36,0,14,0,41,0],
 "structcata_1_1event__detail_1_1event__spec_3_01event__type_1_1gains__addiction_01_4.html#a7b5e63a8addab13a6b5e00d9e06a0666":[35,0,73,1,41,0],
-"structcata_1_1event__detail_1_1event__spec_3_01event__type_1_1gains__mutation_01_4.html":[36,0,14,0,42],
-"structcata_1_1event__detail_1_1event__spec_3_01event__type_1_1gains__mutation_01_4.html":[35,0,73,1,42],
-"structcata_1_1event__detail_1_1event__spec_3_01event__type_1_1gains__mutation_01_4.html#a68f207ba9777607f2618c55304707626":[36,0,14,0,42,0]
+"structcata_1_1event__detail_1_1event__spec_3_01event__type_1_1gains__mutation_01_4.html":[36,0,14,0,42]
 };

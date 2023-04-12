@@ -1,5 +1,7 @@
 var NAVTREEINDEX153 =
 {
+"structmon__effect__data.html":[36,0,645],
+"structmon__effect__data.html#a10e564fec984e4d8168986db4ce63be4":[36,0,645,2],
 "structmon__effect__data.html#a3f623218ab557be6f142cf9067f9548a":[36,0,645,6],
 "structmon__effect__data.html#a61eb4bd8fe200f29e1612839c5125c76":[36,0,645,5],
 "structmon__effect__data.html#a8ed8bd7ffdbace4d924df0415b4807d5":[36,0,645,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX153 =
 "structmutation__branch.html#a3b2b97dbbfc2bb45a13e5abced6a5e12":[36,0,672,54],
 "structmutation__branch.html#a3cdaad731d70c1b025246d994f958b5c":[36,0,672,19],
 "structmutation__branch.html#a3cfda8d1a3caf5e2af76b22ffead46fc":[36,0,672,75],
-"structmutation__branch.html#a3d5ac4ccc031223bdbdc90094c2a3a7b":[36,0,672,44],
-"structmutation__branch.html#a3f1c1950af3dc2a8ee75f8e45e469136":[36,0,672,8],
-"structmutation__branch.html#a428a4c5379f37bfe78da8a1e54fd4b04":[36,0,672,11]
+"structmutation__branch.html#a3d5ac4ccc031223bdbdc90094c2a3a7b":[36,0,672,44]
 };

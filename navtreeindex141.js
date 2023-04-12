@@ -1,5 +1,7 @@
 var NAVTREEINDEX141 =
 {
+"structcity__settings.html#a9dd5b8cc2ae5e3326ca275c25b8dfd78":[36,0,152,4],
+"structcity__settings.html#abb910a7a986fa690ccad31142511747b":[36,0,152,0],
 "structcity__settings.html#ac0e5ad5f63b8b53f9edbaa86981108ac":[36,0,152,1],
 "structcity__settings.html#afa13434d85f3dc9778429ce4c6d4a624":[36,0,152,10],
 "structclothing__mod.html":[36,0,153],
@@ -247,7 +249,5 @@ var NAVTREEINDEX141 =
 "structcoords_1_1project__to__impl_3_010_00_01ScaleDown_00_01ResultScale_01_4.html#a8b31d76deeb4113d1c1b58f565bb63f2":[35,0,93,2,0],
 "structcoords_1_1project__to__impl_3_01ScaleUp_00_010_00_01ResultScale_01_4.html":[35,0,93,3],
 "structcoords_1_1project__to__impl_3_01ScaleUp_00_010_00_01ResultScale_01_4.html":[36,0,19,3],
-"structcoords_1_1project__to__impl_3_01ScaleUp_00_010_00_01ResultScale_01_4.html#a5ad298c1e37bbaa5c14a241bef478aee":[36,0,19,3,0],
-"structcoords_1_1project__to__impl_3_01ScaleUp_00_010_00_01ResultScale_01_4.html#a5ad298c1e37bbaa5c14a241bef478aee":[35,0,93,3,0],
-"structcoords_1_1quotient__remainder__helper.html":[36,0,19,4]
+"structcoords_1_1project__to__impl_3_01ScaleUp_00_010_00_01ResultScale_01_4.html#a5ad298c1e37bbaa5c14a241bef478aee":[36,0,19,3,0]
 };

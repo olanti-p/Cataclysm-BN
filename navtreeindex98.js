@@ -1,5 +1,6 @@
 var NAVTREEINDEX98 =
 {
+"line_8h.html#a3621d2006812bd84f3ed6999b38f90a3a96f30aeb5638ae7ac40d90b5ebdde47e":[37,0,1,357,2,19],
 "line_8h.html#a3621d2006812bd84f3ed6999b38f90a3a99a241919ef2f24a54e0cd6556719a61":[37,0,1,357,2,12],
 "line_8h.html#a3621d2006812bd84f3ed6999b38f90a3a9f6d9a850e0b129ea35053f0c05aa882":[37,0,1,357,2,9],
 "line_8h.html#a3621d2006812bd84f3ed6999b38f90a3ac397289ee45877be0cd49811fe245b4e":[37,0,1,357,2,13],
@@ -248,6 +249,5 @@ var NAVTREEINDEX98 =
 "magic__teleporter__list_8cpp.html":[37,0,1,371],
 "magic__teleporter__list_8cpp.html#a55f5d1910004d3eab56cf8c47653775a":[37,0,1,371,1],
 "magic__teleporter__list_8cpp.html#ac31aab4caaac6adf3aeef26e359787c0":[37,0,1,371,2],
-"magic__teleporter__list_8cpp_source.html":[37,0,1,371],
-"magic__teleporter__list_8h.html":[37,0,1,372]
+"magic__teleporter__list_8cpp_source.html":[37,0,1,371]
 };

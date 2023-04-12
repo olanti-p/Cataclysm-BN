@@ -1,5 +1,7 @@
 var NAVTREEINDEX144 =
 {
+"structdetail_1_1dragonbox_1_1decimal__fp.html#ac76d233464776427ee705d60eb1a5d9b":[36,0,21,0,3,0],
+"structdetail_1_1dragonbox_1_1float__info.html":[36,0,21,0,4],
 "structdetail_1_1dragonbox_1_1float__info.html":[35,0,96,1,4],
 "structdetail_1_1dragonbox_1_1float__info_3_01double_01_4.html":[35,0,96,1,5],
 "structdetail_1_1dragonbox_1_1float__info_3_01double_01_4.html":[36,0,21,0,5],
@@ -247,7 +249,5 @@ var NAVTREEINDEX144 =
 "structdetail_1_1int128__t.html":[35,0,96,52],
 "structdetail_1_1int__checker.html":[36,0,21,52],
 "structdetail_1_1int__checker.html":[35,0,96,53],
-"structdetail_1_1int__checker.html#a1fc60ded6848308cbcb4c5002c2a7dd6":[35,0,96,53,1],
-"structdetail_1_1int__checker.html#a1fc60ded6848308cbcb4c5002c2a7dd6":[36,0,21,52,1],
-"structdetail_1_1int__checker.html#a41bd398cf46ff9c60edcc14d2fe64218":[35,0,96,53,0]
+"structdetail_1_1int__checker.html#a1fc60ded6848308cbcb4c5002c2a7dd6":[35,0,96,53,1]
 };
