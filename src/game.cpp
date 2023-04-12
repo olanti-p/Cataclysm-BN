@@ -2206,6 +2206,8 @@ input_context get_default_mode_input_context()
     ctxt.register_action( "open_color" );
     ctxt.register_action( "open_world_mods" );
     ctxt.register_action( "debug" );
+    ctxt.register_action( "lua_console" );
+    ctxt.register_action( "lua_reload" );
     ctxt.register_action( "debug_scent" );
     ctxt.register_action( "debug_scent_type" );
     ctxt.register_action( "debug_temp" );
@@ -2620,6 +2622,8 @@ bool game::load( const save_t &name )
 
     u.reset();
 
+    cata::load_world_lua_state( get_world_base_save_path() + "/lua_state.json" );
+
     return true;
 }
 
@@ -2724,6 +2728,14 @@ spell_events &game::spell_events_subscriber()
     return *spell_events_ptr;
 }
 
+static bool save_uistate_data( const game &g )
+{
+    return write_to_file( g.get_world_base_save_path() + "/uistate.json", [&]( std::ostream & fout ) {
+        JsonOut jsout( fout );
+        uistate.serialize( jsout );
+    }, _( "uistate data" ) );
+}
+
 bool game::save()
 {
     try {
@@ -2734,10 +2746,9 @@ bool game::save()
             !get_auto_pickup().save_character() ||
             !get_auto_notes_settings().save() ||
             !get_safemode().save_character() ||
-        !write_to_file( get_world_base_save_path() + "/uistate.json", [&]( std::ostream & fout ) {
-        JsonOut jsout( fout );
-            uistate.serialize( jsout );
-        }, _( "uistate data" ) ) ) {
+            !cata::save_world_lua_state( g->get_world_base_save_path() + "/lua_state.json" ) ||
+            !save_uistate_data( *this )
+          ) {
             return false;
         } else {
             world_generator->active_world->add_save( save_t::from_save_id( u.get_save_id() ) );
