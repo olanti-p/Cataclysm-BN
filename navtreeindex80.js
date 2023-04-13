@@ -1,5 +1,7 @@
 var NAVTREEINDEX80 =
 {
+"creature__tracker_8h_source.html":[37,0,1,175],
+"cuboid__rectangle_8h.html":[37,0,1,176],
 "cuboid__rectangle_8h.html#a206dc4f9832c501164e42cdf80af90e8":[37,0,1,176,9],
 "cuboid__rectangle_8h.html#a32523e05045945211a4788f62c43c820":[37,0,1,176,7],
 "cuboid__rectangle_8h.html#a836ed097614df50ee3349c7b9e225510":[37,0,1,176,6],
@@ -247,7 +249,5 @@ var NAVTREEINDEX80 =
 "debug__menu_8cpp.html#a7457e58c3bc9fcf28b9c23cdab4df970ae5cf7757c116b523c5bd1087a8b67492":[37,0,1,184,1,19],
 "debug__menu_8cpp.html#a7457e58c3bc9fcf28b9c23cdab4df970ae94dd7ed0b18e422fcdc4ac536fb4de8":[37,0,1,184,1,27],
 "debug__menu_8cpp.html#a7457e58c3bc9fcf28b9c23cdab4df970aec768be94ee8edf68df12518436ddb22":[37,0,1,184,1,53],
-"debug__menu_8cpp.html#a7457e58c3bc9fcf28b9c23cdab4df970af2285a0920ef2640cb52f5d95cbfc039":[37,0,1,184,1,31],
-"debug__menu_8cpp.html#a7457e58c3bc9fcf28b9c23cdab4df970af6af5f7d7d91d42c63a70c23f1e2ff80":[37,0,1,184,1,33],
-"debug__menu_8cpp.html#a7457e58c3bc9fcf28b9c23cdab4df970af89c0ba34ced12aa3216085b8a0b4557":[37,0,1,184,1,47]
+"debug__menu_8cpp.html#a7457e58c3bc9fcf28b9c23cdab4df970af2285a0920ef2640cb52f5d95cbfc039":[37,0,1,184,1,31]
 };

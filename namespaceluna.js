@@ -9,6 +9,7 @@ var namespaceluna =
     [ "add_val", "namespaceluna.html#ac4a84eddaa43ed9ed730938c79229951", null ],
     [ "begin_enum", "namespaceluna.html#ab71a044fbc79a0be4e9871083f31b2c7", null ],
     [ "begin_lib", "namespaceluna.html#a880e04cf5600a5b6d914e73de6f2131f", null ],
+    [ "doc", "namespaceluna.html#acbed7f37a4a7b77b60d28e09960976b1", null ],
     [ "finalize_enum", "namespaceluna.html#a37123e87474c6a23458fb09075e591f7", null ],
     [ "finalize_lib", "namespaceluna.html#aeb7ede82629ad1b89ad7c2f8da9cdf6b", null ],
     [ "new_usertype", "namespaceluna.html#af2d0a0ff3f0df50ce9efb1b970a84095", null ],

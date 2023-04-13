@@ -1,5 +1,8 @@
 var NAVTREEINDEX162 =
 {
+"structw__point.html#a4af89c0235da5a6b4e9e1b86f2485d6f":[36,0,1008,6],
+"structw__point.html#a5da6bc53130c6b2c47dad86032575e53":[36,0,1008,5],
+"structw__point.html#a7c2572b530f4fd88090eb596a4f5155b":[36,0,1008,4],
 "structw__point.html#a8eb98705d3735e84f406478b2f69ef18":[36,0,1008,1],
 "structw__point.html#aaf1ed8088df29634ce5259faca54f3d5":[36,0,1008,2],
 "structwashing__requirements.html":[36,0,1010],
@@ -246,8 +249,5 @@ var NAVTREEINDEX162 =
 "suffer_8cpp.html#af5dd86266df53b8e4db96ed1853a4626":[37,0,1,636,38],
 "suffer_8cpp.html#af92197f565d6bd921328fea3804c0acf":[37,0,1,636,12],
 "suffer_8cpp.html#afa77306e2784063065644a103b590119":[37,0,1,636,13],
-"suffer_8cpp.html#afb030039372cbf3daafe91d1e1bc6765":[37,0,1,636,64],
-"suffer_8cpp.html#afcfa82c36c0dc2d76cd19d622c2b6ab4":[37,0,1,636,44],
-"suffer_8cpp_source.html":[37,0,1,636],
-"teleport_8cpp.html":[37,0,1,637]
+"suffer_8cpp.html#afb030039372cbf3daafe91d1e1bc6765":[37,0,1,636,64]
 };

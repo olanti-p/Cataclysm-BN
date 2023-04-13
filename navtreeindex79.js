@@ -1,5 +1,7 @@
 var NAVTREEINDEX79 =
 {
+"coordinates_8h.html#a55e95a528c3b73dc891cb1badf632176":[37,0,1,163,53],
+"coordinates_8h.html#a5612af0d0d6abac8477597ff3e7aa22e":[37,0,1,163,28],
 "coordinates_8h.html#a5bb369a4f0a13e24a48b7ab094d27da6":[37,0,1,163,9],
 "coordinates_8h.html#a5ca1722555a6d5ab9ab7ae8e35c35eaa":[37,0,1,163,66],
 "coordinates_8h.html#a6159d6053e92473d31f47afe1f1fffd2":[37,0,1,163,58],
@@ -247,7 +249,5 @@ var NAVTREEINDEX79 =
 "creature__tracker_8cpp.html#a49bc164f30e64702250d2cbea09bf86c":[37,0,1,174,0],
 "creature__tracker_8cpp_source.html":[37,0,1,174],
 "creature__tracker_8h.html":[37,0,1,175],
-"creature__tracker_8h.html#a7835169ea7ffc385488edb11b2a3dffb":[37,0,1,175,2],
-"creature__tracker_8h_source.html":[37,0,1,175],
-"cuboid__rectangle_8h.html":[37,0,1,176]
+"creature__tracker_8h.html#a7835169ea7ffc385488edb11b2a3dffb":[37,0,1,175,2]
 };

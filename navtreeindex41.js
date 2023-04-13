@@ -1,5 +1,7 @@
 var NAVTREEINDEX41 =
 {
+"classgame.html#a8b3819cd380d6a3d207c119e6581300c":[36,0,376,68],
+"classgame.html#a8b7ad73630edfcdd0fef92e19cf4521a":[36,0,376,206],
 "classgame.html#a8c1b19fcf1f4d2c2bdb2142dbc88c723":[36,0,376,180],
 "classgame.html#a8d01cbec36f8d42da86b821f2add52af":[36,0,376,11],
 "classgame.html#a8de895bfd806d08577b8f0afbf231c31":[36,0,376,158],
@@ -247,7 +249,5 @@ var NAVTREEINDEX41 =
 "classgeneric__typed__reader.html#ac65dc681056a777da3dd1732448a0af6":[36,0,379,4],
 "classgeneric__typed__reader.html#ad5cfffc685b127008ffa97f03c10489c":[36,0,379,1],
 "classgeneric__typed__reader.html#af67607ae19c511edb56c5d3f17bb9dab":[36,0,379,0],
-"classgeneric__typed__reader.html#af700506046da840fe051c9007038730c":[36,0,379,2],
-"classgeneric__vehicle__part__range.html":[36,0,380],
-"classgeneric__vehicle__part__range.html#a0ca60e279d69f8bf39176c662f9f6615":[36,0,380,9]
+"classgeneric__typed__reader.html#af700506046da840fe051c9007038730c":[36,0,379,2]
 };

@@ -17,12 +17,7 @@ var catalua__bindings_8h =
     [ "reg_item", "catalua__bindings_8h.html#a3465a6ecaf46214dbd5fa070ea930f95", null ],
     [ "reg_map", "catalua__bindings_8h.html#a2c1c4fa9296d8da216a5ff819bfab733", null ],
     [ "reg_point_tripoint", "catalua__bindings_8h.html#ad0b1333120fc85cf4c4e0a3ba5092bef", null ],
-    [ "reg_test_library_1", "catalua__bindings_8h.html#a19050f05ebdced4c6f39698bc83d21b3", null ],
-    [ "reg_test_library_2", "catalua__bindings_8h.html#abf485d184d720413c08ebf79bcaf1184", null ],
-    [ "reg_test_library_3", "catalua__bindings_8h.html#a506243e1bf8ee3b07b678c66778dd6b0", null ],
-    [ "reg_test_library_4", "catalua__bindings_8h.html#a95ed15b2dbba877bd4c3351c6c22048d", null ],
-    [ "reg_test_library_5", "catalua__bindings_8h.html#a59ba4b8a01b3c3ddb37d93e77a64a2e0", null ],
-    [ "reg_test_library_6", "catalua__bindings_8h.html#ad2f951314dcd3df2a28cdcf6a6bcc65a", null ],
+    [ "reg_testing_library", "catalua__bindings_8h.html#a2ce37eb666639e8599db7251a4a745ca", null ],
     [ "reg_types", "catalua__bindings_8h.html#a6141f284ef92544f5ba01ae531668a07", null ],
     [ "reg_ui_elements", "catalua__bindings_8h.html#ac484065b2c539d27509772637b37c31a", null ]
 ];
