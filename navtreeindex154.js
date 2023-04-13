@@ -1,5 +1,17 @@
 var NAVTREEINDEX154 =
 {
+"structmutation__branch.html#a2cd23d1886d85a4ba400eb534d4ebbde":[36,0,672,13],
+"structmutation__branch.html#a2d094be9349b4d041b898caa0c55920f":[36,0,672,57],
+"structmutation__branch.html#a30668e4aa9d24a2c4abd1b73872f87cf":[36,0,672,120],
+"structmutation__branch.html#a31a2a99c9769f331a1dcac80f4c0091c":[36,0,672,92],
+"structmutation__branch.html#a327647c43604890e8c911ddc3bfc1b9e":[36,0,672,84],
+"structmutation__branch.html#a333b9003068ab6c868a05a4f22948352":[36,0,672,31],
+"structmutation__branch.html#a35c5078b89339f6298622069062ea54d":[36,0,672,3],
+"structmutation__branch.html#a35eb3d4284f1507eb4a7d7ba109c8043":[36,0,672,73],
+"structmutation__branch.html#a3b2b97dbbfc2bb45a13e5abced6a5e12":[36,0,672,54],
+"structmutation__branch.html#a3cdaad731d70c1b025246d994f958b5c":[36,0,672,19],
+"structmutation__branch.html#a3cfda8d1a3caf5e2af76b22ffead46fc":[36,0,672,75],
+"structmutation__branch.html#a3d5ac4ccc031223bdbdc90094c2a3a7b":[36,0,672,44],
 "structmutation__branch.html#a3f1c1950af3dc2a8ee75f8e45e469136":[36,0,672,8],
 "structmutation__branch.html#a428a4c5379f37bfe78da8a1e54fd4b04":[36,0,672,11],
 "structmutation__branch.html#a4323c1b93032354240307f5855041557":[36,0,672,24],
@@ -237,17 +249,5 @@ var NAVTREEINDEX154 =
 "structnpc__follower__rules.html#aa2366cb286553199d5ae204a73857731":[36,0,693,11],
 "structnpc__follower__rules.html#ad18222c3175298f3468ec4805775a374":[36,0,693,22],
 "structnpc__follower__rules.html#ad7640dd1f35a94964cb6bb5cc97a9f3b":[36,0,693,8],
-"structnpc__follower__rules.html#ada7e2b4584005bd57b2f2a54c8adf7dd":[36,0,693,13],
-"structnpc__follower__rules.html#aec3d578e145e0c7c6aaf2712ff638f1a":[36,0,693,1],
-"structnpc__follower__rules.html#af611f5a5762fd4e173e69363a4471f2a":[36,0,693,5],
-"structnpc__follower__rules.html#af7f57605c02d48aba09224adee9d260f":[36,0,693,19],
-"structnpc__follower__rules.html#af929f56ad23d6e4e653359fd31425f5e":[36,0,693,21],
-"structnpc__follower__rules.html#afe9d1e91d4b55d09c98b60a279d24b7d":[36,0,693,15],
-"structnpc__opinion.html":[36,0,694],
-"structnpc__opinion.html#a0403230893b785efdbda1188b6a99702":[36,0,694,1],
-"structnpc__opinion.html#a0e4060d5037e997fd22c635066b7cb59":[36,0,694,5],
-"structnpc__opinion.html#a226e3f6e994da6f7da79a9668455c186":[36,0,694,3],
-"structnpc__opinion.html#a33fc4533430debe24fb3a9a38acfabbe":[36,0,694,10],
-"structnpc__opinion.html#a3dd84c1d61aba9d6486853542c43dd42":[36,0,694,9],
-"structnpc__opinion.html#a409e7d1cc276941c7f621393a3e5f2f3":[36,0,694,2]
+"structnpc__follower__rules.html#ada7e2b4584005bd57b2f2a54c8adf7dd":[36,0,693,13]
 };

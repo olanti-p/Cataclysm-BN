@@ -1,5 +1,11 @@
 var NAVTREEINDEX105 =
 {
+"mapgen__functions_8h.html#a3013c2eae5a3c642a3b5fbb59545708d":[37,0,1,400,37],
+"mapgen__functions_8h.html#a3fe32b1723a7cb96bca11a167291877a":[37,0,1,400,57],
+"mapgen__functions_8h.html#a420f1a6b3a47f991a4640ae3142afaae":[37,0,1,400,10],
+"mapgen__functions_8h.html#a43b8927049348898d2e315907115207e":[37,0,1,400,46],
+"mapgen__functions_8h.html#a4760d799acf19bed42d0458bcebe3483":[37,0,1,400,20],
+"mapgen__functions_8h.html#a4801b56d65242d0a321d7a1494f84d68":[37,0,1,400,13],
 "mapgen__functions_8h.html#a4a818d92f3e05ec2756035209d067a49":[37,0,1,400,52],
 "mapgen__functions_8h.html#a516906bb8bbced8e8da9a949b6efd600":[37,0,1,400,53],
 "mapgen__functions_8h.html#a576d5b097dd20d1713053b817f1b9f31":[37,0,1,400,25],
@@ -243,11 +249,5 @@ var NAVTREEINDEX105 =
 "melee_8h.html#a5ed3b88ed3376694a321005bc94214b7":[37,0,1,418,4],
 "melee_8h.html#aa17d019b7ecb851f167fabc75b2362f9":[37,0,1,418,2],
 "melee_8h_source.html":[37,0,1,418],
-"memorial__logger_8cpp.html":[37,0,1,419],
-"memorial__logger_8cpp.html#a0a3de1e6679128988d176115710ddd03":[37,0,1,419,1],
-"memorial__logger_8cpp.html#a0b49aa7d4b07c448f7546ba24fb6b233":[37,0,1,419,2],
-"memorial__logger_8cpp.html#a1b24df80fb6fce16dd4527cc4a6fa6ca":[37,0,1,419,0],
-"memorial__logger_8cpp.html#a1ca356185f3fffe42ba56314c9d5d1e6":[37,0,1,419,31],
-"memorial__logger_8cpp.html#a20dbc35e55f446d1bbca1eda241e2c2d":[37,0,1,419,22],
-"memorial__logger_8cpp.html#a2b92e4e9fda9f562177702a5d391f4a9":[37,0,1,419,17]
+"memorial__logger_8cpp.html":[37,0,1,419]
 };

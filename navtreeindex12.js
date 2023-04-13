@@ -1,5 +1,11 @@
 var NAVTREEINDEX12 =
 {
+"character__oracle_8h_source.html":[37,0,1,129],
+"character__stat_8h.html":[37,0,1,130],
+"character__stat_8h.html#a035c78e847a263690eaab59f16c23b88":[37,0,1,130,3],
+"character__stat_8h.html#a27f8e52e2e5afc1c4a709dd65ab84755":[37,0,1,130,2],
+"character__stat_8h.html#a27f8e52e2e5afc1c4a709dd65ab84755a308f546dec073d676fe48face3d09056":[37,0,1,130,2,4],
+"character__stat_8h.html#a27f8e52e2e5afc1c4a709dd65ab84755a3963049b60ddd6534b219d3767af0dfc":[37,0,1,130,2,0],
 "character__stat_8h.html#a27f8e52e2e5afc1c4a709dd65ab84755a66212c9f367544fe9bffff62900c6203":[37,0,1,130,2,1],
 "character__stat_8h.html#a27f8e52e2e5afc1c4a709dd65ab84755a7301a4f338e31867e8ef6d3f0a148319":[37,0,1,130,2,3],
 "character__stat_8h.html#a27f8e52e2e5afc1c4a709dd65ab84755acbc4a7ccc74fbcbda6a01632c5e4656e":[37,0,1,130,2,2],
@@ -243,11 +249,5 @@ var NAVTREEINDEX12 =
 "classCharacter.html#a3430e2eee8566869f441d3af8368c153":[36,0,145,516],
 "classCharacter.html#a3487bbfa5772ac7ec5f5cf116a078912":[36,0,145,546],
 "classCharacter.html#a34a927d0f161ac92ab0d462397828bd5":[36,0,145,208],
-"classCharacter.html#a3557152bb23b408ebfa58051c45769b2":[36,0,145,9],
-"classCharacter.html#a355d0c5cefd448bb423cd5f4a6c75bba":[36,0,145,126],
-"classCharacter.html#a358731acbb8b137aa540bb8d49109ca3":[36,0,145,547],
-"classCharacter.html#a35f89e2e6eb1144b623be5281f4f221b":[36,0,145,363],
-"classCharacter.html#a3617fad4c888d630bc4a2b1edb5c9227":[36,0,145,719],
-"classCharacter.html#a36421cfd1daee0e9b07fa38e32329f56":[36,0,145,109],
-"classCharacter.html#a3710a10324a9bf1489396c2a00ad6f25":[36,0,145,246]
+"classCharacter.html#a3557152bb23b408ebfa58051c45769b2":[36,0,145,9]
 };

@@ -16,6 +16,12 @@ var namespacecata =
       [ "reg_item", "namespacecata_1_1detail.html#a3465a6ecaf46214dbd5fa070ea930f95", null ],
       [ "reg_map", "namespacecata_1_1detail.html#a2c1c4fa9296d8da216a5ff819bfab733", null ],
       [ "reg_point_tripoint", "namespacecata_1_1detail.html#ad0b1333120fc85cf4c4e0a3ba5092bef", null ],
+      [ "reg_test_library_1", "namespacecata_1_1detail.html#a19050f05ebdced4c6f39698bc83d21b3", null ],
+      [ "reg_test_library_2", "namespacecata_1_1detail.html#abf485d184d720413c08ebf79bcaf1184", null ],
+      [ "reg_test_library_3", "namespacecata_1_1detail.html#a506243e1bf8ee3b07b678c66778dd6b0", null ],
+      [ "reg_test_library_4", "namespacecata_1_1detail.html#a95ed15b2dbba877bd4c3351c6c22048d", null ],
+      [ "reg_test_library_5", "namespacecata_1_1detail.html#a59ba4b8a01b3c3ddb37d93e77a64a2e0", null ],
+      [ "reg_test_library_6", "namespacecata_1_1detail.html#ad2f951314dcd3df2a28cdcf6a6bcc65a", null ],
       [ "reg_types", "namespacecata_1_1detail.html#a6141f284ef92544f5ba01ae531668a07", null ],
       [ "reg_ui_elements", "namespacecata_1_1detail.html#ac484065b2c539d27509772637b37c31a", null ]
     ] ],
