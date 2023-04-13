@@ -1,5 +1,17 @@
 var NAVTREEINDEX77 =
 {
+"color_8h.html#af600494c677628f77182e7e72db72894":[37,0,1,140,163],
+"color_8h.html#af6db5f8183991166e5001f229336282e":[37,0,1,140,126],
+"color_8h.html#af7bea175641eeb1fbec43dc22b5dd0ea":[37,0,1,140,110],
+"color_8h.html#af9aa5c141cc167465c85ab7680a78dc5":[37,0,1,140,133],
+"color_8h.html#afa7e41b7a5770473bde6ecb3a9f40897":[37,0,1,140,11],
+"color_8h.html#afb00ba7b2a8a6e1e665eb0a582be8921":[37,0,1,140,140],
+"color_8h.html#afb14da50344304e96a425d01c9c41ba4":[37,0,1,140,73],
+"color_8h.html#afbeac4c0ce2f171bf1d4195525fda835":[37,0,1,140,22],
+"color_8h.html#afdf5176a76fb6755a2f41766a209aaae":[37,0,1,140,101],
+"color_8h.html#afe632358e7d8a87871f1e61672f9aa4a":[37,0,1,140,122],
+"color_8h_source.html":[37,0,1,140],
+"color__loader_8h.html":[37,0,1,141],
 "color__loader_8h.html#a2919c0384ecadee109873e67070fc61a":[37,0,1,141,1],
 "color__loader_8h_source.html":[37,0,1,141],
 "computer_8cpp.html":[37,0,1,142],
@@ -237,17 +249,5 @@ var NAVTREEINDEX77 =
 "construction__group_8h.html#aa39b5e6512ad85bc06a16c92d758cc2a":[37,0,1,154,2],
 "construction__group_8h.html#abb5d5e4ce098ba2d7d9a908aeee6c98b":[37,0,1,154,1],
 "construction__group_8h_source.html":[37,0,1,154],
-"construction__partial_8h.html":[37,0,1,155],
-"construction__partial_8h.html#ab8656e85a62bd684e058fd00ee805c4f":[37,0,1,155,1],
-"construction__partial_8h_source.html":[37,0,1,155],
-"construction__sequence_8cpp.html":[37,0,1,156],
-"construction__sequence_8cpp.html#a63bbedcb693b9cd0f74a7fc5e6b5b864":[37,0,1,156,4],
-"construction__sequence_8cpp.html#a931e4647d20ea9a3f0f2f1a3368a87b7":[37,0,1,156,5],
-"construction__sequence_8cpp.html#a9d09cc131d46de4a5c993f90dd9407b7":[37,0,1,156,1],
-"construction__sequence_8cpp.html#aaaf5d2418465c08d386c8f81c6fe041f":[37,0,1,156,6],
-"construction__sequence_8cpp.html#aaea5fc5d3181e2de94c3f0907a6504d9":[37,0,1,156,7],
-"construction__sequence_8cpp.html#ab87dcf409cee13a4410f85cf2e92bfb7":[37,0,1,156,3],
-"construction__sequence_8cpp.html#abe055de70abaec3f4870b1bbdc0eaf2a":[37,0,1,156,2],
-"construction__sequence_8cpp.html#abf7e7f9130e3548ede8580c0e8ceb01e":[37,0,1,156,8],
-"construction__sequence_8cpp.html#ad2faffcffdd5b5e821cd1b7deeeea75a":[37,0,1,156,9]
+"construction__partial_8h.html":[37,0,1,155]
 };

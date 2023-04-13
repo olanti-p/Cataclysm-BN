@@ -1,5 +1,17 @@
 var NAVTREEINDEX56 =
 {
+"classmonster.html#a8bce8bde3c0ee3824c875264f30c47cf":[36,0,653,46],
+"classmonster.html#a8cc6ecf00fc1610faab168c9821d6341":[36,0,653,162],
+"classmonster.html#a8e30fdb59bcecd8ecb8a609431cb6caf":[36,0,653,235],
+"classmonster.html#a8ea6e76214228bc20ec1d69daebe5d72":[36,0,653,217],
+"classmonster.html#a9118d0de36f4dbb72c28cc0832bba897":[36,0,653,70],
+"classmonster.html#a918611ed3f15584f6e4734e1b249ad98":[36,0,653,47],
+"classmonster.html#a92fee3f682eda1b079f69bc6bebb5696":[36,0,653,200],
+"classmonster.html#a984dad86484381638f068d2f1a32f7c6":[36,0,653,136],
+"classmonster.html#a986ff9835bbe69a0b2401e91d01a79c6":[36,0,653,2],
+"classmonster.html#a98c421c82c34706735f13afe25ea7f1f":[36,0,653,195],
+"classmonster.html#a98cfa6c825f373b60a0a4021a8dbf750":[36,0,653,50],
+"classmonster.html#a997d7fb58cdf5a5fe53216fd3ad3b62c":[36,0,653,132],
 "classmonster.html#a9a2109e8e8394c4580a7a545ab9c04fb":[36,0,653,239],
 "classmonster.html#a9c38c518aafd98f360894f74e2f192e8":[36,0,653,254],
 "classmonster.html#a9c786dc6f818492c05e47b95d2d0164d":[36,0,653,244],
@@ -237,17 +249,5 @@ var NAVTREEINDEX56 =
 "classnpc.html#a2419cb3622c72ab961d4aebc64060ee0":[36,0,687,236],
 "classnpc.html#a251cafb769b1d8ec4585deb3b50aaafd":[36,0,687,258],
 "classnpc.html#a276de4730030fc73745440817c9a13aa":[36,0,687,118],
-"classnpc.html#a28ad588f55d2f93f739021a0389a74b1":[36,0,687,307],
-"classnpc.html#a295b6e064a8ef2defd64eb8f9774ba64":[36,0,687,250],
-"classnpc.html#a2b3bf46fefcb3889f2df2bce41d6611b":[36,0,687,7],
-"classnpc.html#a2b7784aa4678a3be484e7fa7027fa497":[36,0,687,90],
-"classnpc.html#a2d47ff8926fed9a85d1168e7e514f871":[36,0,687,298],
-"classnpc.html#a2d65d0fa05b717f66e9f967151422624":[36,0,687,83],
-"classnpc.html#a2ebcfb2511df0644de3d422dcb50d71b":[36,0,687,174],
-"classnpc.html#a2f119a95de9c88dabad376d9b65dd4e6":[36,0,687,8],
-"classnpc.html#a2f3fa0c15437c1a6df2cecb3e28f3984":[36,0,687,185],
-"classnpc.html#a3053738f4a1e327292e1af7afcd34c9c":[36,0,687,233],
-"classnpc.html#a305f1416efd6a05654042edb9d23f2da":[36,0,687,49],
-"classnpc.html#a30e6cc6be262b97a91a4932e19a7901e":[36,0,687,99],
-"classnpc.html#a32ceae6e42afded1f9fef157bfec8715":[36,0,687,161]
+"classnpc.html#a28ad588f55d2f93f739021a0389a74b1":[36,0,687,307]
 };

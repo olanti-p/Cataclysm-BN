@@ -250,6 +250,14 @@ Functions</h2></td></tr>
 <tr class="separator:aa161600db431774cdc9071771793bb21"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf75a3583c9f41b0d384110abd4517f4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecata.html#acf75a3583c9f41b0d384110abd4517f4">run_on_game_load_hooks</a> (<a class="el" href="structcata_1_1lua__state.html">lua_state</a> &amp;state)</td></tr>
 <tr class="separator:acf75a3583c9f41b0d384110abd4517f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18b59864157d3e39262a6b7ef987694e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecata.html#a18b59864157d3e39262a6b7ef987694e">run_on_every_second</a> (<a class="el" href="structcata_1_1lua__state.html">lua_state</a> &amp;state)</td></tr>
+<tr class="separator:a18b59864157d3e39262a6b7ef987694e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2132bb2e43a3fa458cd99750d3ab71c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecata.html#af2132bb2e43a3fa458cd99750d3ab71c">run_on_every_minute</a> (<a class="el" href="structcata_1_1lua__state.html">lua_state</a> &amp;state)</td></tr>
+<tr class="separator:af2132bb2e43a3fa458cd99750d3ab71c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2540cfea9b1eb7bc9c683bafbe3dd3ab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecata.html#a2540cfea9b1eb7bc9c683bafbe3dd3ab">run_on_every_hour</a> (<a class="el" href="structcata_1_1lua__state.html">lua_state</a> &amp;state)</td></tr>
+<tr class="separator:a2540cfea9b1eb7bc9c683bafbe3dd3ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5781f4594c392e902495c11459f01edc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecata.html#a5781f4594c392e902495c11459f01edc">run_on_every_day</a> (<a class="el" href="structcata_1_1lua__state.html">lua_state</a> &amp;state)</td></tr>
+<tr class="separator:a5781f4594c392e902495c11459f01edc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e3c720e2bf07bbe033938ffdac756d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecata.html#a1e3c720e2bf07bbe033938ffdac756d5">run_on_mapgen_postprocess_hooks</a> (<a class="el" href="structcata_1_1lua__state.html">lua_state</a> &amp;state, <a class="el" href="classmap.html">map</a> &amp;m, const <a class="el" href="structtripoint.html">tripoint</a> &amp;p, const <a class="el" href="classtime__point.html">time_point</a> &amp;when)</td></tr>
 <tr class="separator:a1e3c720e2bf07bbe033938ffdac756d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a58ee646192c8f2243fe37630a2419875"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecata.html#a58ee646192c8f2243fe37630a2419875">reg_all_bindings</a> (sol::state &amp;lua)</td></tr>
@@ -1298,10 +1306,10 @@ template&lt;<a class="el" href="event_8h.html#a430b444c74dd3fd1472a31714ec5f1ce"
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="catalua_8cpp_source.html#l00365">365</a> of file <a class="el" href="catalua_8cpp_source.html">catalua.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>{</div>
-<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="catalua_8cpp.html#a0edd4c7bb99aefd1351c645998b33755">LUA_API_VERSION</a>;</div>
-<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>}</div>
+<p class="definition">Definition at line <a class="el" href="catalua_8cpp_source.html#l00369">369</a> of file <a class="el" href="catalua_8cpp_source.html">catalua.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>{</div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="catalua_8cpp.html#a0edd4c7bb99aefd1351c645998b33755">LUA_API_VERSION</a>;</div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>}</div>
 <div class="ttc" id="acatalua_8cpp_html_a0edd4c7bb99aefd1351c645998b33755"><div class="ttname"><a href="catalua_8cpp.html#a0edd4c7bb99aefd1351c645998b33755">LUA_API_VERSION</a></div><div class="ttdeci">constexpr int LUA_API_VERSION</div><div class="ttdef"><b>Definition:</b> <a href="catalua_8cpp_source.html#l00005">catalua.cpp:5</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="catalua_8cpp_source.html#l00005">LUA_API_VERSION</a>.</p>
@@ -1520,7 +1528,7 @@ template&lt;class T , typename Hash  = std::hash&lt;T&gt;&gt; </div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>}</div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="game_8cpp_source.html#l02540">game::load()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="game_8cpp_source.html#l02552">game::load()</a>.</p>
 
 </div>
 </div>
@@ -1775,7 +1783,7 @@ template&lt;typename... Args&gt; </div>
 <p class="definition">Definition at line <a class="el" href="catalua_8cpp_source.html#l00085">85</a> of file <a class="el" href="catalua_8cpp_source.html">catalua.cpp</a>.</p>
 <div class="fragment"><div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>{}</div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="catalua_8cpp_source.html#l00380">run_on_game_load_hooks()</a>, <a class="el" href="catalua_8cpp_source.html#l00375">run_on_game_save_hooks()</a>, and <a class="el" href="catalua_8cpp_source.html#l00385">run_on_mapgen_postprocess_hooks()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="catalua_8cpp_source.html#l00404">run_on_every_day()</a>, <a class="el" href="catalua_8cpp_source.html#l00399">run_on_every_hour()</a>, <a class="el" href="catalua_8cpp_source.html#l00394">run_on_every_minute()</a>, <a class="el" href="catalua_8cpp_source.html#l00389">run_on_every_second()</a>, <a class="el" href="catalua_8cpp_source.html#l00384">run_on_game_load_hooks()</a>, <a class="el" href="catalua_8cpp_source.html#l00379">run_on_game_save_hooks()</a>, and <a class="el" href="catalua_8cpp_source.html#l00409">run_on_mapgen_postprocess_hooks()</a>.</p>
 
 </div>
 </div>
@@ -1878,6 +1886,115 @@ template&lt;typename... Args&gt; </div>
 
 </div>
 </div>
+<a id="a5781f4594c392e902495c11459f01edc" name="a5781f4594c392e902495c11459f01edc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5781f4594c392e902495c11459f01edc">&#9670;&nbsp;</a></span>run_on_every_day()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cata::run_on_every_day </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcata_1_1lua__state.html">lua_state</a> &amp;&#160;</td>
+          <td class="paramname"><em>state</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="catalua_8cpp_source.html#l00404">404</a> of file <a class="el" href="catalua_8cpp_source.html">catalua.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>{</div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>    <a class="code hl_function" href="namespacecata.html#a9248faa992963d0c77f8628d24a25b00">run_hooks</a>( state, <span class="stringliteral">&quot;on_every_day&quot;</span> );</div>
+<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>}</div>
+<div class="ttc" id="anamespacecata_html_a9248faa992963d0c77f8628d24a25b00"><div class="ttname"><a href="namespacecata.html#a9248faa992963d0c77f8628d24a25b00">cata::run_hooks</a></div><div class="ttdeci">void run_hooks(Args &amp;&amp;...)</div><div class="ttdef"><b>Definition:</b> <a href="catalua_8cpp_source.html#l00085">catalua.cpp:85</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="catalua_8cpp_source.html#l00085">run_hooks()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="game_8cpp_source.html#l01344">game::do_turn()</a>.</p>
+
+</div>
+</div>
+<a id="a2540cfea9b1eb7bc9c683bafbe3dd3ab" name="a2540cfea9b1eb7bc9c683bafbe3dd3ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2540cfea9b1eb7bc9c683bafbe3dd3ab">&#9670;&nbsp;</a></span>run_on_every_hour()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cata::run_on_every_hour </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcata_1_1lua__state.html">lua_state</a> &amp;&#160;</td>
+          <td class="paramname"><em>state</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="catalua_8cpp_source.html#l00399">399</a> of file <a class="el" href="catalua_8cpp_source.html">catalua.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>{</div>
+<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>    <a class="code hl_function" href="namespacecata.html#a9248faa992963d0c77f8628d24a25b00">run_hooks</a>( state, <span class="stringliteral">&quot;on_every_hour&quot;</span> );</div>
+<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>}</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="catalua_8cpp_source.html#l00085">run_hooks()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="game_8cpp_source.html#l01344">game::do_turn()</a>.</p>
+
+</div>
+</div>
+<a id="af2132bb2e43a3fa458cd99750d3ab71c" name="af2132bb2e43a3fa458cd99750d3ab71c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2132bb2e43a3fa458cd99750d3ab71c">&#9670;&nbsp;</a></span>run_on_every_minute()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cata::run_on_every_minute </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcata_1_1lua__state.html">lua_state</a> &amp;&#160;</td>
+          <td class="paramname"><em>state</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="catalua_8cpp_source.html#l00394">394</a> of file <a class="el" href="catalua_8cpp_source.html">catalua.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>{</div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>    <a class="code hl_function" href="namespacecata.html#a9248faa992963d0c77f8628d24a25b00">run_hooks</a>( state, <span class="stringliteral">&quot;on_every_minute&quot;</span> );</div>
+<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>}</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="catalua_8cpp_source.html#l00085">run_hooks()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="game_8cpp_source.html#l01344">game::do_turn()</a>.</p>
+
+</div>
+</div>
+<a id="a18b59864157d3e39262a6b7ef987694e" name="a18b59864157d3e39262a6b7ef987694e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a18b59864157d3e39262a6b7ef987694e">&#9670;&nbsp;</a></span>run_on_every_second()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cata::run_on_every_second </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcata_1_1lua__state.html">lua_state</a> &amp;&#160;</td>
+          <td class="paramname"><em>state</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="catalua_8cpp_source.html#l00389">389</a> of file <a class="el" href="catalua_8cpp_source.html">catalua.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>{</div>
+<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>    <a class="code hl_function" href="namespacecata.html#a9248faa992963d0c77f8628d24a25b00">run_hooks</a>( state, <span class="stringliteral">&quot;on_every_second&quot;</span> );</div>
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>}</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="catalua_8cpp_source.html#l00085">run_hooks()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="game_8cpp_source.html#l01344">game::do_turn()</a>.</p>
+
+</div>
+</div>
 <a id="acf75a3583c9f41b0d384110abd4517f4" name="acf75a3583c9f41b0d384110abd4517f4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acf75a3583c9f41b0d384110abd4517f4">&#9670;&nbsp;</a></span>run_on_game_load_hooks()</h2>
 
@@ -1894,13 +2011,14 @@ template&lt;typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="catalua_8cpp_source.html#l00380">380</a> of file <a class="el" href="catalua_8cpp_source.html">catalua.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>{</div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>    <a class="code hl_function" href="namespacecata.html#a9248faa992963d0c77f8628d24a25b00">run_hooks</a>( state, <span class="stringliteral">&quot;on_game_load&quot;</span> );</div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>}</div>
-<div class="ttc" id="anamespacecata_html_a9248faa992963d0c77f8628d24a25b00"><div class="ttname"><a href="namespacecata.html#a9248faa992963d0c77f8628d24a25b00">cata::run_hooks</a></div><div class="ttdeci">void run_hooks(Args &amp;&amp;...)</div><div class="ttdef"><b>Definition:</b> <a href="catalua_8cpp_source.html#l00085">catalua.cpp:85</a></div></div>
+<p class="definition">Definition at line <a class="el" href="catalua_8cpp_source.html#l00384">384</a> of file <a class="el" href="catalua_8cpp_source.html">catalua.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>{</div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>    <a class="code hl_function" href="namespacecata.html#a9248faa992963d0c77f8628d24a25b00">run_hooks</a>( state, <span class="stringliteral">&quot;on_game_load&quot;</span> );</div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="catalua_8cpp_source.html#l00085">run_hooks()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="game_8cpp_source.html#l02552">game::load()</a>.</p>
 
 </div>
 </div>
@@ -1920,12 +2038,14 @@ template&lt;typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="catalua_8cpp_source.html#l00375">375</a> of file <a class="el" href="catalua_8cpp_source.html">catalua.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>{</div>
-<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>    <a class="code hl_function" href="namespacecata.html#a9248faa992963d0c77f8628d24a25b00">run_hooks</a>( state, <span class="stringliteral">&quot;on_game_save&quot;</span> );</div>
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>}</div>
+<p class="definition">Definition at line <a class="el" href="catalua_8cpp_source.html#l00379">379</a> of file <a class="el" href="catalua_8cpp_source.html">catalua.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>{</div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>    <a class="code hl_function" href="namespacecata.html#a9248faa992963d0c77f8628d24a25b00">run_hooks</a>( state, <span class="stringliteral">&quot;on_game_save&quot;</span> );</div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="catalua_8cpp_source.html#l00085">run_hooks()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="game_8cpp_source.html#l02753">game::save()</a>.</p>
 
 </div>
 </div>
@@ -1967,10 +2087,10 @@ template&lt;typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="catalua_8cpp_source.html#l00385">385</a> of file <a class="el" href="catalua_8cpp_source.html">catalua.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>{</div>
-<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>    <a class="code hl_function" href="namespacecata.html#a9248faa992963d0c77f8628d24a25b00">run_hooks</a>( state, <span class="stringliteral">&quot;on_mapgen_postprocess&quot;</span>, m, p, when );</div>
-<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>}</div>
+<p class="definition">Definition at line <a class="el" href="catalua_8cpp_source.html#l00409">409</a> of file <a class="el" href="catalua_8cpp_source.html">catalua.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>{</div>
+<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>    <a class="code hl_function" href="namespacecata.html#a9248faa992963d0c77f8628d24a25b00">run_hooks</a>( state, <span class="stringliteral">&quot;on_mapgen_postprocess&quot;</span>, m, p, when );</div>
+<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="catalua_8cpp_source.html#l00085">run_hooks()</a>.</p>
 
@@ -1999,7 +2119,7 @@ template&lt;typename... Args&gt; </div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>}</div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="game_8cpp_source.html#l02739">game::save()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="game_8cpp_source.html#l02753">game::save()</a>.</p>
 
 </div>
 </div>
@@ -2480,7 +2600,7 @@ template&lt;class T &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacecata.html">cata</a></li>
-    <li class="footer">Generated on Thu Apr 13 2023 12:54:21 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Thu Apr 13 2023 15:08:58 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

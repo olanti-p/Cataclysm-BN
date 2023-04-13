@@ -1,5 +1,16 @@
 var NAVTREEINDEX15 =
 {
+"classCharacter.html#ac3066aafc3a5ffe9ee8058e062e177a7":[36,0,145,646],
+"classCharacter.html#ac32fc7b58853ea8ea8602b622bc734e3":[36,0,145,580],
+"classCharacter.html#ac362a4ed1eb0794de41ee0b5df98724d":[36,0,145,474],
+"classCharacter.html#ac3d46549b7cdaac1f98991167ad5f1b3":[36,0,145,791],
+"classCharacter.html#ac3e27cd8b8fe445e06e6d20d0eb82aff":[36,0,145,240],
+"classCharacter.html#ac407c565e22ac2a0d52a17c1c9986c90":[36,0,145,569],
+"classCharacter.html#ac41a59a1ff1d8efa22a615a5432a6243":[36,0,145,645],
+"classCharacter.html#ac4f79aa8b39826e0d6336d66954e8f7d":[36,0,145,6],
+"classCharacter.html#ac517aa9b8a0950c860d5c0bee192f9a9":[36,0,145,214],
+"classCharacter.html#ac545f65dc2756956a43c456b0228e171":[36,0,145,74],
+"classCharacter.html#ac55733961846b5c57183bd3b0fde9eae":[36,0,145,563],
 "classCharacter.html#ac6bf7fc74f496275b3a2df6eb9a401c2":[36,0,145,603],
 "classCharacter.html#ac72735f47a3511fbc74cd2c6b313d215":[36,0,145,730],
 "classCharacter.html#ac730f7fc536d8e2104ca780f6aa6dd7f":[36,0,145,689],
@@ -238,16 +249,5 @@ var NAVTREEINDEX15 =
 "classCreature.html#a2df004655672434d5a9b31cab46fa16b":[36,0,187,30],
 "classCreature.html#a2ed7b87167039b2cf0ecb2464d62f802":[36,0,187,74],
 "classCreature.html#a303fcc58869f10f44be1d598ed1aa26f":[36,0,187,67],
-"classCreature.html#a30a6abfdfc637db5b7102b5ce56a00d0":[36,0,187,5],
-"classCreature.html#a3175e1b479b42298f197f5a41de45f50":[36,0,187,120],
-"classCreature.html#a31796e0c637397ee99aa363d9fff619a":[36,0,187,20],
-"classCreature.html#a330dad28f732a1cf3af695eedb54877d":[36,0,187,79],
-"classCreature.html#a33f2223d3fa61c5a6cad98914f3895fa":[36,0,187,105],
-"classCreature.html#a35bbfb9c042ed3cf7e0ae9b7280384c4":[36,0,187,143],
-"classCreature.html#a360b7ab7279423ee61b38d433ba338fd":[36,0,187,278],
-"classCreature.html#a362ab9bed1655e6a8d89500c0a918151":[36,0,187,29],
-"classCreature.html#a36dcf5a04ddc0cf9fa29c08b7b099158":[36,0,187,70],
-"classCreature.html#a3721e2f822cedc9866c9e65c2681adc2":[36,0,187,107],
-"classCreature.html#a37feb3219a76eff04680e05807f1cfd0":[36,0,187,85],
-"classCreature.html#a38ea0c149ac718542546fdceba44a4df":[36,0,187,145]
+"classCreature.html#a30a6abfdfc637db5b7102b5ce56a00d0":[36,0,187,5]
 };

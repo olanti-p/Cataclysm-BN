@@ -1,5 +1,16 @@
 var NAVTREEINDEX20 =
 {
+"classSkillDisplayType.html#a359fe8a0a86c6985c9c0cba6bd9f30ad":[36,0,853,8],
+"classSkillDisplayType.html#a61f23b592539e6a0a6b14dac88934f4c":[36,0,853,9],
+"classSkillDisplayType.html#a7dfbbb6a94539de7311dec267c6d9c31":[36,0,853,1],
+"classSkillDisplayType.html#aacc56ed72984ce8371e2ea286b6d68d2":[36,0,853,2],
+"classSkillDisplayType.html#ac0b55f743b3af7917f1acf4c570d08f9":[36,0,853,0],
+"classSkillDisplayType.html#acfd7fc04ad1758e65afed36868e35c67":[36,0,853,3],
+"classSkillDisplayType.html#ad2692d88c231311ee4bdfa45a090e02b":[36,0,853,5],
+"classSkillDisplayType.html#aeb9d5ebe7006488b79a6fbf3387f903c":[36,0,853,4],
+"classSkillDisplayType.html#af51e8a5d2d34368ada9962db8fe0b864":[36,0,853,7],
+"classSkillDisplayType.html#af6f9b19956d3454445042bdc86d79706":[36,0,853,6],
+"classSkillLevel.html":[36,0,854],
 "classSkillLevel.html#a214ba8362781a509528e50c96ac9b3f0":[36,0,854,14],
 "classSkillLevel.html#a26aa41e36b12e46019fc2f5442c64a90":[36,0,854,20],
 "classSkillLevel.html#a28763c074460e59ab2851ab31f9e2a3c":[36,0,854,8],
@@ -238,16 +249,5 @@ var NAVTREEINDEX20 =
 "classactivity__type.html#a0e10a476390007e7a7d9364cb4beb863":[36,0,56,20],
 "classactivity__type.html#a11aacfbd78191ccc9556a6dbb23e1efb":[36,0,56,12],
 "classactivity__type.html#a25bd30a6d62a032791353c72fa349bb6":[36,0,56,15],
-"classactivity__type.html#a28ce4287c06b4b532a5231f8fdef4da8":[36,0,56,14],
-"classactivity__type.html#a2c563452c891e4ab53db0be7bf169fd4":[36,0,56,3],
-"classactivity__type.html#a30f219985982de9f6b162793ab759ca3":[36,0,56,17],
-"classactivity__type.html#a31c383e5dc81ad4df044ea97b7766224":[36,0,56,7],
-"classactivity__type.html#a381f72f72b5a22e260e965294b08ea96":[36,0,56,22],
-"classactivity__type.html#a3f83e1a21e15b9a36bb2ffe9c1c96b90":[36,0,56,1],
-"classactivity__type.html#a4ba4766a422156ce7b2fc7487f783a99":[36,0,56,8],
-"classactivity__type.html#a54a8507ca430b5e4673d376790928459":[36,0,56,11],
-"classactivity__type.html#a895de2408ed81a8aaa60df8e2e64265e":[36,0,56,13],
-"classactivity__type.html#a8c7737b83f50f87dbc1e0c4a920f8834":[36,0,56,9],
-"classactivity__type.html#a96a74ec754eb8c2f48873a26429e6173":[36,0,56,2],
-"classactivity__type.html#aa5ac16650391c20842e0f091df5c3e05":[36,0,56,6]
+"classactivity__type.html#a28ce4287c06b4b532a5231f8fdef4da8":[36,0,56,14]
 };

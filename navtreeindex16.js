@@ -1,5 +1,16 @@
 var NAVTREEINDEX16 =
 {
+"classCreature.html#a3175e1b479b42298f197f5a41de45f50":[36,0,187,120],
+"classCreature.html#a31796e0c637397ee99aa363d9fff619a":[36,0,187,20],
+"classCreature.html#a330dad28f732a1cf3af695eedb54877d":[36,0,187,79],
+"classCreature.html#a33f2223d3fa61c5a6cad98914f3895fa":[36,0,187,105],
+"classCreature.html#a35bbfb9c042ed3cf7e0ae9b7280384c4":[36,0,187,143],
+"classCreature.html#a360b7ab7279423ee61b38d433ba338fd":[36,0,187,278],
+"classCreature.html#a362ab9bed1655e6a8d89500c0a918151":[36,0,187,29],
+"classCreature.html#a36dcf5a04ddc0cf9fa29c08b7b099158":[36,0,187,70],
+"classCreature.html#a3721e2f822cedc9866c9e65c2681adc2":[36,0,187,107],
+"classCreature.html#a37feb3219a76eff04680e05807f1cfd0":[36,0,187,85],
+"classCreature.html#a38ea0c149ac718542546fdceba44a4df":[36,0,187,145],
 "classCreature.html#a38f6eca5af094a68b5f3a03ed8521900":[36,0,187,76],
 "classCreature.html#a3a3ada596854cf8084b3a728b633a9db":[36,0,187,205],
 "classCreature.html#a3abf87ed21086c0a4ea2c6da9aef08cd":[36,0,187,257],
@@ -238,16 +249,5 @@ var NAVTREEINDEX16 =
 "classCreature__tracker.html#a5f544a4e4f764283e2d5870df7bbe9a8":[36,0,188,11],
 "classCreature__tracker.html#a6204e0102cf80ec0a93fb04d9e1c9729":[36,0,188,13],
 "classCreature__tracker.html#a6a593d5147b79f1fe50ccbf3514cbc0c":[36,0,188,12],
-"classCreature__tracker.html#a6a63ec96b30321beea05ef9d8d64d95f":[36,0,188,4],
-"classCreature__tracker.html#a7a9a07b758f4d863fcdc543f7b1b3b0c":[36,0,188,8],
-"classCreature__tracker.html#a830f6796573f3a7a9ebbaa91c29561fb":[36,0,188,24],
-"classCreature__tracker.html#a9356eef8152178f08039d835123e38ce":[36,0,188,23],
-"classCreature__tracker.html#aa62778fd8a12989a3b85ad00bfabbec1":[36,0,188,6],
-"classCreature__tracker.html#abf1446c98b6d5e46563f055d85d6be34":[36,0,188,5],
-"classCreature__tracker.html#acc80d448017a45e951fe001ff983871f":[36,0,188,18],
-"classCreature__tracker.html#acdb39e8f7356d6e7273f97e364058c6a":[36,0,188,20],
-"classCreature__tracker.html#ae505f3cb0fa345d5ae2ccae53ed5a5cf":[36,0,188,19],
-"classCreature__tracker.html#ae5fb3799cc60fe73ce4de69d4d5432a5":[36,0,188,1],
-"classCreature__tracker.html#aee19ba2222ee15db43a73002c2c0f870":[36,0,188,2],
-"classCreature__tracker.html#afad36e18b93092f5c412a38ea332fa20":[36,0,188,15]
+"classCreature__tracker.html#a6a63ec96b30321beea05ef9d8d64d95f":[36,0,188,4]
 };

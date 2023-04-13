@@ -1,5 +1,17 @@
 var NAVTREEINDEX40 =
 {
+"classfont__loader.html#a6b84bc2246765c3255f9a1532fec70e4":[36,0,349,12],
+"classfont__loader.html#a6de04499af039ca4c5e253eac565adeb":[36,0,349,13],
+"classfont__loader.html#a8050a55346b662d79fd2f5abdcbc7793":[36,0,349,6],
+"classfont__loader.html#a82c3a9cdb2f279721280225dabc4e08b":[36,0,349,0],
+"classfont__loader.html#ab2507e0f4566eb8594e716ada2a2564b":[36,0,349,14],
+"classfont__loader.html#ad81559159329f2dfc53dc50ffee68c1b":[36,0,349,10],
+"classfont__loader.html#ada29ad300e5ba04b98569a858268d7c5":[36,0,349,8],
+"classfont__loader.html#af6ed6a20b8ca3b5b9b0a051a87aa8e12":[36,0,349,3],
+"classfont__loader.html#afae003a1d5ef2992152b9c8be4675a7d":[36,0,349,1],
+"classfont__loader.html#afca4307d72ff18a0e0a6f30645805f77":[36,0,349,2],
+"classformat__arg__store.html":[36,0,357],
+"classformat__arg__store.html#a785430d11d4e8e5dcd9f231e7d69695e":[36,0,357,1],
 "classformat__arg__store.html#a888a530af0dcf680153a13f7453871eb":[36,0,357,5],
 "classformat__arg__store.html#a8c4455204a76935307f85e89fad3492f":[36,0,357,3],
 "classformat__arg__store.html#ab8e9e33cc7b78829001a86ef6110ebb6":[36,0,357,2],
@@ -237,17 +249,5 @@ var NAVTREEINDEX40 =
 "classgame.html#a80cb940b3c9d5b8166eb9abc8c238069":[36,0,376,271],
 "classgame.html#a82b3978c3d706c3f1263ab6a1d28fc0e":[36,0,376,296],
 "classgame.html#a8303b59aac6cfd12281a7cecf628a7fd":[36,0,376,26],
-"classgame.html#a83b457b6690516199efbb4a667a950a2":[36,0,376,183],
-"classgame.html#a83c13367dd746db98368e9279df92c4b":[36,0,376,107],
-"classgame.html#a83d7c7045891e11e151efdc2d426bd6a":[36,0,376,238],
-"classgame.html#a83f614520e51207b4b4537e9c4111ca8":[36,0,376,126],
-"classgame.html#a856211bd6de80b80d168b53cc8b412c1":[36,0,376,350],
-"classgame.html#a861ee8fc9d819ed87a9135287a8c84cc":[36,0,376,111],
-"classgame.html#a864a85660284931fc650756b20d8228a":[36,0,376,64],
-"classgame.html#a88047110d037c5af8b9277f9578772f2":[36,0,376,6],
-"classgame.html#a88047110d037c5af8b9277f9578772f2a5dfd352dd6b7a5d118237fcf1e19fcc1":[36,0,376,6,1],
-"classgame.html#a88047110d037c5af8b9277f9578772f2a747af730e45ddc6271b77714ffa3a5a0":[36,0,376,6,0],
-"classgame.html#a88047110d037c5af8b9277f9578772f2ab7426fb9c3932995306fceba2874d057":[36,0,376,6,2],
-"classgame.html#a88365878a3900438aaec090f6b3e89d5":[36,0,376,365],
-"classgame.html#a8abda8202d4d40d918f2946eb9391ffc":[36,0,376,100]
+"classgame.html#a83b457b6690516199efbb4a667a950a2":[36,0,376,183]
 };

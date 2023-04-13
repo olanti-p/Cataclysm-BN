@@ -27,6 +27,8 @@ var catalua__luna__doc_8h =
     [ "LUNA_VAL", "catalua__luna__doc_8h.html#ae54b3922c8dbefa20a489aedca36ca33", null ],
     [ "LUNA_VAL", "catalua__luna__doc_8h.html#a0598e7d876cca64b04dffec4c7d98bd4", null ],
     [ "LUNA_VAL", "catalua__luna__doc_8h.html#aec1f123c0a04dc13e5edaceed31667a8", null ],
+    [ "LUNA_VAL", "catalua__luna__doc_8h.html#a48fa94e0a228ef6b41a11c735b3ef4f6", null ],
+    [ "LUNA_VAL", "catalua__luna__doc_8h.html#a67e4f5f66200dfc21f3faaa6305fd22e", null ],
     [ "LUNA_VAL", "catalua__luna__doc_8h.html#a49237fae139227900a266a8f1f4605aa", null ],
     [ "LUNA_VAL", "catalua__luna__doc_8h.html#ad024b68839252ad7499e46a67a8881b4", null ],
     [ "LUNA_VAL", "catalua__luna__doc_8h.html#a635b5a939159cee76601e48456a5d765", null ]

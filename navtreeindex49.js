@@ -1,5 +1,17 @@
 var NAVTREEINDEX49 =
 {
+"classjmapgen__monster.html#a3f51227437d55761cc625e312e044484":[36,0,509,4],
+"classjmapgen__monster.html#a4e10dce03dc5c82be001e9282ec516df":[36,0,509,5],
+"classjmapgen__monster.html#a5403f93cd6cf00d959578f0e95d76bb2":[36,0,509,0],
+"classjmapgen__monster.html#a5e65a7c3919daa03ed75e5937f972b28":[36,0,509,3],
+"classjmapgen__monster.html#a66ccee684f7438e0bd3ca4f9bc12585f":[36,0,509,9],
+"classjmapgen__monster.html#aa9149f121e48034284591aa571f1abe4":[36,0,509,1],
+"classjmapgen__monster.html#ac6af63e8a123da24173457a90dcdd7e9":[36,0,509,7],
+"classjmapgen__monster.html#af8ff5d110c2fe9583bf1d94bb2389d31":[36,0,509,6],
+"classjmapgen__monster__group.html":[36,0,510],
+"classjmapgen__monster__group.html#a00a8b1f205887782d27ad48943f9abe9":[36,0,510,0],
+"classjmapgen__monster__group.html#a1c37f1b740d7303b1c7287d05baa206b":[36,0,510,1],
+"classjmapgen__monster__group.html#a42e8a6c4f899f099ba59257e8d9fdedd":[36,0,510,2],
 "classjmapgen__monster__group.html#a91b793cbfb83c91eb8ca1e90abac3951":[36,0,510,3],
 "classjmapgen__monster__group.html#afa25b5e991d0bb4a8edf0af72da350d2":[36,0,510,4],
 "classjmapgen__nested.html":[36,0,511],
@@ -237,17 +249,5 @@ var NAVTREEINDEX49 =
 "classknown__magic.html#aeab7b087a69b633b0ae61509ca5e0d48":[36,0,550,14],
 "classknown__magic.html#aeed71b588441f7580d8f3bf9d27a7eb9":[36,0,550,26],
 "classknown__magic.html#af1d54e77049ce1b9ed9d20a559ae0a38":[36,0,550,18],
-"classknown__magic.html#af47da2a24159ff7852576b1db2e30eab":[36,0,550,9],
-"classknown__magic.html#af808c41802489957df2f33a5e3e381c7":[36,0,550,13],
-"classknown__magic.html#af8acd3edf4541649cd1b1ee21124dd0a":[36,0,550,24],
-"classknown__magic.html#af94169b33d6d2cd59d75efac9f92c570":[36,0,550,35],
-"classknown__magic.html#afe4bbf2ea0bcb6c32349b7a54640b6c5":[36,0,550,1],
-"classleap__actor.html":[36,0,557],
-"classleap__actor.html#a2093d10931eb54657bc7cc480104faaa":[36,0,557,8],
-"classleap__actor.html#a3105e23f30e1884a265b33258d66feb4":[36,0,557,6],
-"classleap__actor.html#a412cb0d66bf295c7db4eff873a8e71ac":[36,0,557,9],
-"classleap__actor.html#a4e090d9bb95286da60dab71391f49b8d":[36,0,557,3],
-"classleap__actor.html#a6d3e25f1a26006256833b4047d8b2ac0":[36,0,557,5],
-"classleap__actor.html#a9e7d3e1cc9049a4f5890802024b496e5":[36,0,557,4],
-"classleap__actor.html#abd2f629a74f7fbc5996fa78d92fadfb5":[36,0,557,10]
+"classknown__magic.html#af47da2a24159ff7852576b1db2e30eab":[36,0,550,9]
 };

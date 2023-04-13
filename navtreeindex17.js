@@ -1,5 +1,16 @@
 var NAVTREEINDEX17 =
 {
+"classCreature__tracker.html#a7a9a07b758f4d863fcdc543f7b1b3b0c":[36,0,188,8],
+"classCreature__tracker.html#a830f6796573f3a7a9ebbaa91c29561fb":[36,0,188,24],
+"classCreature__tracker.html#a9356eef8152178f08039d835123e38ce":[36,0,188,23],
+"classCreature__tracker.html#aa62778fd8a12989a3b85ad00bfabbec1":[36,0,188,6],
+"classCreature__tracker.html#abf1446c98b6d5e46563f055d85d6be34":[36,0,188,5],
+"classCreature__tracker.html#acc80d448017a45e951fe001ff983871f":[36,0,188,18],
+"classCreature__tracker.html#acdb39e8f7356d6e7273f97e364058c6a":[36,0,188,20],
+"classCreature__tracker.html#ae505f3cb0fa345d5ae2ccae53ed5a5cf":[36,0,188,19],
+"classCreature__tracker.html#ae5fb3799cc60fe73ce4de69d4d5432a5":[36,0,188,1],
+"classCreature__tracker.html#aee19ba2222ee15db43a73002c2c0f870":[36,0,188,2],
+"classCreature__tracker.html#afad36e18b93092f5c412a38ea332fa20":[36,0,188,15],
 "classCreature__tracker_1_1weak__ptr__comparator.html":[36,0,188,0],
 "classCreature__tracker_1_1weak__ptr__comparator.html#a5b4d042bf5f9b560ef0490f80b657fec":[36,0,188,0,0],
 "classDefaultRemovePartHandler.html":[36,0,201],
@@ -238,16 +249,5 @@ var NAVTREEINDEX17 =
 "classJsonArray.html#a9a088c6ae0e54913543f84184bc16a94":[36,0,536,21],
 "classJsonArray.html#a9d3ce976a87700492330aa75a44d7c5d":[36,0,536,38],
 "classJsonArray.html#a9ee612fc471db675827c4220d15a6040":[36,0,536,36],
-"classJsonArray.html#aaea48aa7c1a2ca1fb333484e0987c896":[36,0,536,41],
-"classJsonArray.html#ab41c94f65d38edfc6b7d025cd827d07d":[36,0,536,37],
-"classJsonArray.html#abc3178c19be88bb5b65f9b740668333f":[36,0,536,15],
-"classJsonArray.html#ac2560bcfa1c1db52e0e4182d1eceb3cf":[36,0,536,10],
-"classJsonArray.html#ac5ad6d12c1f9d6713842a79406e5889b":[36,0,536,25],
-"classJsonArray.html#ac741f066f00effb32844ecf29ab72600":[36,0,536,23],
-"classJsonArray.html#ad34340743e20437554e1ce9322a3b264":[36,0,536,40],
-"classJsonArray.html#ad422f23259186765fda8f7344bcb89e2":[36,0,536,29],
-"classJsonArray.html#adf391661e513ed9d12bec8c2b507049e":[36,0,536,31],
-"classJsonArray.html#ae035b49148b09adf383242e5936977a2":[36,0,536,39],
-"classJsonArray.html#aeaf93fc6ab79b41878783fee3012ad93":[36,0,536,49],
-"classJsonArray.html#aeb9b67cb004053d13af133aa7e72beba":[36,0,536,5]
+"classJsonArray.html#aaea48aa7c1a2ca1fb333484e0987c896":[36,0,536,41]
 };

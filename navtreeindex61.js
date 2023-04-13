@@ -1,5 +1,17 @@
 var NAVTREEINDEX61 =
 {
+"classplace__trap__actor.html#a54ee7ee987fe43f87c2723820a6df451":[36,0,757,4],
+"classplace__trap__actor.html#a857482df8e02545b3c60cf6833523d49":[36,0,757,11],
+"classplace__trap__actor.html#a8c4c6978c8b9f600c99d67017e5efb33":[36,0,757,1],
+"classplace__trap__actor.html#a8d5b17f82ee3de1ad99dad144d361c4d":[36,0,757,12],
+"classplace__trap__actor.html#aaf107324852a613a671151a401327651":[36,0,757,7],
+"classplace__trap__actor.html#ae7a4bf6fee9f037ff6a9cdf52b2aad51":[36,0,757,14],
+"classplace__trap__actor.html#af8b31ed0c81e4dcd67773894ec5041f6":[36,0,757,13],
+"classplayer.html":[36,0,759],
+"classplayer.html#a01a997f2f36602a5adff48c8df16a357":[36,0,759,63],
+"classplayer.html#a07108565639fa6fe5b6776b4e8674fb6":[36,0,759,7],
+"classplayer.html#a0a62c0208584465db2daa1ac6e15b1ad":[36,0,759,3],
+"classplayer.html#a0a809cd0c318adcff86e150e44bff0ff":[36,0,759,26],
 "classplayer.html#a1870b748c0c70bbc649eb822dd72954a":[36,0,759,25],
 "classplayer.html#a1888b03b4841e39fbd3633b95dfe81de":[36,0,759,62],
 "classplayer.html#a19f5c3adb7e0ee6dd64e088c163f5a95":[36,0,759,50],
@@ -237,17 +249,5 @@ var NAVTREEINDEX61 =
 "classplot__options.html#a4c1c70ed016eb8f9325e718935d3e458":[36,0,762,3],
 "classplot__options.html#a526df939f5fc52d3ea6b21554cddc833":[36,0,762,2],
 "classplot__options.html#a59fcdfd31a576ea74dc66a8a297e3520":[36,0,762,11],
-"classplot__options.html#a7f596322e0d114fb1e268f243e91d27b":[36,0,762,8],
-"classplot__options.html#a9b89264cf1b212d7b0c0a96f2ca6e17f":[36,0,762,1],
-"classplot__options.html#aae8201f72f766b03e1f7d7c512c02c2d":[36,0,762,6],
-"classplot__options.html#add61376eef851ac4cb9db77c80311b6a":[36,0,762,12],
-"classplot__options.html#af6a728b042bf39ec2b4da219ad4da15a":[36,0,762,4],
-"classplot__options.html#afa6b01e894d5966177959148c0d85af6":[36,0,762,9],
-"classpointmenu__cb.html":[36,0,768],
-"classpointmenu__cb.html#a155cbda44c0821eb244d0c533cf1cb42":[36,0,768,3],
-"classpointmenu__cb.html#a4a19f6d20de2a68c173be9e560715995":[36,0,768,2],
-"classpointmenu__cb.html#a55f1a034a8c1943b65f2d43e3ea29025":[36,0,768,4],
-"classpointmenu__cb.html#a6149f7635f1d2433671b0fac2f5a883c":[36,0,768,1],
-"classprintf__arg__formatter.html":[36,0,772],
-"classprintf__arg__formatter.html#a00044cf120e73f852f942f13d37ac81f":[36,0,772,14]
+"classplot__options.html#a7f596322e0d114fb1e268f243e91d27b":[36,0,762,8]
 };

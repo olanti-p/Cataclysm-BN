@@ -1,5 +1,17 @@
 var NAVTREEINDEX60 =
 {
+"classovermapbuffer.html#a08542d02f2f33073c0b541c109d1903c":[36,0,735,47],
+"classovermapbuffer.html#a0b8bef1667c69f597978afadac7a6e84":[36,0,735,61],
+"classovermapbuffer.html#a0e0aa6b9838c972ce8069a2689e49433":[36,0,735,2],
+"classovermapbuffer.html#a0e52f9fbb9ce04d1611ca012a836e212":[36,0,735,95],
+"classovermapbuffer.html#a14b04aaa75e9d6e106d888dc24fbefc1":[36,0,735,38],
+"classovermapbuffer.html#a1a83b38d32f052dd03dd5541e53dfa85":[36,0,735,80],
+"classovermapbuffer.html#a1aadf55c95dd93f247e8801b706195ac":[36,0,735,35],
+"classovermapbuffer.html#a1b5530502f1db94f282c358245b91856":[36,0,735,85],
+"classovermapbuffer.html#a1cad2c9154ad09e2d90d6d9ed959da74":[36,0,735,65],
+"classovermapbuffer.html#a1dbfde514340fe86001b8327829f931d":[36,0,735,1],
+"classovermapbuffer.html#a1f7337e9b199e8341d94f6ed82104c35":[36,0,735,37],
+"classovermapbuffer.html#a232145b434bc1f83bc6df7221d15310b":[36,0,735,101],
 "classovermapbuffer.html#a23de1360c9412f1e051e82cb2ecb0059":[36,0,735,53],
 "classovermapbuffer.html#a244c7a0404010b000c86b4dcb7b896c7":[36,0,735,6],
 "classovermapbuffer.html#a244cfaabef2c2d359a9fe2c3d84afbb5":[36,0,735,42],
@@ -237,17 +249,5 @@ var NAVTREEINDEX60 =
 "classplace__trap__actor.html#a2d4c6c18d64bb28cc745eefad1fc9d2b":[36,0,757,3],
 "classplace__trap__actor.html#a2e52f0726ed1334dbd8e9149e119ad64":[36,0,757,6],
 "classplace__trap__actor.html#a48e3f2f0cab4060928518b2394a2dafd":[36,0,757,2],
-"classplace__trap__actor.html#a50c969ecfac86a2f2bd66ff33cf42db3":[36,0,757,8],
-"classplace__trap__actor.html#a54ee7ee987fe43f87c2723820a6df451":[36,0,757,4],
-"classplace__trap__actor.html#a857482df8e02545b3c60cf6833523d49":[36,0,757,11],
-"classplace__trap__actor.html#a8c4c6978c8b9f600c99d67017e5efb33":[36,0,757,1],
-"classplace__trap__actor.html#a8d5b17f82ee3de1ad99dad144d361c4d":[36,0,757,12],
-"classplace__trap__actor.html#aaf107324852a613a671151a401327651":[36,0,757,7],
-"classplace__trap__actor.html#ae7a4bf6fee9f037ff6a9cdf52b2aad51":[36,0,757,14],
-"classplace__trap__actor.html#af8b31ed0c81e4dcd67773894ec5041f6":[36,0,757,13],
-"classplayer.html":[36,0,759],
-"classplayer.html#a01a997f2f36602a5adff48c8df16a357":[36,0,759,63],
-"classplayer.html#a07108565639fa6fe5b6776b4e8674fb6":[36,0,759,7],
-"classplayer.html#a0a62c0208584465db2daa1ac6e15b1ad":[36,0,759,3],
-"classplayer.html#a0a809cd0c318adcff86e150e44bff0ff":[36,0,759,26]
+"classplace__trap__actor.html#a50c969ecfac86a2f2bd66ff33cf42db3":[36,0,757,8]
 };

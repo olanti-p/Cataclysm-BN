@@ -1,5 +1,16 @@
 var NAVTREEINDEX31 =
 {
+"classcatacurses_1_1window.html#a8afbd1925d293cb03e3a913075249887":[36,0,17,0,1],
+"classcatacurses_1_1window.html#a9411dcd946165d408ea51644b0fb3f99":[35,0,78,0,4],
+"classcatacurses_1_1window.html#a9411dcd946165d408ea51644b0fb3f99":[36,0,17,0,4],
+"classcatacurses_1_1window.html#ab399d7c205c8c6b31063b2b51be67b9b":[36,0,17,0,6],
+"classcatacurses_1_1window.html#ab399d7c205c8c6b31063b2b51be67b9b":[35,0,78,0,6],
+"classcatacurses_1_1window.html#ab4ebccdbbf950c1d41d68054e1903de6":[36,0,17,0,0],
+"classcatacurses_1_1window.html#ab4ebccdbbf950c1d41d68054e1903de6":[35,0,78,0,0],
+"classcauterize__actor.html":[36,0,140],
+"classcauterize__actor.html#a0634d6d10fb962c452d2164859faf2f0":[36,0,140,5],
+"classcauterize__actor.html#a0ce53407eff11224a8c4f7aaa28d2afa":[36,0,140,2],
+"classcauterize__actor.html#a55349c277113024de3a87b09f9778856":[36,0,140,1],
 "classcauterize__actor.html#a654c54ed5f0c5001599010723f9df4b2":[36,0,140,0],
 "classcauterize__actor.html#a6c338ae65f7df39aa4d74b6a555fda7a":[36,0,140,3],
 "classcauterize__actor.html#a6fd1d46f9b6cae34bee7f11e76c90be0":[36,0,140,6],
@@ -238,16 +249,5 @@ var NAVTREEINDEX31 =
 "classcomputer__session.html#ad8df29f1388352c72d35244414a54f34":[36,0,167,14],
 "classcomputer__session.html#add187b2415d8b58591d61f28b2ba45e1":[36,0,167,19],
 "classcomputer__session.html#ade33355a3de4aef457f758b3644c34aa":[36,0,167,5],
-"classcomputer__session.html#adeeb6b7a76a686ee61a7506dfea58718":[36,0,167,48],
-"classcomputer__session.html#ae22c58c7cc8908ced98ca72e2754d1fc":[36,0,167,77],
-"classcomputer__session.html#ae2d91418cde9ce4eda0dacd4934121bd":[36,0,167,39],
-"classcomputer__session.html#ae3c09386e28d8b9c72794243a422daaf":[36,0,167,78],
-"classcomputer__session.html#ae46c28b9ba506f0b87dba9fe3835bd1f":[36,0,167,3],
-"classcomputer__session.html#ae56115ef51bb911e55d8a7309ee913b9":[36,0,167,17],
-"classcomputer__session.html#ae763109be2040f268059363f819d688b":[36,0,167,47],
-"classcomputer__session.html#ae7854b0fb02504c75db7a426fa8915ec":[36,0,167,85],
-"classcomputer__session.html#aec1fa4290b8dc1886d7084d4d4d6390b":[36,0,167,81],
-"classcomputer__session.html#aec91760fe180190f552c5bebcdab1ea2":[36,0,167,82],
-"classcomputer__session.html#aed817b6f962ce0e96cd84b1dbd613533":[36,0,167,22],
-"classcomputer__session.html#af3308d54b853fce9d7a2b80de67f1409":[36,0,167,10]
+"classcomputer__session.html#adeeb6b7a76a686ee61a7506dfea58718":[36,0,167,48]
 };

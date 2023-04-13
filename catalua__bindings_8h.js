@@ -18,6 +18,7 @@ var catalua__bindings_8h =
     [ "reg_map", "catalua__bindings_8h.html#a2c1c4fa9296d8da216a5ff819bfab733", null ],
     [ "reg_point_tripoint", "catalua__bindings_8h.html#ad0b1333120fc85cf4c4e0a3ba5092bef", null ],
     [ "reg_testing_library", "catalua__bindings_8h.html#a2ce37eb666639e8599db7251a4a745ca", null ],
+    [ "reg_time_types", "catalua__bindings_8h.html#ae577f4a0620ea203d95eb9da2b8949a7", null ],
     [ "reg_types", "catalua__bindings_8h.html#a6141f284ef92544f5ba01ae531668a07", null ],
     [ "reg_ui_elements", "catalua__bindings_8h.html#ac484065b2c539d27509772637b37c31a", null ]
 ];
