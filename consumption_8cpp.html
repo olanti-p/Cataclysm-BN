@@ -226,6 +226,10 @@ Functions</h2></td></tr>
 <tr class="separator:a590a72c763f8f716dbd0a2da2fdf0d4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8048758dc914b63455fd2c2a422579bf"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="consumption_8cpp.html#a8048758dc914b63455fd2c2a422579bf">flag_USE_EAT_VERB</a> (&quot;USE_EAT_VERB&quot;)</td></tr>
 <tr class="separator:a8048758dc914b63455fd2c2a422579bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2a72c76823c084107b3958a8e1d8757"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="consumption_8cpp.html#ad2a72c76823c084107b3958a8e1d8757">flag_COLD</a> (&quot;COLD&quot;)</td></tr>
+<tr class="separator:ad2a72c76823c084107b3958a8e1d8757"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f65043936bb146f1cca6a8ff64ade08"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="consumption_8cpp.html#a3f65043936bb146f1cca6a8ff64ade08">flag_VERY_COLD</a> (&quot;VERY_COLD&quot;)</td></tr>
+<tr class="separator:a3f65043936bb146f1cca6a8ff64ade08"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7971bf13ca2d151e46e6a0689b4ae544"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="consumption_8cpp.html#a7971bf13ca2d151e46e6a0689b4ae544">herbivore_blacklist</a> (temparray.begin(), temparray.end())</td></tr>
 <tr class="separator:a7971bf13ca2d151e46e6a0689b4ae544"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5929f488aceea680c4980f0881161314"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="generic__factory_8h.html#a1159dbaba81931271dbfe5b9c7f041b3">std::optional</a>&lt; <a class="el" href="structprepared__item__consumption.html">prepared_item_consumption</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="consumption_8cpp.html#a5929f488aceea680c4980f0881161314">find_food_heater</a> (<a class="el" href="classCharacter.html">Character</a> &amp;<a class="el" href="magic_8cpp.html#a6753ecfe87da659675b18c2f81d6ec12">c</a>, const <a class="el" href="classinventory.html">inventory</a> &amp;inv, bool has_fire)</td></tr>
@@ -236,8 +240,8 @@ Functions</h2></td></tr>
 <tr class="separator:a6644222f405b1e26a2095f76c0678670"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35172e0dcda755fa8faef625bda972f3"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structnutrients.html">nutrients</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="consumption_8cpp.html#a35172e0dcda755fa8faef625bda972f3">compute_default_effective_nutrients</a> (const <a class="el" href="classitem.html">item</a> &amp;comest, const <a class="el" href="classCharacter.html">Character</a> &amp;you, const <a class="el" href="classcata_1_1flat__set.html">cata::flat_set</a>&lt; std::string &gt; &amp;extra_flags={})</td></tr>
 <tr class="separator:a35172e0dcda755fa8faef625bda972f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe92f92e13fd7403ae41c156ff5e08be"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="consumption_8cpp.html#afe92f92e13fd7403ae41c156ff5e08be">query_consume_ownership</a> (<a class="el" href="classitem.html">item</a> &amp;target, <a class="el" href="classavatar.html">avatar</a> &amp;you)</td></tr>
-<tr class="separator:afe92f92e13fd7403ae41c156ff5e08be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac08741712a8c206a0cb74130f7517d5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="consumption_8cpp.html#aac08741712a8c206a0cb74130f7517d5">query_consume_ownership</a> (<a class="el" href="classitem.html">item</a> &amp;target, <a class="el" href="classavatar.html">avatar</a> &amp;you)</td></tr>
+<tr class="separator:aac08741712a8c206a0cb74130f7517d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -247,14 +251,10 @@ Variables</h2></td></tr>
 <tr class="separator:ac038c6319122de04af85fb88e6618601"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a22b82ff6998caf559fabe67d535d6771"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="type__id_8h.html#a039e4134b8c5eb549ca440b962667a2f">mtype_id</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="consumption_8cpp.html#a22b82ff6998caf559fabe67d535d6771">mon_player_blob</a> (&quot;mon_player_blob&quot;)</td></tr>
 <tr class="separator:a22b82ff6998caf559fabe67d535d6771"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af240157d33eeab40ef36bc04dd472e75"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="npc_8h.html#a136007e1e0b77eaf7dc4be58f6f42f87">bionic_id</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="consumption_8cpp.html#af240157d33eeab40ef36bc04dd472e75">bio_advreactor</a> (&quot;bio_advreactor&quot;)</td></tr>
-<tr class="separator:af240157d33eeab40ef36bc04dd472e75"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36f9b5f5d763f2c224b59b75af340c6c"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="npc_8h.html#a136007e1e0b77eaf7dc4be58f6f42f87">bionic_id</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="consumption_8cpp.html#a36f9b5f5d763f2c224b59b75af340c6c">bio_digestion</a> (&quot;bio_digestion&quot;)</td></tr>
 <tr class="separator:a36f9b5f5d763f2c224b59b75af340c6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5f686344fc356a766b2eeb5fd27d56a3"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="npc_8h.html#a136007e1e0b77eaf7dc4be58f6f42f87">bionic_id</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="consumption_8cpp.html#a5f686344fc356a766b2eeb5fd27d56a3">bio_furnace</a> (&quot;bio_furnace&quot;)</td></tr>
 <tr class="separator:a5f686344fc356a766b2eeb5fd27d56a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8964de0b81cdb278e268ded8e0e50fe9"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="npc_8h.html#a136007e1e0b77eaf7dc4be58f6f42f87">bionic_id</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="consumption_8cpp.html#a8964de0b81cdb278e268ded8e0e50fe9">bio_reactor</a> (&quot;bio_reactor&quot;)</td></tr>
-<tr class="separator:a8964de0b81cdb278e268ded8e0e50fe9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0378c4d7c8bedb3b625c06e488f25dd9"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="npc_8h.html#a136007e1e0b77eaf7dc4be58f6f42f87">bionic_id</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="consumption_8cpp.html#a0378c4d7c8bedb3b625c06e488f25dd9">bio_syringe</a> (&quot;bio_syringe&quot;)</td></tr>
 <tr class="separator:a0378c4d7c8bedb3b625c06e488f25dd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1cdd6de85176097b616ddd8e3e0a9239"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="npc_8h.html#a136007e1e0b77eaf7dc4be58f6f42f87">bionic_id</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="consumption_8cpp.html#a1cdd6de85176097b616ddd8e3e0a9239">bio_taste_blocker</a> (&quot;bio_taste_blocker&quot;)</td></tr>
@@ -469,7 +469,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l00642">Character::can_eat()</a>, <a class="el" href="consumption_8cpp_source.html#l00828">Character::eat()</a>, <a class="el" href="consumption_8cpp_source.html#l01059">Character::modify_morale()</a>, and <a class="el" href="consumption_8cpp_source.html#l00732">Character::will_eat()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l00642">Character::can_eat()</a>, <a class="el" href="consumption_8cpp_source.html#l00828">Character::eat()</a>, <a class="el" href="consumption_8cpp_source.html#l01072">Character::modify_morale()</a>, and <a class="el" href="consumption_8cpp_source.html#l00732">Character::will_eat()</a>.</p>
 
 </div>
 </div>
@@ -553,13 +553,13 @@ Variables</h2></td></tr>
 <div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span> </div>
 <div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>( kcal );</div>
 <div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>}</div>
-<div class="ttc" id="aclassCharacter_html_a5751b689e5a4ecd43b6de5c3e2d31541"><div class="ttname"><a href="classCharacter.html#a5751b689e5a4ecd43b6de5c3e2d31541">Character::has_bionic</a></div><div class="ttdeci">bool has_bionic(const bionic_id &amp;b) const</div><div class="ttdoc">Returns true if the player has the entered bionic id.</div><div class="ttdef"><b>Definition:</b> <a href="character_8cpp_source.html#l01795">character.cpp:1795</a></div></div>
+<div class="ttc" id="aclassCharacter_html_a5751b689e5a4ecd43b6de5c3e2d31541"><div class="ttname"><a href="classCharacter.html#a5751b689e5a4ecd43b6de5c3e2d31541">Character::has_bionic</a></div><div class="ttdeci">bool has_bionic(const bionic_id &amp;b) const</div><div class="ttdoc">Returns true if the player has the entered bionic id.</div><div class="ttdef"><b>Definition:</b> <a href="character_8cpp_source.html#l01812">character.cpp:1812</a></div></div>
 <div class="ttc" id="aclassCharacter_html_af06dd97724f4f05df782e7a4b4f9cfe1"><div class="ttname"><a href="classCharacter.html#af06dd97724f4f05df782e7a4b4f9cfe1">Character::has_trait</a></div><div class="ttdeci">bool has_trait(const trait_id &amp;b) const override</div><div class="ttdoc">Returns true if the player has the entered trait.</div><div class="ttdef"><b>Definition:</b> <a href="mutation_8cpp_source.html#l00101">mutation.cpp:101</a></div></div>
 <div class="ttc" id="aclasscata_1_1flat__set_html_ade623b3a09ac9a00ae027a89436fccf8"><div class="ttname"><a href="classcata_1_1flat__set.html#ade623b3a09ac9a00ae027a89436fccf8">cata::flat_set::count</a></div><div class="ttdeci">size_type count(const T &amp;t) const</div><div class="ttdef"><b>Definition:</b> <a href="flat__set_8h_source.html#l00141">flat_set.h:141</a></div></div>
-<div class="ttc" id="aclassitem_html_a411163e892e27c57b802d0d015c05162"><div class="ttname"><a href="classitem.html#a411163e892e27c57b802d0d015c05162">item::get_comestible</a></div><div class="ttdeci">const cata::value_ptr&lt; islot_comestible &gt; &amp; get_comestible() const</div><div class="ttdef"><b>Definition:</b> <a href="item_8cpp_source.html#l10119">item.cpp:10119</a></div></div>
-<div class="ttc" id="aclassitem_html_aaa5aeb6f838927babb10ede535cf2a73"><div class="ttname"><a href="classitem.html#aaa5aeb6f838927babb10ede535cf2a73">item::has_flag</a></div><div class="ttdeci">bool has_flag(const std::string &amp;flag) const</div><div class="ttdef"><b>Definition:</b> <a href="item_8cpp_source.html#l05303">item.cpp:5303</a></div></div>
-<div class="ttc" id="aclassitem_html_aca5abd8656e123435b97da00608a5daa"><div class="ttname"><a href="classitem.html#aca5abd8656e123435b97da00608a5daa">item::has_any_flag</a></div><div class="ttdeci">bool has_any_flag(const Container &amp;flags) const</div><div class="ttdef"><b>Definition:</b> <a href="item_8h_source.html#l01411">item.h:1411</a></div></div>
-<div class="ttc" id="aclassitem_html_adfb5ddb3d50f317c79eb7a1a26a63905"><div class="ttname"><a href="classitem.html#adfb5ddb3d50f317c79eb7a1a26a63905">item::get_relative_rot</a></div><div class="ttdeci">double get_relative_rot() const</div><div class="ttdoc">Get rot value relative to shelf life (or 0 if item does not spoil)</div><div class="ttdef"><b>Definition:</b> <a href="item_8cpp_source.html#l05531">item.cpp:5531</a></div></div>
+<div class="ttc" id="aclassitem_html_a411163e892e27c57b802d0d015c05162"><div class="ttname"><a href="classitem.html#a411163e892e27c57b802d0d015c05162">item::get_comestible</a></div><div class="ttdeci">const cata::value_ptr&lt; islot_comestible &gt; &amp; get_comestible() const</div><div class="ttdef"><b>Definition:</b> <a href="item_8cpp_source.html#l10153">item.cpp:10153</a></div></div>
+<div class="ttc" id="aclassitem_html_aaa5aeb6f838927babb10ede535cf2a73"><div class="ttname"><a href="classitem.html#aaa5aeb6f838927babb10ede535cf2a73">item::has_flag</a></div><div class="ttdeci">bool has_flag(const std::string &amp;flag) const</div><div class="ttdef"><b>Definition:</b> <a href="item_8cpp_source.html#l05328">item.cpp:5328</a></div></div>
+<div class="ttc" id="aclassitem_html_aca5abd8656e123435b97da00608a5daa"><div class="ttname"><a href="classitem.html#aca5abd8656e123435b97da00608a5daa">item::has_any_flag</a></div><div class="ttdeci">bool has_any_flag(const Container &amp;flags) const</div><div class="ttdef"><b>Definition:</b> <a href="item_8h_source.html#l01407">item.h:1407</a></div></div>
+<div class="ttc" id="aclassitem_html_adfb5ddb3d50f317c79eb7a1a26a63905"><div class="ttname"><a href="classitem.html#adfb5ddb3d50f317c79eb7a1a26a63905">item::get_relative_rot</a></div><div class="ttdeci">double get_relative_rot() const</div><div class="ttdoc">Get rot value relative to shelf life (or 0 if item does not spoil)</div><div class="ttdef"><b>Definition:</b> <a href="item_8cpp_source.html#l05556">item.cpp:5556</a></div></div>
 <div class="ttc" id="aconsumption_8cpp_html_a0474d93e30c8db4395acf56a8d51a9fe"><div class="ttname"><a href="consumption_8cpp.html#a0474d93e30c8db4395acf56a8d51a9fe">carnivore_blacklist</a></div><div class="ttdeci">const std::vector&lt; std::string &gt; carnivore_blacklist</div><div class="ttdef"><b>Definition:</b> <a href="consumption_8cpp_source.html#l00157">consumption.cpp:157</a></div></div>
 <div class="ttc" id="aconsumption_8cpp_html_a36f9b5f5d763f2c224b59b75af340c6c"><div class="ttname"><a href="consumption_8cpp.html#a36f9b5f5d763f2c224b59b75af340c6c">bio_digestion</a></div><div class="ttdeci">static const bionic_id bio_digestion(&quot;bio_digestion&quot;)</div></div>
 <div class="ttc" id="aconsumption_8cpp_html_a4fbf975d8c329497caf15aa91d65a664"><div class="ttname"><a href="consumption_8cpp.html#a4fbf975d8c329497caf15aa91d65a664">trait_CARNIVORE</a></div><div class="ttdeci">static const trait_id trait_CARNIVORE(&quot;CARNIVORE&quot;)</div></div>
@@ -686,11 +686,11 @@ Variables</h2></td></tr>
 <div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span> </div>
 <div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>    <span class="keywordflow">return</span> res;</div>
 <div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>}</div>
-<div class="ttc" id="aclassCharacter_html_a97c5948a2648dc5fd3e2defd5885cdb0"><div class="ttname"><a href="classCharacter.html#a97c5948a2648dc5fd3e2defd5885cdb0">Character::get_mutations</a></div><div class="ttdeci">std::vector&lt; trait_id &gt; get_mutations(bool include_hidden=true) const</div><div class="ttdoc">Get the idents of all traits/mutations.</div><div class="ttdef"><b>Definition:</b> <a href="newcharacter_8cpp_source.html#l02857">newcharacter.cpp:2857</a></div></div>
-<div class="ttc" id="aclassitem_html_a4326944ae95f4d265c8ca1c76ed89a03"><div class="ttname"><a href="classitem.html#a4326944ae95f4d265c8ca1c76ed89a03">item::made_of</a></div><div class="ttdeci">const std::vector&lt; material_id &gt; &amp; made_of() const</div><div class="ttdoc">The ids of all the materials this is made of.</div><div class="ttdef"><b>Definition:</b> <a href="item_8cpp_source.html#l06413">item.cpp:6413</a></div></div>
+<div class="ttc" id="aclassCharacter_html_a97c5948a2648dc5fd3e2defd5885cdb0"><div class="ttname"><a href="classCharacter.html#a97c5948a2648dc5fd3e2defd5885cdb0">Character::get_mutations</a></div><div class="ttdeci">std::vector&lt; trait_id &gt; get_mutations(bool include_hidden=true) const</div><div class="ttdoc">Get the idents of all traits/mutations.</div><div class="ttdef"><b>Definition:</b> <a href="newcharacter_8cpp_source.html#l02860">newcharacter.cpp:2860</a></div></div>
+<div class="ttc" id="aclassitem_html_a4326944ae95f4d265c8ca1c76ed89a03"><div class="ttname"><a href="classitem.html#a4326944ae95f4d265c8ca1c76ed89a03">item::made_of</a></div><div class="ttdeci">const std::vector&lt; material_id &gt; &amp; made_of() const</div><div class="ttdoc">The ids of all the materials this is made of.</div><div class="ttdef"><b>Definition:</b> <a href="item_8cpp_source.html#l06438">item.cpp:6438</a></div></div>
 <div class="ttc" id="aclassstring__id_html"><div class="ttname"><a href="classstring__id.html">string_id&lt; mutation_branch &gt;</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="item_8cpp_source.html#l10119">item::get_comestible()</a>, <a class="el" href="newcharacter_8cpp_source.html#l02857">Character::get_mutations()</a>, and <a class="el" href="item_8cpp_source.html#l06413">item::made_of()</a>.</p>
+<p class="reference">References <a class="el" href="item_8cpp_source.html#l10153">item::get_comestible()</a>, <a class="el" href="newcharacter_8cpp_source.html#l02860">Character::get_mutations()</a>, and <a class="el" href="item_8cpp_source.html#l06438">item::made_of()</a>.</p>
 
 </div>
 </div>
@@ -763,17 +763,17 @@ Variables</h2></td></tr>
 <div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>    }</div>
 <div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>    <span class="keywordflow">return</span> std::nullopt;</div>
 <div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>}</div>
-<div class="ttc" id="aclassitem_html"><div class="ttname"><a href="classitem.html">item</a></div><div class="ttdef"><b>Definition:</b> <a href="item_8h_source.html#l00210">item.h:211</a></div></div>
+<div class="ttc" id="aclassitem_html"><div class="ttname"><a href="classitem.html">item</a></div><div class="ttdef"><b>Definition:</b> <a href="item_8h_source.html#l00209">item.h:210</a></div></div>
 <div class="ttc" id="aclassvisitable_html_a5b3c37fbe8209cab68aa26d3cc7f4300"><div class="ttname"><a href="classvisitable.html#a5b3c37fbe8209cab68aa26d3cc7f4300">visitable::items_with</a></div><div class="ttdeci">std::vector&lt; item * &gt; items_with(const std::function&lt; bool(const item &amp;)&gt; &amp;filter)</div><div class="ttdoc">Returns all items (including those within a container) matching the filter.</div><div class="ttdef"><b>Definition:</b> <a href="visitable_8cpp_source.html#l00324">visitable.cpp:324</a></div></div>
 <div class="ttc" id="aconsumption_8cpp_html_ab52b3b592a42745385edcf8d90c690a1a334c4a4c42fdb79d7ebc3e73b517e6f8"><div class="ttname"><a href="consumption_8cpp.html#ab52b3b592a42745385edcf8d90c690a1a334c4a4c42fdb79d7ebc3e73b517e6f8">item_consumption_t::none</a></div><div class="ttdeci">@ none</div></div>
 <div class="ttc" id="aconsumption_8cpp_html_ab52b3b592a42745385edcf8d90c690a1a700c216fb376666eaeda0c892e8bdc09"><div class="ttname"><a href="consumption_8cpp.html#ab52b3b592a42745385edcf8d90c690a1a700c216fb376666eaeda0c892e8bdc09">item_consumption_t::component</a></div><div class="ttdeci">@ component</div></div>
-<div class="ttc" id="aitem_8h_html_a64c6001518eb0b959300f427a0086eb0"><div class="ttname"><a href="item_8h.html#a64c6001518eb0b959300f427a0086eb0">is_crafting_component</a></div><div class="ttdeci">bool is_crafting_component(const item &amp;component)</div><div class="ttdoc">Default filter for crafting component searches.</div><div class="ttdef"><b>Definition:</b> <a href="item_8h_source.html#l02272">item.h:2272</a></div></div>
+<div class="ttc" id="aitem_8h_html_a64c6001518eb0b959300f427a0086eb0"><div class="ttname"><a href="item_8h.html#a64c6001518eb0b959300f427a0086eb0">is_crafting_component</a></div><div class="ttdeci">bool is_crafting_component(const item &amp;component)</div><div class="ttdoc">Default filter for crafting component searches.</div><div class="ttdef"><b>Definition:</b> <a href="item_8h_source.html#l02265">item.h:2265</a></div></div>
 <div class="ttc" id="amagic_8cpp_html_a6753ecfe87da659675b18c2f81d6ec12"><div class="ttname"><a href="magic_8cpp.html#a6753ecfe87da659675b18c2f81d6ec12">c</a></div><div class="ttdeci">constexpr double c</div><div class="ttdef"><b>Definition:</b> <a href="magic_8cpp_source.html#l01032">magic.cpp:1032</a></div></div>
 <div class="ttc" id="astructprepared__item__consumption_html"><div class="ttname"><a href="structprepared__item__consumption.html">prepared_item_consumption</a></div><div class="ttdef"><b>Definition:</b> <a href="consumption_8cpp_source.html#l00184">consumption.cpp:184</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="magic_8cpp_source.html#l01032">c</a>, <a class="el" href="consumption_8cpp.html#ab52b3b592a42745385edcf8d90c690a1a700c216fb376666eaeda0c892e8bdc09">component</a>, <a class="el" href="item_8cpp_source.html#l05303">item::has_flag()</a>, <a class="el" href="item_8h_source.html#l02272">is_crafting_component()</a>, <a class="el" href="visitable_8cpp_source.html#l00324">visitable&lt; T &gt;::items_with()</a>, <a class="el" href="consumption_8cpp.html#ab52b3b592a42745385edcf8d90c690a1a334c4a4c42fdb79d7ebc3e73b517e6f8">none</a>, and <a class="el" href="consumption_8cpp.html#ab52b3b592a42745385edcf8d90c690a1a39ab32c5aeb56c9f5ae17f073ce31023">tool</a>.</p>
+<p class="reference">References <a class="el" href="magic_8cpp_source.html#l01032">c</a>, <a class="el" href="consumption_8cpp.html#ab52b3b592a42745385edcf8d90c690a1a700c216fb376666eaeda0c892e8bdc09">component</a>, <a class="el" href="item_8cpp_source.html#l05328">item::has_flag()</a>, <a class="el" href="item_8h_source.html#l02265">is_crafting_component()</a>, <a class="el" href="visitable_8cpp_source.html#l00324">visitable&lt; T &gt;::items_with()</a>, <a class="el" href="consumption_8cpp.html#ab52b3b592a42745385edcf8d90c690a1a334c4a4c42fdb79d7ebc3e73b517e6f8">none</a>, and <a class="el" href="consumption_8cpp.html#ab52b3b592a42745385edcf8d90c690a1a39ab32c5aeb56c9f5ae17f073ce31023">tool</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01059">Character::modify_morale()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01072">Character::modify_morale()</a>.</p>
 
 </div>
 </div>
@@ -855,7 +855,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l00619">Character::allergy_type()</a>, <a class="el" href="consumption_8cpp_source.html#l01059">Character::modify_morale()</a>, and <a class="el" href="consumption_8cpp_source.html#l00732">Character::will_eat()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l00619">Character::allergy_type()</a>, <a class="el" href="consumption_8cpp_source.html#l01072">Character::modify_morale()</a>, and <a class="el" href="consumption_8cpp_source.html#l00732">Character::will_eat()</a>.</p>
 
 </div>
 </div>
@@ -1077,7 +1077,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01059">Character::modify_morale()</a>, and <a class="el" href="consumption_8cpp_source.html#l00732">Character::will_eat()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01072">Character::modify_morale()</a>, and <a class="el" href="consumption_8cpp_source.html#l00732">Character::will_eat()</a>.</p>
 
 </div>
 </div>
@@ -1105,7 +1105,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l00642">Character::can_eat()</a>, <a class="el" href="consumption_8cpp_source.html#l01059">Character::modify_morale()</a>, and <a class="el" href="consumption_8cpp_source.html#l00732">Character::will_eat()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l00642">Character::can_eat()</a>, <a class="el" href="consumption_8cpp_source.html#l01072">Character::modify_morale()</a>, and <a class="el" href="consumption_8cpp_source.html#l00732">Character::will_eat()</a>.</p>
 
 </div>
 </div>
@@ -1134,6 +1134,34 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l00642">Character::can_eat()</a>.</p>
+
+</div>
+</div>
+<a id="ad2a72c76823c084107b3958a8e1d8757" name="ad2a72c76823c084107b3958a8e1d8757"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2a72c76823c084107b3958a8e1d8757">&#9670;&nbsp;</a></span>flag_COLD()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static const std::string flag_COLD </td>
+          <td>(</td>
+          <td class="paramtype">&quot;COLD&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l00828">Character::eat()</a>, and <a class="el" href="consumption_8cpp_source.html#l01072">Character::modify_morale()</a>.</p>
 
 </div>
 </div>
@@ -1189,7 +1217,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01308">Character::can_feed_furnace_with()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01276">Character::can_feed_furnace_with()</a>.</p>
 
 </div>
 </div>
@@ -1217,7 +1245,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01059">Character::modify_morale()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01072">Character::modify_morale()</a>.</p>
 
 </div>
 </div>
@@ -1329,7 +1357,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l00828">Character::eat()</a>, and <a class="el" href="consumption_8cpp_source.html#l01059">Character::modify_morale()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l00828">Character::eat()</a>, and <a class="el" href="consumption_8cpp_source.html#l01072">Character::modify_morale()</a>.</p>
 
 </div>
 </div>
@@ -1469,7 +1497,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01164">Character::consume_effects()</a>, <a class="el" href="consumption_8cpp_source.html#l00828">Character::eat()</a>, and <a class="el" href="consumption_8cpp_source.html#l00732">Character::will_eat()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01179">Character::consume_effects()</a>, <a class="el" href="consumption_8cpp_source.html#l00828">Character::eat()</a>, and <a class="el" href="consumption_8cpp_source.html#l00732">Character::will_eat()</a>.</p>
 
 </div>
 </div>
@@ -1553,7 +1581,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01499">Character::can_consume()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01467">Character::can_consume()</a>.</p>
 
 </div>
 </div>
@@ -1609,7 +1637,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01308">Character::can_feed_furnace_with()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01276">Character::can_feed_furnace_with()</a>.</p>
 
 </div>
 </div>
@@ -1663,7 +1691,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01059">Character::modify_morale()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01072">Character::modify_morale()</a>.</p>
 
 </div>
 </div>
@@ -1691,7 +1719,35 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l00642">Character::can_eat()</a>, <a class="el" href="consumption_8cpp_source.html#l00828">Character::eat()</a>, <a class="el" href="consumption_8cpp_source.html#l01059">Character::modify_morale()</a>, and <a class="el" href="consumption_8cpp_source.html#l00732">Character::will_eat()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l00642">Character::can_eat()</a>, <a class="el" href="consumption_8cpp_source.html#l00828">Character::eat()</a>, <a class="el" href="consumption_8cpp_source.html#l01072">Character::modify_morale()</a>, and <a class="el" href="consumption_8cpp_source.html#l00732">Character::will_eat()</a>.</p>
+
+</div>
+</div>
+<a id="a3f65043936bb146f1cca6a8ff64ade08" name="a3f65043936bb146f1cca6a8ff64ade08"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f65043936bb146f1cca6a8ff64ade08">&#9670;&nbsp;</a></span>flag_VERY_COLD()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static const std::string flag_VERY_COLD </td>
+          <td>(</td>
+          <td class="paramtype">&quot;VERY_COLD&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l00828">Character::eat()</a>, and <a class="el" href="consumption_8cpp_source.html#l01072">Character::modify_morale()</a>.</p>
 
 </div>
 </div>
@@ -1721,21 +1777,18 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l00642">Character::can_eat()</a>, and <a class="el" href="consumption_8cpp_source.html#l01164">Character::consume_effects()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l00642">Character::can_eat()</a>, and <a class="el" href="consumption_8cpp_source.html#l01179">Character::consume_effects()</a>.</p>
 
 </div>
 </div>
-<a id="afe92f92e13fd7403ae41c156ff5e08be" name="afe92f92e13fd7403ae41c156ff5e08be"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afe92f92e13fd7403ae41c156ff5e08be">&#9670;&nbsp;</a></span>query_consume_ownership()</h2>
+<a id="aac08741712a8c206a0cb74130f7517d5" name="aac08741712a8c206a0cb74130f7517d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac08741712a8c206a0cb74130f7517d5">&#9670;&nbsp;</a></span>query_consume_ownership()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static bool query_consume_ownership </td>
+          <td class="memname">bool query_consume_ownership </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classitem.html">item</a> &amp;&#160;</td>
           <td class="paramname"><em>target</em>, </td>
@@ -1752,68 +1805,40 @@ Variables</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="consumption_8cpp_source.html#l01523">1523</a> of file <a class="el" href="consumption_8cpp_source.html">consumption.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l01524" name="l01524"></a><span class="lineno"> 1524</span>{</div>
-<div class="line"><a id="l01525" name="l01525"></a><span class="lineno"> 1525</span>    <span class="keywordflow">if</span>( !target.<a class="code hl_function" href="classitem.html#a0b35b9066ad71987b77727af45d96059">is_owned_by</a>( you, <span class="keyword">true</span> ) ) {</div>
-<div class="line"><a id="l01526" name="l01526"></a><span class="lineno"> 1526</span>        <span class="keywordtype">bool</span> choice = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l01527" name="l01527"></a><span class="lineno"> 1527</span>        <span class="keywordflow">if</span>( you.<a class="code hl_function" href="classCreature.html#a2acb6e1e19bcb775748403d07d8dc3f0">get_value</a>( <span class="stringliteral">&quot;THIEF_MODE&quot;</span> ) == <span class="stringliteral">&quot;THIEF_ASK&quot;</span> ) {</div>
-<div class="line"><a id="l01528" name="l01528"></a><span class="lineno"> 1528</span>            choice = <a class="code hl_function" href="namespacepickup.html#abd31c624477e99fff1c2dee074c44531">pickup::query_thief</a>();</div>
-<div class="line"><a id="l01529" name="l01529"></a><span class="lineno"> 1529</span>        }</div>
-<div class="line"><a id="l01530" name="l01530"></a><span class="lineno"> 1530</span>        <span class="keywordflow">if</span>( you.<a class="code hl_function" href="classCreature.html#a2acb6e1e19bcb775748403d07d8dc3f0">get_value</a>( <span class="stringliteral">&quot;THIEF_MODE&quot;</span> ) == <span class="stringliteral">&quot;THIEF_HONEST&quot;</span> || !choice ) {</div>
-<div class="line"><a id="l01531" name="l01531"></a><span class="lineno"> 1531</span>            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a id="l01532" name="l01532"></a><span class="lineno"> 1532</span>        }</div>
-<div class="line"><a id="l01533" name="l01533"></a><span class="lineno"> 1533</span>        <a class="code hl_function" href="namespaceavatar__funcs.html#a0cb75fd1a3b035578ab495d30d8ee0bd">avatar_funcs::handle_theft_witnesses</a>( you, target.<a class="code hl_function" href="classitem.html#a326dae8709070c316f6859ef0704bf85">get_owner</a>() );</div>
-<div class="line"><a id="l01534" name="l01534"></a><span class="lineno"> 1534</span>    }</div>
-<div class="line"><a id="l01535" name="l01535"></a><span class="lineno"> 1535</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a id="l01536" name="l01536"></a><span class="lineno"> 1536</span>}</div>
-<div class="ttc" id="aclassCreature_html_a2acb6e1e19bcb775748403d07d8dc3f0"><div class="ttname"><a href="classCreature.html#a2acb6e1e19bcb775748403d07d8dc3f0">Creature::get_value</a></div><div class="ttdeci">std::string get_value(const std::string &amp;key) const</div><div class="ttdef"><b>Definition:</b> <a href="creature_8cpp_source.html#l01347">creature.cpp:1347</a></div></div>
-<div class="ttc" id="aclassitem_html_a0b35b9066ad71987b77727af45d96059"><div class="ttname"><a href="classitem.html#a0b35b9066ad71987b77727af45d96059">item::is_owned_by</a></div><div class="ttdeci">bool is_owned_by(const Character &amp;c, bool available_to_take=false) const</div><div class="ttdef"><b>Definition:</b> <a href="item_8cpp_source.html#l01234">item.cpp:1234</a></div></div>
-<div class="ttc" id="aclassitem_html_a326dae8709070c316f6859ef0704bf85"><div class="ttname"><a href="classitem.html#a326dae8709070c316f6859ef0704bf85">item::get_owner</a></div><div class="ttdeci">faction_id get_owner() const</div><div class="ttdef"><b>Definition:</b> <a href="item_8cpp_source.html#l01279">item.cpp:1279</a></div></div>
-<div class="ttc" id="anamespaceavatar__funcs_html_a0cb75fd1a3b035578ab495d30d8ee0bd"><div class="ttname"><a href="namespaceavatar__funcs.html#a0cb75fd1a3b035578ab495d30d8ee0bd">avatar_funcs::handle_theft_witnesses</a></div><div class="ttdeci">bool handle_theft_witnesses(avatar &amp;you, const faction_id &amp;owners)</div><div class="ttdoc">Handle NPCs witnessing theft of their stuff.</div><div class="ttdef"><b>Definition:</b> <a href="avatar__functions_8cpp_source.html#l00828">avatar_functions.cpp:828</a></div></div>
-<div class="ttc" id="anamespacepickup_html_abd31c624477e99fff1c2dee074c44531"><div class="ttname"><a href="namespacepickup.html#abd31c624477e99fff1c2dee074c44531">pickup::query_thief</a></div><div class="ttdeci">bool query_thief()</div><div class="ttdef"><b>Definition:</b> <a href="pickup_8cpp_source.html#l00187">pickup.cpp:187</a></div></div>
+<p class="definition">Definition at line <a class="el" href="consumption_8cpp_source.html#l01491">1491</a> of file <a class="el" href="consumption_8cpp_source.html">consumption.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l01492" name="l01492"></a><span class="lineno"> 1492</span>{</div>
+<div class="line"><a id="l01493" name="l01493"></a><span class="lineno"> 1493</span>    <span class="comment">//Add in a reset here to make sure user keeps getting asked if not set to keep thief setting</span></div>
+<div class="line"><a id="l01494" name="l01494"></a><span class="lineno"> 1494</span>    <span class="keywordflow">if</span>( you.<a class="code hl_function" href="classCreature.html#a2acb6e1e19bcb775748403d07d8dc3f0">get_value</a>( <span class="stringliteral">&quot;THIEF_MODE_KEEP&quot;</span> ) != <span class="stringliteral">&quot;YES&quot;</span> ) {</div>
+<div class="line"><a id="l01495" name="l01495"></a><span class="lineno"> 1495</span>        you.<a class="code hl_function" href="classCreature.html#a04c1983abeefbf67db1e3f2b2a9b58ab">set_value</a>( <span class="stringliteral">&quot;THIEF_MODE&quot;</span>, <span class="stringliteral">&quot;THIEF_ASK&quot;</span> );</div>
+<div class="line"><a id="l01496" name="l01496"></a><span class="lineno"> 1496</span>    }</div>
+<div class="line"><a id="l01497" name="l01497"></a><span class="lineno"> 1497</span>    <span class="keywordflow">if</span>( !target.<a class="code hl_function" href="classitem.html#a0b35b9066ad71987b77727af45d96059">is_owned_by</a>( you, <span class="keyword">true</span> ) ) {</div>
+<div class="line"><a id="l01498" name="l01498"></a><span class="lineno"> 1498</span>        <span class="keywordtype">bool</span> choice = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l01499" name="l01499"></a><span class="lineno"> 1499</span>        <span class="keywordflow">if</span>( you.<a class="code hl_function" href="classCreature.html#a2acb6e1e19bcb775748403d07d8dc3f0">get_value</a>( <span class="stringliteral">&quot;THIEF_MODE&quot;</span> ) == <span class="stringliteral">&quot;THIEF_ASK&quot;</span> ) {</div>
+<div class="line"><a id="l01500" name="l01500"></a><span class="lineno"> 1500</span>            choice = <a class="code hl_function" href="namespacepickup.html#abd31c624477e99fff1c2dee074c44531">pickup::query_thief</a>();</div>
+<div class="line"><a id="l01501" name="l01501"></a><span class="lineno"> 1501</span>        }</div>
+<div class="line"><a id="l01502" name="l01502"></a><span class="lineno"> 1502</span>        <span class="keywordflow">if</span>( you.<a class="code hl_function" href="classCreature.html#a2acb6e1e19bcb775748403d07d8dc3f0">get_value</a>( <span class="stringliteral">&quot;THIEF_MODE&quot;</span> ) == <span class="stringliteral">&quot;THIEF_HONEST&quot;</span> || !choice ) {</div>
+<div class="line"><a id="l01503" name="l01503"></a><span class="lineno"> 1503</span>            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l01504" name="l01504"></a><span class="lineno"> 1504</span>        }</div>
+<div class="line"><a id="l01505" name="l01505"></a><span class="lineno"> 1505</span>        <a class="code hl_function" href="namespaceavatar__funcs.html#a0cb75fd1a3b035578ab495d30d8ee0bd">avatar_funcs::handle_theft_witnesses</a>( you, target.<a class="code hl_function" href="classitem.html#a326dae8709070c316f6859ef0704bf85">get_owner</a>() );</div>
+<div class="line"><a id="l01506" name="l01506"></a><span class="lineno"> 1506</span>    }</div>
+<div class="line"><a id="l01507" name="l01507"></a><span class="lineno"> 1507</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l01508" name="l01508"></a><span class="lineno"> 1508</span>}</div>
+<div class="ttc" id="aclassCreature_html_a04c1983abeefbf67db1e3f2b2a9b58ab"><div class="ttname"><a href="classCreature.html#a04c1983abeefbf67db1e3f2b2a9b58ab">Creature::set_value</a></div><div class="ttdeci">void set_value(const std::string &amp;key, const std::string &amp;value)</div><div class="ttdef"><b>Definition:</b> <a href="creature_8cpp_source.html#l01371">creature.cpp:1371</a></div></div>
+<div class="ttc" id="aclassCreature_html_a2acb6e1e19bcb775748403d07d8dc3f0"><div class="ttname"><a href="classCreature.html#a2acb6e1e19bcb775748403d07d8dc3f0">Creature::get_value</a></div><div class="ttdeci">std::string get_value(const std::string &amp;key) const</div><div class="ttdef"><b>Definition:</b> <a href="creature_8cpp_source.html#l01381">creature.cpp:1381</a></div></div>
+<div class="ttc" id="aclassitem_html_a0b35b9066ad71987b77727af45d96059"><div class="ttname"><a href="classitem.html#a0b35b9066ad71987b77727af45d96059">item::is_owned_by</a></div><div class="ttdeci">bool is_owned_by(const Character &amp;c, bool available_to_take=false) const</div><div class="ttdef"><b>Definition:</b> <a href="item_8cpp_source.html#l01237">item.cpp:1237</a></div></div>
+<div class="ttc" id="aclassitem_html_a326dae8709070c316f6859ef0704bf85"><div class="ttname"><a href="classitem.html#a326dae8709070c316f6859ef0704bf85">item::get_owner</a></div><div class="ttdeci">faction_id get_owner() const</div><div class="ttdef"><b>Definition:</b> <a href="item_8cpp_source.html#l01282">item.cpp:1282</a></div></div>
+<div class="ttc" id="anamespaceavatar__funcs_html_a0cb75fd1a3b035578ab495d30d8ee0bd"><div class="ttname"><a href="namespaceavatar__funcs.html#a0cb75fd1a3b035578ab495d30d8ee0bd">avatar_funcs::handle_theft_witnesses</a></div><div class="ttdeci">bool handle_theft_witnesses(avatar &amp;you, const faction_id &amp;owners)</div><div class="ttdoc">Handle NPCs witnessing theft of their stuff.</div><div class="ttdef"><b>Definition:</b> <a href="avatar__functions_8cpp_source.html#l00850">avatar_functions.cpp:850</a></div></div>
+<div class="ttc" id="anamespacepickup_html_abd31c624477e99fff1c2dee074c44531"><div class="ttname"><a href="namespacepickup.html#abd31c624477e99fff1c2dee074c44531">pickup::query_thief</a></div><div class="ttdeci">bool query_thief()</div><div class="ttdef"><b>Definition:</b> <a href="pickup_8cpp_source.html#l00188">pickup.cpp:188</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="item_8cpp_source.html#l01279">item::get_owner()</a>, <a class="el" href="creature_8cpp_source.html#l01347">Creature::get_value()</a>, <a class="el" href="avatar__functions_8cpp_source.html#l00828">avatar_funcs::handle_theft_witnesses()</a>, <a class="el" href="item_8cpp_source.html#l01234">item::is_owned_by()</a>, and <a class="el" href="pickup_8cpp_source.html#l00187">pickup::query_thief()</a>.</p>
+<p class="reference">References <a class="el" href="item_8cpp_source.html#l01282">item::get_owner()</a>, <a class="el" href="creature_8cpp_source.html#l01381">Creature::get_value()</a>, <a class="el" href="avatar__functions_8cpp_source.html#l00850">avatar_funcs::handle_theft_witnesses()</a>, <a class="el" href="item_8cpp_source.html#l01237">item::is_owned_by()</a>, <a class="el" href="pickup_8cpp_source.html#l00188">pickup::query_thief()</a>, and <a class="el" href="creature_8cpp_source.html#l01371">Creature::set_value()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01538">Character::consume_item()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01510">Character::consume_item()</a>, and <a class="el" href="avatar__functions_8cpp_source.html#l00649">avatar_funcs::unload_item()</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
-<a id="af240157d33eeab40ef36bc04dd472e75" name="af240157d33eeab40ef36bc04dd472e75"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af240157d33eeab40ef36bc04dd472e75">&#9670;&nbsp;</a></span>bio_advreactor</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="npc_8h.html#a136007e1e0b77eaf7dc4be58f6f42f87">bionic_id</a> bio_advreactor(&quot;bio_advreactor&quot;) </td>
-          <td>(</td>
-          <td class="paramtype">&quot;bio_advreactor&quot;&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01261">Character::can_feed_reactor_with()</a>.</p>
-
-</div>
-</div>
 <a id="a36f9b5f5d763f2c224b59b75af340c6c" name="a36f9b5f5d763f2c224b59b75af340c6c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a36f9b5f5d763f2c224b59b75af340c6c">&#9670;&nbsp;</a></span>bio_digestion</h2>
 
@@ -1838,7 +1863,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01164">Character::consume_effects()</a>, <a class="el" href="consumption_8cpp_source.html#l00828">Character::eat()</a>, and <a class="el" href="consumption_8cpp_source.html#l00732">Character::will_eat()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01179">Character::consume_effects()</a>, <a class="el" href="consumption_8cpp_source.html#l00828">Character::eat()</a>, and <a class="el" href="consumption_8cpp_source.html#l00732">Character::will_eat()</a>.</p>
 
 </div>
 </div>
@@ -1866,35 +1891,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01308">Character::can_feed_furnace_with()</a>.</p>
-
-</div>
-</div>
-<a id="a8964de0b81cdb278e268ded8e0e50fe9" name="a8964de0b81cdb278e268ded8e0e50fe9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8964de0b81cdb278e268ded8e0e50fe9">&#9670;&nbsp;</a></span>bio_reactor</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="npc_8h.html#a136007e1e0b77eaf7dc4be58f6f42f87">bionic_id</a> bio_reactor(&quot;bio_reactor&quot;) </td>
-          <td>(</td>
-          <td class="paramtype">&quot;bio_reactor&quot;&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01261">Character::can_feed_reactor_with()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01276">Character::can_feed_furnace_with()</a>.</p>
 
 </div>
 </div>
@@ -1922,7 +1919,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01631">Character::consume_med()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01602">Character::consume_med()</a>.</p>
 
 </div>
 </div>
@@ -1950,7 +1947,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01059">Character::modify_morale()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01072">Character::modify_morale()</a>.</p>
 
 </div>
 </div>
@@ -2004,7 +2001,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01164">Character::consume_effects()</a>, <a class="el" href="consumption_8cpp_source.html#l00828">Character::eat()</a>, and <a class="el" href="consumption_8cpp_source.html#l00732">Character::will_eat()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01179">Character::consume_effects()</a>, <a class="el" href="consumption_8cpp_source.html#l00828">Character::eat()</a>, and <a class="el" href="consumption_8cpp_source.html#l00732">Character::will_eat()</a>.</p>
 
 </div>
 </div>
@@ -2256,7 +2253,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01164">Character::consume_effects()</a>, and <a class="el" href="consumption_8cpp_source.html#l00828">Character::eat()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01179">Character::consume_effects()</a>, and <a class="el" href="consumption_8cpp_source.html#l00828">Character::eat()</a>.</p>
 
 </div>
 </div>
@@ -2284,7 +2281,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01006">Character::modify_stimulation()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01019">Character::modify_stimulation()</a>.</p>
 
 </div>
 </div>
@@ -2304,7 +2301,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01308">Character::can_feed_furnace_with()</a>, <a class="el" href="consumption_8cpp_source.html#l01326">Character::feed_furnace_with()</a>, and <a class="el" href="consumption_8cpp_source.html#l01433">Character::get_acquirable_energy()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01276">Character::can_feed_furnace_with()</a>, <a class="el" href="consumption_8cpp_source.html#l01294">Character::feed_furnace_with()</a>, and <a class="el" href="consumption_8cpp_source.html#l01401">Character::get_acquirable_energy()</a>.</p>
 
 </div>
 </div>
@@ -2332,7 +2329,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01631">Character::consume_med()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01602">Character::consume_med()</a>.</p>
 
 </div>
 </div>
@@ -2360,7 +2357,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01164">Character::consume_effects()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01179">Character::consume_effects()</a>.</p>
 
 </div>
 </div>
@@ -2385,7 +2382,7 @@ Variables</h2></td></tr>
 </div><!-- fragment -->
 <p class="definition">Definition at line <a class="el" href="consumption_8cpp_source.html#l00170">170</a> of file <a class="el" href="consumption_8cpp_source.html">consumption.cpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01282">Character::feed_reactor_with()</a>, and <a class="el" href="consumption_8cpp_source.html#l01433">Character::get_acquirable_energy()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01401">Character::get_acquirable_energy()</a>.</p>
 
 </div>
 </div>
@@ -2413,7 +2410,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01484">Character::can_estimate_rot()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01452">Character::can_estimate_rot()</a>.</p>
 
 </div>
 </div>
@@ -2441,7 +2438,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01484">Character::can_estimate_rot()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01452">Character::can_estimate_rot()</a>.</p>
 
 </div>
 </div>
@@ -2653,7 +2650,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01059">Character::modify_morale()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01072">Character::modify_morale()</a>.</p>
 
 </div>
 </div>
@@ -2681,7 +2678,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l00642">Character::can_eat()</a>, <a class="el" href="consumption_8cpp_source.html#l01059">Character::modify_morale()</a>, and <a class="el" href="consumption_8cpp_source.html#l00732">Character::will_eat()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l00642">Character::can_eat()</a>, <a class="el" href="consumption_8cpp_source.html#l01072">Character::modify_morale()</a>, and <a class="el" href="consumption_8cpp_source.html#l00732">Character::will_eat()</a>.</p>
 
 </div>
 </div>
@@ -2737,7 +2734,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01164">Character::consume_effects()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01179">Character::consume_effects()</a>.</p>
 
 </div>
 </div>
@@ -2819,7 +2816,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01164">Character::consume_effects()</a>, <a class="el" href="consumption_8cpp_source.html#l00828">Character::eat()</a>, and <a class="el" href="consumption_8cpp_source.html#l00472">Character::fun_for()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01179">Character::consume_effects()</a>, <a class="el" href="consumption_8cpp_source.html#l00828">Character::eat()</a>, and <a class="el" href="consumption_8cpp_source.html#l00472">Character::fun_for()</a>.</p>
 
 </div>
 </div>
@@ -2847,7 +2844,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l00642">Character::can_eat()</a>, and <a class="el" href="consumption_8cpp_source.html#l01164">Character::consume_effects()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l00642">Character::can_eat()</a>, and <a class="el" href="consumption_8cpp_source.html#l01179">Character::consume_effects()</a>.</p>
 
 </div>
 </div>
@@ -3127,7 +3124,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01059">Character::modify_morale()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01072">Character::modify_morale()</a>.</p>
 
 </div>
 </div>
@@ -3155,7 +3152,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01164">Character::consume_effects()</a>, and <a class="el" href="consumption_8cpp_source.html#l01059">Character::modify_morale()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01179">Character::consume_effects()</a>, and <a class="el" href="consumption_8cpp_source.html#l01072">Character::modify_morale()</a>.</p>
 
 </div>
 </div>
@@ -3183,7 +3180,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01059">Character::modify_morale()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01072">Character::modify_morale()</a>.</p>
 
 </div>
 </div>
@@ -3211,7 +3208,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l00642">Character::can_eat()</a>, and <a class="el" href="consumption_8cpp_source.html#l01164">Character::consume_effects()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l00642">Character::can_eat()</a>, and <a class="el" href="consumption_8cpp_source.html#l01179">Character::consume_effects()</a>.</p>
 
 </div>
 </div>
@@ -3267,7 +3264,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01059">Character::modify_morale()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01072">Character::modify_morale()</a>.</p>
 
 </div>
 </div>
@@ -3295,7 +3292,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01164">Character::consume_effects()</a>, <a class="el" href="consumption_8cpp_source.html#l00828">Character::eat()</a>, <a class="el" href="consumption_8cpp_source.html#l00472">Character::fun_for()</a>, <a class="el" href="consumption_8cpp_source.html#l01059">Character::modify_morale()</a>, and <a class="el" href="consumption_8cpp_source.html#l00732">Character::will_eat()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01179">Character::consume_effects()</a>, <a class="el" href="consumption_8cpp_source.html#l00828">Character::eat()</a>, <a class="el" href="consumption_8cpp_source.html#l00472">Character::fun_for()</a>, <a class="el" href="consumption_8cpp_source.html#l01072">Character::modify_morale()</a>, and <a class="el" href="consumption_8cpp_source.html#l00732">Character::will_eat()</a>.</p>
 
 </div>
 </div>
@@ -3323,7 +3320,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01164">Character::consume_effects()</a>, <a class="el" href="consumption_8cpp_source.html#l00828">Character::eat()</a>, <a class="el" href="consumption_8cpp_source.html#l00472">Character::fun_for()</a>, and <a class="el" href="consumption_8cpp_source.html#l00732">Character::will_eat()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01179">Character::consume_effects()</a>, <a class="el" href="consumption_8cpp_source.html#l00828">Character::eat()</a>, <a class="el" href="consumption_8cpp_source.html#l00472">Character::fun_for()</a>, and <a class="el" href="consumption_8cpp_source.html#l00732">Character::will_eat()</a>.</p>
 
 </div>
 </div>
@@ -3379,7 +3376,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01164">Character::consume_effects()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01179">Character::consume_effects()</a>.</p>
 
 </div>
 </div>
@@ -3407,7 +3404,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01059">Character::modify_morale()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01072">Character::modify_morale()</a>.</p>
 
 </div>
 </div>
@@ -3435,7 +3432,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01006">Character::modify_stimulation()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01019">Character::modify_stimulation()</a>.</p>
 
 </div>
 </div>
@@ -3575,7 +3572,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01164">Character::consume_effects()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01179">Character::consume_effects()</a>.</p>
 
 </div>
 </div>
@@ -3603,7 +3600,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01059">Character::modify_morale()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l01072">Character::modify_morale()</a>.</p>
 
 </div>
 </div>
@@ -3659,7 +3656,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l00642">Character::can_eat()</a>, and <a class="el" href="consumption_8cpp_source.html#l01538">Character::consume_item()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="consumption_8cpp_source.html#l00642">Character::can_eat()</a>, and <a class="el" href="consumption_8cpp_source.html#l01510">Character::consume_item()</a>.</p>
 
 </div>
 </div>
@@ -3669,7 +3666,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="consumption_8cpp.html">consumption.cpp</a></li>
-    <li class="footer">Generated on Thu Apr 13 2023 15:08:21 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Fri Jul 21 2023 00:00:19 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

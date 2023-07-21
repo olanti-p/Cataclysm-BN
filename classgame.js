@@ -101,7 +101,7 @@ var classgame =
     [ "find_nearby_items", "classgame.html#ab9f7dcb3dda21ec5c7a7ec89c8e1cf5f", null ],
     [ "find_npc", "classgame.html#a6c1dc6b132836c6b4c650432c5ad0a65", null ],
     [ "find_or_make_stairs", "classgame.html#a7b202daa0782b7c8876c8a07f44469bf", null ],
-    [ "fling_creature", "classgame.html#a8e5fa7b122b9d8cd162d73c17f793673", null ],
+    [ "fling_creature", "classgame.html#a54b46b66f09aef3e0c86de145cb5ab94", null ],
     [ "forced_door_closing", "classgame.html#a3a1f068b17382f8fdc8b1077c35723ee", null ],
     [ "gametype", "classgame.html#afbc5ac540961ab27c1380e0824532a89", null ],
     [ "get_creature_if", "classgame.html#a8abda8202d4d40d918f2946eb9391ffc", null ],

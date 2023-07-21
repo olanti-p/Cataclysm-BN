@@ -21,6 +21,7 @@ var namespaceranged =
     [ "get_aim_types", "namespaceranged.html#a751a40c271349c3ea821c5badd49e42f", null ],
     [ "get_fastest_sight", "namespaceranged.html#a3dbef919e3efee8967ddbcba998a55f3", null ],
     [ "get_most_accurate_sight", "namespaceranged.html#ad70a4328dc4c6c69d45b40f23d90195d", null ],
+    [ "get_shape_factory", "namespaceranged.html#ae6187116a03c20b18135711490b2e961", null ],
     [ "get_str_draw_penalty", "namespaceranged.html#a4c8c85e0249f67213d9994612315aa3e", null ],
     [ "get_weapon_dispersion", "namespaceranged.html#a8b31304e61913a0072ad6df6e16bc932", null ],
     [ "gun_engagement_moves", "namespaceranged.html#a1091f2ff573108fbf6d9f56f0c1d2187", null ],
@@ -42,5 +43,6 @@ var namespaceranged =
     [ "throw_cost", "namespaceranged.html#aeadf3905fda7ac9f7e6e13d78d6beadb", null ],
     [ "throw_dispersion_per_dodge", "namespaceranged.html#afd6b1338d47e5ecd34de75b921c11113", null ],
     [ "throw_item", "namespaceranged.html#aaaa4e309fe9b7ad615954c9f7524ddce", null ],
-    [ "throwing_dispersion", "namespaceranged.html#a54895869f69a00b4a74df15057a9a780", null ]
+    [ "throwing_dispersion", "namespaceranged.html#a54895869f69a00b4a74df15057a9a780", null ],
+    [ "time_to_attack", "namespaceranged.html#ad3183129b44ab2775b50bb90da5c5333", null ]
 ];
