@@ -312,9 +312,9 @@ $(document).ready(function(){initNavTree('mondeath_8cpp_source.html',''); initRe
 <div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    <span class="comment">// 1% of the weight of the monster is the base, with overflow damage as a multiplier</span></div>
 <div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    <span class="keywordtype">int</span> gibbed_weight = <a class="code hl_function" href="artifact_8cpp.html#a70800e95389f34dd34186fafaea2a840">rng</a>( 0, std::round( <a class="code hl_function" href="namespaceunits.html#a8306911daadc1a4d7a7b46e9786f4a4c">to_gram</a>( z.<a class="code hl_function" href="classmonster.html#ac657665936ef8e009e683c2fa02f4ce3">get_weight</a>() ) / 100.0 *</div>
 <div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>                                            ( overflow_damage / max_hp + 1 ) ) );</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    <span class="keyword">const</span> <span class="keywordtype">int</span> z_weight = <a class="code hl_function" href="namespaceunits.html#a8306911daadc1a4d7a7b46e9786f4a4c">to_gram</a>( z.<a class="code hl_function" href="classmonster.html#ac657665936ef8e009e683c2fa02f4ce3">get_weight</a>() );</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    <span class="keyword">const</span> uint64_t z_weight = <a class="code hl_function" href="namespaceunits.html#a8306911daadc1a4d7a7b46e9786f4a4c">to_gram</a>( z.<a class="code hl_function" href="classmonster.html#ac657665936ef8e009e683c2fa02f4ce3">get_weight</a>() );</div>
 <div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    <span class="comment">// limit gibbing to 15%</span></div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    gibbed_weight = std::min( gibbed_weight, z_weight * 15 / 100 );</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    gibbed_weight = std::min( <span class="keyword">static_cast&lt;</span>uint64_t<span class="keyword">&gt;</span>( gibbed_weight ), z_weight * 15 / 100 );</div>
 <div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span> </div>
 <div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    <span class="keywordflow">if</span>( pulverized &amp;&amp; gibbable ) {</div>
 <div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>        <span class="keywordtype">float</span> overflow_ratio = overflow_damage / max_hp + 1;</div>
@@ -1332,7 +1332,7 @@ $(document).ready(function(){initNavTree('mondeath_8cpp_source.html',''); initRe
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="mondeath_8cpp.html">mondeath.cpp</a></li>
-    <li class="footer">Generated on Fri Jul 21 2023 00:00:12 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Sat Jul 29 2023 21:50:48 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>
