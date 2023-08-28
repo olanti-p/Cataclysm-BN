@@ -5064,3 +5064,26 @@ bool belongs_to_connection( const overmap_connection_id &id, const oter_id &oter
 {
     return is_ot_match( id->default_terrain.str(), oter, ot_match_type::type );
 }
+
+namespace io
+{
+
+template<>
+std::string enum_to_string<om_direction::type>( om_direction::type data )
+{
+    switch( data ) {
+        case om_direction::type::north:
+            return "north";
+        case om_direction::type::east:
+            return "east";
+        case om_direction::type::south:
+            return "south";
+        case om_direction::type::west:
+            return "west";
+        case om_direction::type::invalid:
+            return "invalid";
+    }
+    return "BUGGED";
+}
+
+} // namespace io

@@ -7,6 +7,8 @@
 #include <array>
 #include <string>
 
+#include "enum_traits.h"
+
 struct point;
 struct tripoint;
 
@@ -15,12 +17,13 @@ namespace om_direction
 {
 /** Basic enum for directions. */
 enum class type : int {
-    invalid = -1,
-    none,
-    north = none,
+    north = 0,
     east,
     south,
     west,
+    num,
+    none = north,
+    invalid = num
 };
 
 /** For the purposes of iteration. */
@@ -103,5 +106,10 @@ type random();
 bool are_parallel( type dir1, type dir2 );
 
 } // namespace om_direction
+
+template<>
+struct enum_traits<om_direction::type> {
+    static constexpr auto last = om_direction::type::num;
+};
 
 #endif // CATA_SRC_OM_DIRECTION_H

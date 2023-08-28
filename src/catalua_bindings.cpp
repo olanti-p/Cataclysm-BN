@@ -22,6 +22,7 @@
 #include "messages.h"
 #include "monster.h"
 #include "npc.h"
+#include "om_direction.h"
 #include "overmap.h"
 #include "player.h"
 #include "popup.h"
@@ -598,6 +599,7 @@ void cata::detail::reg_colors( sol::state &lua )
 void cata::detail::reg_enums( sol::state &lua )
 {
     reg_enum<game_message_type>( lua );
+    reg_enum<om_direction::type>( lua );
 }
 
 void cata::detail::reg_hooks_examples( sol::state &lua )

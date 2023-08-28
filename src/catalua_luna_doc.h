@@ -7,6 +7,10 @@
 
 enum color_id : int;
 enum game_message_type : int;
+namespace om_direction
+{
+enum class type : int;
+}
 
 class avatar;
 class Character;
@@ -84,6 +88,7 @@ LUNA_ID( ter_t, "Ter" )
 
 // Enums
 LUNA_ENUM( game_message_type, "MsgType" )
+LUNA_ENUM( om_direction::type, "OvermapDir" )
 
 
 #endif // CATA_SRC_CATALUA_LUNA_DOC_H
