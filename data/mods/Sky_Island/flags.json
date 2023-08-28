@@ -1,0 +1,20 @@
+[
+  {
+    "id": "UNBREAKABLE",
+    "type": "json_flag",
+    "context": [  ],
+    "info": "TODO: implement this."
+  },
+  {
+    "id": "ONE_PER_LAYER",
+    "type": "json_flag",
+    "context": [  ],
+    "info": "TODO: implement this."
+  },
+  {
+    "id": "PADDED",
+    "type": "json_flag",
+    "context": [  ],
+    "info": "TODO: implement this."
+  }
+]
