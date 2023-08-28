@@ -430,9 +430,9 @@ void run_on_mapgen_postprocess_hooks( lua_state &state, map &m, const tripoint &
     run_hooks( state, "on_mapgen_postprocess", m, p, when );
 }
 
-void run_on_overmapgen_postprocess_hooks( lua_state &state, overmap &m, const point &p )
+void run_on_overmapgen_postprocess_hooks( lua_state &state, overmap &om )
 {
-    run_hooks( state, "on_overmapgen_postprocess", m, p );
+    run_hooks( state, "on_overmapgen_postprocess", om );
 }
 
 } // namespace cata

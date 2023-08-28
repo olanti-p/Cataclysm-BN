@@ -29,7 +29,7 @@ mod.place_oms_in_overmap = function( overmap, oms, num_attempts, zlev )
     return true, p
 end
 
-mod.place_sky_island = function( overmap, p_om )
+mod.place_sky_island = function( overmap )
     --[[
         When looking for starting location, the game scans 3 overmaps in each 
         direction around the central overmap (0,0).
@@ -41,6 +41,7 @@ mod.place_sky_island = function( overmap, p_om )
         place our island in overmap (1,1). 
     ]]
     local p_desired_om = Point.new( 1, 1 )
+    local p_om = overmap:get_pos_abs()
     if p_om == p_desired_om then
         local oms = mod.island_overspecial_id:obj()
         local num_attempts = 0

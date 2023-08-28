@@ -1681,7 +1681,7 @@ void overmap::generate( const overmap *north, const overmap *east,
     place_radios();
 
     cata::run_on_overmapgen_postprocess_hooks(
-        *DynamicDataLoader::get_instance().lua, *this, pos().raw()
+        *DynamicDataLoader::get_instance().lua, *this
     );
 
     dbg( DL::Info ) << "overmap::generate done";

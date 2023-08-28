@@ -619,10 +619,9 @@ void cata::detail::reg_hooks_examples( sol::state &lua )
        );
     luna::set_fx( lib, "on_mapgen_postprocess", []( map &, const tripoint &, const time_point & ) {} );
     DOC( "Called right after overmap generation has completed. "
-         "Overmap argument is the overmap that's being generated (180x180x10 omt area of the world map), "
-         "point is the absolute om pos."
+         "Overmap argument is the overmap that's being generated (180x180x10 omt area of the world map)."
        );
-    luna::set_fx( lib, "on_overmapgen_postprocess", []( overmap &, const point & ) {} );
+    luna::set_fx( lib, "on_overmapgen_postprocess", []( overmap & ) {} );
 
     luna::finalize_lib( lib );
 }
