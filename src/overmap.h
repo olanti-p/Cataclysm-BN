@@ -378,14 +378,15 @@ class overmap
         void serialize( std::ostream &fout ) const;
         // Save per-player overmap view data.
         void serialize_view( std::ostream &fout ) const;
+
+        const city &get_nearest_city( const tripoint_om_omt &p ) const;
+
     private:
         void generate( const overmap *north, const overmap *east,
                        const overmap *south, const overmap *west,
                        overmap_special_batch &enabled_specials );
         bool generate_sub( int z );
         bool generate_over( int z );
-
-        const city &get_nearest_city( const tripoint_om_omt &p ) const;
 
         void signal_hordes( const tripoint_rel_sm &p, int sig_power );
         void process_mongroups();
@@ -456,12 +457,15 @@ class overmap
         om_direction::type random_special_rotation( const overmap_special &special,
                 const tripoint_om_omt &p, bool must_be_unexplored ) const;
 
+    public:
         bool can_place_special( const overmap_special &special, const tripoint_om_omt &p,
                                 om_direction::type dir, bool must_be_unexplored ) const;
 
         void place_special(
             const overmap_special &special, const tripoint_om_omt &p, om_direction::type dir,
             const city &cit, bool must_be_unexplored, bool force );
+
+    private:
         /**
          * Iterate over the overmap and place the quota of specials.
          * If the stated minimums are not reached, it will spawn a new nearby overmap
