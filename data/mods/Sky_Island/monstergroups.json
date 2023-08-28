@@ -1,0 +1,154 @@
+[
+    {
+      "type": "monstergroup",
+      "name": "GROUP_SI_ZOMEASY",
+      "//": "A simple mix of common low level zombies.  Threat level keeps below around 7.",
+      "default": "mon_zombie",
+      "monsters": [
+        { "monster": "mon_zombie", "cost_multiplier": 1, "freq": 2000 },
+        { "monster": "mon_zombie_fat", "cost_multiplier": 1, "freq": 200 },
+        { "monster": "mon_zombie_tough", "cost_multiplier": 1, "freq": 100 },
+        { "monster": "mon_zombie_child", "cost_multiplier": 1, "freq": 25 },
+        { "monster": "mon_zombie_rot", "cost_multiplier": 1, "freq": 25 },
+        { "monster": "mon_zombie_crawler", "cost_multiplier": 1, "freq": 25 },
+        { "monster": "mon_zombie_dog", "cost_multiplier": 1, "freq": 25 },
+        { "monster": "mon_dog_zombie_cop", "cost_multiplier": 1, "freq": 10 },
+        { "monster": "mon_dog_zombie_rot", "cost_multiplier": 1, "freq": 10 },
+        { "monster": "mon_zombie_cop", "cost_multiplier": 1, "freq": 10 },
+        { "monster": "mon_boomer", "cost_multiplier": 1, "freq": 10 },
+        { "monster": "mon_zombie_shady", "cost_multiplier": 1, "freq": 5 },
+        { "monster": "mon_zombie_hazmat", "cost_multiplier": 1, "freq": 5 },
+        { "monster": "mon_zombie_fireman", "cost_multiplier": 1, "freq": 5 },
+        { "monster": "mon_zombie_static", "cost_multiplier": 1, "freq": 15 },
+        { "monster": "mon_beekeeper", "cost_multiplier": 1, "freq": 5 },
+        { "monster": "mon_feral_human_tool", "cost_multiplier": 1, "freq": 25 },
+        { "monster": "mon_dog_skeleton", "cost_multiplier": 1, "freq": 5 },
+        { "monster": "mon_zombie_runner", "cost_multiplier": 1, "freq": 100 },
+        { "monster": "mon_zombie_brainless", "cost_multiplier": 1, "freq": 5 },
+        { "monster": "mon_skeleton", "cost_multiplier": 1, "freq": 35 },
+        { "monster": "mon_zombie_pig", "cost_multiplier": 1, "freq": 10 },
+        { "monster": "mon_zombie_thorny", "cost_multiplier": 1, "freq": 10 },
+        { "monster": "mon_zombie_scientist", "cost_multiplier": 1, "freq": 10 }
+      ]
+    },
+    {
+      "type": "monstergroup",
+      "name": "GROUP_SI_ZOMMID",
+      "//": "A simple mix of evolved zombies.  Threat level to mid/low teens.  A few exceptions made for special effects like acid or speed, like dogs.",
+      "default": "mon_zombie_tough",
+      "monsters": [
+        { "monster": "mon_zombie_tough", "cost_multiplier": 1, "freq": 1000 },
+        { "monster": "mon_zombie_grabber", "cost_multiplier": 1, "freq": 100 },
+        { "monster": "mon_zombie_grappler", "cost_multiplier": 1, "freq": 50 },
+        { "monster": "mon_zombie_hunter", "cost_multiplier": 1, "freq": 100 },
+        { "monster": "mon_feral_soldier", "cost_multiplier": 1, "freq": 20 },
+        { "monster": "mon_zombie_gasbag", "cost_multiplier": 1, "freq": 25 },
+        { "monster": "mon_zombie_shrieker", "cost_multiplier": 1, "freq": 25 },
+        { "monster": "mon_zombie_acidic", "cost_multiplier": 1, "freq": 25 },
+        { "monster": "mon_zombie_brute", "cost_multiplier": 1, "freq": 25 },
+        { "monster": "mon_zombie_technician", "cost_multiplier": 1, "freq": 20 },
+        { "monster": "mon_zombie_hollow", "cost_multiplier": 1, "freq": 20 },
+        { "monster": "mon_zombie_survivor", "cost_multiplier": 1, "freq": 10 },
+        { "monster": "mon_boomer_huge", "cost_multiplier": 1, "freq": 10 },
+        { "monster": "mon_zombie_swat", "cost_multiplier": 1, "freq": 20 },
+        { "monster": "mon_zombie_skull", "cost_multiplier": 1, "freq": 10 },
+        { "monster": "mon_zombie_biter", "cost_multiplier": 1, "freq": 15 },
+        { "monster": "mon_zombie_soldier", "cost_multiplier": 1, "freq": 50 },
+        { "monster": "mon_zombie_fiend", "cost_multiplier": 1, "freq": 20 },
+        { "monster": "mon_zoose", "cost_multiplier": 1, "freq": 5 },
+        { "monster": "mon_zombie_scientist", "cost_multiplier": 1, "freq": 10 }
+      ]
+    },
+    {
+      "type": "monstergroup",
+      "name": "GROUP_SI_ZOMHARD",
+      "//": "A mix of powerful zombies.  Threat level high teens up to mid 20s.  Exceptions made for especially tough monsters.",
+      "default": "mon_zombie_brute",
+      "monsters": [
+        { "monster": "mon_zombie_brute", "cost_multiplier": 1, "freq": 1000 },
+        { "monster": "mon_zombie_kevlar_1", "cost_multiplier": 1, "freq": 100 },
+        { "monster": "mon_zombie_mancroc", "cost_multiplier": 1, "freq": 25 },
+        { "monster": "mon_zombie_smoker", "cost_multiplier": 1, "freq": 10 },
+        { "monster": "mon_zombie_nullfield", "cost_multiplier": 1, "freq": 25 },
+        { "monster": "mon_zombie_electric", "cost_multiplier": 1, "freq": 50 },
+        { "monster": "mon_skeleton_brute", "cost_multiplier": 1, "freq": 200 },
+        { "monster": "mon_zombear", "cost_multiplier": 1, "freq": 10 },
+        { "monster": "mon_devourer", "cost_multiplier": 1, "freq": 25 },
+        { "monster": "mon_zombie_survivor_elite", "cost_multiplier": 1, "freq": 15 },
+        { "monster": "mon_zombie_spitter", "cost_multiplier": 1, "freq": 75 },
+        { "monster": "mon_zombie_armored", "cost_multiplier": 1, "freq": 10 },
+        { "monster": "mon_zombie_predator", "cost_multiplier": 1, "freq": 10 }
+      ]
+    },
+    {
+      "type": "monstergroup",
+      "name": "GROUP_SI_ZOMELITE",
+      "//": "A blend of truly elite zombies.  Threat level up to the ceiling.",
+      "default": "mon_zombie_hulk",
+      "monsters": [
+        { "monster": "mon_zombie_soldier_blackops_1", "cost_multiplier": 1, "freq": 100 },
+        { "monster": "mon_zombie_soldier_acid_1", "cost_multiplier": 1, "freq": 100 },
+        { "monster": "mon_zombie_soldier_acid_2", "cost_multiplier": 1, "freq": 25 },
+        { "monster": "mon_zombie_kevlar_1", "cost_multiplier": 1, "freq": 50 },
+        { "monster": "mon_zombie_necro", "cost_multiplier": 1, "freq": 20 },
+        { "monster": "mon_zombie_hulk", "cost_multiplier": 1, "freq": 5 },
+        { "monster": "mon_zombie_nullfield", "cost_multiplier": 1, "freq": 100 },
+        { "monster": "mon_zombie_brute_shocker", "cost_multiplier": 1, "freq": 5 },
+        { "monster": "mon_skeleton_electric", "cost_multiplier": 1, "freq": 50 },
+        { "monster": "mon_zombie_bio_op", "cost_multiplier": 1, "freq": 50 },
+        { "monster": "mon_zombie_survivor_elite", "cost_multiplier": 1, "freq": 50 },
+        { "monster": "mon_zombie_brute_ninja", "cost_multiplier": 1, "freq": 20 },
+        { "monster": "mon_zombie_armored", "cost_multiplier": 1, "freq": 10 },
+        { "monster": "mon_zombie_predator", "cost_multiplier": 1, "freq": 50 },
+        { "monster": "mon_zombie_corrosive", "cost_multiplier": 1, "freq": 25 }
+      ]
+    },
+    {
+      "type": "monstergroup",
+      "name": "GROUP_SI_ZOMBOSS",
+      "//": "Boss tier encounters.  Extreme danger level.",
+      "default": "mon_zombie_hulk",
+      "monsters": [
+        { "monster": "mon_zombie_hulk", "cost_multiplier": 1, "freq": 100 },
+        { "monster": "mon_skeleton_hulk", "cost_multiplier": 1, "freq": 75 },
+        { "monster": "mon_zombie_kevlar_2", "cost_multiplier": 1, "freq": 50 },
+        { "monster": "mon_zombie_bio_op2", "cost_multiplier": 1, "freq": 15 },
+        { "monster": "mon_jabberwock", "cost_multiplier": 1, "freq": 25 },
+        { "monster": "mon_zombie_brute_shocker", "cost_multiplier": 1, "freq": 10 }
+      ]
+    },
+    {
+      "type": "monstergroup",
+      "name": "GROUP_SI_ZOMBOSSMULT",
+      "//": "Boss tier encounters for enemies that show up in bunches.  Extreme danger level.",
+      "default": "mon_zombie_hulk",
+      "monsters": [
+        { "monster": "mon_zombie_hulk", "cost_multiplier": 1, "freq": 10 },
+        { "monster": "mon_zombie_bio_op2", "cost_multiplier": 1, "freq": 50 },
+        { "monster": "mon_feral_militia", "cost_multiplier": 1, "freq": 100 },
+        { "monster": "mon_skeleton_electric", "cost_multiplier": 1, "freq": 100 },
+        { "monster": "mon_zombie_brute_grappler", "cost_multiplier": 1, "freq": 50 },
+        { "monster": "mon_zombie_brute_shocker", "cost_multiplier": 1, "freq": 100 }
+      ]
+    },
+    {
+      "type": "monstergroup",
+      "name": "GROUP_SI_MIGO",
+      "//": "Powerful migo.",
+      "default": "mon_mi_go",
+      "monsters": [
+        { "monster": "mon_mi_go", "cost_multiplier": 1, "freq": 200 },
+        { "monster": "mon_mi_go_scout", "cost_multiplier": 1, "freq": 25 },
+        { "monster": "mon_mi_go_slaver", "cost_multiplier": 1, "freq": 15 },
+        { "monster": "mon_mi_go_surgeon", "cost_multiplier": 1, "freq": 10 }
+      ]
+    },
+    {
+      "type": "monstergroup",
+      "name": "GROUP_SI_MIGO_ELITE",
+      "//": "Evolved migo.",
+      "default": "mon_mi_go_guard",
+      "monsters": [ { "monster": "mon_mi_go_myrmidon", "cost_multiplier": 1, "freq": 25 }, { "monster": "mon_mi_go_guard", "cost_multiplier": 1, "freq": 75 } ]
+    }
+  ]
+  
