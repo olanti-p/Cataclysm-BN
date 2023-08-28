@@ -8,8 +8,10 @@
 
 class Item_factory;
 class map;
+class overmap;
 class time_point;
 struct tripoint;
+struct point;
 
 namespace cata
 {
@@ -43,6 +45,7 @@ void run_on_game_save_hooks( lua_state &state );
 void run_on_every_x_hooks( lua_state &state );
 void run_on_mapgen_postprocess_hooks( lua_state &state, map &m, const tripoint &p,
                                       const time_point &when );
+void run_on_overmapgen_postprocess_hooks( lua_state &state, overmap &m, const point &p );
 void reg_lua_iuse_actors( lua_state &state, Item_factory &ifactory );
 
 } // namespace cata

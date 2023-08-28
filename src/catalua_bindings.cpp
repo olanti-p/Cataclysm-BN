@@ -22,6 +22,7 @@
 #include "messages.h"
 #include "monster.h"
 #include "npc.h"
+#include "overmap.h"
 #include "player.h"
 #include "popup.h"
 #include "rng.h"
@@ -615,6 +616,11 @@ void cata::detail::reg_hooks_examples( sol::state &lua )
          "tripoint is the absolute omt pos, and time_point is the current time (for time-based effects)."
        );
     luna::set_fx( lib, "on_mapgen_postprocess", []( map &, const tripoint &, const time_point & ) {} );
+    DOC( "Called right after overmap generation has completed. "
+         "Overmap argument is the overmap that's being generated (180x180x10 omt area of the world map), "
+         "point is the absolute om pos."
+       );
+    luna::set_fx( lib, "on_overmapgen_postprocess", []( overmap &, const point & ) {} );
 
     luna::finalize_lib( lib );
 }

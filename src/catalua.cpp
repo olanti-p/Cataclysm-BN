@@ -109,6 +109,7 @@ void run_on_every_x_hooks( lua_state & ) {}
 #include "item_factory.h"
 #include "map.h"
 #include "mod_manager.h"
+#include "overmap.h"
 #include "path_info.h"
 #include "point.h"
 #include "worldfactory.h"
@@ -289,6 +290,7 @@ void init_global_state_tables( lua_state &state, const std::vector<mod_id> &modl
     hooks["on_game_load"] = lua.create_table();
     hooks["on_game_save"] = lua.create_table();
     hooks["on_mapgen_postprocess"] = lua.create_table();
+    hooks["on_overmapgen_postprocess"] = lua.create_table();
 }
 
 void set_mod_being_loaded( lua_state &state, const mod_id &mod )
@@ -426,6 +428,11 @@ void run_on_mapgen_postprocess_hooks( lua_state &state, map &m, const tripoint &
                                       const time_point &when )
 {
     run_hooks( state, "on_mapgen_postprocess", m, p, when );
+}
+
+void run_on_overmapgen_postprocess_hooks( lua_state &state, overmap &m, const point &p )
+{
+    run_hooks( state, "on_overmapgen_postprocess", m, p );
 }
 
 } // namespace cata
