@@ -332,9 +332,10 @@ void start_location::place_player( player &u ) const
     for( const auto &i : mgr.get_zones() ) {
         const zone_data &zone = i.get();
         if( zone.get_type() == zone_type_ZONE_START_POINT ) {
-            if( m.inbounds( zone.get_center_point() ) ) {
+            tripoint zone_p = m.getlocal( zone.get_center_point() );
+            if( m.inbounds( zone_p ) ) {
                 found_good_spot = true;
-                u.setpos( m.getlocal( zone.get_center_point() ) );
+                u.setpos( zone_p );
                 break;
             }
         }

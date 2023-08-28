@@ -33,6 +33,7 @@
 #include "string_formatter.h"
 #include "string_input_popup.h"
 #include "translations.h"
+#include "type_id.h"
 #include "ui.h"
 #include "value_ptr.h"
 #include "vehicle.h"
@@ -120,6 +121,9 @@ zone_manager::zone_manager()
     types.emplace( zone_type_id( "AUTO_DRINK" ),
                    zone_type( translate_marker( "Auto Drink" ),
                               translate_marker( "Items in this zone will be automatically consumed during a long activity if you get thirsty." ) ) );
+    types.emplace( zone_type_id( "ZONE_START_POINT" ),
+                   zone_type( translate_marker( "Start Point" ),
+                              translate_marker( "A prioritized spawn point." ) ) );
 
 }
 
