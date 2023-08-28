@@ -42,7 +42,7 @@
         "                        "
       ],
       "terrain": { " ": "t_grass", ".": "t_fake_air", "X": "t_grass", "Y": "t_grass", "Z": "t_grass" },
-      "//place_zones": [ { "type": "ZONE_START_POINT", "faction": "your_followers", "x": [ 10, 14 ], "y": [ 16, 20 ] } ],
+      "place_zones": [ { "type": "ZONE_START_POINT", "faction": "your_followers", "x": [ 10, 14 ], "y": [ 16, 20 ] } ],
       "furniture": { "X": "f_exitportal" },
       "//items": { "Z": [ { "item": "si_trash_heap", "chance": 100 } ], "Y": [ { "item": "starterkit_items", "chance": 100 } ] },
       "place_item": [  ]
