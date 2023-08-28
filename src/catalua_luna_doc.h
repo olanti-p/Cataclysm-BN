@@ -24,6 +24,7 @@ class map_stack;
 class map;
 class monster;
 class npc;
+class overmap_special;
 class player;
 class query_popup;
 class time_duration;
@@ -84,6 +85,7 @@ LUNA_ID( field_type, "FieldType" )
 LUNA_ID( furn_t, "Furn" )
 LUNA_ID( itype, "Itype" )
 LUNA_ID( ter_t, "Ter" )
+LUNA_ID( overmap_special, "OvermapSpecial" );
 
 
 // Enums

@@ -10,6 +10,7 @@
 #include "itype.h"
 #include "json.h"
 #include "mapdata.h"
+#include "overmap_special.h"
 #include "type_id.h"
 
 
@@ -100,6 +101,7 @@ void cata::detail::reg_game_ids( sol::state &lua )
     reg_id<body_part_type, true>( lua );
     reg_id<effect_type, false>( lua );
     reg_id<field_type, true>( lua );
+    reg_id<overmap_special, false>( lua );
 }
 
 void cata::detail::reg_types( sol::state &lua )

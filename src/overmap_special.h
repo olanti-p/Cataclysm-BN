@@ -15,6 +15,7 @@
 #include "omdata.h"
 #include "point.h"
 #include "type_id.h"
+#include "catalua_type_operators.h"
 
 struct city;
 
@@ -97,6 +98,9 @@ class overmap_special
         void load( const JsonObject &jo, const std::string &src );
         void finalize();
         void check() const;
+
+        LUA_TYPE_OPS( overmap_special, id )
+
     private:
         // These locations are the default values if ones are not specified for the individual OMTs.
         std::set<overmap_location_id> default_locations;
