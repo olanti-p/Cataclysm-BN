@@ -173,6 +173,7 @@
     "city_sizes": [ 0, 20 ],
     "occurrences": [ 0, 0 ],
     "rotate": false,
-    "flags": [ "CLASSIC", "SAFE_AT_WORLDGEN", "GLOBALLY_UNIQUE" ]
+    "//TODO": "Safe on spawn",
+    "flags": [ "CLASSIC" ]
   }
 ]
