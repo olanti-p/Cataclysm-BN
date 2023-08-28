@@ -34,6 +34,7 @@ class uilist;
 struct body_part_type;
 struct field_type;
 struct point;
+struct city;
 struct tripoint;
 
 
@@ -59,6 +60,7 @@ LUNA_VAL( avatar, "Avatar" );
 LUNA_VAL( Character, "Character" );
 LUNA_VAL( color_id, "Color" );
 LUNA_VAL( Creature, "Creature" );
+LUNA_VAL( city, "City" );
 LUNA_VAL( distribution_grid_tracker, "DistributionGridTracker" );
 LUNA_VAL( distribution_grid, "DistributionGrid" );
 LUNA_VAL( item_stack, "ItemStack" );
