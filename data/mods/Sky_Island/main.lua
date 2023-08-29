@@ -150,3 +150,13 @@ mod.init_new_game = function()
     ))
     mod.set_difficulty( mod.query_difficulty() )
 end
+
+mod.activate_warp_statue = function(who, pos, is_furn)
+    -- TODO: implement
+    gapi.add_msg("You examine the WARP statue.")
+end
+
+mod.activate_return_statue = function(who, pos, is_furn)
+    -- TODO: implement
+    gapi.add_msg("You examine the RETURN statue.")
+end

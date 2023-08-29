@@ -13,7 +13,7 @@
     "required_str": 1,
     "crafting_pseudo_item": "fakeitem_statue",
     "flags": [ "NOCOLLIDE", "NO_PICKUP_ON_EXAMINE", "TRANSPARENT" ],
-    "//examine_action": { "type": "effect_on_condition", "effect_on_conditions": [ "EOC_warp_statue" ] }
+    "lua_examine_action": "SI_WARP_STATUE"
   },
   {
     "type": "furniture",
@@ -28,7 +28,7 @@
     "coverage": 0,
     "required_str": -1,
     "flags": [ "NOCOLLIDE", "NO_PICKUP_ON_EXAMINE", "TRANSPARENT" ],
-    "//examine_action": { "type": "effect_on_condition", "effect_on_conditions": [ "EOC_statue_return" ] }
+    "lua_examine_action": "SI_STATUE_RETURN"
   },
   {
     "type": "terrain",

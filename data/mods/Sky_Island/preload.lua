@@ -13,3 +13,11 @@ end
 game.iuse_functions[ "ADJUST_SI_DIFFICULTY" ] = function(...)
     return mod.adjust_difficulty(...)
 end
+
+game.examine_functions[ "SI_WARP_STATUE" ] = function(...)
+    return mod.activate_warp_statue(...)
+end
+
+game.examine_functions[ "SI_STATUE_RETURN" ] = function(...)
+    return mod.activate_return_statue(...)
+end
