@@ -41,10 +41,10 @@ mod.place_sky_island = function( overmap )
         place our island in overmap (1,1). 
     ]]
     local p_desired_om = Point.new( 1, 1 )
-    local p_om = overmap:get_pos_abs()
+    local p_om = overmap:get_abs_pos()
     if p_om == p_desired_om then
         local oms = mod.island_overspecial_id:obj()
-        local num_attempts = 0
+        local num_attempts = 100
         local forced, p = mod.place_oms_in_overmap( overmap, oms, num_attempts, mod.island_spawn_zlev )
 
         local msg = "Placed Sky Island at "..tostring(p)
