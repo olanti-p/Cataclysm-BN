@@ -211,6 +211,7 @@ end
 #### Item use function
 Item use functions use unique id to register themselves in item factory.
 On item activation, they receive multiple arguments that will be described in the example below.
+Note that it is possible to override hardcoded item use functions this way.
 
 ```lua
 -- In preload.lua
