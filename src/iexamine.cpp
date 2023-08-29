@@ -28,7 +28,9 @@
 #include "calendar.h"
 #include "cata_unreachable.h"
 #include "cata_utility.h"
+#include "catalua.h"
 #include "catacharset.h"
+#include "catalua_iexamine.h"
 #include "character.h"
 #include "character_functions.h"
 #include "colony.h"
@@ -56,6 +58,7 @@
 #include "game_inventory.h"
 #include "handle_liquid.h"
 #include "harvest.h"
+#include "init.h"
 #include "input.h"
 #include "int_id.h"
 #include "inventory.h"
@@ -253,6 +256,26 @@ static const time_duration milling_time = 6_hours;
 void iexamine::none( player &/*p*/, const tripoint &examp )
 {
     add_msg( _( "That is a %s." ), get_map().name( examp ) );
+}
+
+/**
+ * Call specified Lua function
+ */
+void iexamine::lua( player &p, const tripoint &examp )
+{
+    map &here = get_map();
+    const std::string *lua_action = nullptr;
+    bool is_furn = false;
+    if( here.has_furn( examp ) && here.furn( examp )->examine == iexamine::lua ) {
+        // We're dealing with furniture
+        lua_action = &here.furn( examp )->lua_examine_action;
+        is_furn = true;
+    } else {
+        // We're dealing with terrain
+        lua_action = &here.ter( examp )->lua_examine_action;
+    }
+    Character &ch = *p.as_character();
+    run_luafunc( *DynamicDataLoader::get_instance().lua, *lua_action, ch, examp, is_furn );
 }
 
 /**
@@ -6299,6 +6322,7 @@ iexamine_function iexamine_function_from_string( const std::string &function_nam
 {
     static const std::map<std::string, iexamine_function> function_map = {{
             { "none", &iexamine::none },
+            { "lua", &iexamine::lua },
             { "deployed_furniture", &iexamine::deployed_furniture },
             { "cvdmachine", &iexamine::cvdmachine },
             { "nanofab", &iexamine::nanofab },

@@ -19,6 +19,7 @@ Use the `Home` key to return to the top.
       - [Global overrides](#global-overrides)
       - [Hooks](#hooks)
       - [Item use function](#item-use-function)
+      - [Examine function](#examine-function)
       - [Translation functions](#translation-functions)
   - [C++ layout](#c-layout)
     - [Lua source files](#lua-source-files)
@@ -229,6 +230,33 @@ mod.my_awesome_iuse_function = function( who, item, pos )
   -- `who` is the character that activated the item
   -- `item` is the item itself
   -- `pos` is the position of the item (equal to character pos if character has it on them)
+end
+```
+
+#### Examine function
+Furniture and terrain examine functions can be defined in Lua via unique string id.
+On data loading, if terrain or furniture has `lua_examine_action` member, the game looks
+for the corresponding function in the table.
+Note that it is NOT currently possible to globally overwrite hardcoded examine actions,
+but you do it on an individual basis by copy-from'ing the JSON definition
+and setting custom `lua_examine_action` there.
+
+```lua
+-- In preload.lua
+local mod = game.mod_runtime[ game.current_mod ]
+game.examine_functions[ "INSPIRING_SIGNPOST" ] = function(...)
+  -- This is just a forward declaration,
+  -- but it will allow us to use INSPIRING_SIGNPOST iuse in JSONs.
+  return mod.my_awesome_examine_function(...)
+end
+
+-- In main.lua
+local mod = game.mod_runtime[ game.current_mod ]
+mod.my_awesome_examine_function = function( who, pos, is_furn )
+  -- Do actual examine effect here.
+  -- `who` is the character that activated the examination
+  -- `pos` is the position of the examined tile
+  -- `is_furn` whether function was activated for furniture or terrain
 end
 ```
 

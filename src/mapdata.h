@@ -401,6 +401,7 @@ struct map_data_common_t {
         std::string prompt;
 
         iexamine_function examine; // What happens when the terrain/furniture is examined
+        std::string lua_examine_action; // id of Lua examine action
 
         /**
          * When will this terrain/furniture get harvested and what will drop?

@@ -3000,6 +3000,12 @@ Color of the object as it appears in the game. "color" defines the foreground co
 #### `examine_action`
 
 (Optional) The json function that is called when the object is examined. See "src/iexamine.h".
+This is mutually exclusive with `lua_examine_action`, and will overwrite it on copy-from.
+
+#### `lua_examine_action`
+
+(Optional) The Lua examine action function that is called when the object is examined. See LUA_SUPPORT.md
+This is mutually exclusive with `examine_action`, and will overwrite it on copy-from.
 
 #### `close" And "open`
 

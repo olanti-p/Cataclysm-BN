@@ -25,6 +25,7 @@ namespace iexamine
 void egg_sack_generic( player &p, const tripoint &examp, const mtype_id &montype );
 
 void none( player &p, const tripoint &examp );
+void lua( player &p, const tripoint &examp );
 
 void gaspump( player &p, const tripoint &examp );
 void atm( player &p, const tripoint &examp );

@@ -285,6 +285,8 @@ void init_global_state_tables( lua_state &state, const std::vector<mod_id> &modl
 
     // iuse functions
     gt["iuse_functions"] = lua.create_table();
+    // examine functions
+    gt["examine_functions"] = lua.create_table();
 
     // hooks
     hooks["on_game_start"] = lua.create_table();

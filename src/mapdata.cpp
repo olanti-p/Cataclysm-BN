@@ -11,12 +11,15 @@
 #include "assign.h"
 #include "calendar.h"
 #include "cached_options.h"
+#include "catalua.h"
+#include "catalua_iexamine.h"
 #include "color.h"
 #include "debug.h"
 #include "enum_conversions.h"
 #include "generic_factory.h"
 #include "harvest.h"
 #include "iexamine.h"
+#include "init.h"
 #include "int_id.h"
 #include "item.h"
 #include "item_group.h"
@@ -1285,10 +1288,27 @@ std::string enum_to_string<season_type>( season_type data )
 
 void map_data_common_t::load( const JsonObject &jo, const std::string &src )
 {
+    if( jo.has_member( "examine_action" ) && jo.has_member( "lua_examine_action" ) ) {
+        jo.throw_error( "Only one of 'examine_action' and 'lua_examine_action' is allowed." );
+    }
     if( jo.has_member( "examine_action" ) ) {
-        examine = iexamine_function_from_string( jo.get_string( "examine_action" ) );
+        std::string action_id = jo.get_string( "examine_action" );
+        if( action_id == "lua" ) {
+            jo.throw_error( "'lua' is not allowed. Use 'lua_examine_action' field instead." );
+        } else {
+            examine = iexamine_function_from_string( action_id );
+            lua_examine_action.clear();
+        }
     } else if( !was_loaded ) {
         examine = iexamine_function_from_string( "none" );
+        lua_examine_action.clear();
+    }
+    if( jo.has_member( "lua_examine_action" ) ) {
+        examine = iexamine_function_from_string( "lua" );
+        lua_examine_action = jo.get_string( "lua_examine_action" );
+        if( !iexamine::is_luafunc_valid( *DynamicDataLoader::get_instance().lua, lua_examine_action ) ) {
+            jo.throw_error( string_format( "No lua examine action defined with id '%s'", lua_examine_action ) );
+        }
     }
 
     if( jo.has_array( "harvest_by_season" ) ) {
