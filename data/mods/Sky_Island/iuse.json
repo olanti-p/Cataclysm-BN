@@ -1,0 +1,7 @@
+[
+  {
+    "type": "item_action",
+    "id": "ADJUST_SI_DIFFICULTY",
+    "name": { "str": "Choose your challenge" }
+  }
+]

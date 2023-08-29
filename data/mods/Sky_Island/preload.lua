@@ -9,3 +9,7 @@ end
 game.hooks.on_game_start[ #game.hooks.on_game_start + 1 ] = function(...)
     return mod.init_new_game(...)
 end
+
+game.iuse_functions[ "ADJUST_SI_DIFFICULTY" ] = function(...)
+    return mod.adjust_difficulty(...)
+end

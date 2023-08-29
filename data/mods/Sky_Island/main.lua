@@ -124,6 +124,11 @@ mod.get_difficulty = function()
     return storage.difficulty
 end
 
+mod.adjust_difficulty = function( who, item, pos )
+    mod.set_difficulty( mod.query_difficulty() )
+    return 0
+end
+
 mod.init_new_game = function()
     if gapi.get_scenario():get_id() ~= mod.warper_scenario_id then
         -- Check that the player didn't mess up and choose the wrong scenario.

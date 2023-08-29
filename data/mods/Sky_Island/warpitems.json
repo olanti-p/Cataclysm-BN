@@ -51,11 +51,7 @@
     "id": "warpdifficulty_stone",
     "name": { "str": "Difficulty Adjuster" },
     "color": "magenta",
-    "//use_action": {
-      "type": "effect_on_conditions",
-      "description": "Choose your challenge.",
-      "effect_on_conditions": [ "EOC_difficultycheck" ]
-    },
+    "use_action": "ADJUST_SI_DIFFICULTY",
     "volume": "250 ml",
     "weight": "10 g",
     "looks_like": "spiral_stone",
