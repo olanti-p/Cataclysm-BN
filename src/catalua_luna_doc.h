@@ -27,6 +27,7 @@ class npc;
 class overmap;
 class overmap_special;
 class player;
+class scenario;
 class query_popup;
 class time_duration;
 class time_point;
@@ -90,6 +91,7 @@ LUNA_ID( furn_t, "Furn" )
 LUNA_ID( itype, "Itype" )
 LUNA_ID( ter_t, "Ter" )
 LUNA_ID( overmap_special, "OvermapSpecial" );
+LUNA_ID( scenario, "Scenario" );
 
 
 // Enums

@@ -27,6 +27,7 @@
 #include "player.h"
 #include "popup.h"
 #include "rng.h"
+#include "scenario.h"
 #include "translations.h"
 #include "type_id.h"
 #include "ui.h"
@@ -502,6 +503,7 @@ void cata::detail::reg_game_api( sol::state &lua )
 
     luna::set_fx( lib, "get_avatar", &get_avatar );
     luna::set_fx( lib, "get_map", &get_map );
+    luna::set_fx( lib, "get_scenario", &get_scenario );
     luna::set_fx( lib, "get_distribution_grid_tracker", &get_distribution_grid_tracker );
     luna::set_fx( lib, "get_character_name", []( const Character & you ) -> std::string {
         return you.name;
@@ -782,6 +784,17 @@ void cata::detail::reg_time_types( sol::state &lua )
     }
 }
 
+void cata::detail::reg_scenario( sol::state &lua )
+{
+    sol::usertype<scenario> ut =
+        luna::new_usertype<scenario>(
+            lua,
+            luna::no_bases,
+            luna::no_constructor
+        );
+    luna::set_fx( ut, "get_id", &scenario::ident );
+}
+
 void cata::detail::reg_testing_library( sol::state &lua )
 {
     DOC( "Library for testing purposes" );
@@ -816,6 +829,7 @@ void cata::reg_all_bindings( sol::state &lua )
     reg_colors( lua );
     reg_enums( lua );
     reg_overmap_api( lua );
+    reg_scenario( lua );
     reg_game_ids( lua );
     reg_coords_library( lua );
     reg_constants( lua );

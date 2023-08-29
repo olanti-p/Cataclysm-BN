@@ -8,6 +8,7 @@
 #include "faction.h"
 #include "field_type.h"
 #include "itype.h"
+#include "scenario.h"
 #include "json.h"
 #include "mapdata.h"
 #include "overmap_special.h"
@@ -102,6 +103,7 @@ void cata::detail::reg_game_ids( sol::state &lua )
     reg_id<effect_type, false>( lua );
     reg_id<field_type, true>( lua );
     reg_id<overmap_special, false>( lua );
+    reg_id<scenario, false>( lua );
 }
 
 void cata::detail::reg_types( sol::state &lua )

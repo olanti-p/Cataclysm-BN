@@ -33,6 +33,7 @@ void reg_game_ids( sol::state &lua );
 void reg_types( sol::state &lua );
 void reg_ui_elements( sol::state &lua );
 void reg_overmap_api( sol::state &lua );
+void reg_scenario( sol::state &lua );
 
 } // namespace detail
 
