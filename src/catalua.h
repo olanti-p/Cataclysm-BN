@@ -40,6 +40,7 @@ void clear_mod_being_loaded( lua_state &state );
 void run_mod_preload_script( lua_state &state, const mod_id &mod );
 void run_mod_finalize_script( lua_state &state, const mod_id &mod );
 void run_mod_main_script( lua_state &state, const mod_id &mod );
+void run_on_game_start_hooks( lua_state &state );
 void run_on_game_load_hooks( lua_state &state );
 void run_on_game_save_hooks( lua_state &state );
 void run_on_every_x_hooks( lua_state &state );

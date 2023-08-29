@@ -607,6 +607,8 @@ void cata::detail::reg_hooks_examples( sol::state &lua )
     DOC( "Documentation for hooks" );
     luna::userlib lib = luna::begin_lib( lua, "hooks_doc" );
 
+    DOC( "Called when new game is started" );
+    luna::set_fx( lib, "on_game_start", []() {} );
     DOC( "Called when game is about to save" );
     luna::set_fx( lib, "on_game_save", []() {} );
     DOC( "Called right after game has loaded" );

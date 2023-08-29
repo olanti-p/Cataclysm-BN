@@ -49,6 +49,7 @@
 #include "calendar.h"
 #include "cata_utility.h"
 #include "catacharset.h"
+#include "catalua.h"
 #include "character.h"
 #include "character_display.h"
 #include "character_functions.h"
@@ -753,6 +754,9 @@ bool game::start_game()
         const auto mission = mission::reserve_new( m, character_id() );
         mission->assign( u );
     }
+    // Run additional setup on Lua side
+    cata::run_on_game_start_hooks( *DynamicDataLoader::get_instance().lua );
+
     g->events().send<event_type::game_start>( u.getID() );
     for( Skill &elem : Skill::skills ) {
         int level = u.get_skill_level_object( elem.ident() ).level();

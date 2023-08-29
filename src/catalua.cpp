@@ -287,6 +287,7 @@ void init_global_state_tables( lua_state &state, const std::vector<mod_id> &modl
     gt["iuse_functions"] = lua.create_table();
 
     // hooks
+    hooks["on_game_start"] = lua.create_table();
     hooks["on_game_load"] = lua.create_table();
     hooks["on_game_save"] = lua.create_table();
     hooks["on_mapgen_postprocess"] = lua.create_table();
@@ -412,6 +413,11 @@ int get_lua_api_version()
 void lua_state_deleter::operator()( lua_state *state ) const
 {
     delete state;
+}
+
+void run_on_game_start_hooks( lua_state &state )
+{
+    run_hooks( state, "on_game_start" );
 }
 
 void run_on_game_save_hooks( lua_state &state )
