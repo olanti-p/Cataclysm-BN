@@ -24,6 +24,7 @@
 #include "npc.h"
 #include "om_direction.h"
 #include "overmap.h"
+#include "output.h"
 #include "player.h"
 #include "popup.h"
 #include "rng.h"
@@ -364,11 +365,20 @@ void cata::detail::reg_ui_elements( sol::state &lua )
         luna::set_fx( ut, "title", []( uilist & ui, const std::string & text ) {
             ui.title = text;
         } );
-        DOC( "Return value, text" );
-        luna::set_fx( ut, "add", []( uilist & ui, int retval, const std::string & text ) {
-            ui.addentry( retval, true, MENU_AUTOASSIGN, text );
+        luna::set_fx( ut, "allow_cancel", []( uilist & ui, bool value ) {
+            ui.allow_cancel = value;
         } );
-        DOC( "Returns retval for selected entry, or a negative number on fail/cancel" );
+        DOC( "Add new entry.  Arguments: (return value, text, description)" );
+        luna::set_fx( ut, "add", []( uilist & ui, int retval, const std::string & text,
+        sol::optional<std::string> descr ) {
+            if( descr ) {
+                ui.addentry_desc( retval, true, MENU_AUTOASSIGN, text, *descr );
+                ui.desc_enabled = true;
+            } else {
+                ui.addentry( retval, true, MENU_AUTOASSIGN, text );
+            }
+        } );
+        DOC( "Returns return value of selected entry, or a negative number on fail/cancel" );
         luna::set_fx( ut, "query", []( uilist & ui ) {
             ui.query();
             return ui.ret;
