@@ -100,6 +100,30 @@ mod.show_popup = function(text)
     popup:query()
 end
 
+-- Ask player to choose the difficulty
+mod.query_difficulty = function()
+    local list = UiList.new()
+    list:title(locale.gettext("Choose difficulty"))
+    list:allow_cancel( false )
+    for diff, data in ipairs( mod.difficulty_data ) do
+        list:add( diff, data.name, data.descr )
+    end
+    return list:query()
+end
+
+mod.set_difficulty = function(diff)
+    -- Save the difficulty to storage, so it persists across save/load
+    storage.difficulty = diff
+
+    local text = locale.gettext("Difficulty set to: %s.  You can use the Difficulty Adjuster if you wish to change your setting at any time.")
+    local msg = string.format(text, mod.difficulty_data[diff].name )
+    gapi.add_msg(msg)
+end
+
+mod.get_difficulty = function()
+    return storage.difficulty
+end
+
 mod.init_new_game = function()
     if gapi.get_scenario():get_id() ~= mod.warper_scenario_id then
         -- Check that the player didn't mess up and choose the wrong scenario.
@@ -119,4 +143,5 @@ mod.init_new_game = function()
     mod.show_popup(locale.gettext(
         "Now, let's select your difficulty mode!\n\nThis only affects how long the expedition timer is.  It won't change combat difficulty or any other settings."
     ))
+    mod.set_difficulty( mod.query_difficulty() )
 end
