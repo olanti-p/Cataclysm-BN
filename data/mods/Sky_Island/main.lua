@@ -1,9 +1,13 @@
 gdebug.log_info("SkyIsland: main.")
 
 local mod = game.mod_runtime[ game.current_mod ]
+local storage = game.mod_storage[ game.current_mod ]
 
 mod.island_overspecial_id = OvermapSpecialId.new("HQislandspecial")
 assert( mod.island_overspecial_id:is_valid() )
+
+mod.warper_scenario_id = ScenarioId.new("scenario_warper")
+assert(mod.warper_scenario_id:is_valid())
 
 -- Somewhat counter-intuitive, but the island is designed relative to ground level
 mod.island_spawn_zlev = 0
@@ -86,4 +90,33 @@ mod.place_sky_island = function( overmap )
         end
         gdebug.log_info(msg)
     end
+end
+
+-- Show popup with text
+mod.show_popup = function(text)
+    local popup = QueryPopup.new()
+    popup:message(text)
+    popup:allow_any_key(true)
+    popup:query()
+end
+
+mod.init_new_game = function()
+    if gapi.get_scenario():get_id() ~= mod.warper_scenario_id then
+        -- Check that the player didn't mess up and choose the wrong scenario.
+        -- It may happen, for example, if they added ALL THE MODS AT ONCE and some conflicts cropped up.
+        mod.show_popup(locale.gettext(
+            [[Error: Sky Islands mod only works with the "Warper" scenario.  Please create a new world and create a new character there with the "Warper" scenario.]]
+        ))
+        return
+    end
+
+    mod.show_popup(locale.gettext(
+        "Welcome to Sky Islands.  Here, you will have to make expeditions from your floating sanctuary base to the world below.  Fight your way to the exit within the time limit and bring back whatever you can carry, but if you die, you will be returned to the island injured, and lose all equipment you were carrying."
+    ))
+    mod.show_popup(locale.gettext(
+        "While on expedition, you will be timed by 'warp pulses', which hit you at regular intervals.  After 8 pulses, you will suffer warp sickness, which results in reduced stats.  Every pulse after that will lower your stats even further.  After the 12th pulse, you will also begin disintegrating, taking damage until you die.\n\nGet home safely to reset the timer!"
+    ))
+    mod.show_popup(locale.gettext(
+        "Now, let's select your difficulty mode!\n\nThis only affects how long the expedition timer is.  It won't change combat difficulty or any other settings."
+    ))
 end
