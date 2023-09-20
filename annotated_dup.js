@@ -21,6 +21,11 @@ var annotated_dup =
     [ "anonymous_namespace{iexamine.cpp}", "namespaceanonymous__namespace_02iexamine_8cpp_03.html", [
       [ "atm_menu", "classanonymous__namespace_02iexamine_8cpp_03_1_1atm__menu.html", "classanonymous__namespace_02iexamine_8cpp_03_1_1atm__menu" ]
     ] ],
+    [ "anonymous_namespace{iexamine_elevator.cpp}", "namespaceanonymous__namespace_02iexamine__elevator_8cpp_03.html", [
+      [ "elevator", "namespaceanonymous__namespace_02iexamine__elevator_8cpp_03_1_1elevator.html", [
+        [ "elevator_vehicles", "structanonymous__namespace_02iexamine__elevator_8cpp_03_1_1elevator_1_1elevator__vehicles.html", "structanonymous__namespace_02iexamine__elevator_8cpp_03_1_1elevator_1_1elevator__vehicles" ]
+      ] ]
+    ] ],
     [ "anonymous_namespace{main.cpp}", "namespaceanonymous__namespace_02main_8cpp_03.html", [
       [ "arg_handler", "structanonymous__namespace_02main_8cpp_03_1_1arg__handler.html", "structanonymous__namespace_02main_8cpp_03_1_1arg__handler" ]
     ] ],
@@ -147,6 +152,11 @@ var annotated_dup =
       [ "is_instance_of", "structcata_1_1is__instance__of.html", null ],
       [ "is_instance_of< TMPL< T >, TMPL >", "structcata_1_1is__instance__of_3_01TMPL_3_01T_01_4_00_01TMPL_01_4.html", null ],
       [ "list", "classcata_1_1list.html", "classcata_1_1list" ],
+      [ "lua_log_handler", "classcata_1_1lua__log__handler.html", "classcata_1_1lua__log__handler" ],
+      [ "lua_log_msg", "structcata_1_1lua__log__msg.html", "structcata_1_1lua__log__msg" ],
+      [ "lua_state", "structcata_1_1lua__state.html", "structcata_1_1lua__state" ],
+      [ "lua_state_deleter", "structcata_1_1lua__state__deleter.html", "structcata_1_1lua__state__deleter" ],
+      [ "on_every_x_hooks", "structcata_1_1on__every__x__hooks.html", "structcata_1_1on__every__x__hooks" ],
       [ "poly_serialized", "classcata_1_1poly__serialized.html", "classcata_1_1poly__serialized" ],
       [ "range_hash", "structcata_1_1range__hash.html", "structcata_1_1range__hash" ],
       [ "string_formatter", "classcata_1_1string__formatter.html", "classcata_1_1string__formatter" ],
@@ -373,6 +383,14 @@ var annotated_dup =
     ] ],
     [ "item_internal", "namespaceitem__internal.html", [
       [ "scoped_goes_bad_cache", "structitem__internal_1_1scoped__goes__bad__cache.html", "structitem__internal_1_1scoped__goes__bad__cache" ]
+    ] ],
+    [ "luna", "namespaceluna.html", [
+      [ "detail", "namespaceluna_1_1detail.html", [
+        [ "luna_traits", "structluna_1_1detail_1_1luna__traits.html", "structluna_1_1detail_1_1luna__traits" ]
+      ] ],
+      [ "no_bases_t", "structluna_1_1no__bases__t.html", null ],
+      [ "userenum", "structluna_1_1userenum.html", "structluna_1_1userenum" ],
+      [ "userlib", "structluna_1_1userlib.html", "structluna_1_1userlib" ]
     ] ],
     [ "mapf", "namespacemapf.html", [
       [ "format_effect", "classmapf_1_1format__effect.html", "classmapf_1_1format__effect" ]
@@ -989,6 +1007,7 @@ var annotated_dup =
     [ "look_around_result", "structlook__around__result.html", "structlook__around__result" ],
     [ "loot_options", "classloot__options.html", "classloot__options" ],
     [ "lru_cache", "classlru__cache.html", "classlru__cache" ],
+    [ "lua_iuse_actor", "classlua__iuse__actor.html", "classlua__iuse__actor" ],
     [ "ma_buff", "classma__buff.html", "classma__buff" ],
     [ "ma_buff_effect_type", "classma__buff__effect__type.html", "classma__buff__effect__type" ],
     [ "ma_buff_reader", "classma__buff__reader.html", "classma__buff__reader" ],
@@ -1116,7 +1135,7 @@ var annotated_dup =
     [ "npc_template", "classnpc__template.html", "classnpc__template" ],
     [ "null_deleter", "structnull__deleter.html", "structnull__deleter" ],
     [ "null_tile_data", "classnull__tile__data.html", "classnull__tile__data" ],
-    [ "NullBuf", "structNullBuf.html", "structNullBuf" ],
+    [ "NullStream", "classNullStream.html", "classNullStream" ],
     [ "number_sci_notation", "structnumber__sci__notation.html", "structnumber__sci__notation" ],
     [ "numeric_interval", "structnumeric__interval.html", "structnumeric__interval" ],
     [ "nutrients", "structnutrients.html", "structnutrients" ],

@@ -5,7 +5,6 @@ var vehicle_8h =
     [ "vehicle_stack", "classvehicle__stack.html", "classvehicle__stack" ],
     [ "towing_data", "classtowing__data.html", "classtowing__data" ],
     [ "bounding_box", "structbounding__box.html", "structbounding__box" ],
-    [ "vehicle_part", "structvehicle__part.html", "structvehicle__part" ],
     [ "turret_data", "classturret__data.html", "classturret__data" ],
     [ "label", "structlabel.html", "structlabel" ],
     [ "vehicle", "classvehicle.html", "classvehicle" ],

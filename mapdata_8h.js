@@ -64,6 +64,7 @@ var mapdata_8h =
       [ "TFLAG_SUSPENDED", "mapdata_8h.html#aa04d037303ea30193f7cf0cd82304258a2a438fcf02f4d0e3cb4bff7196e22e0d", null ],
       [ "TFLAG_FRIDGE", "mapdata_8h.html#aa04d037303ea30193f7cf0cd82304258a5de6eb8938be0be12457f3487fefc5fd", null ],
       [ "TFLAG_FREEZER", "mapdata_8h.html#aa04d037303ea30193f7cf0cd82304258a04ca2fb5756f4bc14502c085742ef755", null ],
+      [ "TFLAG_ELEVATOR", "mapdata_8h.html#aa04d037303ea30193f7cf0cd82304258a6f83922af9059767be2b746cf63d39db", null ],
       [ "NUM_TERFLAGS", "mapdata_8h.html#aa04d037303ea30193f7cf0cd82304258ac71b834a9a68c80d712bd6cd400edb51", null ]
     ] ],
     [ "ter_connects", "mapdata_8h.html#ad5c8dd765ceb58f8e211d3158f4df4ce", [

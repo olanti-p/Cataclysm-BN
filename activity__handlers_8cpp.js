@@ -174,6 +174,7 @@ var activity__handlers_8cpp =
     [ "effect_sleep", "activity__handlers_8cpp.html#ab16f8be4be2050986e76d2cb0cff7609", null ],
     [ "effect_tied", "activity__handlers_8cpp.html#a09c667a72022d7e0ee0b851560831e04", null ],
     [ "effect_under_op", "activity__handlers_8cpp.html#a02ed1ef06d6f12fde82b64232c55a749", null ],
+    [ "fault_bionic_nonsterile", "activity__handlers_8cpp.html#a26ecdac9a64be27edf58e27505e8548b", null ],
     [ "HUMAN", "activity__handlers_8cpp.html#a68c5ef383bc1e0a72f76c0e09276a494", null ],
     [ "itype_2x4", "activity__handlers_8cpp.html#a2903765637d33796105b203898a261ba", null ],
     [ "itype_animal", "activity__handlers_8cpp.html#a074d40bd9aa2c4af3bf4890c3bd54be5", null ],

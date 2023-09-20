@@ -118,6 +118,7 @@ var item_8cpp =
     [ "flag_WET", "item_8cpp.html#a0f35b65e17801413ce658571f42dd000", null ],
     [ "flag_WIND_EXTINGUISH", "item_8cpp.html#aa028a83e8da03673f74839cd1f754323", null ],
     [ "get_base_env_resist", "item_8cpp.html#a62b9a91d73cca0fcb671b80079e8ee5d", null ],
+    [ "get_clothing_mod_val_key", "item_8cpp.html#a4344f62919abf9934b6abe5a7cffbe3e", null ],
     [ "get_food_impl", "item_8cpp.html#ab80849566151d8e8d33fffd5503acf69", null ],
     [ "get_freshness_description", "item_8cpp.html#aca6160da93053b44b107ccef5e04175f", null ],
     [ "get_hourly_rotpoints_at_temp", "item_8cpp.html#ad77555a9fa3da8deb7eb91abfb19d8a7", null ],

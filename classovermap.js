@@ -50,7 +50,6 @@ var classovermap =
     [ "get_npcs", "classovermap.html#af80797d7954bfd590954fc0f3453eda8", null ],
     [ "get_settings", "classovermap.html#a8c4ead50b77b2f0e7af787f9fd9f79b6", null ],
     [ "global_base_point", "classovermap.html#a5e30889d06c2b1669fc3f3230cd3bf9d", null ],
-    [ "good_river", "classovermap.html#a1e7e0d794538c0aaf50a0ff76f5c677e", null ],
     [ "has_extra", "classovermap.html#a3b44939d7a011d34cc60d22a44814ab6", null ],
     [ "has_note", "classovermap.html#a5fb011f293a27eb7ac75df97bfb36da4", null ],
     [ "has_note_with_danger_radius", "classovermap.html#a25bd3fb03cd8d84e74a798e17fbf3628", null ],
@@ -92,7 +91,7 @@ var classovermap =
     [ "place_specials", "classovermap.html#a930fc34d406d1e8b259583e69d326890", null ],
     [ "place_specials_pass", "classovermap.html#a95e99945448cde730da1f00e0c0c16b4", null ],
     [ "place_swamps", "classovermap.html#a2a0824d61e61b06e0c22cd76491f9f85", null ],
-    [ "polish_river", "classovermap.html#a8d3fbbd661dcfa7c3ca512436aa62da9", null ],
+    [ "polish_rivers", "classovermap.html#a5a94efc4760df474137b9ff2b469994d", null ],
     [ "populate", "classovermap.html#aa9f247c1bbefb74ef668594b7c26f41f", null ],
     [ "populate", "classovermap.html#abb3f160f3b4a736276fc5b143a7218f3", null ],
     [ "populate_connections_out_from_neighbors", "classovermap.html#a6db9bf514dcf0fc9e193f73eccd05049", null ],
@@ -129,7 +128,7 @@ var classovermap =
     [ "overmap_special_placements", "classovermap.html#acb711947d0e95bfd7e71c56e9724f1f9", null ],
     [ "radios", "classovermap.html#adca0a7e93c09419381429042db5084cc", null ],
     [ "scents", "classovermap.html#ace13b57da0344050156c8e5e643eb601", null ],
-    [ "settings", "classovermap.html#a67f238943c09a0de2ad8ecd2f34cc4fb", null ],
+    [ "settings", "classovermap.html#a1c39f262783927ca13cd476dba73905d", null ],
     [ "vehicles", "classovermap.html#a310c87d14736ee7f6edea7b0180789a3", null ],
     [ "zg", "classovermap.html#a2c4a178cb22997f78d39282562929523", null ]
 ];

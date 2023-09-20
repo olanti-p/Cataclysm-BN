@@ -152,16 +152,16 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="magic__spell__effect_8cpp_source.html#l00094">94</a> of file <a class="el" href="magic__spell__effect_8cpp_source.html">magic_spell_effect.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>{</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="namespacespell__detail.html#aecae8daa3162adfa31392f7400a9cf41">side_of</a>( a0, a0 + d, <a class="code hl_variable" href="magic_8cpp.html#a6753ecfe87da659675b18c2f81d6ec12">c</a> ) != 1 &amp;&amp; <a class="code hl_function" href="namespacespell__detail.html#aecae8daa3162adfa31392f7400a9cf41">side_of</a>( a1, a1 + d, <a class="code hl_variable" href="magic_8cpp.html#a6753ecfe87da659675b18c2f81d6ec12">c</a> ) != -1;</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>}</div>
+<p class="definition">Definition at line <a class="el" href="magic__spell__effect_8cpp_source.html#l00095">95</a> of file <a class="el" href="magic__spell__effect_8cpp_source.html">magic_spell_effect.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>{</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="namespacespell__detail.html#aecae8daa3162adfa31392f7400a9cf41">side_of</a>( a0, a0 + d, <a class="code hl_variable" href="magic_8cpp.html#a6753ecfe87da659675b18c2f81d6ec12">c</a> ) != 1 &amp;&amp; <a class="code hl_function" href="namespacespell__detail.html#aecae8daa3162adfa31392f7400a9cf41">side_of</a>( a1, a1 + d, <a class="code hl_variable" href="magic_8cpp.html#a6753ecfe87da659675b18c2f81d6ec12">c</a> ) != -1;</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>}</div>
 <div class="ttc" id="amagic_8cpp_html_a6753ecfe87da659675b18c2f81d6ec12"><div class="ttname"><a href="magic_8cpp.html#a6753ecfe87da659675b18c2f81d6ec12">c</a></div><div class="ttdeci">constexpr double c</div><div class="ttdef"><b>Definition:</b> <a href="magic_8cpp_source.html#l01032">magic.cpp:1032</a></div></div>
-<div class="ttc" id="anamespacespell__detail_html_aecae8daa3162adfa31392f7400a9cf41"><div class="ttname"><a href="namespacespell__detail.html#aecae8daa3162adfa31392f7400a9cf41">spell_detail::side_of</a></div><div class="ttdeci">static int side_of(point a, point b, point c)</div><div class="ttdef"><b>Definition:</b> <a href="magic__spell__effect_8cpp_source.html#l00088">magic_spell_effect.cpp:88</a></div></div>
+<div class="ttc" id="anamespacespell__detail_html_aecae8daa3162adfa31392f7400a9cf41"><div class="ttname"><a href="namespacespell__detail.html#aecae8daa3162adfa31392f7400a9cf41">spell_detail::side_of</a></div><div class="ttdeci">static int side_of(point a, point b, point c)</div><div class="ttdef"><b>Definition:</b> <a href="magic__spell__effect_8cpp_source.html#l00089">magic_spell_effect.cpp:89</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="magic_8cpp_source.html#l01032">c</a>, and <a class="el" href="magic__spell__effect_8cpp_source.html#l00088">side_of()</a>.</p>
+<p class="reference">References <a class="el" href="magic_8cpp_source.html#l01032">c</a>, and <a class="el" href="magic__spell__effect_8cpp_source.html#l00089">side_of()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="magic__spell__effect_8cpp_source.html#l00099">build_line()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="magic__spell__effect_8cpp_source.html#l00100">build_line()</a>.</p>
 
 </div>
 </div>
@@ -223,27 +223,27 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="magic__spell__effect_8cpp_source.html#l00099">99</a> of file <a class="el" href="magic__spell__effect_8cpp_source.html">magic_spell_effect.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>{</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <a class="code hl_struct" href="structtripoint.html">tripoint</a> last_point = source;</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="keywordflow">while</span>( <a class="code hl_function" href="namespacespell__detail.html#a701062001bf425781ef422e919784cf0">between_or_on</a>( <a class="code hl_variable" href="point_8h.html#a0ee2195dcb488ae55fbf4316f5011172">point_zero</a>, delta, delta_perp, <a class="code hl_function" href="mapgen_8cpp.html#a7a9bb2e98af3268deb7dd8fda06a7d2e">line</a>.get() ) ) {</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        <span class="keywordflow">if</span>( !test( source + <a class="code hl_function" href="mapgen_8cpp.html#a7a9bb2e98af3268deb7dd8fda06a7d2e">line</a>.get(), last_point ) ) {</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>            <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        }</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        <a class="code hl_enumeration" href="namespacedetail_1_1digits.html#aad69d2373aa047bdd9e81494bf3da5ae">result</a>.emplace( source + <a class="code hl_function" href="mapgen_8cpp.html#a7a9bb2e98af3268deb7dd8fda06a7d2e">line</a>.get() );</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        last_point = source + <a class="code hl_function" href="mapgen_8cpp.html#a7a9bb2e98af3268deb7dd8fda06a7d2e">line</a>.get();</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        <a class="code hl_function" href="mapgen_8cpp.html#a7a9bb2e98af3268deb7dd8fda06a7d2e">line</a>.next();</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    }</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>}</div>
-<div class="ttc" id="amapgen_8cpp_html_a7a9bb2e98af3268deb7dd8fda06a7d2e"><div class="ttname"><a href="mapgen_8cpp.html#a7a9bb2e98af3268deb7dd8fda06a7d2e">line</a></div><div class="ttdeci">void line(map *m, const ter_id &amp;type, point p1, point p2)</div><div class="ttdef"><b>Definition:</b> <a href="mapgen_8cpp_source.html#l06281">mapgen.cpp:6281</a></div></div>
+<p class="definition">Definition at line <a class="el" href="magic__spell__effect_8cpp_source.html#l00100">100</a> of file <a class="el" href="magic__spell__effect_8cpp_source.html">magic_spell_effect.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>{</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <a class="code hl_struct" href="structtripoint.html">tripoint</a> last_point = source;</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="keywordflow">while</span>( <a class="code hl_function" href="namespacespell__detail.html#a701062001bf425781ef422e919784cf0">between_or_on</a>( <a class="code hl_variable" href="point_8h.html#a0ee2195dcb488ae55fbf4316f5011172">point_zero</a>, delta, delta_perp, <a class="code hl_function" href="mapgen_8cpp.html#a7a9bb2e98af3268deb7dd8fda06a7d2e">line</a>.get() ) ) {</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        <span class="keywordflow">if</span>( !test( source + <a class="code hl_function" href="mapgen_8cpp.html#a7a9bb2e98af3268deb7dd8fda06a7d2e">line</a>.get(), last_point ) ) {</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>            <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        }</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        <a class="code hl_enumeration" href="namespacedetail_1_1digits.html#aad69d2373aa047bdd9e81494bf3da5ae">result</a>.emplace( source + <a class="code hl_function" href="mapgen_8cpp.html#a7a9bb2e98af3268deb7dd8fda06a7d2e">line</a>.get() );</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        last_point = source + <a class="code hl_function" href="mapgen_8cpp.html#a7a9bb2e98af3268deb7dd8fda06a7d2e">line</a>.get();</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        <a class="code hl_function" href="mapgen_8cpp.html#a7a9bb2e98af3268deb7dd8fda06a7d2e">line</a>.next();</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    }</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>}</div>
+<div class="ttc" id="amapgen_8cpp_html_a7a9bb2e98af3268deb7dd8fda06a7d2e"><div class="ttname"><a href="mapgen_8cpp.html#a7a9bb2e98af3268deb7dd8fda06a7d2e">line</a></div><div class="ttdeci">void line(map *m, const ter_id &amp;type, point p1, point p2)</div><div class="ttdef"><b>Definition:</b> <a href="mapgen_8cpp_source.html#l06290">mapgen.cpp:6290</a></div></div>
 <div class="ttc" id="anamespacedetail_1_1digits_html_aad69d2373aa047bdd9e81494bf3da5ae"><div class="ttname"><a href="namespacedetail_1_1digits.html#aad69d2373aa047bdd9e81494bf3da5ae">detail::digits::result</a></div><div class="ttdeci">result</div><div class="ttdef"><b>Definition:</b> <a href="fmtlib__format-inl_8h_source.html#l01626">fmtlib_format-inl.h:1626</a></div></div>
-<div class="ttc" id="anamespacespell__detail_html_a701062001bf425781ef422e919784cf0"><div class="ttname"><a href="namespacespell__detail.html#a701062001bf425781ef422e919784cf0">spell_detail::between_or_on</a></div><div class="ttdeci">static bool between_or_on(point a0, point a1, point d, point c)</div><div class="ttdef"><b>Definition:</b> <a href="magic__spell__effect_8cpp_source.html#l00094">magic_spell_effect.cpp:94</a></div></div>
+<div class="ttc" id="anamespacespell__detail_html_a701062001bf425781ef422e919784cf0"><div class="ttname"><a href="namespacespell__detail.html#a701062001bf425781ef422e919784cf0">spell_detail::between_or_on</a></div><div class="ttdeci">static bool between_or_on(point a0, point a1, point d, point c)</div><div class="ttdef"><b>Definition:</b> <a href="magic__spell__effect_8cpp_source.html#l00095">magic_spell_effect.cpp:95</a></div></div>
 <div class="ttc" id="apoint_8h_html_a0ee2195dcb488ae55fbf4316f5011172"><div class="ttname"><a href="point_8h.html#a0ee2195dcb488ae55fbf4316f5011172">point_zero</a></div><div class="ttdeci">static constexpr point point_zero</div><div class="ttdef"><b>Definition:</b> <a href="point_8h_source.html#l00260">point.h:260</a></div></div>
 <div class="ttc" id="astructtripoint_html"><div class="ttname"><a href="structtripoint.html">tripoint</a></div><div class="ttdef"><b>Definition:</b> <a href="point_8h_source.html#l00133">point.h:133</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="magic__spell__effect_8cpp_source.html#l00094">between_or_on()</a>, <a class="el" href="mapgen_8cpp_source.html#l06281">line()</a>, and <a class="el" href="point_8h_source.html#l00260">point_zero</a>.</p>
+<p class="reference">References <a class="el" href="magic__spell__effect_8cpp_source.html#l00095">between_or_on()</a>, <a class="el" href="mapgen_8cpp_source.html#l06290">line()</a>, and <a class="el" href="point_8h_source.html#l00260">point_zero</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="magic__spell__effect_8cpp_source.html#l00239">spell_effect::spell_effect_line()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="magic__spell__effect_8cpp_source.html#l00240">spell_effect::spell_effect_line()</a>.</p>
 
 </div>
 </div>
@@ -287,17 +287,17 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="magic__spell__effect_8cpp_source.html#l00088">88</a> of file <a class="el" href="magic__spell__effect_8cpp_source.html">magic_spell_effect.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>{</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="keywordtype">int</span> cross = ( ( <a class="code hl_variable" href="magic_8cpp.html#aa93a189fb7bbbf87be54bcc7bd11bb6f">b</a>.x - <a class="code hl_variable" href="magic_8cpp.html#a188caae18b60b66f9f44214c7e28ac1f">a</a>.x ) * ( <a class="code hl_variable" href="magic_8cpp.html#a6753ecfe87da659675b18c2f81d6ec12">c</a>.y - <a class="code hl_variable" href="magic_8cpp.html#a188caae18b60b66f9f44214c7e28ac1f">a</a>.y ) - ( <a class="code hl_variable" href="magic_8cpp.html#aa93a189fb7bbbf87be54bcc7bd11bb6f">b</a>.y - <a class="code hl_variable" href="magic_8cpp.html#a188caae18b60b66f9f44214c7e28ac1f">a</a>.y ) * ( <a class="code hl_variable" href="magic_8cpp.html#a6753ecfe87da659675b18c2f81d6ec12">c</a>.x - <a class="code hl_variable" href="magic_8cpp.html#a188caae18b60b66f9f44214c7e28ac1f">a</a>.x ) );</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="keywordflow">return</span> ( cross &gt; 0 ) - ( cross &lt; 0 );</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>}</div>
+<p class="definition">Definition at line <a class="el" href="magic__spell__effect_8cpp_source.html#l00089">89</a> of file <a class="el" href="magic__spell__effect_8cpp_source.html">magic_spell_effect.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>{</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="keywordtype">int</span> cross = ( ( <a class="code hl_variable" href="magic_8cpp.html#aa93a189fb7bbbf87be54bcc7bd11bb6f">b</a>.x - <a class="code hl_variable" href="magic_8cpp.html#a188caae18b60b66f9f44214c7e28ac1f">a</a>.x ) * ( <a class="code hl_variable" href="magic_8cpp.html#a6753ecfe87da659675b18c2f81d6ec12">c</a>.y - <a class="code hl_variable" href="magic_8cpp.html#a188caae18b60b66f9f44214c7e28ac1f">a</a>.y ) - ( <a class="code hl_variable" href="magic_8cpp.html#aa93a189fb7bbbf87be54bcc7bd11bb6f">b</a>.y - <a class="code hl_variable" href="magic_8cpp.html#a188caae18b60b66f9f44214c7e28ac1f">a</a>.y ) * ( <a class="code hl_variable" href="magic_8cpp.html#a6753ecfe87da659675b18c2f81d6ec12">c</a>.x - <a class="code hl_variable" href="magic_8cpp.html#a188caae18b60b66f9f44214c7e28ac1f">a</a>.x ) );</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="keywordflow">return</span> ( cross &gt; 0 ) - ( cross &lt; 0 );</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>}</div>
 <div class="ttc" id="amagic_8cpp_html_a188caae18b60b66f9f44214c7e28ac1f"><div class="ttname"><a href="magic_8cpp.html#a188caae18b60b66f9f44214c7e28ac1f">a</a></div><div class="ttdeci">constexpr double a</div><div class="ttdef"><b>Definition:</b> <a href="magic_8cpp_source.html#l01030">magic.cpp:1030</a></div></div>
 <div class="ttc" id="amagic_8cpp_html_aa93a189fb7bbbf87be54bcc7bd11bb6f"><div class="ttname"><a href="magic_8cpp.html#aa93a189fb7bbbf87be54bcc7bd11bb6f">b</a></div><div class="ttdeci">constexpr double b</div><div class="ttdef"><b>Definition:</b> <a href="magic_8cpp_source.html#l01031">magic.cpp:1031</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="magic_8cpp_source.html#l01030">a</a>, <a class="el" href="magic_8cpp_source.html#l01031">b</a>, and <a class="el" href="magic_8cpp_source.html#l01032">c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="magic__spell__effect_8cpp_source.html#l00094">between_or_on()</a>, and <a class="el" href="magic__spell__effect_8cpp_source.html#l00239">spell_effect::spell_effect_line()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="magic__spell__effect_8cpp_source.html#l00095">between_or_on()</a>, and <a class="el" href="magic__spell__effect_8cpp_source.html#l00240">spell_effect::spell_effect_line()</a>.</p>
 
 </div>
 </div>
@@ -307,7 +307,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacespell__detail.html">spell_detail</a></li>
-    <li class="footer">Generated on Sat Jul 29 2023 21:51:29 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Wed Sep 20 2023 19:26:58 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

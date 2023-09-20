@@ -21,7 +21,6 @@ var iexamine_8cpp =
     [ "flag_CLOSES_PORTAL", "iexamine_8cpp.html#a7d35bca8445952e92b60e326f8a6a99c", null ],
     [ "flag_COOKED", "iexamine_8cpp.html#acb899f0e81667f5db435b88b88880c16", null ],
     [ "flag_DIAMOND", "iexamine_8cpp.html#a6e3abd26810b9daacc0533ce433b2171", null ],
-    [ "flag_ELEVATOR", "iexamine_8cpp.html#a483a2928c33c4f70d1b00ac5dc37ebcc", null ],
     [ "flag_FERTILIZER", "iexamine_8cpp.html#a6667890439d15281d61810dfde0dc2fa", null ],
     [ "flag_FIRE", "iexamine_8cpp.html#a352d917849c46a3af8658f0069105cd7", null ],
     [ "flag_FIRESTARTER", "iexamine_8cpp.html#a4513b947a174bc83fbd690dd1a3ef345", null ],

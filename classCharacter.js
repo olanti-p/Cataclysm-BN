@@ -208,7 +208,7 @@ var classCharacter =
     [ "get_bionic_state", "classCharacter.html#a1dec3582c8fadd4a9e38c70dfbf468bf", null ],
     [ "get_bionics", "classCharacter.html#ae798c58ced01966f567d2c6fa6971eb8", null ],
     [ "get_cbm_rechargeable_with", "classCharacter.html#a0da9712d69a6d58b659622f9cdbeacd7", null ],
-    [ "get_check_encumbrance", "classCharacter.html#a165e76d3db9a1a8c6810b25c9b0ed42f", null ],
+    [ "get_check_encumbrance", "classCharacter.html#ae43f0438aaa62322ab6d33b7500bc905", null ],
     [ "get_consumable_from", "classCharacter.html#ad58bc3e4db2aa237a070695ca2746ee5", null ],
     [ "get_dependent_worn_items", "classCharacter.html#a591474485ef234f71c26b8e59adf57b0", null ],
     [ "get_destination_activity", "classCharacter.html#a54431751250b6e0b49e992f40ae6a728", null ],

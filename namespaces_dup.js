@@ -156,6 +156,10 @@ var namespaces_dup =
       [ "offroad_str_req_cap", "namespaceanonymous__namespace_02grab_8cpp_03.html#a9ffee7ffe58226b58a1f284ec3f6a856", null ]
     ] ],
     [ "anonymous_namespace{iexamine.cpp}", "namespaceanonymous__namespace_02iexamine_8cpp_03.html", "namespaceanonymous__namespace_02iexamine_8cpp_03" ],
+    [ "anonymous_namespace{iexamine_elevator.cpp}", "namespaceanonymous__namespace_02iexamine__elevator_8cpp_03.html", "namespaceanonymous__namespace_02iexamine__elevator_8cpp_03" ],
+    [ "anonymous_namespace{item.cpp}", "namespaceanonymous__namespace_02item_8cpp_03.html", [
+      [ "get_clothing_mod_val_key", "namespaceanonymous__namespace_02item_8cpp_03.html#a4344f62919abf9934b6abe5a7cffbe3e", null ]
+    ] ],
     [ "anonymous_namespace{item_category.cpp}", "namespaceanonymous__namespace_02item__category_8cpp_03.html", [
       [ "item_category_factory", "namespaceanonymous__namespace_02item__category_8cpp_03.html#af08a772fbabbbc0c65e9f8f29b163d2e", null ]
     ] ],
@@ -195,6 +199,9 @@ var namespaces_dup =
     ] ],
     [ "anonymous_namespace{material.cpp}", "namespaceanonymous__namespace_02material_8cpp_03.html", [
       [ "material_data", "namespaceanonymous__namespace_02material_8cpp_03.html#a7ca756e3448d6202a95086c3d2fa0005", null ]
+    ] ],
+    [ "anonymous_namespace{mattack_actors.cpp}", "namespaceanonymous__namespace_02mattack__actors_8cpp_03.html", [
+      [ "find_target_vehicle", "namespaceanonymous__namespace_02mattack__actors_8cpp_03.html#a767184a049adbbdfe57d29478e2d0fa2", null ]
     ] ],
     [ "anonymous_namespace{messages.cpp}", "namespaceanonymous__namespace_02messages_8cpp_03.html", "namespaceanonymous__namespace_02messages_8cpp_03" ],
     [ "anonymous_namespace{morale_types.cpp}", "namespaceanonymous__namespace_02morale__types_8cpp_03.html", [
@@ -255,6 +262,13 @@ var namespaces_dup =
     ] ],
     [ "anonymous_namespace{trap.cpp}", "namespaceanonymous__namespace_02trap_8cpp_03.html", [
       [ "trap_factory", "namespaceanonymous__namespace_02trap_8cpp_03.html#ab3675c90d391e657ff95abc6c6e3ad40", null ]
+    ] ],
+    [ "anonymous_namespace{vehicle_export.cpp}", "namespaceanonymous__namespace_02vehicle__export_8cpp_03.html", [
+      [ "refs", "namespaceanonymous__namespace_02vehicle__export_8cpp_03.html#aae074b3ea243a2926f0bb13142d41c7d", null ],
+      [ "grouped_refs", "namespaceanonymous__namespace_02vehicle__export_8cpp_03.html#a3b93ca166df07dd5a8510740e5d16cae", null ],
+      [ "is_plain_id", "namespaceanonymous__namespace_02vehicle__export_8cpp_03.html#a32b6ce1a395b05bc16feec0e9b0bb16b", null ],
+      [ "json_part_write", "namespaceanonymous__namespace_02vehicle__export_8cpp_03.html#a97d04f684db4c74819f947931c56c600", null ],
+      [ "json_parts_write", "namespaceanonymous__namespace_02vehicle__export_8cpp_03.html#a23fd25bd61f1e8e8777d9ba10bff3ccb", null ]
     ] ],
     [ "anonymous_namespace{weather_gen.cpp}", "namespaceanonymous__namespace_02weather__gen_8cpp_03.html", [
       [ "coldest_hour", "namespaceanonymous__namespace_02weather__gen_8cpp_03.html#a700033f9fcab08f4915c435aed946b98", null ],
@@ -594,7 +608,8 @@ var namespaces_dup =
       ] ]
     ] ],
     [ "game_info", "namespacegame__info.html", [
-      [ "bitness", "namespacegame__info.html#a89e70b6c3190e6d2d5cd25d30388fd84", null ],
+      [ "bitness", "namespacegame__info.html#a346914292a97ce585747c5f07fa41027", null ],
+      [ "bitness_string", "namespacegame__info.html#acdbccaac41fc7f113ba5d011321557b4", null ],
       [ "game_report", "namespacegame__info.html#a6e2841c65be4bf7f92290991465a9edb", null ],
       [ "game_version", "namespacegame__info.html#aee3ac3ce7ea3341cfcb88e84261ba800", null ],
       [ "graphics_version", "namespacegame__info.html#a61e6df366ab3796e27177f4e4d777dc0", null ],
@@ -722,6 +737,7 @@ var namespaces_dup =
       [ "check_mods_for_errors", "namespaceinit.html#a65d404eb71b025ce30265f7eb245a813", null ],
       [ "is_data_loaded", "namespaceinit.html#adfd08e6d89eb52f3404a9bb47f0f6fa7", null ],
       [ "load_core_bn_modfiles", "namespaceinit.html#a4c0940fb41394700d2b04313098d8204", null ],
+      [ "load_main_lua_scripts", "namespaceinit.html#ada77873ea544730670708cae3c188180", null ],
       [ "load_soundpack_files", "namespaceinit.html#a8ba37b679d394453119d20c691fd20d9", null ],
       [ "load_world_modfiles", "namespaceinit.html#abd5d92dc3d9cc02dd46330831b163372", null ]
     ] ],
@@ -938,6 +954,9 @@ var namespaces_dup =
       [ "weed_cake", "namespaceiuse.html#a9a3cc0372f69cfd7f6554822d61a083e", null ],
       [ "xanax", "namespaceiuse.html#af2324774ae58dc15ed929ec5b4f0bb7f", null ]
     ] ],
+    [ "json_export", "namespacejson__export.html", [
+      [ "vehicle", "namespacejson__export.html#a0f3f501e14d08ab8bedf5692af7d8104", null ]
+    ] ],
     [ "l10n_data", "namespacel10n__data.html", [
       [ "add_base_catalogue", "namespacel10n__data.html#abfcdf2a2557ecb53efa07617e16d4fe1", null ],
       [ "add_cat_if_exists", "namespacel10n__data.html#a866dbbf9bf762ee7bb94f51ddd2264bd", null ],
@@ -962,6 +981,7 @@ var namespaces_dup =
       [ "handle_liquid_from_ground", "namespaceliquid__handler.html#ae4b5ac39dbc51d5559ba9d6f901395f0", null ],
       [ "perform_liquid_transfer", "namespaceliquid__handler.html#a8c1765bcc2eb292f1a8cc24f0ca2b8b9", null ]
     ] ],
+    [ "luna", "namespaceluna.html", "namespaceluna" ],
     [ "map_funcs", "namespacemap__funcs.html", [
       [ "climbing_cost", "namespacemap__funcs.html#a8f22c4f8a377d195788aa0fa4d315491", null ],
       [ "migo_nerve_cage_removal", "namespacemap__funcs.html#a60f9a4c25252a0b8cffa456f6bc25887", null ]
@@ -1452,6 +1472,7 @@ var namespaces_dup =
       [ "keybindingsdir", "namespacePATH__INFO.html#a1e9ba1a402f471d94423691877ec77f6", null ],
       [ "language_defs_file", "namespacePATH__INFO.html#a87c3bb74433855094b83a53bfdd92852", null ],
       [ "lastworld", "namespacePATH__INFO.html#a8c382696ff179ba28e1f06d7cfdd4436", null ],
+      [ "lua_doc_output", "namespacePATH__INFO.html#aea32d12cf2ae62096fb72de5cbeff1b3", null ],
       [ "main_menu_tips", "namespacePATH__INFO.html#aabcf66dffe7dc74841a1b92f729904d1", null ],
       [ "memorialdir", "namespacePATH__INFO.html#a182bc8dae734699bdf8e6942592366bc", null ],
       [ "moddir", "namespacePATH__INFO.html#a3b5e8898cb37116e2a8639b13b0079f9", null ],

@@ -140,16 +140,16 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vehicle__group_8cpp_source.html#l00087">87</a> of file <a class="el" href="vehicle__group_8cpp_source.html">vehicle_group.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>{</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="keywordflow">if</span>( jo.<a class="code hl_function" href="classJsonObject.html#aa92b5eb23f6b39645877d79fbef784a0">has_array</a>( key ) ) {</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        <span class="keywordflow">for</span>( <span class="keyword">const</span> <span class="keywordtype">int</span> i : jo.<a class="code hl_function" href="classJsonObject.html#a69f62f59b5e39da6059b7c3cf8b12421">get_array</a>( key ) ) {</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>            <a class="code hl_variable" href="structVehicleFacings.html#a98625704bb5a6f88dc1152f7cd30bcee">values</a>.push_back( <a class="code hl_function" href="namespaceunits.html#a068cd98efba5fd1fbb936ce3597db23d">units::from_degrees</a>( i ) );</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        }</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        <a class="code hl_variable" href="structVehicleFacings.html#a98625704bb5a6f88dc1152f7cd30bcee">values</a>.push_back( <a class="code hl_function" href="namespaceunits.html#a068cd98efba5fd1fbb936ce3597db23d">units::from_degrees</a>( jo.<a class="code hl_function" href="classJsonObject.html#a99e64f59bc5e72e7572125064b68da29">get_int</a>( key ) ) );</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    }</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>}</div>
+<p class="definition">Definition at line <a class="el" href="vehicle__group_8cpp_source.html#l00088">88</a> of file <a class="el" href="vehicle__group_8cpp_source.html">vehicle_group.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>{</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="keywordflow">if</span>( jo.<a class="code hl_function" href="classJsonObject.html#aa92b5eb23f6b39645877d79fbef784a0">has_array</a>( key ) ) {</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        <span class="keywordflow">for</span>( <span class="keyword">const</span> <span class="keywordtype">int</span> i : jo.<a class="code hl_function" href="classJsonObject.html#a69f62f59b5e39da6059b7c3cf8b12421">get_array</a>( key ) ) {</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>            <a class="code hl_variable" href="structVehicleFacings.html#a98625704bb5a6f88dc1152f7cd30bcee">values</a>.push_back( <a class="code hl_function" href="namespaceunits.html#a068cd98efba5fd1fbb936ce3597db23d">units::from_degrees</a>( i ) );</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        }</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        <a class="code hl_variable" href="structVehicleFacings.html#a98625704bb5a6f88dc1152f7cd30bcee">values</a>.push_back( <a class="code hl_function" href="namespaceunits.html#a068cd98efba5fd1fbb936ce3597db23d">units::from_degrees</a>( jo.<a class="code hl_function" href="classJsonObject.html#a99e64f59bc5e72e7572125064b68da29">get_int</a>( key ) ) );</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    }</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>}</div>
 <div class="ttc" id="aclassJsonObject_html_a69f62f59b5e39da6059b7c3cf8b12421"><div class="ttname"><a href="classJsonObject.html#a69f62f59b5e39da6059b7c3cf8b12421">JsonObject::get_array</a></div><div class="ttdeci">JsonArray get_array(const std::string &amp;name) const</div><div class="ttdef"><b>Definition:</b> <a href="json_8cpp_source.html#l00400">json.cpp:400</a></div></div>
 <div class="ttc" id="aclassJsonObject_html_a99e64f59bc5e72e7572125064b68da29"><div class="ttname"><a href="classJsonObject.html#a99e64f59bc5e72e7572125064b68da29">JsonObject::get_int</a></div><div class="ttdeci">int get_int(const std::string &amp;name) const</div><div class="ttdef"><b>Definition:</b> <a href="json_8cpp_source.html#l00350">json.cpp:350</a></div></div>
 <div class="ttc" id="aclassJsonObject_html_aa92b5eb23f6b39645877d79fbef784a0"><div class="ttname"><a href="classJsonObject.html#aa92b5eb23f6b39645877d79fbef784a0">JsonObject::has_array</a></div><div class="ttdeci">bool has_array(const std::string &amp;name) const</div><div class="ttdef"><b>Definition:</b> <a href="json_8cpp_source.html#l00483">json.cpp:483</a></div></div>
@@ -176,10 +176,10 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vehicle__group_8cpp_source.html#l00038">38</a> of file <a class="el" href="vehicle__group_8cpp_source.html">vehicle_group.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>{</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="rng_8h.html#a12244355ee77108f1b08618e9962e4d1">random_entry</a>( <a class="code hl_variable" href="structVehicleFacings.html#a98625704bb5a6f88dc1152f7cd30bcee">values</a> );</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>}</div>
+<p class="definition">Definition at line <a class="el" href="vehicle__group_8cpp_source.html#l00039">39</a> of file <a class="el" href="vehicle__group_8cpp_source.html">vehicle_group.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>{</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="rng_8h.html#a12244355ee77108f1b08618e9962e4d1">random_entry</a>( <a class="code hl_variable" href="structVehicleFacings.html#a98625704bb5a6f88dc1152f7cd30bcee">values</a> );</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>}</div>
 <div class="ttc" id="arng_8h_html_a12244355ee77108f1b08618e9962e4d1"><div class="ttname"><a href="rng_8h.html#a12244355ee77108f1b08618e9962e4d1">random_entry</a></div><div class="ttdeci">V random_entry(const C &amp;container, D default_value)</div><div class="ttdoc">Returns a random entry in the container.</div><div class="ttdef"><b>Definition:</b> <a href="rng_8h_source.html#l00088">rng.h:88</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="rng_8h_source.html#l00088">random_entry()</a>, and <a class="el" href="vehicle__group_8h_source.html#l00059">values</a>.</p>
@@ -203,7 +203,7 @@ Public Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="vehicle__group_8h_source.html#l00059">59</a> of file <a class="el" href="vehicle__group_8h_source.html">vehicle_group.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="vehicle__group_8cpp_source.html#l00038">pick()</a>, and <a class="el" href="vehicle__group_8cpp_source.html#l00087">VehicleFacings()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="vehicle__group_8cpp_source.html#l00039">pick()</a>, and <a class="el" href="vehicle__group_8cpp_source.html#l00088">VehicleFacings()</a>.</p>
 
 </div>
 </div>
@@ -217,7 +217,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="structVehicleFacings.html">VehicleFacings</a></li>
-    <li class="footer">Generated on Sat Jul 29 2023 21:51:22 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Wed Sep 20 2023 19:26:49 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

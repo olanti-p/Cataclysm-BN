@@ -110,7 +110,7 @@ Public Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="pathfinding_8cpp_source.html#l00040">40</a> of file <a class="el" href="pathfinding_8cpp_source.html">pathfinding.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pathfinding_8cpp_source.html#l00041">41</a> of file <a class="el" href="pathfinding_8cpp_source.html">pathfinding.cpp</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="afb8bdb3355d382149156a9fb91053d0a" name="afb8bdb3355d382149156a9fb91053d0a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afb8bdb3355d382149156a9fb91053d0a">&#9670;&nbsp;</a></span>init()</h2>
@@ -146,26 +146,26 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pathfinding_8cpp_source.html#l00047">47</a> of file <a class="el" href="pathfinding_8cpp_source.html">pathfinding.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>                                      {</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        <a class="code hl_struct" href="structtripoint.html">tripoint</a> p;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="keywordflow">for</span>( p.<a class="code hl_variable" href="structtripoint.html#affdc0d5b75024cbfacd208a495def3dc">x</a> = min.<a class="code hl_variable" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">x</a>; p.<a class="code hl_variable" href="structtripoint.html#affdc0d5b75024cbfacd208a495def3dc">x</a> &lt;= max.<a class="code hl_variable" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">x</a>; p.<a class="code hl_variable" href="structtripoint.html#affdc0d5b75024cbfacd208a495def3dc">x</a>++ ) {</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            <span class="keywordflow">for</span>( p.<a class="code hl_variable" href="structtripoint.html#a89f6c0a16e2bfd7ce4f1f1d20404c4d7">y</a> = min.<a class="code hl_variable" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">y</a>; p.<a class="code hl_variable" href="structtripoint.html#a89f6c0a16e2bfd7ce4f1f1d20404c4d7">y</a> &lt;= max.<a class="code hl_variable" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">y</a>; p.<a class="code hl_variable" href="structtripoint.html#a89f6c0a16e2bfd7ce4f1f1d20404c4d7">y</a>++ ) {</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>                <span class="keyword">const</span> <span class="keywordtype">int</span> ind = <a class="code hl_function" href="pathfinding_8cpp.html#a65e028ff3eecf028c660a6fc13d47ee6">flat_index</a>( p );</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                <a class="code hl_variable" href="structpath__data__layer.html#a31f2ea8d5661731f57ad7a5ed7ad4f03">state</a>[ind] = <a class="code hl_enumvalue" href="pathfinding_8cpp.html#ac94a766a92de298b1a4c849533491128abc0379508aad3e690190440da0271f7e">ASL_NONE</a>; <span class="comment">// Mark as unvisited</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>            }</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        }</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    }</div>
-<div class="ttc" id="apathfinding_8cpp_html_a65e028ff3eecf028c660a6fc13d47ee6"><div class="ttname"><a href="pathfinding_8cpp.html#a65e028ff3eecf028c660a6fc13d47ee6">flat_index</a></div><div class="ttdeci">constexpr int flat_index(const tripoint &amp;p)</div><div class="ttdef"><b>Definition:</b> <a href="pathfinding_8cpp_source.html#l00034">pathfinding.cpp:34</a></div></div>
-<div class="ttc" id="apathfinding_8cpp_html_ac94a766a92de298b1a4c849533491128abc0379508aad3e690190440da0271f7e"><div class="ttname"><a href="pathfinding_8cpp.html#ac94a766a92de298b1a4c849533491128abc0379508aad3e690190440da0271f7e">ASL_NONE</a></div><div class="ttdeci">@ ASL_NONE</div><div class="ttdef"><b>Definition:</b> <a href="pathfinding_8cpp_source.html#l00028">pathfinding.cpp:28</a></div></div>
-<div class="ttc" id="astructpath__data__layer_html_a31f2ea8d5661731f57ad7a5ed7ad4f03"><div class="ttname"><a href="structpath__data__layer.html#a31f2ea8d5661731f57ad7a5ed7ad4f03">path_data_layer::state</a></div><div class="ttdeci">std::array&lt; astar_state, MAPSIZE_X *MAPSIZE_Y &gt; state</div><div class="ttdef"><b>Definition:</b> <a href="pathfinding_8cpp_source.html#l00042">pathfinding.cpp:42</a></div></div>
+<p class="definition">Definition at line <a class="el" href="pathfinding_8cpp_source.html#l00048">48</a> of file <a class="el" href="pathfinding_8cpp_source.html">pathfinding.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                                      {</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <a class="code hl_struct" href="structtripoint.html">tripoint</a> p;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <span class="keywordflow">for</span>( p.<a class="code hl_variable" href="structtripoint.html#affdc0d5b75024cbfacd208a495def3dc">x</a> = min.<a class="code hl_variable" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">x</a>; p.<a class="code hl_variable" href="structtripoint.html#affdc0d5b75024cbfacd208a495def3dc">x</a> &lt;= max.<a class="code hl_variable" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">x</a>; p.<a class="code hl_variable" href="structtripoint.html#affdc0d5b75024cbfacd208a495def3dc">x</a>++ ) {</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            <span class="keywordflow">for</span>( p.<a class="code hl_variable" href="structtripoint.html#a89f6c0a16e2bfd7ce4f1f1d20404c4d7">y</a> = min.<a class="code hl_variable" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">y</a>; p.<a class="code hl_variable" href="structtripoint.html#a89f6c0a16e2bfd7ce4f1f1d20404c4d7">y</a> &lt;= max.<a class="code hl_variable" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">y</a>; p.<a class="code hl_variable" href="structtripoint.html#a89f6c0a16e2bfd7ce4f1f1d20404c4d7">y</a>++ ) {</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                <span class="keyword">const</span> <span class="keywordtype">int</span> ind = <a class="code hl_function" href="pathfinding_8cpp.html#a65e028ff3eecf028c660a6fc13d47ee6">flat_index</a>( p );</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>                <a class="code hl_variable" href="structpath__data__layer.html#a31f2ea8d5661731f57ad7a5ed7ad4f03">state</a>[ind] = <a class="code hl_enumvalue" href="pathfinding_8cpp.html#ac94a766a92de298b1a4c849533491128abc0379508aad3e690190440da0271f7e">ASL_NONE</a>; <span class="comment">// Mark as unvisited</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            }</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        }</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    }</div>
+<div class="ttc" id="apathfinding_8cpp_html_a65e028ff3eecf028c660a6fc13d47ee6"><div class="ttname"><a href="pathfinding_8cpp.html#a65e028ff3eecf028c660a6fc13d47ee6">flat_index</a></div><div class="ttdeci">constexpr int flat_index(const tripoint &amp;p)</div><div class="ttdef"><b>Definition:</b> <a href="pathfinding_8cpp_source.html#l00035">pathfinding.cpp:35</a></div></div>
+<div class="ttc" id="apathfinding_8cpp_html_ac94a766a92de298b1a4c849533491128abc0379508aad3e690190440da0271f7e"><div class="ttname"><a href="pathfinding_8cpp.html#ac94a766a92de298b1a4c849533491128abc0379508aad3e690190440da0271f7e">ASL_NONE</a></div><div class="ttdeci">@ ASL_NONE</div><div class="ttdef"><b>Definition:</b> <a href="pathfinding_8cpp_source.html#l00029">pathfinding.cpp:29</a></div></div>
+<div class="ttc" id="astructpath__data__layer_html_a31f2ea8d5661731f57ad7a5ed7ad4f03"><div class="ttname"><a href="structpath__data__layer.html#a31f2ea8d5661731f57ad7a5ed7ad4f03">path_data_layer::state</a></div><div class="ttdeci">std::array&lt; astar_state, MAPSIZE_X *MAPSIZE_Y &gt; state</div><div class="ttdef"><b>Definition:</b> <a href="pathfinding_8cpp_source.html#l00043">pathfinding.cpp:43</a></div></div>
 <div class="ttc" id="astructpoint_html_a9a82ca9504acabb1e30569f89c805471"><div class="ttname"><a href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a></div><div class="ttdeci">int y</div><div class="ttdef"><b>Definition:</b> <a href="point_8h_source.html#l00039">point.h:39</a></div></div>
 <div class="ttc" id="astructpoint_html_ad679b07fb69d55f5ad454d0f1f2891d5"><div class="ttname"><a href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a></div><div class="ttdeci">int x</div><div class="ttdef"><b>Definition:</b> <a href="point_8h_source.html#l00038">point.h:38</a></div></div>
 <div class="ttc" id="astructtripoint_html"><div class="ttname"><a href="structtripoint.html">tripoint</a></div><div class="ttdef"><b>Definition:</b> <a href="point_8h_source.html#l00133">point.h:133</a></div></div>
 <div class="ttc" id="astructtripoint_html_a89f6c0a16e2bfd7ce4f1f1d20404c4d7"><div class="ttname"><a href="structtripoint.html#a89f6c0a16e2bfd7ce4f1f1d20404c4d7">tripoint::y</a></div><div class="ttdeci">int y</div><div class="ttdef"><b>Definition:</b> <a href="point_8h_source.html#l00137">point.h:137</a></div></div>
 <div class="ttc" id="astructtripoint_html_affdc0d5b75024cbfacd208a495def3dc"><div class="ttname"><a href="structtripoint.html#affdc0d5b75024cbfacd208a495def3dc">tripoint::x</a></div><div class="ttdeci">int x</div><div class="ttdef"><b>Definition:</b> <a href="point_8h_source.html#l00136">point.h:136</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="pathfinding_8cpp_source.html#l00028">ASL_NONE</a>, <a class="el" href="pathfinding_8cpp_source.html#l00034">flat_index()</a>, <a class="el" href="pathfinding_8cpp_source.html#l00042">state</a>, <a class="el" href="point_8h_source.html#l00038">point::x</a>, <a class="el" href="point_8h_source.html#l00136">tripoint::x</a>, <a class="el" href="point_8h_source.html#l00039">point::y</a>, and <a class="el" href="point_8h_source.html#l00137">tripoint::y</a>.</p>
+<p class="reference">References <a class="el" href="pathfinding_8cpp_source.html#l00029">ASL_NONE</a>, <a class="el" href="pathfinding_8cpp_source.html#l00035">flat_index()</a>, <a class="el" href="pathfinding_8cpp_source.html#l00043">state</a>, <a class="el" href="point_8h_source.html#l00038">point::x</a>, <a class="el" href="point_8h_source.html#l00136">tripoint::x</a>, <a class="el" href="point_8h_source.html#l00039">point::y</a>, and <a class="el" href="point_8h_source.html#l00137">tripoint::y</a>.</p>
 
 </div>
 </div>
@@ -182,7 +182,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pathfinding_8cpp_source.html#l00044">44</a> of file <a class="el" href="pathfinding_8cpp_source.html">pathfinding.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pathfinding_8cpp_source.html#l00045">45</a> of file <a class="el" href="pathfinding_8cpp_source.html">pathfinding.cpp</a>.</p>
 
 </div>
 </div>
@@ -198,7 +198,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pathfinding_8cpp_source.html#l00045">45</a> of file <a class="el" href="pathfinding_8cpp_source.html">pathfinding.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pathfinding_8cpp_source.html#l00046">46</a> of file <a class="el" href="pathfinding_8cpp_source.html">pathfinding.cpp</a>.</p>
 
 </div>
 </div>
@@ -214,7 +214,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pathfinding_8cpp_source.html#l00043">43</a> of file <a class="el" href="pathfinding_8cpp_source.html">pathfinding.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pathfinding_8cpp_source.html#l00044">44</a> of file <a class="el" href="pathfinding_8cpp_source.html">pathfinding.cpp</a>.</p>
 
 </div>
 </div>
@@ -230,9 +230,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pathfinding_8cpp_source.html#l00042">42</a> of file <a class="el" href="pathfinding_8cpp_source.html">pathfinding.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pathfinding_8cpp_source.html#l00043">43</a> of file <a class="el" href="pathfinding_8cpp_source.html">pathfinding.cpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pathfinding_8cpp_source.html#l00047">init()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pathfinding_8cpp_source.html#l00048">init()</a>.</p>
 
 </div>
 </div>
@@ -245,7 +245,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="structpath__data__layer.html">path_data_layer</a></li>
-    <li class="footer">Generated on Sat Jul 29 2023 21:51:17 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Wed Sep 20 2023 19:26:43 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

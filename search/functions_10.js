@@ -276,7 +276,7 @@ var searchData=
   ['points_5fleft_273',['points_left',['../structpoints__left.html#acf2c7ab54e40b093afb3c7e65812b569',1,'points_left']]],
   ['points_5fon_5fzlevel_274',['points_on_zlevel',['../classmap.html#a61d83c54adde6e54f8abf5a2b6834ea1',1,'map::points_on_zlevel() const'],['../classmap.html#ab6226ce995ba5e55285e827c98588845',1,'map::points_on_zlevel(int z) const']]],
   ['poison_275',['poison',['../namespaceiuse.html#a63bd00335278775136a06a2f6b73c8a3',1,'iuse']]],
-  ['polish_5friver_276',['polish_river',['../classovermap.html#a8d3fbbd661dcfa7c3ca512436aa62da9',1,'overmap']]],
+  ['polish_5frivers_276',['polish_rivers',['../classovermap.html#a5a94efc4760df474137b9ff2b469994d',1,'overmap']]],
   ['poly_277',['poly',['../classmonster.html#a39d78be1e47deaf970439c3b9504e5d9',1,'monster']]],
   ['poly_5fkeep_5fspeed_278',['poly_keep_speed',['../monattack_8cpp.html#a56f18a86263588ccac54657fd6d404a4',1,'monattack.cpp']]],
   ['poly_5fserialized_279',['poly_serialized',['../classcata_1_1poly__serialized.html#a88a8541bb3b47adbec5bd2f46bec21d8',1,'cata::poly_serialized::poly_serialized(const poly_serialized&lt; T &gt; &amp;other)'],['../classcata_1_1poly__serialized.html#a203dc40c56c5f91b142c23508a5a3b89',1,'cata::poly_serialized::poly_serialized()=default'],['../classcata_1_1poly__serialized.html#a8e8099fd1e28a1c59ebb27a95702dfb1',1,'cata::poly_serialized::poly_serialized(poly_serialized &amp;&amp;)=default'],['../classcata_1_1poly__serialized.html#a1dbe319052ec2610bc422f9c81511725',1,'cata::poly_serialized::poly_serialized(T *value)']]],

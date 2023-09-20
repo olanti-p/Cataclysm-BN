@@ -149,6 +149,7 @@ $(document).ready(function(){initNavTree('map__field_8cpp.html',''); initResizab
 <code>#include &quot;<a class="el" href="type__id_8h_source.html">type_id.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="units_8h_source.html">units.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="vehicle_8h_source.html">vehicle.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="vehicle__part_8h_source.html">vehicle_part.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="vpart__position_8h_source.html">vpart_position.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="weather_8h_source.html">weather.h</a>&quot;</code><br />
 </div>
@@ -243,19 +244,19 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="map__field_8cpp_source.html#l00354">354</a> of file <a class="el" href="map__field_8cpp_source.html">map_field.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>{</div>
-<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>    <span class="keywordflow">return</span> t.<a class="code hl_function" href="structmap__data__common__t.html#a630778707744fb147436b9aa0c370a7e">has_flag</a>( <a class="code hl_enumvalue" href="mapdata_8h.html#aa04d037303ea30193f7cf0cd82304258a864d6ad5483bbf02eb5653e30b42edfd">TFLAG_FLAMMABLE</a> ) || t.<a class="code hl_function" href="structmap__data__common__t.html#a630778707744fb147436b9aa0c370a7e">has_flag</a>( <a class="code hl_enumvalue" href="mapdata_8h.html#aa04d037303ea30193f7cf0cd82304258a9a5b42bf32cf92352e066de02b6858ad">TFLAG_FLAMMABLE_ASH</a> ) ||</div>
-<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>           t.<a class="code hl_function" href="structmap__data__common__t.html#a630778707744fb147436b9aa0c370a7e">has_flag</a>( <a class="code hl_enumvalue" href="mapdata_8h.html#aa04d037303ea30193f7cf0cd82304258a67a9abfd9f6e2c9bd1c299f5ef6279e5">TFLAG_FLAMMABLE_HARD</a> );</div>
-<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>}</div>
-<div class="ttc" id="amapdata_8h_html_aa04d037303ea30193f7cf0cd82304258a67a9abfd9f6e2c9bd1c299f5ef6279e5"><div class="ttname"><a href="mapdata_8h.html#aa04d037303ea30193f7cf0cd82304258a67a9abfd9f6e2c9bd1c299f5ef6279e5">TFLAG_FLAMMABLE_HARD</a></div><div class="ttdeci">@ TFLAG_FLAMMABLE_HARD</div><div class="ttdef"><b>Definition:</b> <a href="mapdata_8h_source.html#l00294">mapdata.h:294</a></div></div>
-<div class="ttc" id="amapdata_8h_html_aa04d037303ea30193f7cf0cd82304258a864d6ad5483bbf02eb5653e30b42edfd"><div class="ttname"><a href="mapdata_8h.html#aa04d037303ea30193f7cf0cd82304258a864d6ad5483bbf02eb5653e30b42edfd">TFLAG_FLAMMABLE</a></div><div class="ttdeci">@ TFLAG_FLAMMABLE</div><div class="ttdef"><b>Definition:</b> <a href="mapdata_8h_source.html#l00277">mapdata.h:277</a></div></div>
-<div class="ttc" id="amapdata_8h_html_aa04d037303ea30193f7cf0cd82304258a9a5b42bf32cf92352e066de02b6858ad"><div class="ttname"><a href="mapdata_8h.html#aa04d037303ea30193f7cf0cd82304258a9a5b42bf32cf92352e066de02b6858ad">TFLAG_FLAMMABLE_ASH</a></div><div class="ttdeci">@ TFLAG_FLAMMABLE_ASH</div><div class="ttdef"><b>Definition:</b> <a href="mapdata_8h_source.html#l00289">mapdata.h:289</a></div></div>
-<div class="ttc" id="astructmap__data__common__t_html_a630778707744fb147436b9aa0c370a7e"><div class="ttname"><a href="structmap__data__common__t.html#a630778707744fb147436b9aa0c370a7e">map_data_common_t::has_flag</a></div><div class="ttdeci">bool has_flag(const std::string &amp;flag) const</div><div class="ttdef"><b>Definition:</b> <a href="mapdata_8h_source.html#l00419">mapdata.h:419</a></div></div>
+<p class="definition">Definition at line <a class="el" href="map__field_8cpp_source.html#l00355">355</a> of file <a class="el" href="map__field_8cpp_source.html">map_field.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>{</div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>    <span class="keywordflow">return</span> t.<a class="code hl_function" href="structmap__data__common__t.html#a630778707744fb147436b9aa0c370a7e">has_flag</a>( <a class="code hl_enumvalue" href="mapdata_8h.html#aa04d037303ea30193f7cf0cd82304258a864d6ad5483bbf02eb5653e30b42edfd">TFLAG_FLAMMABLE</a> ) || t.<a class="code hl_function" href="structmap__data__common__t.html#a630778707744fb147436b9aa0c370a7e">has_flag</a>( <a class="code hl_enumvalue" href="mapdata_8h.html#aa04d037303ea30193f7cf0cd82304258a9a5b42bf32cf92352e066de02b6858ad">TFLAG_FLAMMABLE_ASH</a> ) ||</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>           t.<a class="code hl_function" href="structmap__data__common__t.html#a630778707744fb147436b9aa0c370a7e">has_flag</a>( <a class="code hl_enumvalue" href="mapdata_8h.html#aa04d037303ea30193f7cf0cd82304258a67a9abfd9f6e2c9bd1c299f5ef6279e5">TFLAG_FLAMMABLE_HARD</a> );</div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>}</div>
+<div class="ttc" id="amapdata_8h_html_aa04d037303ea30193f7cf0cd82304258a67a9abfd9f6e2c9bd1c299f5ef6279e5"><div class="ttname"><a href="mapdata_8h.html#aa04d037303ea30193f7cf0cd82304258a67a9abfd9f6e2c9bd1c299f5ef6279e5">TFLAG_FLAMMABLE_HARD</a></div><div class="ttdeci">@ TFLAG_FLAMMABLE_HARD</div><div class="ttdef"><b>Definition:</b> <a href="mapdata_8h_source.html#l00295">mapdata.h:295</a></div></div>
+<div class="ttc" id="amapdata_8h_html_aa04d037303ea30193f7cf0cd82304258a864d6ad5483bbf02eb5653e30b42edfd"><div class="ttname"><a href="mapdata_8h.html#aa04d037303ea30193f7cf0cd82304258a864d6ad5483bbf02eb5653e30b42edfd">TFLAG_FLAMMABLE</a></div><div class="ttdeci">@ TFLAG_FLAMMABLE</div><div class="ttdef"><b>Definition:</b> <a href="mapdata_8h_source.html#l00278">mapdata.h:278</a></div></div>
+<div class="ttc" id="amapdata_8h_html_aa04d037303ea30193f7cf0cd82304258a9a5b42bf32cf92352e066de02b6858ad"><div class="ttname"><a href="mapdata_8h.html#aa04d037303ea30193f7cf0cd82304258a9a5b42bf32cf92352e066de02b6858ad">TFLAG_FLAMMABLE_ASH</a></div><div class="ttdeci">@ TFLAG_FLAMMABLE_ASH</div><div class="ttdef"><b>Definition:</b> <a href="mapdata_8h_source.html#l00290">mapdata.h:290</a></div></div>
+<div class="ttc" id="astructmap__data__common__t_html_a630778707744fb147436b9aa0c370a7e"><div class="ttname"><a href="structmap__data__common__t.html#a630778707744fb147436b9aa0c370a7e">map_data_common_t::has_flag</a></div><div class="ttdeci">bool has_flag(const std::string &amp;flag) const</div><div class="ttdef"><b>Definition:</b> <a href="mapdata_8h_source.html#l00421">mapdata.h:421</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="mapdata_8h_source.html#l00419">map_data_common_t::has_flag()</a>, <a class="el" href="mapdata_8h_source.html#l00277">TFLAG_FLAMMABLE</a>, <a class="el" href="mapdata_8h_source.html#l00289">TFLAG_FLAMMABLE_ASH</a>, and <a class="el" href="mapdata_8h_source.html#l00294">TFLAG_FLAMMABLE_HARD</a>.</p>
+<p class="reference">References <a class="el" href="mapdata_8h_source.html#l00421">map_data_common_t::has_flag()</a>, <a class="el" href="mapdata_8h_source.html#l00278">TFLAG_FLAMMABLE</a>, <a class="el" href="mapdata_8h_source.html#l00290">TFLAG_FLAMMABLE_ASH</a>, and <a class="el" href="mapdata_8h_source.html#l00295">TFLAG_FLAMMABLE_HARD</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l00396">map::process_fields_in_submap()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l00397">map::process_fields_in_submap()</a>.</p>
 
 </div>
 </div>
@@ -283,7 +284,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l00396">map::process_fields_in_submap()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l00397">map::process_fields_in_submap()</a>.</p>
 
 </div>
 </div>
@@ -311,7 +312,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01223">map::player_in_field()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01224">map::player_in_field()</a>.</p>
 
 </div>
 </div>
@@ -347,14 +348,14 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="map__field_8cpp_source.html#l00161">161</a> of file <a class="el" href="map__field_8cpp_source.html">map_field.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>{</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    <span class="keywordflow">return</span> ter.<a class="code hl_function" href="structmap__data__common__t.html#a630778707744fb147436b9aa0c370a7e">has_flag</a>( flag ) || furn.<a class="code hl_function" href="structmap__data__common__t.html#a630778707744fb147436b9aa0c370a7e">has_flag</a>( flag );</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>}</div>
+<p class="definition">Definition at line <a class="el" href="map__field_8cpp_source.html#l00162">162</a> of file <a class="el" href="map__field_8cpp_source.html">map_field.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>{</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    <span class="keywordflow">return</span> ter.<a class="code hl_function" href="structmap__data__common__t.html#a630778707744fb147436b9aa0c370a7e">has_flag</a>( flag ) || furn.<a class="code hl_function" href="structmap__data__common__t.html#a630778707744fb147436b9aa0c370a7e">has_flag</a>( flag );</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="mapdata_8h_source.html#l00419">map_data_common_t::has_flag()</a>.</p>
+<p class="reference">References <a class="el" href="mapdata_8h_source.html#l00421">map_data_common_t::has_flag()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="map__extras_8cpp_source.html#l02065">MapExtras::burned_ground_parser()</a>, <a class="el" href="map__field_8cpp_source.html#l00211">map::gas_can_spread_to()</a>, and <a class="el" href="map__field_8cpp_source.html#l00396">map::process_fields_in_submap()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__extras_8cpp_source.html#l02066">MapExtras::burned_ground_parser()</a>, <a class="el" href="map__field_8cpp_source.html#l00212">map::gas_can_spread_to()</a>, and <a class="el" href="map__field_8cpp_source.html#l00397">map::process_fields_in_submap()</a>.</p>
 
 </div>
 </div>
@@ -392,23 +393,23 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="map__field_8cpp_source.html#l00166">166</a> of file <a class="el" href="map__field_8cpp_source.html">map_field.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>{</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    <span class="keywordflow">if</span>( ter.<a class="code hl_variable" href="structmap__data__common__t.html#aa6eb23c1a5d8e89d877880f9aaf32eb6">movecost</a> == 0 ) {</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>        <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    }</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span> </div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    <span class="keywordflow">if</span>( furn.<a class="code hl_variable" href="structmap__data__common__t.html#aa6eb23c1a5d8e89d877880f9aaf32eb6">movecost</a> &lt; 0 ) {</div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>        <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    }</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    <span class="keywordflow">return</span> ter.<a class="code hl_variable" href="structmap__data__common__t.html#aa6eb23c1a5d8e89d877880f9aaf32eb6">movecost</a> + furn.<a class="code hl_variable" href="structmap__data__common__t.html#aa6eb23c1a5d8e89d877880f9aaf32eb6">movecost</a>;</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>}</div>
-<div class="ttc" id="astructmap__data__common__t_html_aa6eb23c1a5d8e89d877880f9aaf32eb6"><div class="ttname"><a href="structmap__data__common__t.html#aa6eb23c1a5d8e89d877880f9aaf32eb6">map_data_common_t::movecost</a></div><div class="ttdeci">int movecost</div><div class="ttdef"><b>Definition:</b> <a href="mapdata_8h_source.html#l00383">mapdata.h:383</a></div></div>
+<p class="definition">Definition at line <a class="el" href="map__field_8cpp_source.html#l00167">167</a> of file <a class="el" href="map__field_8cpp_source.html">map_field.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>{</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    <span class="keywordflow">if</span>( ter.<a class="code hl_variable" href="structmap__data__common__t.html#aa6eb23c1a5d8e89d877880f9aaf32eb6">movecost</a> == 0 ) {</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>        <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    }</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span> </div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    <span class="keywordflow">if</span>( furn.<a class="code hl_variable" href="structmap__data__common__t.html#aa6eb23c1a5d8e89d877880f9aaf32eb6">movecost</a> &lt; 0 ) {</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>        <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    }</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span> </div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    <span class="keywordflow">return</span> ter.<a class="code hl_variable" href="structmap__data__common__t.html#aa6eb23c1a5d8e89d877880f9aaf32eb6">movecost</a> + furn.<a class="code hl_variable" href="structmap__data__common__t.html#aa6eb23c1a5d8e89d877880f9aaf32eb6">movecost</a>;</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>}</div>
+<div class="ttc" id="astructmap__data__common__t_html_aa6eb23c1a5d8e89d877880f9aaf32eb6"><div class="ttname"><a href="structmap__data__common__t.html#aa6eb23c1a5d8e89d877880f9aaf32eb6">map_data_common_t::movecost</a></div><div class="ttdeci">int movecost</div><div class="ttdef"><b>Definition:</b> <a href="mapdata_8h_source.html#l00385">mapdata.h:385</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="mapdata_8h_source.html#l00383">map_data_common_t::movecost</a>.</p>
+<p class="reference">References <a class="el" href="mapdata_8h_source.html#l00385">map_data_common_t::movecost</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l00211">map::gas_can_spread_to()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l00212">map::gas_can_spread_to()</a>.</p>
 
 </div>
 </div>
@@ -437,7 +438,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01223">map::player_in_field()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01224">map::player_in_field()</a>.</p>
 
 </div>
 </div>
@@ -465,7 +466,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01223">map::player_in_field()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01224">map::player_in_field()</a>.</p>
 
 </div>
 </div>
@@ -493,7 +494,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01631">map::monster_in_field()</a>, and <a class="el" href="map__field_8cpp_source.html#l01223">map::player_in_field()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01632">map::monster_in_field()</a>, and <a class="el" href="map__field_8cpp_source.html#l01224">map::player_in_field()</a>.</p>
 
 </div>
 </div>
@@ -521,7 +522,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l00124">map::burn_body_part()</a>, and <a class="el" href="map__field_8cpp_source.html#l01631">map::monster_in_field()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l00125">map::burn_body_part()</a>, and <a class="el" href="map__field_8cpp_source.html#l01632">map::monster_in_field()</a>.</p>
 
 </div>
 </div>
@@ -549,7 +550,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01223">map::player_in_field()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01224">map::player_in_field()</a>.</p>
 
 </div>
 </div>
@@ -577,7 +578,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01631">map::monster_in_field()</a>, and <a class="el" href="map__field_8cpp_source.html#l01223">map::player_in_field()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01632">map::monster_in_field()</a>, and <a class="el" href="map__field_8cpp_source.html#l01224">map::player_in_field()</a>.</p>
 
 </div>
 </div>
@@ -605,7 +606,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01223">map::player_in_field()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01224">map::player_in_field()</a>.</p>
 
 </div>
 </div>
@@ -633,7 +634,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01223">map::player_in_field()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01224">map::player_in_field()</a>.</p>
 
 </div>
 </div>
@@ -661,7 +662,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01631">map::monster_in_field()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01632">map::monster_in_field()</a>.</p>
 
 </div>
 </div>
@@ -689,7 +690,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01223">map::player_in_field()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01224">map::player_in_field()</a>.</p>
 
 </div>
 </div>
@@ -717,7 +718,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01631">map::monster_in_field()</a>, and <a class="el" href="map__field_8cpp_source.html#l01223">map::player_in_field()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01632">map::monster_in_field()</a>, and <a class="el" href="map__field_8cpp_source.html#l01224">map::player_in_field()</a>.</p>
 
 </div>
 </div>
@@ -745,7 +746,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01631">map::monster_in_field()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01632">map::monster_in_field()</a>.</p>
 
 </div>
 </div>
@@ -773,7 +774,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01631">map::monster_in_field()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01632">map::monster_in_field()</a>.</p>
 
 </div>
 </div>
@@ -801,7 +802,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01223">map::player_in_field()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01224">map::player_in_field()</a>.</p>
 
 </div>
 </div>
@@ -829,7 +830,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l00396">map::process_fields_in_submap()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l00397">map::process_fields_in_submap()</a>.</p>
 
 </div>
 </div>
@@ -857,7 +858,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01631">map::monster_in_field()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01632">map::monster_in_field()</a>.</p>
 
 </div>
 </div>
@@ -885,7 +886,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01223">map::player_in_field()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01224">map::player_in_field()</a>.</p>
 
 </div>
 </div>
@@ -913,7 +914,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01223">map::player_in_field()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01224">map::player_in_field()</a>.</p>
 
 </div>
 </div>
@@ -941,7 +942,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01223">map::player_in_field()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01224">map::player_in_field()</a>.</p>
 
 </div>
 </div>
@@ -969,7 +970,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01223">map::player_in_field()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01224">map::player_in_field()</a>.</p>
 
 </div>
 </div>
@@ -997,7 +998,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01223">map::player_in_field()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01224">map::player_in_field()</a>.</p>
 
 </div>
 </div>
@@ -1025,7 +1026,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01223">map::player_in_field()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01224">map::player_in_field()</a>.</p>
 
 </div>
 </div>
@@ -1053,7 +1054,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01223">map::player_in_field()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01224">map::player_in_field()</a>.</p>
 
 </div>
 </div>
@@ -1081,7 +1082,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01223">map::player_in_field()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="map__field_8cpp_source.html#l01224">map::player_in_field()</a>.</p>
 
 </div>
 </div>
@@ -1091,7 +1092,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="map__field_8cpp.html">map_field.cpp</a></li>
-    <li class="footer">Generated on Sat Jul 29 2023 21:50:57 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Wed Sep 20 2023 19:26:19 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

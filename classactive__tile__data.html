@@ -204,7 +204,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classnull__tile__data.html#aa3c082ef7ec93966bffd6f18acca2765">null_tile_data</a>, <a class="el" href="classbattery__tile.html#a6a45466e7dc69833cabb70a7fb35bb08">battery_tile</a>, <a class="el" href="classcharge__watcher__tile.html#a41f678073691b03dc448de882efe2dea">charge_watcher_tile</a>, <a class="el" href="classcharger__tile.html#a59e8079e714925f1524bd2cfd0186de7">charger_tile</a>, <a class="el" href="classsolar__tile.html#ab3c837d64e80e382e25b2815b7851042">solar_tile</a>, <a class="el" href="classsteady__consumer__tile.html#a10cc1ca407e166c167b27e5270b0c233">steady_consumer_tile</a>, and <a class="el" href="classvehicle__connector__tile.html#a955e7c7d5bc92772fdb8adc8055dbd4c">vehicle_connector_tile</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="active__tile__data_8cpp_source.html#l00395">create()</a>, and <a class="el" href="game_8cpp_source.html#l09527">game::grabbed_furn_move()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="active__tile__data_8cpp_source.html#l00396">create()</a>, and <a class="el" href="game_8cpp_source.html#l09553">game::grabbed_furn_move()</a>.</p>
 
 </div>
 </div>
@@ -232,28 +232,28 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="active__tile__data_8cpp_source.html#l00395">395</a> of file <a class="el" href="active__tile__data_8cpp_source.html">active_tile_data.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>{</div>
-<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">auto</span> type_map = <a class="code hl_function" href="active__tile__data_8cpp.html#a678c8662df8c49de90bd4bded7702826">build_type_map</a>();</div>
-<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>    <span class="keyword">const</span> <span class="keyword">auto</span> iter = type_map.find( <span class="keywordtype">id</span> );</div>
-<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>    <span class="keywordflow">if</span>( iter == type_map.end() ) {</div>
-<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>        <a class="code hl_define" href="debug_8h.html#a87e509562277a7ada3a75330d00cb445">debugmsg</a>( <span class="stringliteral">&quot;Invalid active_tile_data id %s&quot;</span>, <span class="keywordtype">id</span>.c_str() );</div>
-<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>        <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code hl_class" href="classnull__tile__data.html">null_tile_data</a>();</div>
-<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>    }</div>
-<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span> </div>
-<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>    <a class="code hl_class" href="classactive__tile__data.html">active_tile_data</a> *new_tile = iter-&gt;second-&gt;<a class="code hl_function" href="classactive__tile__data.html#addb77fa05a9d34befbc074ec3e035a3c">clone</a>();</div>
-<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>    new_tile-&gt;<a class="code hl_variable" href="classactive__tile__data.html#a09248140f120cc220b7902efd5c44824">last_updated</a> = <a class="code hl_variable" href="namespacecalendar.html#ab01178b933b4f1c62bd75b2edfdbaf79">calendar::start_of_cataclysm</a>;</div>
-<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>    <span class="keywordflow">return</span> new_tile;</div>
-<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>}</div>
-<div class="ttc" id="aactive__tile__data_8cpp_html_a678c8662df8c49de90bd4bded7702826"><div class="ttname"><a href="active__tile__data_8cpp.html#a678c8662df8c49de90bd4bded7702826">build_type_map</a></div><div class="ttdeci">static std::map&lt; std::string, std::unique_ptr&lt; active_tile_data &gt; &gt; build_type_map()</div><div class="ttdef"><b>Definition:</b> <a href="active__tile__data_8cpp_source.html#l00380">active_tile_data.cpp:380</a></div></div>
+<p class="definition">Definition at line <a class="el" href="active__tile__data_8cpp_source.html#l00396">396</a> of file <a class="el" href="active__tile__data_8cpp_source.html">active_tile_data.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>{</div>
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">auto</span> type_map = <a class="code hl_function" href="active__tile__data_8cpp.html#a678c8662df8c49de90bd4bded7702826">build_type_map</a>();</div>
+<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>    <span class="keyword">const</span> <span class="keyword">auto</span> iter = type_map.find( <span class="keywordtype">id</span> );</div>
+<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>    <span class="keywordflow">if</span>( iter == type_map.end() ) {</div>
+<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>        <a class="code hl_define" href="debug_8h.html#a87e509562277a7ada3a75330d00cb445">debugmsg</a>( <span class="stringliteral">&quot;Invalid active_tile_data id %s&quot;</span>, <span class="keywordtype">id</span>.c_str() );</div>
+<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>        <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code hl_class" href="classnull__tile__data.html">null_tile_data</a>();</div>
+<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>    }</div>
+<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span> </div>
+<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>    <a class="code hl_class" href="classactive__tile__data.html">active_tile_data</a> *new_tile = iter-&gt;second-&gt;<a class="code hl_function" href="classactive__tile__data.html#addb77fa05a9d34befbc074ec3e035a3c">clone</a>();</div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>    new_tile-&gt;<a class="code hl_variable" href="classactive__tile__data.html#a09248140f120cc220b7902efd5c44824">last_updated</a> = <a class="code hl_variable" href="namespacecalendar.html#ab01178b933b4f1c62bd75b2edfdbaf79">calendar::start_of_cataclysm</a>;</div>
+<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>    <span class="keywordflow">return</span> new_tile;</div>
+<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>}</div>
+<div class="ttc" id="aactive__tile__data_8cpp_html_a678c8662df8c49de90bd4bded7702826"><div class="ttname"><a href="active__tile__data_8cpp.html#a678c8662df8c49de90bd4bded7702826">build_type_map</a></div><div class="ttdeci">static std::map&lt; std::string, std::unique_ptr&lt; active_tile_data &gt; &gt; build_type_map()</div><div class="ttdef"><b>Definition:</b> <a href="active__tile__data_8cpp_source.html#l00381">active_tile_data.cpp:381</a></div></div>
 <div class="ttc" id="aclassactive__tile__data_html"><div class="ttname"><a href="classactive__tile__data.html">active_tile_data</a></div><div class="ttdef"><b>Definition:</b> <a href="active__tile__data_8h_source.html#l00014">active_tile_data.h:15</a></div></div>
 <div class="ttc" id="aclassactive__tile__data_html_a09248140f120cc220b7902efd5c44824"><div class="ttname"><a href="classactive__tile__data.html#a09248140f120cc220b7902efd5c44824">active_tile_data::last_updated</a></div><div class="ttdeci">time_point last_updated</div><div class="ttdef"><b>Definition:</b> <a href="active__tile__data_8h_source.html#l00020">active_tile_data.h:20</a></div></div>
 <div class="ttc" id="aclassactive__tile__data_html_addb77fa05a9d34befbc074ec3e035a3c"><div class="ttname"><a href="classactive__tile__data.html#addb77fa05a9d34befbc074ec3e035a3c">active_tile_data::clone</a></div><div class="ttdeci">virtual active_tile_data * clone() const =0</div></div>
-<div class="ttc" id="aclassnull__tile__data_html"><div class="ttname"><a href="classnull__tile__data.html">null_tile_data</a></div><div class="ttdef"><b>Definition:</b> <a href="active__tile__data_8cpp_source.html#l00086">active_tile_data.cpp:87</a></div></div>
-<div class="ttc" id="adebug_8h_html_a87e509562277a7ada3a75330d00cb445"><div class="ttname"><a href="debug_8h.html#a87e509562277a7ada3a75330d00cb445">debugmsg</a></div><div class="ttdeci">#define debugmsg(...)</div><div class="ttdoc">Debug message of level DL::Error and class DC::DebugMsg, also includes the source file name and line,...</div><div class="ttdef"><b>Definition:</b> <a href="debug_8h_source.html#l00074">debug.h:74</a></div></div>
+<div class="ttc" id="aclassnull__tile__data_html"><div class="ttname"><a href="classnull__tile__data.html">null_tile_data</a></div><div class="ttdef"><b>Definition:</b> <a href="active__tile__data_8cpp_source.html#l00087">active_tile_data.cpp:88</a></div></div>
+<div class="ttc" id="adebug_8h_html_a87e509562277a7ada3a75330d00cb445"><div class="ttname"><a href="debug_8h.html#a87e509562277a7ada3a75330d00cb445">debugmsg</a></div><div class="ttdeci">#define debugmsg(...)</div><div class="ttdoc">Debug message of level DL::Error and class DC::DebugMsg, also includes the source file name and line,...</div><div class="ttdef"><b>Definition:</b> <a href="debug_8h_source.html#l00075">debug.h:75</a></div></div>
 <div class="ttc" id="anamespacecalendar_html_ab01178b933b4f1c62bd75b2edfdbaf79"><div class="ttname"><a href="namespacecalendar.html#ab01178b933b4f1c62bd75b2edfdbaf79">calendar::start_of_cataclysm</a></div><div class="ttdeci">const time_point &amp; start_of_cataclysm</div><div class="ttdef"><b>Definition:</b> <a href="calendar_8cpp_source.html#l00033">calendar.cpp:33</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="active__tile__data_8cpp_source.html#l00380">build_type_map()</a>, <a class="el" href="classactive__tile__data.html#addb77fa05a9d34befbc074ec3e035a3c">clone()</a>, <a class="el" href="debug_8h_source.html#l00074">debugmsg</a>, <a class="el" href="active__tile__data_8h_source.html#l00020">last_updated</a>, and <a class="el" href="calendar_8cpp_source.html#l00033">calendar::start_of_cataclysm</a>.</p>
+<p class="reference">References <a class="el" href="active__tile__data_8cpp_source.html#l00381">build_type_map()</a>, <a class="el" href="classactive__tile__data.html#addb77fa05a9d34befbc074ec3e035a3c">clone()</a>, <a class="el" href="debug_8h_source.html#l00075">debugmsg</a>, <a class="el" href="active__tile__data_8h_source.html#l00020">last_updated</a>, and <a class="el" href="calendar_8cpp_source.html#l00033">calendar::start_of_cataclysm</a>.</p>
 
 </div>
 </div>
@@ -273,12 +273,12 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="active__tile__data_8cpp_source.html#l00079">79</a> of file <a class="el" href="active__tile__data_8cpp_source.html">active_tile_data.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>{</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <a class="code hl_class" href="classJsonObject.html">JsonObject</a> jo( jsin );</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    jo.read( <span class="stringliteral">&quot;last_updated&quot;</span>, <a class="code hl_variable" href="classactive__tile__data.html#a09248140f120cc220b7902efd5c44824">last_updated</a> );</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <a class="code hl_function" href="classactive__tile__data.html#aaf017fd26312edf9a01aba4651d89a1c">load</a>( jo );</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>}</div>
+<p class="definition">Definition at line <a class="el" href="active__tile__data_8cpp_source.html#l00080">80</a> of file <a class="el" href="active__tile__data_8cpp_source.html">active_tile_data.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>{</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <a class="code hl_class" href="classJsonObject.html">JsonObject</a> jo( jsin );</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    jo.read( <span class="stringliteral">&quot;last_updated&quot;</span>, <a class="code hl_variable" href="classactive__tile__data.html#a09248140f120cc220b7902efd5c44824">last_updated</a> );</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <a class="code hl_function" href="classactive__tile__data.html#aaf017fd26312edf9a01aba4651d89a1c">load</a>( jo );</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>}</div>
 <div class="ttc" id="aclassJsonObject_html"><div class="ttname"><a href="classJsonObject.html">JsonObject</a></div><div class="ttdef"><b>Definition:</b> <a href="json_8h_source.html#l00826">json.h:827</a></div></div>
 <div class="ttc" id="aclassactive__tile__data_html_aaf017fd26312edf9a01aba4651d89a1c"><div class="ttname"><a href="classactive__tile__data.html#aaf017fd26312edf9a01aba4651d89a1c">active_tile_data::load</a></div><div class="ttdeci">virtual void load(JsonObject &amp;jo)=0</div></div>
 </div><!-- fragment -->
@@ -316,7 +316,7 @@ Private Attributes</h2></td></tr>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="active__tile__data_8h_source.html#l00020">last_updated</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="active__tile__data_8cpp_source.html#l00246">charger_tile::update_internal()</a>, <a class="el" href="active__tile__data_8cpp_source.html#l00113">solar_tile::update_internal()</a>, and <a class="el" href="active__tile__data_8cpp_source.html#l00307">steady_consumer_tile::update_internal()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="active__tile__data_8cpp_source.html#l00247">charger_tile::update_internal()</a>, <a class="el" href="active__tile__data_8cpp_source.html#l00114">solar_tile::update_internal()</a>, and <a class="el" href="active__tile__data_8cpp_source.html#l00308">steady_consumer_tile::update_internal()</a>.</p>
 
 </div>
 </div>
@@ -373,7 +373,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classnull__tile__data.html#a4886c9fac6fbad282da2800b39c52f99">null_tile_data</a>, <a class="el" href="classbattery__tile.html#adadf04690f15ccb5579308c6c371eecd">battery_tile</a>, <a class="el" href="classcharge__watcher__tile.html#ae12e68b41c26aa4d6db9f8741be88626">charge_watcher_tile</a>, <a class="el" href="classcharger__tile.html#af321d79f32a15e549091e78e41e2674b">charger_tile</a>, <a class="el" href="classsolar__tile.html#a0ac762e3f0606a75d1eea121b597ae1c">solar_tile</a>, <a class="el" href="classsteady__consumer__tile.html#abae8d443272e4b8fb808526546594d71">steady_consumer_tile</a>, and <a class="el" href="classvehicle__connector__tile.html#a3a448409a8e3277569b052d539c4b8a8">vehicle_connector_tile</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="active__tile__data_8cpp_source.html#l00079">deserialize()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="active__tile__data_8cpp_source.html#l00080">deserialize()</a>.</p>
 
 </div>
 </div>
@@ -393,11 +393,11 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="active__tile__data_8cpp_source.html#l00073">73</a> of file <a class="el" href="active__tile__data_8cpp_source.html">active_tile_data.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>{</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    jsout.<a class="code hl_function" href="classJsonOut.html#adb3c899f0ad7fc4f25cd3357c51a2c42">member</a>( <span class="stringliteral">&quot;last_updated&quot;</span>, <a class="code hl_variable" href="classactive__tile__data.html#a09248140f120cc220b7902efd5c44824">last_updated</a> );</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <a class="code hl_function" href="classactive__tile__data.html#a97c5dd9359cb5e915aef4a2be3caaec9">store</a>( jsout );</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>}</div>
+<p class="definition">Definition at line <a class="el" href="active__tile__data_8cpp_source.html#l00074">74</a> of file <a class="el" href="active__tile__data_8cpp_source.html">active_tile_data.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>{</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    jsout.<a class="code hl_function" href="classJsonOut.html#adb3c899f0ad7fc4f25cd3357c51a2c42">member</a>( <span class="stringliteral">&quot;last_updated&quot;</span>, <a class="code hl_variable" href="classactive__tile__data.html#a09248140f120cc220b7902efd5c44824">last_updated</a> );</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <a class="code hl_function" href="classactive__tile__data.html#a97c5dd9359cb5e915aef4a2be3caaec9">store</a>( jsout );</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>}</div>
 <div class="ttc" id="aclassJsonOut_html_adb3c899f0ad7fc4f25cd3357c51a2c42"><div class="ttname"><a href="classJsonOut.html#adb3c899f0ad7fc4f25cd3357c51a2c42">JsonOut::member</a></div><div class="ttdeci">void member(const std::string &amp;name)</div><div class="ttdef"><b>Definition:</b> <a href="json_8cpp_source.html#l02235">json.cpp:2235</a></div></div>
 <div class="ttc" id="aclassactive__tile__data_html_a97c5dd9359cb5e915aef4a2be3caaec9"><div class="ttname"><a href="classactive__tile__data.html#a97c5dd9359cb5e915aef4a2be3caaec9">active_tile_data::store</a></div><div class="ttdeci">virtual void store(JsonOut &amp;jsout) const =0</div></div>
 </div><!-- fragment -->
@@ -436,7 +436,7 @@ Private Attributes</h2></td></tr>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="active__tile__data_8h_source.html#l00020">last_updated</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="distribution__grid_8cpp_source.html#l00293">grid_furn_transform_queue::apply()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="distribution__grid_8cpp_source.html#l00294">grid_furn_transform_queue::apply()</a>.</p>
 
 </div>
 </div>
@@ -466,7 +466,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classnull__tile__data.html#ac6c1d317669c4b5ab25f61fb7b4c0d1e">null_tile_data</a>, <a class="el" href="classbattery__tile.html#a8932da971b4f4c793c23af76ab4e0d37">battery_tile</a>, <a class="el" href="classcharge__watcher__tile.html#aaf46f418207172983b3920a689e5f128">charge_watcher_tile</a>, <a class="el" href="classcharger__tile.html#a30c39814014551369a1124096cc3ebc2">charger_tile</a>, <a class="el" href="classsolar__tile.html#a17bee5ba0a32011c60aa44128a9bc9bd">solar_tile</a>, <a class="el" href="classsteady__consumer__tile.html#a2e9fb520eee0f94214bca3f23f656043">steady_consumer_tile</a>, and <a class="el" href="classvehicle__connector__tile.html#aa7f1dbb341866e0604e8cdade5bf851d">vehicle_connector_tile</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="active__tile__data_8cpp_source.html#l00073">serialize()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="active__tile__data_8cpp_source.html#l00074">serialize()</a>.</p>
 
 </div>
 </div>
@@ -598,7 +598,7 @@ Private Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="active__tile__data_8h_source.html#l00020">20</a> of file <a class="el" href="active__tile__data_8h_source.html">active_tile_data.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="active__tile__data_8cpp_source.html#l00395">create()</a>, <a class="el" href="active__tile__data_8cpp_source.html#l00079">deserialize()</a>, <a class="el" href="active__tile__data_8h_source.html#l00037">get_last_updated()</a>, <a class="el" href="active__tile__data_8cpp_source.html#l00073">serialize()</a>, <a class="el" href="active__tile__data_8h_source.html#l00040">set_last_updated()</a>, and <a class="el" href="active__tile__data_8h_source.html#l00032">update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="active__tile__data_8cpp_source.html#l00396">create()</a>, <a class="el" href="active__tile__data_8cpp_source.html#l00080">deserialize()</a>, <a class="el" href="active__tile__data_8h_source.html#l00037">get_last_updated()</a>, <a class="el" href="active__tile__data_8cpp_source.html#l00074">serialize()</a>, <a class="el" href="active__tile__data_8h_source.html#l00040">set_last_updated()</a>, and <a class="el" href="active__tile__data_8h_source.html#l00032">update()</a>.</p>
 
 </div>
 </div>
@@ -612,7 +612,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classactive__tile__data.html">active_tile_data</a></li>
-    <li class="footer">Generated on Sat Jul 29 2023 21:51:00 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Wed Sep 20 2023 19:26:23 for Cataclysm BN by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>
