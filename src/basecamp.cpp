@@ -40,6 +40,8 @@
 #include "translations.h"
 #include "type_id.h"
 
+// TEST PR 1
+
 static const zone_type_id zone_type_camp_storage( "CAMP_STORAGE" );
 
 const std::map<point, base_camps::direction_data> base_camps::all_directions = {
