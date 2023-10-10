@@ -119,6 +119,7 @@ worldfactory::worldfactory()
     , mman_ui( *mman )
 {
     // prepare tab display order
+    // TEST 3
     tabs.push_back( std::bind( &worldfactory::show_worldgen_tab_modselection, this, _1, _2, _3 ) );
     tabs.push_back( std::bind( &worldfactory::show_worldgen_tab_options, this, _1, _2, _3 ) );
     tabs.push_back( std::bind( &worldfactory::show_worldgen_tab_confirm, this, _1, _2, _3 ) );
