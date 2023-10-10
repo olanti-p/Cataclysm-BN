@@ -100,6 +100,8 @@ void json_trait_flag::check() const
     }
 }
 
+// TEST 2
+
 void json_trait_flag::finalize_all()
 {
     json_trait_flags_all.finalize();
