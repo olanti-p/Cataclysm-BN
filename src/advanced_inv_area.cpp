@@ -32,6 +32,8 @@
 #include "vehicle_part.h"
 #include "vpart_position.h"
 
+// TEST 4
+
 int advanced_inv_area::get_item_count() const
 {
     if( id == AIM_INVENTORY ) {
