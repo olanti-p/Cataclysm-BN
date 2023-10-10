@@ -913,6 +913,7 @@ dealt_damage_instance Creature::deal_damage( Creature *source, bodypart_id bp,
     absorb_hit( bp, d );
 
     // Add up all the damage units dealt
+    // TEST
     for( const auto &it : d.damage_units ) {
         int cur_damage = 0;
         deal_damage_handle_type( it, bp, cur_damage, total_pain );
