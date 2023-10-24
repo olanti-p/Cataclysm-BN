@@ -1,35 +1,68 @@
-name: "Experimental Release"
+name: Release
 concurrency: release
 on:
   push:
     branches:
       - upload
     paths-ignore:
-      - 'doc/**'
-      - 'scripts/**'
+      - "doc/**"
+      - "scripts/**"
+
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version string for manual release (e.g 2023-11)"
+        required: true
+        type: string
 
 env:
+  VERSION: ${{ inputs.version }}
   VCPKG_BINARY_SOURCES: "default"
+  IS_MANUAL_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
+
 jobs:
   release:
     name: Create Release
     runs-on: ubuntu-22.04
+
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
-      timestamp: ${{ steps.get-timestamp.outputs.time }}
       release_already_exists: ${{ steps.tag_check.outputs.exists }}
+
+      # used in VERSION.txt
+      build_info: ${{ steps.generate_env_vars.outputs.build_info }}
+
+      # used in mv bindist src
+      # e.g experimental, 2023-11
+      src: ${{ steps.generate_env_vars.outputs.src }}
+
+      # used in mv bindist dest
+      # e.g 2023-11-01-1234, 0.4
+      dest: ${{ steps.generate_env_vars.outputs.dest }}
+
     steps:
-      - name: Get build timestamp
-        id: get-timestamp
-        uses: nanzm/get-time-action@v1.1
-        with:
-          timeZone: 0
-          format: "YYYY-MM-DD-HHmm"
       - name: Generate environmental variables
         id: generate_env_vars
         run: |
-          echo "tag_name=cbn-experimental-${{ steps.get-timestamp.outputs.time }}" >> $GITHUB_OUTPUT
-          echo "release_name=Cataclysm-BN experimental build ${{ steps.get-timestamp.outputs.time }}" >> $GITHUB_OUTPUT
+          if [[ ${{ env.IS_MANUAL_RELEASE }} == "true" ]]
+          then
+            version="${{ github.event.inputs.version }}"
+
+            echo "tag_name=cbn-${version}" >> $GITHUB_OUTPUT
+            echo "release_name=Cataclysm-BN ${version}" >> $GITHUB_OUTPUT
+            echo "build_info"="build version stirng: ${version}" >> $GITHUB_OUTPUT
+            echo "src=${version}" >> $GITHUB_OUTPUT
+            echo "dest=${version}" >> $GITHUB_OUTPUT
+          else
+            timestamp=$(date -u +"%Y-%m-%d-%H%M")
+
+            echo "tag_name=cbn-experimental-${timestamp}" >> $GITHUB_OUTPUT
+            echo "release_name=Cataclysm-BN experimental ${timestamp}" >> $GITHUB_OUTPUT
+            echo "build_info=\"build number: ${timestamp}\"" >> $GITHUB_OUTPUT
+            echo "src=experimental" >> $GITHUB_OUTPUT
+            echo "dest=${timestamp}" >> $GITHUB_OUTPUT
+          fi
+
       - name: Check if there is existing git tag
         id: tag_check
         uses: mukunku/tag-exists-action@v1.0.0
@@ -37,7 +70,9 @@ jobs:
           tag: ${{ steps.generate_env_vars.outputs.tag_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: actions/checkout@v3
+
       - name: Push tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v5.5
@@ -46,8 +81,11 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           custom_tag: ${{ steps.generate_env_vars.outputs.tag_name }}
           tag_prefix: ""
+
       - uses: actions/checkout@v3
+
       - run: git fetch origin tag ${{ steps.generate_env_vars.outputs.tag_name }} --no-tags
+
       - name: Build Changelog
         id: build_changelog
         uses: mikepenz/release-changelog-builder-action@v2.1.0
@@ -55,6 +93,7 @@ jobs:
           configuration: "changelog.json"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Create release
         id: create_release
         uses: actions/create-release@v1
@@ -66,9 +105,10 @@ jobs:
           release_name: ${{ steps.generate_env_vars.outputs.release_name }}
           body: |
             ${{ steps.build_changelog.outputs.changelog }}
-            These are the outputs for the experimental build of commit [${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
-          draft: false
-          prerelease: true
+            These are the outputs for the build of commit [${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
+          draft: ${{ env.IS_MANUAL_RELEASE == 'false' }}
+          prerelease: ${{ env.IS_MANUAL_RELEASE == 'true' }}
+
   builds:
     needs: release
     if: ${{ needs.release.outputs.release_already_exists == 'false' }}
@@ -159,20 +199,24 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       ZSTD_CLEVEL: 17
+
     steps:
       - uses: actions/checkout@v3
+
       - name: Create VERSION.TXT
         shell: bash
         run: |
           cat >VERSION.txt <<EOL
           build type: ${{ matrix.artifact }}
-          build number: ${{ needs.release.outputs.timestamp }}
+          ${{ needs.release.outputs.build_info }}
           commit sha: ${{ github.sha }}
           commit url: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
           EOL
+
       - name: Install dependencies (windows msvc) (1/3)
         if: runner.os == 'Windows'
         uses: microsoft/setup-msbuild@v1.3.1
+
       - name: Install dependencies (windows msvc) (2/3)
         if: runner.os == 'Windows'
         uses: lukka/run-vcpkg@main
@@ -187,10 +231,12 @@ jobs:
           # field in vcpkg.json. Caching happens as a post-action which runs at the end of
           # the whole workflow, after vcpkg install happens during msbuild run.
           vcpkgGitCommitId: "a7b6122f6b6504d16d96117336a0562693579933"
+
       - name: Install dependencies (windows msvc) (3/3)
         if: runner.os == 'Windows'
         run: |
           vcpkg integrate install
+
       - name: Install dependencies (windows mxe)
         if: matrix.mxe != 'none'
         run: |
@@ -198,6 +244,7 @@ jobs:
           sudo apt install astyle autoconf automake autopoint bash bison bzip2 cmake flex gettext git g++ gperf intltool \
             libffi-dev libgdk-pixbuf2.0-dev libtool libltdl-dev libssl-dev libxml-parser-perl lzip make mingw-w64 openssl \
             p7zip-full patch perl pkg-config python ruby scons sed unzip wget xz-utils g++-multilib libc6-dev-i386 libtool-bin
+
       - name: Install MXE
         if: matrix.mxe != 'none'
         run: |
@@ -208,34 +255,40 @@ jobs:
           curl -L -o libbacktrace-${{ matrix.mxe }}-w64-mingw32.tar.gz https://github.com/Qrox/libbacktrace/releases/download/2020-01-03/libbacktrace-${{ matrix.mxe }}-w64-mingw32.tar.gz
           shasum -a 256 -c ./build-scripts/libbacktrace-${{ matrix.mxe }}-w64-mingw32-sha256
           sudo tar -xzf libbacktrace-${{ matrix.mxe }}-w64-mingw32.tar.gz --exclude=LICENSE -C /opt/mxe/usr/${{ matrix.mxe }}-w64-mingw32.static.gcc11
+
       - name: Install dependencies (Linux)
         if: runner.os == 'Linux' && matrix.mxe == 'none' && matrix.android == 'none'
         run: |
           sudo apt-get update
           sudo apt-get install libncursesw5-dev libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev \
             libsdl2-mixer-dev libpulse-dev ccache gettext parallel
+
       - name: Install dependencies (mac)
         if: runner.os == 'macOS'
         run: |
           HOMEBREW_NO_AUTO_UPDATE=yes HOMEBREW_NO_INSTALL_CLEANUP=yes brew install sdl2 sdl2_image sdl2_ttf sdl2_mixer gettext ccache parallel
           pip3 install mac_alias==2.2.0 dmgbuild==1.4.2 biplist
+
       - name: Compile translations (windows)
         if: runner.os == 'Windows'
         shell: bash
         run: |
           lang/compile_mo.sh all
+
       - name: Build CBN (linux)
         if: runner.os == 'Linux' && matrix.mxe == 'none' && matrix.android == 'none'
         run: |
           make -j$((`nproc`+0)) TILES=${{ matrix.tiles }} SOUND=${{ matrix.tiles }} LUA=1 RELEASE=1 LANGUAGES=all PCH=0 bindist
-          mv cataclysmbn-unstable.tar.gz cbn-${{ matrix.artifact }}-${{ needs.release.outputs.timestamp }}.tar.gz
+          mv cataclysmbn-${{ needs.release.outputs.src }}.tar.gz cbn-${{ matrix.artifact }}-${{ needs.release.outputs.dest }}.tar.gz
+
       - name: Build CBN (windows)
         if: matrix.mxe != 'none'
         env:
           PLATFORM: /opt/mxe/usr/bin/${{ matrix.mxe }}-w64-mingw32.static.gcc11-
         run: |
           make -j$((`nproc`+0)) CROSS="${PLATFORM}" TILES=1 SOUND=1 LUA=1 RELEASE=1 LANGUAGES=all PCH=0 bindist
-          mv cataclysmbn-unstable.zip cbn-${{ matrix.artifact }}-${{ needs.release.outputs.timestamp }}.zip
+          mv cataclysmbn-${{ needs.release.outputs.src }}.zip cbn-${{ matrix.artifact }}-${{ needs.release.outputs.dest }}.zip
+
       - name: Build CBN (windows msvc)
         if: runner.os == 'Windows'
         env:
@@ -243,23 +296,27 @@ jobs:
         run: |
           msbuild -m -p:Configuration=Release -p:Platform=${{ matrix.arch }} "-target:Cataclysm-vcpkg-static;JsonFormatter-vcpkg-static" msvc-full-features\Cataclysm-vcpkg-static.sln
           .\build-scripts\windist.ps1
-          mv cataclysmbn.zip cbn-${{ matrix.artifact }}-${{ needs.release.outputs.timestamp }}.zip
+          mv cataclysmbn.zip cbn-${{ matrix.artifact }}-${{ needs.release.outputs.dest }}.zip
+
       - name: Build CBN (osx)
         if: runner.os == 'macOS'
         run: |
           make -j3 TILES=${{ matrix.tiles }} SOUND=${{ matrix.tiles }} LUA=1 RELEASE=1 LANGUAGES=all USE_HOME_DIR=1 OSX_MIN=11 PCH=0 dmgdist COMPILER=clang++
-          mv CataclysmBN-unstable.dmg cbn-${{ matrix.artifact }}-${{ needs.release.outputs.timestamp }}.dmg
+          mv CataclysmBN-${{ needs.release.outputs.src }}.dmg cbn-${{ matrix.artifact }}-${{ needs.release.outputs.dest }}.dmg
+
       - name: Set up JDK 11 (android)
         if: runner.os == 'Linux' && matrix.android != 'none' && matrix.mxe == 'none'
         uses: actions/setup-java@v3
         with:
           java-version: "11"
           distribution: "adopt"
+
       - name: Setup Build and Dependencies (android)
         if: runner.os == 'Linux' && matrix.android != 'none' && matrix.mxe == 'none'
         run: |
           sudo apt-get update
           sudo apt-get install gettext
+
       - name: Build CBN (android)
         if: runner.os == 'Linux' && matrix.android != 'none' && matrix.mxe == 'none'
         working-directory: ./android
@@ -268,21 +325,42 @@ jobs:
           gpg -d --passphrase "${{ secrets.KEYSTORE_PASSWORD }}" --batch release.keystore.asc > app/release.keystore
           echo "${{ secrets.KEYSTORE_PROPERTIES }}" > keystore.properties.asc
           gpg -d --passphrase "${{ secrets.KEYSTORE_PASSWORD }}" --batch keystore.properties.asc > keystore.properties
-          export UPSTREAM_BUILD_NUMBER="$((2037 + ${{ github.run_number }}))"
-          chmod +x gradlew
-          if [ ${{ matrix.android }} = arm64 ]
+
+          if [[ "${{ env.IS_MANUAL_RELEASE }}" == "true" ]]
           then
-               ./gradlew -Pj=$((`nproc`+0)) -Pabi_arm_32=false assembleExperimentalRelease
-               mv ./app/build/outputs/apk/experimental/release/*.apk ../cbn-${{ matrix.artifact }}-${{ needs.release.outputs.timestamp }}.apk
-          elif [ ${{ matrix.android }} = arm32 ]
-          then
-               ./gradlew -Pj=$((`nproc`+0)) -Pabi_arm_64=false assembleExperimentalRelease
-               mv ./app/build/outputs/apk/experimental/release/*.apk ../cbn-${{ matrix.artifact }}-${{ needs.release.outputs.timestamp }}.apk
-          elif [ ${{ matrix.android }} = bundle ]
-          then
-               ./gradlew -Pj=$((`nproc`+0)) bundleExperimentalRelease
-               mv ./app/build/outputs/bundle/experimentalRelease/*.aab ../cbn-${{ matrix.artifact }}-${{ needs.release.outputs.timestamp }}.aab
+            dir_lower=stable
+            dir_capital=Stable
+          else
+            dir_lower=experimental
+            dir_capital=Experimental
+            export UPSTREAM_BUILD_NUMBER="$((2037 + ${{ github.run_number }}))"\
           fi
+
+          # extract stable and experimental path to variable
+          case ${{ matrix.android }} in
+            arm32)
+              arm_flag="-Pabi_arm_64=false"
+            arm64)
+              arm_flag="-Pabi_arm_32=false"
+            arm32 | arm64)
+              output_kind="apk"
+              ext="apk"
+              flags="${arm_flag} assemble${dir_capital}Release"
+              path="${dir_lower}/release" ;;
+            bundle)
+              output_kind="bundle"
+              ext="aab"
+              flags="bundle${dir_capital}Release"
+              path="${dir_lower}Release" ;;
+          esac
+
+          src="./app/build/outputs/${output_kind}/${path}/*.${ext}"
+          dest="../cbn-${{ matrix.artifact }}-${{ needs.release.outputs.dest }}.${ext}"
+
+          chmod +x gradlew
+          ./gradlew -Pj=$((`nproc`+0)) ${flags}
+          mv ${src} ${dest}
+
       - name: Upload release asset
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
@@ -290,6 +368,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.release.outputs.upload_url }}
-          asset_path: cbn-${{ matrix.artifact }}-${{ needs.release.outputs.timestamp }}.${{ matrix.ext }}
-          asset_name: cbn-${{ matrix.artifact }}-${{ needs.release.outputs.timestamp }}.${{ matrix.ext }}
+          asset_path: cbn-${{ matrix.artifact }}-${{ needs.release.outputs.dest }}.${{ matrix.ext }}
+          asset_name: cbn-${{ matrix.artifact }}-${{ needs.release.outputs.dest }}.${{ matrix.ext }}
           asset_content_type: ${{ matrix.content }}
