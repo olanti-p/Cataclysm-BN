@@ -1,10 +1,9 @@
 #ifndef CATA_SRC_EDITOR_MENU_BAR_H
 #define CATA_SRC_EDITOR_MENU_BAR_H
 
-#include "state.h"
-
 namespace editor
 {
+struct me_state;
 
 void show_main_menu_bar( me_state &state );
 

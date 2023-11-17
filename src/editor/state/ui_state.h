@@ -1,11 +1,11 @@
-#ifndef CATA_SRC_EDITOR_UISTATE_H
-#define CATA_SRC_EDITOR_UISTATE_H
+#ifndef CATA_SRC_EDITOR_UI_STATE_H
+#define CATA_SRC_EDITOR_UI_STATE_H
 
 #include "pimpl.h"
 
 #include "common/uuid.h"
 #include "canvas/camera.h"
-#include "canvas/canvas_tools.h"
+#include "state/tools_state.h"
 
 #include <set>
 
@@ -96,4 +96,4 @@ void run_ui_for_state( me_state &state );
 
 } // namespace editor
 
-#endif // CATA_SRC_EDITOR_UISTATE_H
+#endif // CATA_SRC_EDITOR_UI_STATE_H

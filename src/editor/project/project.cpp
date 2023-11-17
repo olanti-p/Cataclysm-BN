@@ -2,10 +2,10 @@
 
 #include "file.h"
 #include "mapgen/palette.h"
-#include "state.h"
+#include "state/state.h"
 #include "common/uuid.h"
 #include "widget/widgets.h"
-#include "uistate.h"
+#include "state/ui_state.h"
 
 #include <chrono>
 

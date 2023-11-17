@@ -1,10 +1,10 @@
 #include "state.h"
 
 #include "control_state.h"
-#include "project.h"
-#include "history.h"
-#include "save_and_export.h"
-#include "uistate.h"
+#include "history_state.h"
+#include "save_export_state.h"
+#include "ui_state.h"
+#include "project/project.h"
 
 namespace editor
 {

@@ -1,7 +1,7 @@
-#include "history.h"
+#include "history_state.h"
 
-#include "canvas/canvas_tools.h"
-#include "project.h"
+#include "state/tools_state.h"
+#include "project/project.h"
 #include "widget/widgets.h"
 
 // Cata's DebugLog define conflicts with function in ImGui

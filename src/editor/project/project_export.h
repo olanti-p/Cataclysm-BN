@@ -1,9 +1,12 @@
-#ifndef CATA_SRC_EDITOR_STATE_EXPORT_H
-#define CATA_SRC_EDITOR_STATE_EXPORT_H
+#ifndef CATA_SRC_EDITOR_PROJECT_EXPORT_H
+#define CATA_SRC_EDITOR_PROJECT_EXPORT_H
 
 #include <string>
 
-#include "state.h"
+namespace editor
+{
+struct me_project;
+} // namespace editor
 
 namespace editor_export
 {
@@ -14,4 +17,4 @@ std::string format_string( const std::string &js );
 
 } // namespace editor_export
 
-#endif // CATA_SRC_EDITOR_STATE_EXPORT_H
+#endif // CATA_SRC_EDITOR_PROJECT_EXPORT_H

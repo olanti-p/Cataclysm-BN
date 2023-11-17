@@ -1,5 +1,5 @@
-#ifndef CATA_SRC_EDITOR_HISTORY_H
-#define CATA_SRC_EDITOR_HISTORY_H
+#ifndef CATA_SRC_EDITOR_HISTORY_STATE_H
+#define CATA_SRC_EDITOR_HISTORY_STATE_H
 
 #include <memory>
 #include <vector>
@@ -99,4 +99,4 @@ void handle_revision_change( me_history_state &state, me_canvas_tools_state &too
 
 } // namespace editor
 
-#endif // CATA_SRC_EDITOR_HISTORY_H
+#endif // CATA_SRC_EDITOR_HISTORY_STATE_H

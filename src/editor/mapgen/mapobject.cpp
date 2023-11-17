@@ -3,8 +3,8 @@
 #include "project/file.h"
 #include "piece.h"
 #include "project/project.h"
-#include "project/state.h"
-#include "project/uistate.h"
+#include "state/state.h"
+#include "state/ui_state.h"
 #include "widget/widgets.h"
 
 #include "translations.h"

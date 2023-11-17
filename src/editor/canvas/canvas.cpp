@@ -8,9 +8,9 @@
 #include "widget/widgets.h"
 #include "project/file.h"
 #include "project/project.h"
-#include "project/state.h"
-#include "project/uistate.h"
-#include "canvas_tools.h"
+#include "state/state.h"
+#include "state/ui_state.h"
+#include "state/tools_state.h"
 
 #include <set>
 #include <functional>

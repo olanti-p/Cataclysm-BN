@@ -1,5 +1,5 @@
-#ifndef CATA_SRC_EDITOR_CANVAS_TOOLS_H
-#define CATA_SRC_EDITOR_CANVAS_TOOLS_H
+#ifndef CATA_SRC_EDITOR_TOOLS_STATE_H
+#define CATA_SRC_EDITOR_TOOLS_STATE_H
 
 #include "common/uuid.h"
 #include "enum_traits.h"
@@ -83,4 +83,4 @@ struct enum_traits<editor::CanvasTool> {
     static constexpr editor::CanvasTool last = editor::CanvasTool::_Num;
 };
 
-#endif // CATA_SRC_EDITOR_CANVAS_TOOLS_H
+#endif // CATA_SRC_EDITOR_TOOLS_STATE_H

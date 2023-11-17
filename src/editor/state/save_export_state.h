@@ -1,5 +1,5 @@
-#ifndef CATA_SRC_EDITOR_SAVE_AND_EXPORT_H
-#define CATA_SRC_EDITOR_SAVE_AND_EXPORT_H
+#ifndef CATA_SRC_EDITOR_SAVE_EXPORT_STATE_H
+#define CATA_SRC_EDITOR_SAVE_EXPORT_STATE_H
 
 #include <optional>
 #include <string>
@@ -27,4 +27,4 @@ void handle_project_exiting( me_state &state );
 
 } // namespace editor
 
-#endif // CATA_SRC_EDITOR_SAVE_AND_EXPORT_H
+#endif // CATA_SRC_EDITOR_SAVE_EXPORT_STATE_H
