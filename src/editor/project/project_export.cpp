@@ -1,6 +1,6 @@
 #include "project_export.h"
 
-#include "file.h"
+#include "mapgen/mapgen.h"
 #include "project.h"
 
 #include "mapgen/palette.h"

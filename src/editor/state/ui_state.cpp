@@ -5,7 +5,7 @@
 #include "history_state.h"
 #include "imgui.h"
 #include "mapgen/palette.h"
-#include "project/file.h"
+#include "mapgen/mapgen.h"
 #include "project/menu_bar.h"
 #include "project/project.h"
 #include "save_export_state.h"

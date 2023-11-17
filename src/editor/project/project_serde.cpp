@@ -1,7 +1,7 @@
 #include "project_serde.h"
 
 #include "mapgen/piece_impl.h"
-#include "file.h"
+#include "mapgen/mapgen.h"
 #include "project.h"
 #include "common/weighted_list_serde.h"
 

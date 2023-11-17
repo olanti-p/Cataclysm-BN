@@ -1,6 +1,6 @@
 #include "mapobject.h"
 
-#include "project/file.h"
+#include "mapgen.h"
 #include "piece.h"
 #include "project/project.h"
 #include "state/state.h"

@@ -1,7 +1,7 @@
 #ifndef CATA_SRC_EDITOR_PROJECT_H
 #define CATA_SRC_EDITOR_PROJECT_H
 
-#include "file.h"
+#include "mapgen/mapgen.h"
 #include "mapgen/palette.h"
 #include "common/uuid.h"
 

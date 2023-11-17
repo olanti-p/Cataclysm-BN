@@ -2,7 +2,7 @@
 
 #include "state/tools_state.h"
 #include "common/color.h"
-#include "project/file.h"
+#include "mapgen.h"
 #include "map_key_gen.h"
 #include "piece_impl.h"
 #include "project/project.h"

@@ -1,6 +1,6 @@
 #include "project.h"
 
-#include "file.h"
+#include "mapgen/mapgen.h"
 #include "mapgen/palette.h"
 #include "state/state.h"
 #include "common/uuid.h"
