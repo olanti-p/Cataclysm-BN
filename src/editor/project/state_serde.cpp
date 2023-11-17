@@ -549,36 +549,6 @@ void deserialize_eid( JsonIn &jsin, std::string &data )
 
 } // namespace detail
 
-void uuid_generator::serialize( JsonOut &jsout ) const
-{
-    jsout.start_object();
-    jsout.member( "counter", counter );
-    jsout.end_object();
-}
-
-void uuid_generator::deserialize( JsonIn &jsin )
-{
-    JsonObject jo = jsin.get_object();
-
-    jo.read( "counter", counter );
-}
-
-void me_int_range::serialize( JsonOut &jsout ) const
-{
-    jsout.start_object();
-    jsout.member( "min", min );
-    jsout.member( "max", max );
-    jsout.end_object();
-}
-
-void me_int_range::deserialize( JsonIn &jsin )
-{
-    JsonObject jo = jsin.get_object();
-
-    jo.read( "min", min );
-    jo.read( "max", max );
-}
-
 void me_mapping::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
@@ -660,8 +630,7 @@ void me_mapobject::deserialize( JsonIn &jsin )
 void me_mapgen_base::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
-    jsout.member( "size", size );
-    jsout.member( "rows", rows );
+    jsout.member( "canvas", canvas );
     jsout.member( "inline_palette_id", inline_palette_id );
     jsout.end_object();
 }
@@ -670,8 +639,7 @@ void me_mapgen_base::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
-    jo.read( "size", size );
-    jo.read( "rows", rows );
+    jo.read( "canvas", canvas );
     jo.read( "inline_palette_id", inline_palette_id );
 }
 

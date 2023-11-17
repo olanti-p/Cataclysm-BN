@@ -172,22 +172,11 @@ point_rel_etile me_file::mapgensize() const
     }
 }
 
-void me_mapgen_base::set_size( const point &s )
-{
-    if( size == s ) {
-        return;
-    }
-    // TODO: graciously transfer entries from old size
-    size = s;
-    rows.clear();
-    rows.resize( s.x * s.y, UUID_INVALID );
-}
-
 me_mapgen_base::~me_mapgen_base() = default;
 
 void me_mapgen_base::remove_usages( const uuid_t &uuid )
 {
-    for( uuid_t &cell : rows ) {
+    for( uuid_t &cell : canvas.get_data() ) {
         if( cell == uuid ) {
             cell = UUID_INVALID;
         }

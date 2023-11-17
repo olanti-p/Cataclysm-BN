@@ -579,10 +579,11 @@ static void emit_file_contents( JsonOut &jo, const editor::me_project &project,
         if( file.uses_rows() ) {
             const editor::me_palette &pal = *project.get_palette_by_uuid( file.base.inline_palette_id );
             emit_array( jo, "rows", [&]() {
-                for( int y = 0; y < file.mapgensize().y(); y++ ) {
+                const editor::Canvas2D<editor::uuid_t> &canvas = file.base.canvas;
+                for( int y = 0; y < canvas.get_size().y; y++ ) {
                     std::string s;
-                    for( int x = 0; x < file.mapgensize().x(); x++ ) {
-                        editor::uuid_t uuid = file.base.get_uuid_at( point( x, y ) );
+                    for( int x = 0; x < canvas.get_size().x; x++ ) {
+                        editor::uuid_t uuid = canvas.get( point( x, y ) );
                         const map_key &mk = pal.key_from_uuid( uuid );
                         s += mk.str;
                     }
