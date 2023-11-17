@@ -531,10 +531,10 @@ void HelpPopup( const char *desc )
 
 bool VectorWidget::run_internal( size_t num )
 {
-    cata::optional<size_t> del;
-    cata::optional<size_t> dupe;
-    cata::optional<size_t> move_from;
-    cata::optional<size_t> move_to;
+    std::optional<size_t> del;
+    std::optional<size_t> dupe;
+    std::optional<size_t> move_from;
+    std::optional<size_t> move_to;
     for( size_t i = 0; i < num; i++ ) {
         ImGui::PushID( i );
         if( f_delete ) {

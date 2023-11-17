@@ -26,8 +26,8 @@ struct me_titlescreen_state {
     me_titlescreen_state &operator=( me_titlescreen_state && ) = default;
 
     bool open_file_dialog = false;
-    cata::optional<titlescreen_ui_retval> ret;
-    cata::optional<std::string> popup_prompt;
+    std::optional<titlescreen_ui_retval> ret;
+    std::optional<std::string> popup_prompt;
 };
 
 /**

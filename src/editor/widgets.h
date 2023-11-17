@@ -4,9 +4,10 @@
 #include <functional>
 #include <string>
 #include <vector>
+#include <set>
 
 #include "imgui.h"
-#include "misc/cpp/imgui_stdlib.h"
+#include "imgui_stdlib.h"
 
 #include "editable_id.h"
 #include "int_range.h"
@@ -76,7 +77,7 @@ bool InputId(
 
 template<typename T>
 bool InputId( const char *label, editor::editable_id<T> &id, ImGuiInputTextFlags flags = 0,
-              ImGuiInputTextCallback callback = NULL, void *user_data = NULL )
+              ImGuiInputTextCallback callback = nullptr, void *user_data = NULL )
 {
     return detail::InputId( label, id.data, editor::editable_id<T>::get_all_opts(), id.is_valid(),
                             flags, callback, user_data );

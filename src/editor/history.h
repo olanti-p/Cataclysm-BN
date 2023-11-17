@@ -4,8 +4,8 @@
 #include <memory>
 #include <vector>
 #include <string>
+#include <optional>
 
-#include "../optional.h"
 #include "imgui.h"
 
 namespace editor
@@ -78,15 +78,15 @@ struct me_history_state {
     bool has_unexported_changes() const;
 
     bool file_has_changes = false;
-    cata::optional<ImGuiID> current_widget_changed = 0;
+    std::optional<ImGuiID> current_widget_changed = 0;
     std::string current_widget_changed_str;
-    cata::optional<ImGuiID> last_widget_changed = 0;
-    cata::optional<int> switch_to_revision;
+    std::optional<ImGuiID> last_widget_changed = 0;
+    std::optional<int> switch_to_revision;
     me_file_revision current_revision;
     std::vector<me_file_revision> file_history;
     int history_capacity = 200;
-    cata::optional<int> last_saved_revision;
-    cata::optional<int> last_exported_revision;
+    std::optional<int> last_saved_revision;
+    std::optional<int> last_exported_revision;
     int edit_counter = 0;
 };
 

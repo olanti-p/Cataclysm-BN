@@ -3,6 +3,8 @@
 
 #include "../mapgen_map_key.h"
 
+#include <vector>
+
 namespace editor
 {
 

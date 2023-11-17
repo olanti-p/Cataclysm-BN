@@ -112,7 +112,7 @@ void handle_revision_change( me_history_state &state, me_canvas_tools_state &too
 
         state.current_widget_changed_str.clear();
         state.last_widget_changed = state.current_widget_changed;
-        state.current_widget_changed = cata::nullopt;
+        state.current_widget_changed = std::nullopt;
 
         bool is_alt_history = false;
 

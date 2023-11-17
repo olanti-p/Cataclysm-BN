@@ -165,7 +165,7 @@ static void show_palette_entries( me_state &state, me_palette &palette )
                 col_default_piece_color,
                 me_mapping(),
                 false,
-                cata::nullopt
+                std::nullopt
             } );
             ret = true;
         }
@@ -180,7 +180,7 @@ static void show_palette_entries( me_state &state, me_palette &palette )
             src.color,
             src.mapping,
             false,
-            cata::nullopt
+            std::nullopt
         } );
     } )
     .with_delete( [&]( size_t idx ) {
@@ -226,7 +226,7 @@ static void show_palette_entries( me_state &state, me_palette &palette )
             ImGui::EndErrorArea();
         }
         {
-            cata::optional<std::string> text;
+            std::optional<std::string> text;
             me_piece_alt_terrain *ptr = list[idx].mapping.get_first_piece_of_type<me_piece_alt_terrain>();
             if( ptr ) {
                 text = ptr->fmt_data_summary();
@@ -240,7 +240,7 @@ static void show_palette_entries( me_state &state, me_palette &palette )
             ImGui::EndDisabled();
         }
         {
-            cata::optional<std::string> text;
+            std::optional<std::string> text;
             me_piece_alt_furniture *ptr = list[idx].mapping.get_first_piece_of_type<me_piece_alt_furniture>();
             if( ptr ) {
                 text = ptr->fmt_data_summary();
