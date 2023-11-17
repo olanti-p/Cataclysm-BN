@@ -13,18 +13,18 @@ static void show_canvas_hint()
     ImGui::Text( "Use mouse to paint canvas with palette entries." );
 }
 
-void show_file_info( State &state, Mapgen &file, bool &show )
+void show_mapgen_info( State &state, Mapgen &mapgen, bool &show )
 {
-    if( !ImGui::Begin( "File Info", &show ) ) {
+    if( !ImGui::Begin( "Mapgen Info", &show ) ) {
         ImGui::End();
         return;
     }
-    ImGui::PushID( file.uuid );
+    ImGui::PushID( mapgen.uuid );
 
     ImGui::Text( "Mapgen type:" );
-    if( ImGui::RadioButton( "Oter", file.mtype == MapgenType::Oter ) ) {
-        file.mtype = MapgenType::Oter;
-        file.base.set_size( file.mapgensize().raw() );
+    if( ImGui::RadioButton( "Oter", mapgen.mtype == MapgenType::Oter ) ) {
+        mapgen.mtype = MapgenType::Oter;
+        mapgen.base.set_size( mapgen.mapgensize().raw() );
         state.mark_changed();
     }
     ImGui::HelpPopup(
@@ -35,9 +35,9 @@ void show_file_info( State &state, Mapgen &file, bool &show )
         "Each omt type must have at least 1 omt mapgen assigned to it."
     );
     ImGui::SameLine();
-    if( ImGui::RadioButton( "Update", file.mtype == MapgenType::Update ) ) {
-        file.mtype = MapgenType::Update;
-        file.base.set_size( file.mapgensize().raw() );
+    if( ImGui::RadioButton( "Update", mapgen.mtype == MapgenType::Update ) ) {
+        mapgen.mtype = MapgenType::Update;
+        mapgen.base.set_size( mapgen.mapgensize().raw() );
         state.mark_changed();
     }
     ImGui::HelpPopup(
@@ -46,9 +46,9 @@ void show_file_info( State &state, Mapgen &file, bool &show )
         "Can be used for automatic calculation of camp blueprint requirements."
     );
     ImGui::SameLine();
-    if( ImGui::RadioButton( "Nested", file.mtype == MapgenType::Nested ) ) {
-        file.mtype = MapgenType::Nested;
-        file.base.set_size( file.mapgensize().raw() );
+    if( ImGui::RadioButton( "Nested", mapgen.mtype == MapgenType::Nested ) ) {
+        mapgen.mtype = MapgenType::Nested;
+        mapgen.base.set_size( mapgen.mapgensize().raw() );
         state.mark_changed();
     }
     ImGui::HelpPopup(
@@ -59,31 +59,31 @@ void show_file_info( State &state, Mapgen &file, bool &show )
     ImGui::Separator();
 
     if( ImGui::Button( "Show/hide inline palette" ) ) {
-        state.ui->toggle_show_palette( file.base.inline_palette_id );
+        state.ui->toggle_show_palette( mapgen.base.inline_palette_id );
     }
     ImGui::Separator();
 
-    if( file.mtype == MapgenType::Oter ) {
-        if( ImGui::InputId( "om_terrain", file.oter.om_terrain ) ) {
+    if( mapgen.mtype == MapgenType::Oter ) {
+        if( ImGui::InputId( "om_terrain", mapgen.oter.om_terrain ) ) {
             state.mark_changed();
         }
         ImGui::HelpPopup( "Overmap terrain type to assign this mapgen to." );
-        if( ImGui::InputIntClamped( "weight", file.oter.weight, 0, 10000 ) ) {
-            state.mark_changed( "file-info-oter-weight-input" );
+        if( ImGui::InputIntClamped( "weight", mapgen.oter.weight, 0, 10000 ) ) {
+            state.mark_changed( "mapgen-info-oter-weight-input" );
         }
         ImGui::HelpPopup(
             "Weight of this mapgen, defaults to 100.\n\n"
             "The higher this value is, the more frequently this mapgen will be chosen "
             "to generate the overmap terrain."
         );
-        if( ImGui::InputIntRange( "rotation", file.oter.rotation ) ) {
+        if( ImGui::InputIntRange( "rotation", mapgen.oter.rotation ) ) {
             state.mark_changed();
         }
         ImGui::Text( "Oter mapgen base:" );
         ImGui::HelpPopup( "Defines how to fill in the 'empty' tiles in the canvas." );
 
-        if( ImGui::RadioButton( "Fill terrain", file.oter.mapgen_base == OterMapgenBase::FillTer ) ) {
-            file.oter.mapgen_base = OterMapgenBase::FillTer;
+        if( ImGui::RadioButton( "Fill terrain", mapgen.oter.mapgen_base == OterMapgenBase::FillTer ) ) {
+            mapgen.oter.mapgen_base = OterMapgenBase::FillTer;
             state.mark_changed();
         }
         ImGui::HelpPopup(
@@ -92,8 +92,8 @@ void show_file_info( State &state, Mapgen &file, bool &show )
         );
         ImGui::SameLine();
         if( ImGui::RadioButton( "Predecessor mapgen",
-                                file.oter.mapgen_base == OterMapgenBase::PredecessorMapgen ) ) {
-            file.oter.mapgen_base = OterMapgenBase::PredecessorMapgen;
+                                mapgen.oter.mapgen_base == OterMapgenBase::PredecessorMapgen ) ) {
+            mapgen.oter.mapgen_base = OterMapgenBase::PredecessorMapgen;
             state.mark_changed();
         }
         ImGui::HelpPopup(
@@ -105,8 +105,8 @@ void show_file_info( State &state, Mapgen &file, bool &show )
             "Keep in mind that predecessor mapgen may place items, monsters and vehices!"
         );
         ImGui::SameLine();
-        if( ImGui::RadioButton( "Rows", file.oter.mapgen_base == OterMapgenBase::Rows ) ) {
-            file.oter.mapgen_base = OterMapgenBase::Rows;
+        if( ImGui::RadioButton( "Rows", mapgen.oter.mapgen_base == OterMapgenBase::Rows ) ) {
+            mapgen.oter.mapgen_base = OterMapgenBase::Rows;
             state.mark_changed();
         }
         ImGui::HelpPopup(
@@ -116,42 +116,42 @@ void show_file_info( State &state, Mapgen &file, bool &show )
             "Most useful for complex layouts with little variation, such as buildings."
         );
 
-        if( file.oter.mapgen_base == OterMapgenBase::PredecessorMapgen ) {
-            if( ImGui::InputId( "predecessor_mapgen", file.oter.predecessor_mapgen ) ) {
+        if( mapgen.oter.mapgen_base == OterMapgenBase::PredecessorMapgen ) {
+            if( ImGui::InputId( "predecessor_mapgen", mapgen.oter.predecessor_mapgen ) ) {
                 state.mark_changed();
             }
             ImGui::HelpPopup( "Overmap type id to run predecessor mapgen for." );
         } else {
-            if( ImGui::InputId( "fill_ter", file.oter.fill_ter ) ) {
+            if( ImGui::InputId( "fill_ter", mapgen.oter.fill_ter ) ) {
                 state.mark_changed();
             }
             ImGui::HelpPopup( "Terrain type to fill empty spots with." );
         }
-        if( file.oter.mapgen_base == OterMapgenBase::Rows ) {
+        if( mapgen.oter.mapgen_base == OterMapgenBase::Rows ) {
             show_canvas_hint();
         }
-    } else if( file.mtype == MapgenType::Update ) {
-        if( ImGui::InputText( "update_mapgen_id", &file.update.update_mapgen_id ) ) {
+    } else if( mapgen.mtype == MapgenType::Update ) {
+        if( ImGui::InputText( "update_mapgen_id", &mapgen.update.update_mapgen_id ) ) {
             state.mark_changed();
         }
         ImGui::HelpPopup( "ID of this update mapgen." );
-        if( ImGui::InputId( "fill_ter", file.update.fill_ter ) ) {
+        if( ImGui::InputId( "fill_ter", mapgen.update.fill_ter ) ) {
             state.mark_changed();
         }
         ImGui::HelpPopup( "Terrain type to fill empty spots with." );
     } else { // MapgenType::Nested
-        if( ImGui::InputText( "nested_mapgen_id", &file.nested.nested_mapgen_id ) ) {
+        if( ImGui::InputText( "nested_mapgen_id", &mapgen.nested.nested_mapgen_id ) ) {
             state.mark_changed();
         }
         ImGui::HelpPopup( "ID of this nested mapgen." );
-        if( ImGui::InputIntRange( "rotation", file.nested.rotation ) ) {
+        if( ImGui::InputIntRange( "rotation", mapgen.nested.rotation ) ) {
             state.mark_changed();
         }
         ImGui::HelpPopup( "Allowed rotations." );
         // Only square nested mapgens are possible
-        if( ImGui::InputIntClamped( "mapgensize", file.nested.size.x, 1, SEEX * 2 ) ) {
-            file.nested.size.y = file.nested.size.x;
-            file.base.set_size( file.mapgensize().raw() );
+        if( ImGui::InputIntClamped( "mapgensize", mapgen.nested.size.x, 1, SEEX * 2 ) ) {
+            mapgen.nested.size.y = mapgen.nested.size.x;
+            mapgen.base.set_size( mapgen.mapgensize().raw() );
             state.mark_changed();
         }
         ImGui::HelpPopup( "Size of this nested mapgen." );

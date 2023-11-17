@@ -67,11 +67,11 @@ struct UiState {
     bool show_demo_wnd = false;             // Whether to show ImGui Demo window
     bool show_metrics_wnd = false;          // Whether to show ImGui Metrics/Debugger window
     bool show_project_overview = true;      // Whether to show project overview window
-    bool show_mapgen_info = true;           // Whether to show file info
+    bool show_mapgen_info = true;           // Whether to show mapgen info
     bool show_history = true;               // Whether to show undo/redo history
     bool show_camera_controls = true;       // Whether to show camera controls
     bool show_toolbar = true;               // Whether to show canvas toolbar
-    std::optional<UUID> active_file_id;   // UUID of active file
+    std::optional<UUID> active_mapgen_id;   // UUID of active mapgen
 
     std::vector<detail::OpenPalette> open_palettes; // List of open palettes
     std::vector<detail::OpenMapping> open_mappings; // List of open mappings

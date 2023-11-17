@@ -536,50 +536,50 @@ std::string get_object_category( editor::PieceType data )
  * ============= HIGH-LEVEL FUNCTIONS =============
  */
 
-static void emit_file_contents( JsonOut &jo, const editor::Project &project,
-                                const editor::Mapgen &file )
+static void emit_mapgen_contents( JsonOut &jo, const editor::Project &project,
+                                  const editor::Mapgen &mapgen )
 {
     emit( jo, "type", "mapgen" );
     emit( jo, "method", "json" );
 
-    if( file.mtype == editor::MapgenType::Oter ) {
-        emit( jo, "om_terrain", file.oter.om_terrain );
-        emit( jo, "weight", file.oter.weight );
-    } else if( file.mtype == editor::MapgenType::Nested ) {
-        emit( jo, "nested_mapgen_id", file.nested.nested_mapgen_id );
+    if( mapgen.mtype == editor::MapgenType::Oter ) {
+        emit( jo, "om_terrain", mapgen.oter.om_terrain );
+        emit( jo, "weight", mapgen.oter.weight );
+    } else if( mapgen.mtype == editor::MapgenType::Nested ) {
+        emit( jo, "nested_mapgen_id", mapgen.nested.nested_mapgen_id );
     } else { // editor::MapgenType::Update
-        emit( jo, "update_mapgen_id", file.update.update_mapgen_id );
+        emit( jo, "update_mapgen_id", mapgen.update.update_mapgen_id );
     }
 
     emit_object( jo, "object", [&]() {
 
-        if( file.mtype == editor::MapgenType::Oter ) {
-            if( file.oter.mapgen_base == editor::OterMapgenBase::PredecessorMapgen ) {
-                emit( jo, "predecessor_mapgen", file.oter.predecessor_mapgen );
+        if( mapgen.mtype == editor::MapgenType::Oter ) {
+            if( mapgen.oter.mapgen_base == editor::OterMapgenBase::PredecessorMapgen ) {
+                emit( jo, "predecessor_mapgen", mapgen.oter.predecessor_mapgen );
             } else {
-                emit( jo, "fill_ter", file.oter.fill_ter );
+                emit( jo, "fill_ter", mapgen.oter.fill_ter );
             }
-            if( file.oter.rotation ) {
-                emit( jo, "rotation", file.oter.rotation );
+            if( mapgen.oter.rotation ) {
+                emit( jo, "rotation", mapgen.oter.rotation );
             }
-        } else if( file.mtype == editor::MapgenType::Nested ) {
+        } else if( mapgen.mtype == editor::MapgenType::Nested ) {
             emit_array( jo, "mapgensize", [&]() {
-                emit_val( jo, file.nested.size.x );
-                emit_val( jo, file.nested.size.y );
+                emit_val( jo, mapgen.nested.size.x );
+                emit_val( jo, mapgen.nested.size.y );
             } );
-            if( file.nested.rotation ) {
-                emit( jo, "rotation", file.nested.rotation );
+            if( mapgen.nested.rotation ) {
+                emit( jo, "rotation", mapgen.nested.rotation );
             }
         } else { // editor::MapgenType::Update
-            if( !file.update.fill_ter.is_null() ) {
-                emit( jo, "fill_ter", file.update.fill_ter );
+            if( !mapgen.update.fill_ter.is_null() ) {
+                emit( jo, "fill_ter", mapgen.update.fill_ter );
             }
         }
 
-        if( file.uses_rows() ) {
-            const editor::Palette &pal = *project.get_palette( file.base.inline_palette_id );
+        if( mapgen.uses_rows() ) {
+            const editor::Palette &pal = *project.get_palette( mapgen.base.inline_palette_id );
             emit_array( jo, "rows", [&]() {
-                const editor::Canvas2D<editor::UUID> &canvas = file.base.canvas;
+                const editor::Canvas2D<editor::UUID> &canvas = mapgen.base.canvas;
                 for( int y = 0; y < canvas.get_size().y; y++ ) {
                     std::string s;
                     for( int x = 0; x < canvas.get_size().x; x++ ) {
@@ -644,7 +644,7 @@ static void emit_file_contents( JsonOut &jo, const editor::Project &project,
 
             std::vector<const editor::MapObject *> matching_objects;
 
-            for( const editor::MapObject &it : file.objects ) {
+            for( const editor::MapObject &it : mapgen.objects ) {
                 if( it.piece->get_type() == pt ) {
                     matching_objects.push_back( &it );
                 }
@@ -672,9 +672,9 @@ std::string to_string( const editor::Project &project )
 {
     return serialize_wrapper( [&]( JsonOut & jo ) {
         emit_array( jo, [&]() {
-            for( const editor::Mapgen &file : project.mapgens ) {
+            for( const editor::Mapgen &mapgen : project.mapgens ) {
                 emit_object( jo, [&]() {
-                    emit_file_contents( jo, project, file );
+                    emit_mapgen_contents( jo, project, mapgen );
                 } );
             }
         } );

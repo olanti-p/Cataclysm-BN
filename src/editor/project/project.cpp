@@ -14,9 +14,9 @@ namespace editor
 
 const Mapgen *Project::get_mapgen( const UUID &fid ) const
 {
-    for( const Mapgen &file : mapgens ) {
-        if( fid == file.uuid ) {
-            return &file;
+    for( const Mapgen &mapgen : mapgens ) {
+        if( fid == mapgen.uuid ) {
+            return &mapgen;
         }
     }
     return nullptr;
@@ -54,9 +54,9 @@ void show_project_overview_ui( State &state, Project &project, bool &show )
         ImGui::SameLine();
         if( ImGui::Selectable(
                 string_format( "Mapgen #%d", idx ).c_str(),
-                state.ui->active_file_id && *state.ui->active_file_id == this_uuid )
+                state.ui->active_mapgen_id && *state.ui->active_mapgen_id == this_uuid )
           ) {
-            state.ui->active_file_id = this_uuid;
+            state.ui->active_mapgen_id = this_uuid;
         }
     } )
     .with_add( [&]()->bool {

@@ -30,23 +30,23 @@ ProjectSnapshot ProjectSnapshot::make_copy() const
     return ret;
 }
 
-void show_file_history( HistoryState &state, bool &show )
+void show_edit_history( HistoryState &state, bool &show )
 {
     ImGui::SetNextWindowSize( ImVec2( 230.0f, 130.0f ), ImGuiCond_FirstUseEver );
-    if( !ImGui::Begin( "File history", &show ) ) {
+    if( !ImGui::Begin( "Edit history", &show ) ) {
         ImGui::End();
         return;
     }
 
     ImGui::HelpMarkerInline(
         "Undo/redo support.\n\n"
-        "In order to enable undo and redo, the editor has to keep track of the old versions (revisions) of the file.  "
-        "This is done entirely in memory, so remembering too much revisions may exhaust available RAM at some point "
-        "and trigger program termination by the OS.  You can manually control how much revisions will be kept alive "
+        "In order to enable undo and redo, the editor has to keep track of the old versions (snapshots) of the project.  "
+        "This is done entirely in memory, so remembering too much snapshots may exhaust available RAM at some point "
+        "and trigger program termination by the OS.  You can manually control how much snapshots will be kept alive "
         "using the widget below.\n"
         "\nHotkeys:\n"
-        "  Ctrl+Z - Undo (advance to older revision)\n"
-        "  Ctrl+Shift+Z - Redo (advance to newer revision)\n"
+        "  Ctrl+Z - Undo (advance to older snapshot)\n"
+        "  Ctrl+Shift+Z - Redo (advance to newer snapshot)\n"
     );
 
     ImGui::SetNextItemWidth( ImGui::GetFrameHeight() * 4.0f );
@@ -54,16 +54,16 @@ void show_file_history( HistoryState &state, bool &show )
                             ImGuiInputTextFlags_AutoSelectAll );
 
     ImGui::HelpMarkerInline(
-        "The list below keeps track of file revisions.\n\n"
-        "Click on a revision to make it active.  "
-        "Every edit automatically generates a new revision and places it at the top.\n"
+        "The list below keeps track of project snapshots.\n\n"
+        "Click on a snapshot to make it active.  "
+        "Every edit automatically generates a new snapshot and places it at the top.\n"
         "\nMarkers use in the list:\n"
-        "  [S] This revision is the one saved in the project file.\n"
-        "  [E] This revision is the one that was used for export.\n"
+        "  [S] This snapshot is the one saved in the project file.\n"
+        "  [E] This snapshot is the one that was used for export.\n"
     );
     ImGui::Text( "Edit counter (debug): %d", state.edit_counter );
 
-    for( const ProjectSnapshot &entry : state.file_history ) {
+    for( const ProjectSnapshot &entry : state.snapshots ) {
         bool is_saved = state.last_saved_snapshot && *state.last_saved_snapshot == entry.num;
         bool is_exported = state.last_exported_snapshot && *state.last_exported_snapshot == entry.num;
         std::string fname = string_format(
@@ -80,21 +80,21 @@ void show_file_history( HistoryState &state, bool &show )
     ImGui::End();
 }
 
-void handle_revision_change( HistoryState &state, ToolsState &tools )
+void handle_snapshot_change( HistoryState &state, ToolsState &tools )
 {
     if( tools.has_ongoing_tool_operation() ) {
         return;
     }
     if( state.switch_to_snapshot ) {
-        auto it = std::find_if( state.file_history.cbegin(),
-        state.file_history.cend(), [&]( const ProjectSnapshot & rev ) {
+        auto it = std::find_if( state.snapshots.cbegin(),
+        state.snapshots.cend(), [&]( const ProjectSnapshot & rev ) {
             return rev.num == *state.switch_to_snapshot;
         } );
-        assert( it != state.file_history.cend() );
+        assert( it != state.snapshots.cend() );
         state.current_snapshot = it->make_copy();
         state.switch_to_snapshot.reset();
-    } else if( state.file_has_changes ) {
-        state.file_has_changes = false;
+    } else if( state.project_has_changes ) {
+        state.project_has_changes = false;
 
         const bool is_changing_same = state.last_widget_changed && state.current_widget_changed &&
                                       *state.last_widget_changed == *state.current_widget_changed;
@@ -106,9 +106,9 @@ void handle_revision_change( HistoryState &state, ToolsState &tools )
         bool is_alt_history = false;
 
         // Erase alternative history
-        while( state.file_history[0].num != state.current_snapshot.num ) {
+        while( state.snapshots[0].num != state.current_snapshot.num ) {
             // TODO: optimize this to use dequeue
-            state.file_history.erase( state.file_history.cbegin() );
+            state.snapshots.erase( state.snapshots.cbegin() );
             is_alt_history = true;
         }
 
@@ -117,18 +117,18 @@ void handle_revision_change( HistoryState &state, ToolsState &tools )
         const bool is_rev_exported = state.last_exported_snapshot ? *state.last_exported_snapshot ==
                                      state.current_snapshot.num : false;
         const bool collapse_change = is_changing_same && !is_alt_history && !is_rev_saved &&
-                                     !is_rev_exported && !state.file_history.empty();
+                                     !is_rev_exported && !state.snapshots.empty();
 
         if( collapse_change ) {
-            state.file_history.erase( state.file_history.cbegin() );
+            state.snapshots.erase( state.snapshots.cbegin() );
         } else {
             state.current_snapshot.num++;
         }
-        state.file_history.insert( state.file_history.cbegin(), state.current_snapshot.make_copy() );
+        state.snapshots.insert( state.snapshots.cbegin(), state.current_snapshot.make_copy() );
 
         // Erase old entries
-        if( static_cast<int>( state.file_history.size() ) > state.history_capacity ) {
-            state.file_history.resize( state.history_capacity );
+        if( static_cast<int>( state.snapshots.size() ) > state.history_capacity ) {
+            state.snapshots.resize( state.history_capacity );
         }
     }
 }
@@ -145,16 +145,16 @@ HistoryState::HistoryState( std::unique_ptr<Project> &&project, bool was_loaded 
         current_snapshot.project = std::move( project );
     }
 
-    file_history.reserve( history_capacity + 1 );
-    file_history.emplace_back( current_snapshot.make_copy() );
+    snapshots.reserve( history_capacity + 1 );
+    snapshots.emplace_back( current_snapshot.make_copy() );
 }
 
 void HistoryState::mark_changed( const char *id )
 {
     std::string new_widget_changed_str = id ? id : "<nullptr>";
-    if( file_has_changes ) {
+    if( project_has_changes ) {
         std::cerr << string_format(
-                      R"(Tried to invoke mark_changed( "%s" ), but the file has already been marked as changed with id "%s".)",
+                      R"(Tried to invoke mark_changed( "%s" ), but the project has already been marked as changed with id "%s".)",
                       new_widget_changed_str,
                       current_widget_changed_str
                   ) << std::endl;
@@ -165,7 +165,7 @@ void HistoryState::mark_changed( const char *id )
         ImGuiWindow *wnd = ImGui::GetCurrentWindow();
         current_widget_changed = wnd->GetID( id );
     }
-    file_has_changes = true;
+    project_has_changes = true;
     edit_counter++;
 }
 

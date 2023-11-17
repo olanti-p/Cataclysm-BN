@@ -15,7 +15,7 @@
 
 namespace editor
 {
-void handle_file_saving( State &state )
+void handle_project_saving( State &state )
 {
     ControlState &control = *state.control;
     SaveExportState &sestate = *state.save_export;
@@ -27,7 +27,7 @@ void handle_file_saving( State &state )
         return;
     }
 
-    if( control.want_save && !sestate.file_save_path ) {
+    if( control.want_save && !sestate.project_save_path ) {
         control.want_save = false;
         control.want_save_as = true;
     }
@@ -37,13 +37,13 @@ void handle_file_saving( State &state )
         ImGui::SetNextWindowSize( ImVec2( 580, 380 ), ImGuiCond_FirstUseEver );
         ImGuiFileDialog::Instance()->OpenDialog( "SaveToFile",
                 "Save As...", ".json",
-                sestate.file_save_path ? *sestate.file_save_path : ".",
+                sestate.project_save_path ? *sestate.project_save_path : ".",
                 1, nullptr, ImGuiFileDialogFlags_ConfirmOverwrite );
     }
 
     if( ImGuiFileDialog::Instance()->Display( "SaveToFile" ) ) {
         if( ImGuiFileDialog::Instance()->IsOk() ) {
-            sestate.file_save_path = ImGuiFileDialog::Instance()->GetFilePathName();
+            sestate.project_save_path = ImGuiFileDialog::Instance()->GetFilePathName();
             control.want_save = true;
         } else {
             control.want_exit_after_save = false;
@@ -53,8 +53,8 @@ void handle_file_saving( State &state )
 
     if( control.want_save ) {
         control.want_save = false;
-        assert( sestate.file_save_path );
-        write_to_file( *sestate.file_save_path, [&]( std::ostream & oss ) {
+        assert( sestate.project_save_path );
+        write_to_file( *sestate.project_save_path, [&]( std::ostream & oss ) {
             oss << serialize( state.project() );
         } );
         state.history->last_saved_snapshot = state.history->current_snapshot.num;
@@ -65,7 +65,7 @@ void handle_file_saving( State &state )
     }
 }
 
-void handle_file_exporting( State &state )
+void handle_project_exporting( State &state )
 {
     ControlState &control = *state.control;
     SaveExportState &sestate = *state.save_export;
@@ -76,7 +76,7 @@ void handle_file_exporting( State &state )
         return;
     }
 
-    if( control.want_export && !sestate.file_export_path ) {
+    if( control.want_export && !sestate.project_export_path ) {
         control.want_export = false;
         control.want_export_as = true;
     }
@@ -86,28 +86,28 @@ void handle_file_exporting( State &state )
         ImGui::SetNextWindowSize( ImVec2( 580, 380 ), ImGuiCond_FirstUseEver );
         ImGuiFileDialog::Instance()->OpenDialog( "ExportToFile",
                 "Export As...", ".json",
-                sestate.file_export_path ? *sestate.file_export_path : ".",
+                sestate.project_export_path ? *sestate.project_export_path : ".",
                 1, nullptr, ImGuiFileDialogFlags_ConfirmOverwrite );
     }
 
     if( ImGuiFileDialog::Instance()->Display( "ExportToFile" ) ) {
         if( ImGuiFileDialog::Instance()->IsOk() ) {
-            sestate.file_export_path = ImGuiFileDialog::Instance()->GetFilePathName();
+            sestate.project_export_path = ImGuiFileDialog::Instance()->GetFilePathName();
             control.want_export = true;
         }
         ImGuiFileDialog::Instance()->Close();
     }
 
     if( g->export_editor_project_on_start ) {
-        sestate.file_export_path = *g->export_editor_project_on_start;
+        sestate.project_export_path = *g->export_editor_project_on_start;
         control.want_export = true;
         g->export_editor_project_on_start.reset();
     }
 
     if( control.want_export ) {
         control.want_export = false;
-        assert( sestate.file_export_path );
-        write_to_file( *sestate.file_export_path, [&]( std::ostream & oss ) {
+        assert( sestate.project_export_path );
+        write_to_file( *sestate.project_export_path, [&]( std::ostream & oss ) {
             std::string s = editor_export::to_string( state.project() );
             oss << editor_export::format_string( s );
         } );

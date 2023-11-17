@@ -32,7 +32,7 @@ static void show_titlescreen_window( TitleScreen &state )
         state.ret->make_new = true;
     }
     if( ImGui::Button( "Load Project", btn_size ) ) {
-        state.open_file_dialog = true;
+        state.open_project_dialog = true;
     }
     if( ImGui::Button( "Exit Editor", btn_size ) ) {
         state.ret = TitleScreenReturn();
@@ -44,10 +44,10 @@ static void show_titlescreen_window( TitleScreen &state )
         state.ret->exit_to_desktop = true;
     }
 
-    if( state.open_file_dialog ) {
-        state.open_file_dialog = false;
+    if( state.open_project_dialog ) {
+        state.open_project_dialog = false;
         ImGui::SetNextWindowSize( ImVec2( 580, 380 ), ImGuiCond_FirstUseEver );
-        ImGuiFileDialog::Instance()->OpenDialog( "OpenFile", "Choose a File", ".json", "." );
+        ImGuiFileDialog::Instance()->OpenDialog( "OpenFile", "Choose Project File", ".json", "." );
     }
 
     if( ImGuiFileDialog::Instance()->Display( "OpenFile" ) ) {

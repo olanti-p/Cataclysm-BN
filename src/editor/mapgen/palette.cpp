@@ -185,8 +185,8 @@ static void show_palette_entries( State &state, Palette &palette )
     } )
     .with_delete( [&]( size_t idx ) {
         const UUID &uuid = list[ idx ].uuid;
-        for( Mapgen &file : proj.mapgens ) {
-            file.base.remove_usages( uuid );
+        for( Mapgen &mapgen : proj.mapgens ) {
+            mapgen.base.remove_usages( uuid );
         }
         if( tools.get_brush() == uuid ) {
             tools.set_brush( UUID_INVALID );

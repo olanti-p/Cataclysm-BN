@@ -17,12 +17,12 @@ struct SaveExportState {
     SaveExportState &operator=( const SaveExportState & ) = delete;
     SaveExportState &operator=( SaveExportState && ) = default;
 
-    std::optional<std::string> file_save_path;
-    std::optional<std::string> file_export_path;
+    std::optional<std::string> project_save_path;
+    std::optional<std::string> project_export_path;
 };
 
-void handle_file_saving( State &state );
-void handle_file_exporting( State &state );
+void handle_project_saving( State &state );
+void handle_project_exporting( State &state );
 void handle_project_exiting( State &state );
 
 } // namespace editor

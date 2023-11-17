@@ -105,7 +105,7 @@ struct Mapgen {
 /**
  * =============== Windows ===============
  */
-void show_file_info( State &state, Mapgen &file, bool &show );
+void show_mapgen_info( State &state, Mapgen &mapgen, bool &show );
 
 } // namespace editor
 

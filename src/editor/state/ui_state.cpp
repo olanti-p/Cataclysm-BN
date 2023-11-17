@@ -102,24 +102,24 @@ void run_ui_for_state( State &state )
 
     show_main_menu_bar( state );
 
-    handle_file_saving( state );
-    handle_file_exporting( state );
+    handle_project_saving( state );
+    handle_project_exporting( state );
     handle_project_exiting( state );
 
     Project &proj = state.project();
 
     UiState &uistate = *state.ui;
 
-    Mapgen *active_file = nullptr;
-    if( uistate.active_file_id ) {
-        active_file = proj.get_mapgen( *uistate.active_file_id );
-        if( !active_file ) {
-            uistate.active_file_id.reset();
+    Mapgen *active_mapgen = nullptr;
+    if( uistate.active_mapgen_id ) {
+        active_mapgen = proj.get_mapgen( *uistate.active_mapgen_id );
+        if( !active_mapgen ) {
+            uistate.active_mapgen_id.reset();
         }
     }
 
-    // TODO: multiple files on same canvas
-    show_canvas( state, active_file );
+    // TODO: multiple mapgens on same canvas
+    show_canvas( state, active_mapgen );
 
     if( uistate.show_demo_wnd ) {
         ImGui::ShowDemoWindow( &uistate.show_demo_wnd );
@@ -130,11 +130,11 @@ void run_ui_for_state( State &state )
     if( uistate.show_project_overview ) {
         show_project_overview_ui( state, proj, uistate.show_project_overview );
     }
-    if( uistate.show_mapgen_info && active_file ) {
-        show_file_info( state, *active_file, uistate.show_mapgen_info );
+    if( uistate.show_mapgen_info && active_mapgen ) {
+        show_mapgen_info( state, *active_mapgen, uistate.show_mapgen_info );
     }
     if( uistate.show_history ) {
-        show_file_history( *state.history, uistate.show_history );
+        show_edit_history( *state.history, uistate.show_history );
     }
     if( uistate.show_toolbar ) {
         show_toolbar( *uistate.tools, uistate.show_toolbar );
@@ -208,7 +208,7 @@ void run_ui_for_state( State &state )
         }
     }
 
-    handle_revision_change( *state.history, *uistate.tools );
+    handle_snapshot_change( *state.history, *uistate.tools );
 }
 
 } // namespace editor
