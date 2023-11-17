@@ -64,7 +64,7 @@ struct me_palette_entry {
     me_mapping mapping;
 
     mutable bool sprite_cache_valid = false;
-    mutable cata::optional<SpriteRef> sprite_cache;
+    mutable std::optional<SpriteRef> sprite_cache;
 
     void build_sprite_cache() const;
 

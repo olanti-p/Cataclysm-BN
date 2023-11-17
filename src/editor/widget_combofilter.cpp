@@ -205,11 +205,11 @@ bool ComboWithFilter( const char *label, int *current_item, const std::vector<st
         }
         ImGui::EndListBox();
 
-        if( IsKeyPressedEx( ImGuiKey_Enter ) ) {
+        if( IsKeyPressed( ImGuiKey_Enter ) ) {
             value_changed = true;
             *current_item = focus_idx;
             CloseCurrentPopup();
-        } else if( IsKeyPressedEx( ImGuiKey_Escape ) ) {
+        } else if( IsKeyPressed( ImGuiKey_Escape ) ) {
             value_changed = false;
             CloseCurrentPopup();
         }

@@ -1,8 +1,7 @@
 #ifndef CATA_SRC_EDITOR_SAVE_AND_EXPORT_H
 #define CATA_SRC_EDITOR_SAVE_AND_EXPORT_H
 
-#include "../optional.h"
-
+#include <optional>
 #include <string>
 
 namespace editor
@@ -21,11 +20,11 @@ struct me_save_export_state {
     bool open_save_as = false;
     bool do_save = false;
     bool do_exit_after_save = false;
-    cata::optional<std::string> file_save_path;
+    std::optional<std::string> file_save_path;
 
     bool open_export_as = false;
     bool do_export = false;
-    cata::optional<std::string> file_export_path;
+    std::optional<std::string> file_export_path;
 };
 
 void handle_file_saving( me_state &state );

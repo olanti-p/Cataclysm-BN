@@ -1,12 +1,13 @@
 #ifndef CATA_SRC_EDITOR_UISTATE_H
 #define CATA_SRC_EDITOR_UISTATE_H
 
-#include "../optional.h"
 #include "../pimpl.h"
 
 #include "uuid.h"
 #include "camera.h"
 #include "canvas_tools.h"
+
+#include <set>
 
 namespace editor
 {
@@ -69,7 +70,7 @@ struct me_uistate {
     bool show_file_info = true; // Whether to show file info
     bool show_file_history = true; // Whether to show undo/redo history
     bool show_toolbar = true; // Whether to show canvas toolbar
-    cata::optional<uuid_t> active_file_id; // UUID of active file
+    std::optional<uuid_t> active_file_id; // UUID of active file
 
     std::vector<detail::open_palette> open_palettes; // List of open palettes
     std::vector<detail::open_mapping> open_mappings; // List of open mappings

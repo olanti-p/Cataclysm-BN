@@ -3,7 +3,7 @@
 #include "widgets.h"
 #include "imgui.h"
 #include "ImGuiFileDialog.h"
-#include "misc/cpp/imgui_stdlib.h"
+#include "imgui_stdlib.h"
 
 #include "../fstream_utils.h"
 #include "../string_utils.h"
@@ -86,8 +86,8 @@ static void show_titlescreen_window( me_titlescreen_state &state )
     }
 
     ImGui::SetWindowPos(
-        point( ImGui::GetIO().DisplaySize ) / 2.0f -
-        point( ImGui::GetWindowSize() ) / 2.0f
+        ImGui::GetIO().DisplaySize / 2.0f -
+        ImGui::GetWindowSize() / 2.0f
     );
 
     ImGui::End();

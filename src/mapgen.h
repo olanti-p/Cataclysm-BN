@@ -363,7 +363,7 @@ class mapgen_function_json_nested : public mapgen_function_json_base
         explicit mapgen_function_json_nested( const json_source_location &jsrcloc );
         ~mapgen_function_json_nested() override = default;
 
-        void nest( mapgendata &dat, const point &offset ) const;
+        void nest( mapgendata &dat, point offset ) const;
 
         bool setup_internal( const JsonObject &jo ) override;
 

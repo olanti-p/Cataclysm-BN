@@ -2,11 +2,21 @@ set(MAIN_CPP ${CMAKE_SOURCE_DIR}/src/main.cpp)
 set(MESSAGES_CPP ${CMAKE_SOURCE_DIR}/src/messages.cpp)
 set(RESOURCE_RC ${CMAKE_SOURCE_DIR}/src/resource.rc)
 
-file(GLOB CATACLYSM_BN_SOURCES ${CMAKE_SOURCE_DIR}/src/*.cpp)
+file(GLOB CATACLYSM_BN_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/imgui/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/editor/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+    ${CMAKE_SOURCE_DIR}/tools/format/format.cpp
+)
 
 list(REMOVE_ITEM CATACLYSM_BN_SOURCES ${MAIN_CPP} ${MESSAGES_CPP})
 
-file(GLOB CATACLYSM_BN_HEADERS ${CMAKE_SOURCE_DIR}/src/*.h)
+file(GLOB CATACLYSM_BN_HEADERS
+    ${CMAKE_CURRENT_SOURCE_DIR}/imgui/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/editor/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.h
+    ${CMAKE_SOURCE_DIR}/tools/format/format.h
+)
 
 if (LUA)
     add_subdirectory(lua)
@@ -34,7 +44,8 @@ if (TILES)
             cataclysm-tiles-common OBJECT
             ${CATACLYSM_BN_SOURCES}
             ${CATACLYSM_BN_HEADERS})
-    target_include_directories(cataclysm-tiles-common INTERFACE ${CMAKE_SOURCE_DIR}/src)
+    target_include_directories(cataclysm-tiles-common PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+    target_include_directories(cataclysm-tiles-common PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/imgui)
 
     if (WIN32)
         add_definitions(-DUSE_WINMAIN)
@@ -58,6 +69,8 @@ if (TILES)
 
     target_link_libraries(cataclysm-tiles PRIVATE cataclysm-tiles-common)
     target_compile_definitions(cataclysm-tiles-common PUBLIC TILES )
+
+    target_compile_definitions(cataclysm-tiles-common PUBLIC NO_JSON_FORMAT_MAIN )
 
     if (NOT "${CMAKE_EXPORT_COMPILE_COMMANDS}")
         target_precompile_headers(cataclysm-tiles-common PRIVATE

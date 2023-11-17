@@ -3,6 +3,8 @@
 
 #include <SDL.h>
 
+#include <string>
+
 namespace editor
 {
 void set_default_ini_path( bool flush = true );

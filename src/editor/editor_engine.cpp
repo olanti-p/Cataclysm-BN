@@ -2,8 +2,8 @@
 
 #include "app.h"
 #include "uistate_store.h"
-#include "imgui_impl_sdl.h"
-#include "imgui_impl_sdlrenderer.h"
+#include "imgui_impl_sdl2.h"
+#include "imgui_impl_sdlrenderer2.h"
 #include "imgui.h"
 
 #include "../game.h"
@@ -82,7 +82,7 @@ bool init_ui( SDL_Window &window_ref, SDL_Renderer &renderer_ref )
 
     // Setup Platform/Renderer backends
     ImGui_ImplSDL2_InitForSDLRenderer( window, renderer );
-    ImGui_ImplSDLRenderer_Init( renderer );
+    ImGui_ImplSDLRenderer2_Init( renderer );
 
     // Specify ini file path
     set_default_ini_path( false );
@@ -92,7 +92,7 @@ bool init_ui( SDL_Window &window_ref, SDL_Renderer &renderer_ref )
 
 void shutdown_ui()
 {
-    ImGui_ImplSDLRenderer_Shutdown();
+    ImGui_ImplSDLRenderer2_Shutdown();
     ImGui_ImplSDL2_Shutdown();
     ImGui::DestroyContext();
 
@@ -106,7 +106,7 @@ void render_ui()
         return;
     }
     // Start the Dear ImGui frame
-    ImGui_ImplSDLRenderer_NewFrame();
+    ImGui_ImplSDLRenderer2_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
 
@@ -114,7 +114,7 @@ void render_ui()
 
     // Rendering
     ImGui::Render();
-    ImGui_ImplSDLRenderer_RenderDrawData( ImGui::GetDrawData() );
+    ImGui_ImplSDLRenderer2_RenderDrawData( ImGui::GetDrawData() );
 }
 
 bool process_event( SDL_Event &event )

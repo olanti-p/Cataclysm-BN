@@ -16,6 +16,7 @@
 #include <unordered_set>
 #include <utility>
 #include <vector>
+#include <sstream>
 
 #include "activity_actor_definitions.h"
 #include "all_enum_values.h"
@@ -47,6 +48,7 @@
 #include "map.h"
 #include "map_iterator.h"
 #include "mapbuffer.h"
+#include "messages.h"
 #include "mission.h"
 #include "mongroup.h"
 #include "npc.h"
@@ -2116,7 +2118,11 @@ static tripoint_abs_omt display( const tripoint_abs_omt &orig,
         } else if( action == "MISSIONS" ) {
             g->list_missions();
         } else if( action == "RELOAD_TILESET" ) {
-            g->reload_tileset();
+            std::ostringstream ss;
+            g->reload_tileset( [&ss]( const std::string & str ) {
+                ss << str << std::endl;
+            } );
+            add_msg( ss.str() );
             ui.mark_resize();
         }
 

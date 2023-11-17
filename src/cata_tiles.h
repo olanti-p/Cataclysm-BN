@@ -118,7 +118,7 @@ class texture
 
         SDL_Point getsize() const {
             SDL_Point size;
-            SDL_QueryTexture( sdl_texture_ptr.get(), NULL, NULL, &size.x, &size.y );
+            SDL_QueryTexture( sdl_texture_ptr.get(), nullptr, nullptr, &size.x, &size.y );
             return size;
         }
 };
