@@ -11,34 +11,34 @@
 
 namespace editor
 {
-struct me_state;
-struct me_camera;
-struct me_canvas_tools_state;
+struct State;
+struct Camera;
+struct ToolsState;
 
 namespace detail
 {
-struct open_palette {
+struct OpenPalette {
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
 
-    uuid_t uuid = UUID_INVALID;
+    UUID uuid = UUID_INVALID;
     bool open = true;
 };
 
-struct open_mapping {
+struct OpenMapping {
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
 
-    uuid_t palette = UUID_INVALID;
-    uuid_t uuid = UUID_INVALID;
+    UUID palette = UUID_INVALID;
+    UUID uuid = UUID_INVALID;
     bool open = true;
 };
 
-struct open_mapgenobject {
+struct OpenMapgenObject {
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
 
-    uuid_t uuid = UUID_INVALID;
+    UUID uuid = UUID_INVALID;
     bool open = true;
 };
 } // namespace detail
@@ -52,14 +52,14 @@ struct open_mapgenobject {
  * As such, it is required to check members for validity when using them,
  * and in case of invalidation - reset to some neutral but valid state.
 */
-struct me_uistate {
-    me_uistate();
-    me_uistate( const me_uistate & ) = delete;
-    me_uistate( me_uistate && );
-    ~me_uistate();
+struct UiState {
+    UiState();
+    UiState( const UiState & ) = delete;
+    UiState( UiState && );
+    ~UiState();
 
-    me_uistate &operator=( const me_uistate & ) = delete;
-    me_uistate &operator=( me_uistate && );
+    UiState &operator=( const UiState & ) = delete;
+    UiState &operator=( UiState && );
 
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
@@ -71,28 +71,28 @@ struct me_uistate {
     bool show_file_history = true;          // Whether to show undo/redo history
     bool show_camera_controls = true;       // Whether to show camera controls
     bool show_toolbar = true;               // Whether to show canvas toolbar
-    std::optional<uuid_t> active_file_id;   // UUID of active file
+    std::optional<UUID> active_file_id;   // UUID of active file
 
-    std::vector<detail::open_palette> open_palettes; // List of open palettes
-    std::vector<detail::open_mapping> open_mappings; // List of open mappings
-    std::vector<detail::open_mapgenobject> open_mapgenobjects; // List of open mapgenobjects
+    std::vector<detail::OpenPalette> open_palettes; // List of open palettes
+    std::vector<detail::OpenMapping> open_mappings; // List of open mappings
+    std::vector<detail::OpenMapgenObject> open_mapgenobjects; // List of open mapgenobjects
 
-    pimpl<me_camera> camera;
-    pimpl<me_canvas_tools_state> tools_state;
+    pimpl<Camera> camera;
+    pimpl<ToolsState> tools_state;
 
-    std::set<uuid_t> expanded_mapping_pieces;
-    std::set<uuid_t> expanded_mapobjects;
+    std::set<UUID> expanded_mapping_pieces;
+    std::set<UUID> expanded_mapobjects;
 
-    void toggle_show_palette( uuid_t uuid );
-    void toggle_show_mapping( uuid_t palette, uuid_t uuid );
-    void toggle_show_mapobjects( uuid_t uuid );
+    void toggle_show_palette( UUID uuid );
+    void toggle_show_mapping( UUID palette, UUID uuid );
+    void toggle_show_mapobjects( UUID uuid );
 };
 
 /**
  * =============== Windows ===============
  */
-void show_camera_controls( me_state &state, bool &show );
-void run_ui_for_state( me_state &state );
+void show_camera_controls( State &state, bool &show );
+void run_ui_for_state( State &state );
 
 } // namespace editor
 

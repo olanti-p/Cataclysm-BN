@@ -6,29 +6,29 @@
 namespace editor
 {
 struct asset_library;
-struct me_history_state;
-struct me_project;
-struct me_save_export_state;
-struct me_uistate;
-struct me_control_state;
+struct HistoryState;
+struct Project;
+struct SaveExportState;
+struct UiState;
+struct ControlState;
 
-struct me_state {
-    me_state();
-    explicit me_state( std::unique_ptr<me_project> &&project );
-    me_state( std::unique_ptr<me_project> &&project, const std::string *loaded_from_path );
-    me_state( const me_state & ) = delete;
-    me_state( me_state && );
-    ~me_state();
+struct State {
+    State();
+    explicit State( std::unique_ptr<Project> &&project );
+    State( std::unique_ptr<Project> &&project, const std::string *loaded_from_path );
+    State( const State & ) = delete;
+    State( State && );
+    ~State();
 
-    me_state &operator=( const me_state & ) = delete;
-    me_state &operator=( me_state && );
+    State &operator=( const State & ) = delete;
+    State &operator=( State && );
 
-    pimpl<me_history_state> histate;
-    pimpl<me_save_export_state> sestate;
-    pimpl<me_control_state> cstate;
-    me_uistate *uistate = nullptr;
+    pimpl<HistoryState> histate;
+    pimpl<SaveExportState> sestate;
+    pimpl<ControlState> cstate;
+    UiState *uistate = nullptr;
 
-    me_project &project();
+    Project &project();
 
     /**
      * Mark project as changed.
@@ -48,7 +48,7 @@ struct me_state {
 /**
  * ============= Entry point =============
  */
-void show_me_ui( me_state &state );
+void show_me_ui( State &state );
 
 } // namespace editor
 

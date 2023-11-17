@@ -5,7 +5,7 @@
 #include "weighted_list.h"
 
 template<typename T>
-void serialize( const editor::me_weighted_list<T> &list, JsonOut &jsout )
+void serialize( const editor::WeightedList<T> &list, JsonOut &jsout )
 {
     jsout.start_array();
     for( const auto &e : list.entries ) {
@@ -18,11 +18,11 @@ void serialize( const editor::me_weighted_list<T> &list, JsonOut &jsout )
 }
 
 template<typename T>
-void deserialize( editor::me_weighted_list<T> &list, JsonIn &jsin )
+void deserialize( editor::WeightedList<T> &list, JsonIn &jsin )
 {
     JsonArray ja = jsin.get_array();
     for( JsonObject jo : ja ) {
-        editor::detail::weighted_list_entry<T> e;
+        editor::detail::WeightedListEntry<T> e;
         jo.read( "w", e.weight );
         jo.read( "v", e.val );
         list.entries.push_back( std::move( e ) );

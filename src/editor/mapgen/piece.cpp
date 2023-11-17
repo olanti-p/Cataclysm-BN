@@ -6,51 +6,51 @@
 namespace editor
 {
 
-std::string me_piece::fmt_summary() const
+std::string Piece::fmt_summary() const
 {
     return string_format( "%s: %s", io::enum_to_string<PieceType>( get_type() ), fmt_data_summary() );
 }
 
-const std::vector<std::unique_ptr<me_piece>> &get_piece_templates()
+const std::vector<std::unique_ptr<Piece>> &get_piece_templates()
 {
-    static std::vector<std::unique_ptr<me_piece>> ret;
+    static std::vector<std::unique_ptr<Piece>> ret;
     if( ret.empty() ) {
         ret.reserve( static_cast<int>( PieceType::NumJmTypes ) );
-        REG_PIECE( me_piece_field );
-        REG_PIECE( me_piece_npc );
-        REG_PIECE( me_piece_faction );
-        REG_PIECE( me_piece_sign );
-        REG_PIECE( me_piece_graffiti );
-        REG_PIECE( me_piece_vending_machine );
-        REG_PIECE( me_piece_toilet );
-        REG_PIECE( me_piece_gaspump );
-        REG_PIECE( me_piece_liquid );
-        REG_PIECE( me_piece_igroup );
-        REG_PIECE( me_piece_loot );
-        REG_PIECE( me_piece_mgroup );
-        REG_PIECE( me_piece_monster );
-        REG_PIECE( me_piece_vehicle );
-        REG_PIECE( me_piece_item );
-        REG_PIECE( me_piece_trap );
-        REG_PIECE( me_piece_furniture );
-        REG_PIECE( me_piece_terrain );
-        REG_PIECE( me_piece_ter_furn_transform );
-        REG_PIECE( me_piece_make_rubble );
-        REG_PIECE( me_piece_computer );
-        REG_PIECE( me_piece_sealed_item );
-        REG_PIECE( me_piece_translate );
-        REG_PIECE( me_piece_zone );
-        REG_PIECE( me_piece_nested );
-        REG_PIECE( me_piece_alt_trap );
-        REG_PIECE( me_piece_alt_furniture );
-        REG_PIECE( me_piece_alt_terrain );
+        REG_PIECE( PieceField );
+        REG_PIECE( PieceNPC );
+        REG_PIECE( PieceFaction );
+        REG_PIECE( PieceSign );
+        REG_PIECE( PieceGraffiti );
+        REG_PIECE( PieceVendingMachine );
+        REG_PIECE( PieceToilet );
+        REG_PIECE( PieceGaspump );
+        REG_PIECE( PieceLiquid );
+        REG_PIECE( PieceIGroup );
+        REG_PIECE( PieceLoot );
+        REG_PIECE( PieceMGroup );
+        REG_PIECE( PieceMonster );
+        REG_PIECE( PieceVehicle );
+        REG_PIECE( PieceItem );
+        REG_PIECE( PieceTrap );
+        REG_PIECE( PieceFurniture );
+        REG_PIECE( PieceTerrain );
+        REG_PIECE( PieceTerFurnTransform );
+        REG_PIECE( PieceMakeRubble );
+        REG_PIECE( PieceComputer );
+        REG_PIECE( PieceSealeditem );
+        REG_PIECE( PieceTranslate );
+        REG_PIECE( PieceZone );
+        REG_PIECE( PieceNested );
+        REG_PIECE( PieceAltTrap );
+        REG_PIECE( PieceAltFurniture );
+        REG_PIECE( PieceAltTerrain );
     }
     return ret;
 }
 
-std::unique_ptr<me_piece> make_new_piece( PieceType pt )
+std::unique_ptr<Piece> make_new_piece( PieceType pt )
 {
-    for( const std::unique_ptr<me_piece> &it : get_piece_templates() ) {
+    for( const std::unique_ptr<Piece> &it : get_piece_templates() ) {
         if( it->get_type() == pt ) {
             return it->clone();
         }

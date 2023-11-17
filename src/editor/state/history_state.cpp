@@ -14,23 +14,23 @@
 
 namespace editor
 {
-me_file_revision::me_file_revision()
+FileRevision::FileRevision()
 {
-    project = std::make_unique<me_project>();
+    project = std::make_unique<Project>();
 }
-me_file_revision::me_file_revision( me_file_revision && ) = default;
-me_file_revision::~me_file_revision() = default;
-me_file_revision &me_file_revision::operator=( me_file_revision && ) = default;
+FileRevision::FileRevision( FileRevision && ) = default;
+FileRevision::~FileRevision() = default;
+FileRevision &FileRevision::operator=( FileRevision && ) = default;
 
-me_file_revision me_file_revision::make_copy() const
+FileRevision FileRevision::make_copy() const
 {
-    me_file_revision ret;
-    ret.project = std::make_unique<me_project>( *project );
+    FileRevision ret;
+    ret.project = std::make_unique<Project>( *project );
     ret.num = num;
     return ret;
 }
 
-void show_file_history( me_history_state &state, bool &show )
+void show_file_history( HistoryState &state, bool &show )
 {
     ImGui::SetNextWindowSize( ImVec2( 230.0f, 130.0f ), ImGuiCond_FirstUseEver );
     if( !ImGui::Begin( "File history", &show ) ) {
@@ -63,7 +63,7 @@ void show_file_history( me_history_state &state, bool &show )
     );
     ImGui::Text( "Edit counter (debug): %d", state.edit_counter );
 
-    for( const me_file_revision &entry : state.file_history ) {
+    for( const FileRevision &entry : state.file_history ) {
         bool is_saved = state.last_saved_revision && *state.last_saved_revision == entry.num;
         bool is_exported = state.last_exported_revision && *state.last_exported_revision == entry.num;
         std::string fname = string_format(
@@ -80,14 +80,14 @@ void show_file_history( me_history_state &state, bool &show )
     ImGui::End();
 }
 
-void handle_revision_change( me_history_state &state, me_canvas_tools_state &tools )
+void handle_revision_change( HistoryState &state, ToolsState &tools )
 {
     if( tools.has_ongoing_tool_operation() ) {
         return;
     }
     if( state.switch_to_revision ) {
         auto it = std::find_if( state.file_history.cbegin(),
-        state.file_history.cend(), [&]( const me_file_revision & rev ) {
+        state.file_history.cend(), [&]( const FileRevision & rev ) {
             return rev.num == *state.switch_to_revision;
         } );
         assert( it != state.file_history.cend() );
@@ -133,9 +133,9 @@ void handle_revision_change( me_history_state &state, me_canvas_tools_state &too
     }
 }
 
-me_history_state::me_history_state( std::unique_ptr<me_project> &&project, bool was_loaded )
+HistoryState::HistoryState( std::unique_ptr<Project> &&project, bool was_loaded )
 {
-    current_revision = me_file_revision();
+    current_revision = FileRevision();
 
     if( was_loaded ) {
         last_saved_revision = current_revision.num;
@@ -149,7 +149,7 @@ me_history_state::me_history_state( std::unique_ptr<me_project> &&project, bool 
     file_history.emplace_back( current_revision.make_copy() );
 }
 
-void me_history_state::mark_changed( const char *id )
+void HistoryState::mark_changed( const char *id )
 {
     std::string new_widget_changed_str = id ? id : "<nullptr>";
     if( file_has_changes ) {
@@ -169,12 +169,12 @@ void me_history_state::mark_changed( const char *id )
     edit_counter++;
 }
 
-bool me_history_state::has_unsaved_changes() const
+bool HistoryState::has_unsaved_changes() const
 {
     return !last_saved_revision || current_revision.num != *last_saved_revision;
 }
 
-bool me_history_state::has_unexported_changes() const
+bool HistoryState::has_unexported_changes() const
 {
     return !last_exported_revision || current_revision.num != *last_exported_revision;
 }

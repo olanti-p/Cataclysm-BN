@@ -10,7 +10,7 @@ constexpr int MIN_SCALE = 8;
 constexpr int MAX_SCALE = 128;
 constexpr int DEFAULT_SCALE = 32;
 
-struct me_camera {
+struct Camera {
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
 

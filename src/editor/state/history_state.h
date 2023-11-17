@@ -10,35 +10,35 @@
 
 namespace editor
 {
-struct me_project;
-struct me_canvas_tools_state;
+struct Project;
+struct ToolsState;
 
-struct me_file_revision {
-    std::unique_ptr<me_project> project;
+struct FileRevision {
+    std::unique_ptr<Project> project;
     int num = 0;
 
-    me_file_revision();
-    me_file_revision( const me_file_revision & ) = delete;
-    me_file_revision( me_file_revision && );
-    ~me_file_revision();
+    FileRevision();
+    FileRevision( const FileRevision & ) = delete;
+    FileRevision( FileRevision && );
+    ~FileRevision();
 
-    me_file_revision &operator=( const me_file_revision & ) = delete;
-    me_file_revision &operator=( me_file_revision && );
+    FileRevision &operator=( const FileRevision & ) = delete;
+    FileRevision &operator=( FileRevision && );
 
-    me_file_revision make_copy() const;
+    FileRevision make_copy() const;
 };
 
-struct me_history_state {
-    me_history_state() = default;
-    ~me_history_state() = default;
-    me_history_state( std::unique_ptr<me_project> &&project, bool was_loaded );
+struct HistoryState {
+    HistoryState() = default;
+    ~HistoryState() = default;
+    HistoryState( std::unique_ptr<Project> &&project, bool was_loaded );
 
-    me_history_state( const me_history_state & ) = delete;
-    me_history_state( me_history_state && ) = default;
-    me_history_state &operator=( const me_history_state & ) = delete;
-    me_history_state &operator=( me_history_state && ) = default;
+    HistoryState( const HistoryState & ) = delete;
+    HistoryState( HistoryState && ) = default;
+    HistoryState &operator=( const HistoryState & ) = delete;
+    HistoryState &operator=( HistoryState && ) = default;
 
-    inline me_project &project() {
+    inline Project &project() {
         return *current_revision.project;
     }
 
@@ -82,8 +82,8 @@ struct me_history_state {
     std::string current_widget_changed_str;
     std::optional<ImGuiID> last_widget_changed = 0;
     std::optional<int> switch_to_revision;
-    me_file_revision current_revision;
-    std::vector<me_file_revision> file_history;
+    FileRevision current_revision;
+    std::vector<FileRevision> file_history;
     int history_capacity = 200;
     std::optional<int> last_saved_revision;
     std::optional<int> last_exported_revision;
@@ -93,9 +93,9 @@ struct me_history_state {
 /**
  * =============== Windows ===============
  */
-void show_file_history( me_history_state &state, bool &show );
+void show_file_history( HistoryState &state, bool &show );
 
-void handle_revision_change( me_history_state &state, me_canvas_tools_state &tools );
+void handle_revision_change( HistoryState &state, ToolsState &tools );
 
 } // namespace editor
 

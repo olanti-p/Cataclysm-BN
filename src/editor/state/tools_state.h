@@ -9,7 +9,7 @@
 
 namespace editor
 {
-struct me_state;
+struct State;
 
 enum class CanvasTool {
     Brush,
@@ -19,16 +19,16 @@ enum class CanvasTool {
     _Num,
 };
 
-struct me_canvas_tools_state {
+struct ToolsState {
     public:
         void serialize( JsonOut &jsout ) const;
         void deserialize( JsonIn &jsin );
 
-        inline const uuid_t &get_brush() const {
+        inline const UUID &get_brush() const {
             return brush;
         }
 
-        inline void set_brush( const uuid_t &uuid ) {
+        inline void set_brush( const UUID &uuid ) {
             assert( !ongoing_tool_operation );
             brush = uuid;
         }
@@ -68,13 +68,13 @@ struct me_canvas_tools_state {
         bool ongoing_tool_operation = false;
         bool tool_op_changed_data = false;
         CanvasTool tool = CanvasTool::Brush;
-        uuid_t brush = UUID_INVALID;
+        UUID brush = UUID_INVALID;
 };
 
 /**
  * =============== Windows ===============
  */
-void show_toolbar( me_canvas_tools_state &tools, bool &show );
+void show_toolbar( ToolsState &tools, bool &show );
 
 } // namespace editor
 

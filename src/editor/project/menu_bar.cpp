@@ -9,9 +9,9 @@
 
 namespace editor
 {
-void show_main_menu_bar( me_state &state )
+void show_main_menu_bar( State &state )
 {
-    me_control_state &control = *state.cstate;
+    ControlState &control = *state.cstate;
 
     if( ImGui::BeginMainMenuBar() ) {
         if( ImGui::BeginMenu( "File" ) ) {

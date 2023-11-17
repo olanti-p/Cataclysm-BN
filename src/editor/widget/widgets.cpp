@@ -122,7 +122,7 @@ bool detail::InputId( const char *label,
     return ret;
 }
 
-bool InputIntRange( const char *label, editor::me_int_range &r )
+bool InputIntRange( const char *label, editor::IntRange &r )
 {
     bool has_error = r.min > r.max;
     ImGui::BeginGroup();

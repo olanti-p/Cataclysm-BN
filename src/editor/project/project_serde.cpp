@@ -10,7 +10,7 @@
 #include "json.h"
 #include "mapgen.h"
 
-void serialize( const std::unique_ptr<editor::me_piece> &ptr, JsonOut &jsout )
+void serialize( const std::unique_ptr<editor::Piece> &ptr, JsonOut &jsout )
 {
     jsout.start_object();
     jsout.member_as_string( "piece_type", ptr->get_type() );
@@ -19,16 +19,16 @@ void serialize( const std::unique_ptr<editor::me_piece> &ptr, JsonOut &jsout )
     jsout.end_object();
 }
 
-void deserialize( std::unique_ptr<editor::me_piece> &ptr, JsonIn &jsin )
+void deserialize( std::unique_ptr<editor::Piece> &ptr, JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
     editor::PieceType pt;
     jo.read( "piece_type", pt );
-    editor::uuid_t uuid;
+    editor::UUID uuid;
     jo.read( "uuid", uuid );
 
-    std::unique_ptr<editor::me_piece> val = editor::make_new_piece( pt );
+    std::unique_ptr<editor::Piece> val = editor::make_new_piece( pt );
     val->deserialize( jo );
     val->uuid = uuid;
     ptr = std::move( val );
@@ -149,9 +149,9 @@ std::string enum_to_string<editor::PieceType>( editor::PieceType data )
         case editor::PieceType::Toilet: return "Toilet";
         case editor::PieceType::GasPump: return "GasPump";
         case editor::PieceType::Liquid: return "Liquid";
-        case editor::PieceType::Igroup: return "Igroup";
+        case editor::PieceType::IGroup: return "Igroup";
         case editor::PieceType::Loot: return "Loot";
-        case editor::PieceType::Mgroup: return "Mgroup";
+        case editor::PieceType::MGroup: return "Mgroup";
         case editor::PieceType::Monster: return "Monster";
         case editor::PieceType::Vehicle: return "Vehicle";
         case editor::PieceType::Item: return "Item";
@@ -181,113 +181,113 @@ std::string enum_to_string<editor::PieceType>( editor::PieceType data )
 namespace editor
 {
 
-void me_piece_field::serialize( JsonOut &jsout ) const
+void PieceField::serialize( JsonOut &jsout ) const
 {
     jsout.member( "ftype", ftype );
     jsout.member( "intensity", intensity );
     jsout.member( "age", age );
 }
 
-void me_piece_field::deserialize( JsonObject &jsin )
+void PieceField::deserialize( JsonObject &jsin )
 {
     jsin.read( "ftype", ftype );
     jsin.read( "intensity", intensity );
     jsin.read( "age", age );
 }
 
-void me_piece_npc::serialize( JsonOut &jsout ) const
+void PieceNPC::serialize( JsonOut &jsout ) const
 {
     jsout.member( "npc_class", npc_class );
     jsout.member( "target", target );
     jsout.member( "traits", traits );
 }
 
-void me_piece_npc::deserialize( JsonObject &jsin )
+void PieceNPC::deserialize( JsonObject &jsin )
 {
     jsin.read( "npc_class", npc_class );
     jsin.read( "target", target );
     jsin.read( "traits", traits );
 }
 
-void me_piece_faction::serialize( JsonOut &jsout ) const
+void PieceFaction::serialize( JsonOut &jsout ) const
 {
     jsout.member( "id", id );
 }
 
-void me_piece_faction::deserialize( JsonObject &jsin )
+void PieceFaction::deserialize( JsonObject &jsin )
 {
     jsin.read( "id", id );
 }
 
-void me_piece_sign::serialize( JsonOut &jsout ) const
+void PieceSign::serialize( JsonOut &jsout ) const
 {
     jsout.member( "use_snippet", use_snippet );
     jsout.member( "snippet", snippet );
     jsout.member( "text", text );
 }
 
-void me_piece_sign::deserialize( JsonObject &jsin )
+void PieceSign::deserialize( JsonObject &jsin )
 {
     jsin.read( "use_snippet", use_snippet );
     jsin.read( "snippet", snippet );
     jsin.read( "text", text );
 }
 
-void me_piece_graffiti::serialize( JsonOut &jsout ) const
+void PieceGraffiti::serialize( JsonOut &jsout ) const
 {
     jsout.member( "use_snippet", use_snippet );
     jsout.member( "snippet", snippet );
     jsout.member( "text", text );
 }
 
-void me_piece_graffiti::deserialize( JsonObject &jsin )
+void PieceGraffiti::deserialize( JsonObject &jsin )
 {
     jsin.read( "use_snippet", use_snippet );
     jsin.read( "snippet", snippet );
     jsin.read( "text", text );
 }
 
-void me_piece_vending_machine::serialize( JsonOut &jsout ) const
+void PieceVendingMachine::serialize( JsonOut &jsout ) const
 {
     jsout.member( "reinforced", reinforced );
     jsout.member( "use_default_group", use_default_group );
     jsout.member( "item_group", item_group );
 }
 
-void me_piece_vending_machine::deserialize( JsonObject &jsin )
+void PieceVendingMachine::deserialize( JsonObject &jsin )
 {
     jsin.read( "reinforced", reinforced );
     jsin.read( "use_default_group", use_default_group );
     jsin.read( "item_group", item_group );
 }
 
-void me_piece_toilet::serialize( JsonOut &jsout ) const
+void PieceToilet::serialize( JsonOut &jsout ) const
 {
     jsout.member( "use_default_amount", use_default_amount );
     jsout.member( "amount", amount );
 }
 
-void me_piece_toilet::deserialize( JsonObject &jsin )
+void PieceToilet::deserialize( JsonObject &jsin )
 {
     jsin.read( "use_default_amount", use_default_amount );
     jsin.read( "amount", amount );
 }
 
-void me_piece_gaspump::serialize( JsonOut &jsout ) const
+void PieceGaspump::serialize( JsonOut &jsout ) const
 {
     jsout.member( "use_default_amount", use_default_amount );
     jsout.member( "amount", amount );
     jsout.member_as_string( "fuel", fuel );
 }
 
-void me_piece_gaspump::deserialize( JsonObject &jsin )
+void PieceGaspump::deserialize( JsonObject &jsin )
 {
     jsin.read( "use_default_amount", use_default_amount );
     jsin.read( "amount", amount );
     jsin.read( "fuel", fuel );
 }
 
-void me_piece_liquid::serialize( JsonOut &jsout ) const
+void PieceLiquid::serialize( JsonOut &jsout ) const
 {
     jsout.member( "use_default_amount", use_default_amount );
     jsout.member( "amount", amount );
@@ -296,7 +296,7 @@ void me_piece_liquid::serialize( JsonOut &jsout ) const
     jsout.member( "chance", chance );
 }
 
-void me_piece_liquid::deserialize( JsonObject &jsin )
+void PieceLiquid::deserialize( JsonObject &jsin )
 {
     jsin.read( "use_default_amount", use_default_amount );
     jsin.read( "amount", amount );
@@ -305,7 +305,7 @@ void me_piece_liquid::deserialize( JsonObject &jsin )
     jsin.read( "chance", chance );
 }
 
-void me_piece_igroup::serialize( JsonOut &jsout ) const
+void PieceIGroup::serialize( JsonOut &jsout ) const
 {
     jsout.member( "chance", chance );
     jsout.member( "group_id", group_id );
@@ -313,7 +313,7 @@ void me_piece_igroup::serialize( JsonOut &jsout ) const
     jsout.member( "repeat", repeat );
 }
 
-void me_piece_igroup::deserialize( JsonObject &jsin )
+void PieceIGroup::deserialize( JsonObject &jsin )
 {
     jsin.read( "chance", chance );
     jsin.read( "group_id", group_id );
@@ -321,17 +321,17 @@ void me_piece_igroup::deserialize( JsonObject &jsin )
     jsin.read( "repeat", repeat );
 }
 
-void me_piece_loot::serialize( JsonOut &jsout ) const
+void PieceLoot::serialize( JsonOut &jsout ) const
 {
     // TODO
 }
 
-void me_piece_loot::deserialize( JsonObject &jsin )
+void PieceLoot::deserialize( JsonObject &jsin )
 {
     // TODO
 }
 
-void me_piece_mgroup::serialize( JsonOut &jsout ) const
+void PieceMGroup::serialize( JsonOut &jsout ) const
 {
     jsout.member( "spawn_always", spawn_always );
     jsout.member( "chance", chance );
@@ -340,7 +340,7 @@ void me_piece_mgroup::serialize( JsonOut &jsout ) const
     jsout.member( "density", density );
 }
 
-void me_piece_mgroup::deserialize( JsonObject &jsin )
+void PieceMGroup::deserialize( JsonObject &jsin )
 {
     jsin.read( "spawn_always", spawn_always );
     jsin.read( "chance", chance );
@@ -349,17 +349,17 @@ void me_piece_mgroup::deserialize( JsonObject &jsin )
     jsin.read( "density", density );
 }
 
-void me_piece_monster::serialize( JsonOut &jsout ) const
+void PieceMonster::serialize( JsonOut &jsout ) const
 {
     // TODO
 }
 
-void me_piece_monster::deserialize( JsonObject &jsin )
+void PieceMonster::deserialize( JsonObject &jsin )
 {
     // TODO
 }
 
-void me_piece_vehicle::serialize( JsonOut &jsout ) const
+void PieceVehicle::serialize( JsonOut &jsout ) const
 {
     jsout.member( "group_id", group_id );
     jsout.member( "chance", chance );
@@ -369,7 +369,7 @@ void me_piece_vehicle::serialize( JsonOut &jsout ) const
     jsout.member( "allowed_rotations", allowed_rotations );
 }
 
-void me_piece_vehicle::deserialize( JsonObject &jsin )
+void PieceVehicle::deserialize( JsonObject &jsin )
 {
     jsin.read( "group_id", group_id );
     jsin.read( "chance", chance );
@@ -379,7 +379,7 @@ void me_piece_vehicle::deserialize( JsonObject &jsin )
     jsin.read( "allowed_rotations", allowed_rotations );
 }
 
-void me_piece_item::serialize( JsonOut &jsout ) const
+void PieceItem::serialize( JsonOut &jsout ) const
 {
     jsout.member( "item_id", item_id );
     jsout.member( "amount", amount );
@@ -389,7 +389,7 @@ void me_piece_item::serialize( JsonOut &jsout ) const
     jsout.member( "repeat", repeat );
 }
 
-void me_piece_item::deserialize( JsonObject &jsin )
+void PieceItem::deserialize( JsonObject &jsin )
 {
     jsin.read( "item_id", item_id );
     jsin.read( "amount", amount );
@@ -399,132 +399,132 @@ void me_piece_item::deserialize( JsonObject &jsin )
     jsin.read( "repeat", repeat );
 }
 
-void me_piece_trap::serialize( JsonOut &jsout ) const
+void PieceTrap::serialize( JsonOut &jsout ) const
 {
     // TODO
 }
 
-void me_piece_trap::deserialize( JsonObject &jsin )
+void PieceTrap::deserialize( JsonObject &jsin )
 {
     // TODO
 }
 
-void me_piece_furniture::serialize( JsonOut &jsout ) const
+void PieceFurniture::serialize( JsonOut &jsout ) const
 {
     // TODO
 }
 
-void me_piece_furniture::deserialize( JsonObject &jsin )
+void PieceFurniture::deserialize( JsonObject &jsin )
 {
     // TODO
 }
 
-void me_piece_terrain::serialize( JsonOut &jsout ) const
+void PieceTerrain::serialize( JsonOut &jsout ) const
 {
     // TODO
 }
 
-void me_piece_terrain::deserialize( JsonObject &jsin )
+void PieceTerrain::deserialize( JsonObject &jsin )
 {
     // TODO
 }
 
-void me_piece_ter_furn_transform::serialize( JsonOut &jsout ) const
+void PieceTerFurnTransform::serialize( JsonOut &jsout ) const
 {
     // TODO
 }
 
-void me_piece_ter_furn_transform::deserialize( JsonObject &jsin )
+void PieceTerFurnTransform::deserialize( JsonObject &jsin )
 {
     // TODO
 }
 
-void me_piece_make_rubble::serialize( JsonOut &jsout ) const
+void PieceMakeRubble::serialize( JsonOut &jsout ) const
 {
     // TODO
 }
 
-void me_piece_make_rubble::deserialize( JsonObject &jsin )
+void PieceMakeRubble::deserialize( JsonObject &jsin )
 {
     // TODO
 }
 
-void me_piece_computer::serialize( JsonOut &jsout ) const
+void PieceComputer::serialize( JsonOut &jsout ) const
 {
     // TODO
 }
 
-void me_piece_computer::deserialize( JsonObject &jsin )
+void PieceComputer::deserialize( JsonObject &jsin )
 {
     // TODO
 }
 
-void me_piece_sealed_item::serialize( JsonOut &jsout ) const
+void PieceSealeditem::serialize( JsonOut &jsout ) const
 {
     // TODO
 }
 
-void me_piece_sealed_item::deserialize( JsonObject &jsin )
+void PieceSealeditem::deserialize( JsonObject &jsin )
 {
     // TODO
 }
 
-void me_piece_translate::serialize( JsonOut &jsout ) const
+void PieceTranslate::serialize( JsonOut &jsout ) const
 {
     // TODO
 }
 
-void me_piece_translate::deserialize( JsonObject &jsin )
+void PieceTranslate::deserialize( JsonObject &jsin )
 {
     // TODO
 }
 
-void me_piece_zone::serialize( JsonOut &jsout ) const
+void PieceZone::serialize( JsonOut &jsout ) const
 {
     // TODO
 }
 
-void me_piece_zone::deserialize( JsonObject &jsin )
+void PieceZone::deserialize( JsonObject &jsin )
 {
     // TODO
 }
 
-void me_piece_nested::serialize( JsonOut &jsout ) const
+void PieceNested::serialize( JsonOut &jsout ) const
 {
     // TODO
 }
 
-void me_piece_nested::deserialize( JsonObject &jsin )
+void PieceNested::deserialize( JsonObject &jsin )
 {
     // TODO
 }
 
-void me_piece_alt_trap::serialize( JsonOut &jsout ) const
+void PieceAltTrap::serialize( JsonOut &jsout ) const
 {
     jsout.member( "list", list );
 }
 
-void me_piece_alt_trap::deserialize( JsonObject &jsin )
+void PieceAltTrap::deserialize( JsonObject &jsin )
 {
     jsin.read( "list", list );
 }
 
-void me_piece_alt_furniture::serialize( JsonOut &jsout ) const
+void PieceAltFurniture::serialize( JsonOut &jsout ) const
 {
     jsout.member( "list", list );
 }
 
-void me_piece_alt_furniture::deserialize( JsonObject &jsin )
+void PieceAltFurniture::deserialize( JsonObject &jsin )
 {
     jsin.read( "list", list );
 }
 
-void me_piece_alt_terrain::serialize( JsonOut &jsout ) const
+void PieceAltTerrain::serialize( JsonOut &jsout ) const
 {
     jsout.member( "list", list );
 }
 
-void me_piece_alt_terrain::deserialize( JsonObject &jsin )
+void PieceAltTerrain::deserialize( JsonObject &jsin )
 {
     jsin.read( "list", list );
 }
@@ -549,21 +549,21 @@ void deserialize_eid( JsonIn &jsin, std::string &data )
 
 } // namespace detail
 
-void me_mapping::serialize( JsonOut &jsout ) const
+void Mapping::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
     jsout.member( "pieces", pieces );
     jsout.end_object();
 }
 
-void me_mapping::deserialize( JsonIn &jsin )
+void Mapping::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
     jo.read( "pieces", pieces );
 }
 
-void me_palette_entry::serialize( JsonOut &jsout ) const
+void PaletteEntry::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
     jsout.member( "uuid", uuid );
@@ -573,7 +573,7 @@ void me_palette_entry::serialize( JsonOut &jsout ) const
     jsout.end_object();
 }
 
-void me_palette_entry::deserialize( JsonIn &jsin )
+void PaletteEntry::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
@@ -583,7 +583,7 @@ void me_palette_entry::deserialize( JsonIn &jsin )
     jo.read( "mapping", mapping );
 }
 
-void me_palette::serialize( JsonOut &jsout ) const
+void Palette::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
     jsout.member( "uuid", uuid );
@@ -593,7 +593,7 @@ void me_palette::serialize( JsonOut &jsout ) const
     jsout.end_object();
 }
 
-void me_palette::deserialize( JsonIn &jsin )
+void Palette::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
@@ -603,7 +603,7 @@ void me_palette::deserialize( JsonIn &jsin )
     jo.read( "entries", entries );
 }
 
-void me_mapobject::serialize( JsonOut &jsout ) const
+void MapObject::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
     jsout.member( "x", x );
@@ -615,7 +615,7 @@ void me_mapobject::serialize( JsonOut &jsout ) const
     jsout.end_object();
 }
 
-void me_mapobject::deserialize( JsonIn &jsin )
+void MapObject::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
@@ -627,7 +627,7 @@ void me_mapobject::deserialize( JsonIn &jsin )
     jo.read( "piece", piece );
 }
 
-void me_mapgen_base::serialize( JsonOut &jsout ) const
+void MapgenBase::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
     jsout.member( "canvas", canvas );
@@ -635,7 +635,7 @@ void me_mapgen_base::serialize( JsonOut &jsout ) const
     jsout.end_object();
 }
 
-void me_mapgen_base::deserialize( JsonIn &jsin )
+void MapgenBase::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
@@ -643,7 +643,7 @@ void me_mapgen_base::deserialize( JsonIn &jsin )
     jo.read( "inline_palette_id", inline_palette_id );
 }
 
-void me_mapgen_oter::serialize( JsonOut &jsout ) const
+void MapgenOter::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
     jsout.member( "om_terrain", om_terrain );
@@ -655,7 +655,7 @@ void me_mapgen_oter::serialize( JsonOut &jsout ) const
     jsout.end_object();
 }
 
-void me_mapgen_oter::deserialize( JsonIn &jsin )
+void MapgenOter::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
@@ -667,7 +667,7 @@ void me_mapgen_oter::deserialize( JsonIn &jsin )
     jo.read( "rotation", rotation );
 }
 
-void me_mapgen_update::serialize( JsonOut &jsout ) const
+void MapgenUpdate::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
     jsout.member( "update_mapgen_id", update_mapgen_id );
@@ -675,7 +675,7 @@ void me_mapgen_update::serialize( JsonOut &jsout ) const
     jsout.end_object();
 }
 
-void me_mapgen_update::deserialize( JsonIn &jsin )
+void MapgenUpdate::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
@@ -683,7 +683,7 @@ void me_mapgen_update::deserialize( JsonIn &jsin )
     jo.read( "fill_ter", fill_ter );
 }
 
-void me_mapgen_nested::serialize( JsonOut &jsout ) const
+void MapgenNested::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
     jsout.member( "nested_mapgen_id", nested_mapgen_id );
@@ -692,7 +692,7 @@ void me_mapgen_nested::serialize( JsonOut &jsout ) const
     jsout.end_object();
 }
 
-void me_mapgen_nested::deserialize( JsonIn &jsin )
+void MapgenNested::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
@@ -708,7 +708,7 @@ int project_load_version()
     return project_load_version_val;
 }
 
-void me_file::serialize( JsonOut &jsout ) const
+void Mapgen::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
     jsout.member( "uuid", uuid );
@@ -721,7 +721,7 @@ void me_file::serialize( JsonOut &jsout ) const
     jsout.end_object();
 }
 
-void me_file::deserialize( JsonIn &jsin )
+void Mapgen::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
@@ -734,7 +734,7 @@ void me_file::deserialize( JsonIn &jsin )
     jo.read( "objects", objects );
 }
 
-void me_project::serialize( JsonOut &jsout ) const
+void Project::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
     jsout.member( "project_format_version", PROJECT_FORMAT_VERSION );
@@ -745,7 +745,7 @@ void me_project::serialize( JsonOut &jsout ) const
     jsout.end_object();
 }
 
-void me_project::deserialize( JsonIn &jsin )
+void Project::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 

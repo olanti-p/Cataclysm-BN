@@ -6,7 +6,7 @@
 namespace editor
 {
 
-me_map_key_generator::me_map_key_generator()
+MapKeyGenerator::MapKeyGenerator()
 {
     const translation &trans = SNIPPET.get_snippet_ref_by_id( snippet_id( "me_auto_map_keys" ) );
     std::u32string s_u32 = utf8_to_utf32( trans.raw );
@@ -17,7 +17,7 @@ me_map_key_generator::me_map_key_generator()
     }
 }
 
-void me_map_key_generator::blacklist( const map_key &opt )
+void MapKeyGenerator::blacklist( const map_key &opt )
 {
     std::remove( opts.begin(), opts.end(), opt );
 }

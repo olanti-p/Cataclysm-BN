@@ -15,10 +15,10 @@
 
 namespace editor
 {
-void handle_file_saving( me_state &state )
+void handle_file_saving( State &state )
 {
-    me_control_state &control = *state.cstate;
-    me_save_export_state &sestate = *state.sestate;
+    ControlState &control = *state.cstate;
+    SaveExportState &sestate = *state.sestate;
 
     if( state.uistate->tools_state->has_ongoing_tool_operation() ) {
         control.want_save = false;
@@ -65,10 +65,10 @@ void handle_file_saving( me_state &state )
     }
 }
 
-void handle_file_exporting( me_state &state )
+void handle_file_exporting( State &state )
 {
-    me_control_state &control = *state.cstate;
-    me_save_export_state &sestate = *state.sestate;
+    ControlState &control = *state.cstate;
+    SaveExportState &sestate = *state.sestate;
 
     if( state.uistate->tools_state->has_ongoing_tool_operation() ) {
         control.want_export = false;
@@ -115,9 +115,9 @@ void handle_file_exporting( me_state &state )
     }
 }
 
-void handle_project_exiting( me_state &state )
+void handle_project_exiting( State &state )
 {
-    me_control_state &control = *state.cstate;
+    ControlState &control = *state.cstate;
 
     if( state.uistate->tools_state->has_ongoing_tool_operation() ) {
         control.want_close = false;

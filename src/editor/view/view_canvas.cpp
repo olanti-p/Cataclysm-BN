@@ -24,7 +24,7 @@ point_abs_screen get_mouse_pos()
     return point_abs_screen( mouse_pos.x, mouse_pos.y );
 }
 
-point_abs_etile get_mouse_tile_pos( const me_camera &cam )
+point_abs_etile get_mouse_tile_pos( const Camera &cam )
 {
     point_abs_screen screen_pos = get_mouse_pos();
     point_abs_epos epos = cam.screen_to_world( screen_pos );
@@ -38,7 +38,7 @@ point_abs_etile get_mouse_tile_pos( const me_camera &cam )
 
 void draw_frame(
     ImDrawList *draw_list,
-    const me_camera &cam,
+    const Camera &cam,
     const point_abs_etile &p1,
     const point_abs_etile &p2,
     ImVec4 col,
@@ -57,7 +57,7 @@ void draw_frame(
 
 void highlight_tile(
     ImDrawList *draw_list,
-    const me_camera &cam,
+    const Camera &cam,
     point_abs_etile tile,
     ImVec4 col
 )
@@ -67,7 +67,7 @@ void highlight_tile(
 
 void fill_tile(
     ImDrawList *draw_list,
-    const me_camera &cam,
+    const Camera &cam,
     point_abs_etile tile,
     ImVec4 col
 )
@@ -77,7 +77,7 @@ void fill_tile(
 
 static void fill_tile_sprited(
     ImDrawList *draw_list,
-    const me_camera &cam,
+    const Camera &cam,
     point_abs_etile tile,
     const SpriteRef &img
 )
@@ -91,7 +91,7 @@ static void fill_tile_sprited(
 
 void highlight_region(
     ImDrawList *draw_list,
-    const me_camera &cam,
+    const Camera &cam,
     point_abs_etile p1,
     point_abs_etile p2,
     ImVec4 col_bg,
@@ -104,7 +104,7 @@ void highlight_region(
 
 void fill_region(
     ImDrawList *draw_list,
-    const me_camera &cam,
+    const Camera &cam,
     point_abs_etile p1,
     point_abs_etile p2,
     ImVec4 col
@@ -116,15 +116,15 @@ void fill_region(
 /**
  * Find all tiles that match predicate.
 */
-static std::vector<point> find_tiles_via_global( const Canvas2D<uuid_t> &canvas,
-        std::function<bool( const uuid_t & )> predicate )
+static std::vector<point> find_tiles_via_global( const Canvas2D<UUID> &canvas,
+        std::function<bool( const UUID & )> predicate )
 {
     std::vector<point> ret;
 
     for( int x = 0; x < canvas.get_size().x; x++ ) {
         for( int y = 0; y < canvas.get_size().y; y++ ) {
             point p( x, y );
-            const uuid_t &t = canvas.get( p );
+            const UUID &t = canvas.get( p );
             if( predicate( t ) ) {
                 ret.push_back( p );
             }
@@ -137,9 +137,9 @@ static std::vector<point> find_tiles_via_global( const Canvas2D<uuid_t> &canvas,
 /**
  * Find via floodfill all tiles that match predicate.
 */
-static std::vector<point> find_tiles_via_floodfill( const Canvas2D<uuid_t> &canvas,
+static std::vector<point> find_tiles_via_floodfill( const Canvas2D<UUID> &canvas,
         const point &initial_pos,
-        std::function<bool( const uuid_t & )> predicate )
+        std::function<bool( const UUID & )> predicate )
 {
     std::vector<point> ret;
 
@@ -175,12 +175,12 @@ static std::vector<point> find_tiles_via_floodfill( const Canvas2D<uuid_t> &canv
     return ret;
 }
 
-static void apply_bucket_tool( Canvas2D<uuid_t> &canvas, const uuid_t &brush,
+static void apply_bucket_tool( Canvas2D<UUID> &canvas, const UUID &brush,
                                const point_abs_etile &tile_pos,
                                bool global )
 {
-    const uuid_t tgt = canvas.get( tile_pos.raw() );
-    const auto predicate = [ = ]( const uuid_t &t ) {
+    const UUID tgt = canvas.get( tile_pos.raw() );
+    const auto predicate = [ = ]( const UUID & t ) {
         return t == tgt;
     };
     std::vector<point> tiles;
@@ -194,7 +194,7 @@ static void apply_bucket_tool( Canvas2D<uuid_t> &canvas, const uuid_t &brush,
     }
 }
 
-void show_canvas( me_state &state, me_file *file_ptr )
+void show_canvas( State &state, Mapgen *file_ptr )
 {
     ImVec2 disp_size = ImGui::GetIO().DisplaySize;
 
@@ -218,8 +218,8 @@ void show_canvas( me_state &state, me_file *file_ptr )
     }
 
     ImDrawList *draw_list = ImGui::GetWindowDrawList();
-    me_camera &cam = *state.uistate->camera;
-    editor::me_file &file = *file_ptr;
+    Camera &cam = *state.uistate->camera;
+    editor::Mapgen &file = *file_ptr;
     ImGui::PushID( file.uuid );
 
     highlight_region(
@@ -233,11 +233,11 @@ void show_canvas( me_state &state, me_file *file_ptr )
 
     ImGuiIO &io = ImGui::GetIO();
     bool canvas_hovered = ImGui::IsWindowHovered();
-    me_canvas_tools_state &tools = *state.uistate->tools_state;
+    ToolsState &tools = *state.uistate->tools_state;
     bool brush_stroke_active = false;
 
     bool show_tooltip = false;
-    const me_palette_entry *tooltip_entry = nullptr;
+    const PaletteEntry *tooltip_entry = nullptr;
     point_abs_etile tooltip_pos;
     if( canvas_hovered ) {
         point_abs_etile tile_pos = get_mouse_tile_pos( cam );
@@ -249,7 +249,7 @@ void show_canvas( me_state &state, me_file *file_ptr )
             show_tooltip = true;
             tooltip_pos = tile_pos;
             if( is_mouse_in_bounds ) {
-                const uuid_t &uuid = file.base.canvas.get( tile_pos.raw() );
+                const UUID &uuid = file.base.canvas.get( tile_pos.raw() );
                 tooltip_entry = state.project().get_palette_by_uuid(
                                     file.base.inline_palette_id )->find_entry( uuid );
             }
@@ -279,7 +279,7 @@ void show_canvas( me_state &state, me_file *file_ptr )
         }
         if( file.uses_rows() ) {
             // Ensure the brush is in valid state
-            const me_palette &pal = *state.project().get_palette_by_uuid( file.base.inline_palette_id );
+            const Palette &pal = *state.project().get_palette_by_uuid( file.base.inline_palette_id );
             if( tools.get_brush() != UUID_INVALID && !pal.find_entry( tools.get_brush() ) ) {
                 tools.set_brush( UUID_INVALID );
             }
@@ -289,7 +289,7 @@ void show_canvas( me_state &state, me_file *file_ptr )
                     tools.start_tool_operation();
                 }
                 if( is_mouse_in_bounds ) {
-                    const uuid_t &uuid = file.base.canvas.get( tile_pos.raw() );
+                    const UUID &uuid = file.base.canvas.get( tile_pos.raw() );
                     if( uuid != tools.get_brush() ) {
                         file.base.canvas.set( tile_pos.raw(), tools.get_brush() );
                         tools.set_tool_operation_changed_data();
@@ -299,7 +299,7 @@ void show_canvas( me_state &state, me_file *file_ptr )
             if( ( tools.get_tool() == CanvasTool::Bucket || tools.get_tool() == CanvasTool::BucketGlobal ) &&
                 ImGui::IsMouseClicked( ImGuiMouseButton_Left ) ) {
                 if( is_mouse_in_bounds ) {
-                    const uuid_t &uuid = file.base.canvas.get( tile_pos.raw() );
+                    const UUID &uuid = file.base.canvas.get( tile_pos.raw() );
                     if( uuid != tools.get_brush() ) {
                         apply_bucket_tool( file.base.canvas, tools.get_brush(), tile_pos,
                                            tools.get_tool() == CanvasTool::BucketGlobal );
@@ -309,7 +309,7 @@ void show_canvas( me_state &state, me_file *file_ptr )
             }
             if( ImGui::IsMouseClicked( ImGuiMouseButton_Middle ) ) {
                 if( is_mouse_in_bounds ) {
-                    const uuid_t &uuid = file.base.canvas.get( tile_pos.raw() );
+                    const UUID &uuid = file.base.canvas.get( tile_pos.raw() );
                     tools.set_brush( uuid );
                 } else {
                     tools.set_brush( UUID_INVALID );
@@ -327,15 +327,15 @@ void show_canvas( me_state &state, me_file *file_ptr )
             }
         }
 
-        me_palette *pal_ptr = state.project().get_palette_by_uuid( file.base.inline_palette_id );
+        Palette *pal_ptr = state.project().get_palette_by_uuid( file.base.inline_palette_id );
         assert( pal_ptr );
 
-        me_palette &pal = *pal_ptr;
+        Palette &pal = *pal_ptr;
 
         for( int x = 0; x < file.mapgensize().x(); x++ ) {
             for( int y = 0; y < file.mapgensize().y(); y++ ) {
                 point_abs_etile p( x, y );
-                uuid_t uuid = file.base.canvas.get( p.raw() );
+                UUID uuid = file.base.canvas.get( p.raw() );
                 const SpriteRef *img = pal.sprite_from_uuid( uuid );
                 if( img ) {
                     fill_tile_sprited( draw_list, cam, p, *img );
@@ -346,7 +346,7 @@ void show_canvas( me_state &state, me_file *file_ptr )
         for( int x = 0; x < file.mapgensize().x(); x++ ) {
             for( int y = 0; y < file.mapgensize().y(); y++ ) {
                 point_abs_etile p( x, y );
-                uuid_t uuid = file.base.canvas.get( p.raw() );
+                UUID uuid = file.base.canvas.get( p.raw() );
                 ImVec4 col = pal.color_from_uuid( uuid );
                 const SpriteRef *img = pal.sprite_from_uuid( uuid );
                 if( img ) {
@@ -371,7 +371,7 @@ void show_canvas( me_state &state, me_file *file_ptr )
         }
     }
 
-    for( const me_mapobject &obj : file.objects ) {
+    for( const MapObject &obj : file.objects ) {
         if( !obj.visible ) {
             continue;
         }
@@ -404,8 +404,8 @@ void show_canvas( me_state &state, me_file *file_ptr )
     }
 
     if( show_tooltip ) {
-        std::vector<const me_mapobject *> objects;
-        for( const me_mapobject &obj : file.objects ) {
+        std::vector<const MapObject *> objects;
+        for( const MapObject &obj : file.objects ) {
             if( obj.x.max < tooltip_pos.x() ||
                 obj.y.max < tooltip_pos.y() ||
                 obj.x.min > tooltip_pos.x() ||
@@ -419,14 +419,14 @@ void show_canvas( me_state &state, me_file *file_ptr )
         if( tooltip_entry || !objects.empty() ) {
             ImGui::BeginTooltip();
             if( tooltip_entry ) {
-                const me_palette_entry &e = *tooltip_entry;
+                const PaletteEntry &e = *tooltip_entry;
                 for( const auto &it : e.mapping.pieces ) {
                     ImGui::TextDisabled( "MAP" );
                     ImGui::SameLine();
                     ImGui::Text( "%s", it->fmt_summary().c_str() );
                 }
             }
-            for( const me_mapobject *obj : objects ) {
+            for( const MapObject *obj : objects ) {
                 ImGui::TextDisabled( "OBJ" );
                 ImGui::SameLine();
                 ImGui::Text( "%s", obj->piece->fmt_summary().c_str() );

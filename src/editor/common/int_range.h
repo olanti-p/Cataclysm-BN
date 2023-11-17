@@ -7,7 +7,7 @@ class JsonIn;
 namespace editor
 {
 
-struct me_int_range {
+struct IntRange {
     int min = 0;
     int max = 0;
 

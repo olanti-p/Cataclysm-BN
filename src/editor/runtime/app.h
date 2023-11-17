@@ -5,39 +5,39 @@
 
 namespace editor
 {
-struct me_titlescreen_state;
-struct me_state;
+struct TitleScreen;
+struct State;
 
-struct app_run_state {
+struct AppRunState {
     bool do_exit_to_game = false;
     bool do_exit_to_dektop = false;
 };
 
-struct me_main_app {
-    me_main_app();
-    me_main_app( const me_main_app & ) = delete;
-    me_main_app( me_main_app && );
-    ~me_main_app();
+struct App {
+    App();
+    App( const App & ) = delete;
+    App( App && );
+    ~App();
 
-    me_main_app &operator=( const me_main_app & ) = delete;
-    me_main_app &operator=( me_main_app && );
+    App &operator=( const App & ) = delete;
+    App &operator=( App && );
 
-    std::unique_ptr<me_titlescreen_state> title_state;
-    std::unique_ptr<me_state> editor_state;
+    std::unique_ptr<TitleScreen> title_state;
+    std::unique_ptr<State> editor_state;
 
-    app_run_state run_state;
+    AppRunState run_state;
 };
 
 /**
  * =============== Helpers ===============
  */
-void init_app( me_main_app &app );
-void update_app_state( me_main_app &app );
+void init_app( App &app );
+void update_app_state( App &app );
 
 /**
  * =============== Windows ===============
  */
-void show_app( me_main_app &app );
+void show_app( App &app );
 
 
 } // namespace editor

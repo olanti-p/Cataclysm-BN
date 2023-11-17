@@ -3,9 +3,9 @@
 
 namespace editor
 {
-struct me_state;
+struct State;
 
-void show_main_menu_bar( me_state &state );
+void show_main_menu_bar( State &state );
 
 } // namespace editor
 

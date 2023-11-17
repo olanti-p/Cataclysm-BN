@@ -11,18 +11,18 @@
 
 namespace editor
 {
-me_mapobject::me_mapobject() = default;
-me_mapobject::me_mapobject( me_mapobject && ) = default;
-me_mapobject::~me_mapobject() = default;
+MapObject::MapObject() = default;
+MapObject::MapObject( MapObject && ) = default;
+MapObject::~MapObject() = default;
 
-me_mapobject &me_mapobject::operator=( me_mapobject && ) = default;
+MapObject &MapObject::operator=( MapObject && ) = default;
 
-me_mapobject::me_mapobject( const me_mapobject &rhs )
+MapObject::MapObject( const MapObject &rhs )
 {
     *this = rhs;
 }
 
-me_mapobject &me_mapobject::operator=( const me_mapobject &rhs )
+MapObject &MapObject::operator=( const MapObject &rhs )
 {
     x = rhs.x;
     y = rhs.y;
@@ -33,32 +33,32 @@ me_mapobject &me_mapobject::operator=( const me_mapobject &rhs )
     return *this;
 }
 
-const uuid_t &me_mapobject::get_uuid() const
+const UUID &MapObject::get_uuid() const
 {
     return piece->uuid;
 }
 
-void me_mapobject::set_uuid( const uuid_t &uuid )
+void MapObject::set_uuid( const UUID &uuid )
 {
     piece->uuid = uuid;
 }
 
-static bool is_expanded( const me_state &state, const uuid_t &object_id )
+static bool is_expanded( const State &state, const UUID &object_id )
 {
     return state.uistate->expanded_mapobjects.count( object_id ) != 0;
 }
 
-static void expand_object( me_state &state, const uuid_t &object_id )
+static void expand_object( State &state, const UUID &object_id )
 {
     state.uistate->expanded_mapobjects.insert( object_id );
 }
 
-static void collapse_object( me_state &state, const uuid_t &object_id )
+static void collapse_object( State &state, const UUID &object_id )
 {
     state.uistate->expanded_mapobjects.erase( object_id );
 }
 
-void show_mapobjects( me_state &state, me_file &f, bool &show )
+void show_mapobjects( State &state, Mapgen &f, bool &show )
 {
     ImGui::SetNextWindowSize( ImVec2( 420.0f, 300.0f ), ImGuiCond_FirstUseEver );
     ImGui::SetNextWindowPos( ImVec2( 50.0f, 50.0f ), ImGuiCond_FirstUseEver );
@@ -70,7 +70,7 @@ void show_mapobjects( me_state &state, me_file &f, bool &show )
     }
     ImGui::PushID( f.uuid );
 
-    std::vector<me_mapobject> &list = f.objects;
+    std::vector<MapObject> &list = f.objects;
 
     bool changed = ImGui::VectorWidget()
     .with_add( [&]() -> bool {
@@ -101,9 +101,9 @@ void show_mapobjects( me_state &state, me_file &f, bool &show )
         if( ImGui::Combo( "##pick-new-object", &new_object_type, new_object_str.c_str() ) )
         {
             if( new_object_type != 0 ) {
-                me_mapobject obj;
+                MapObject obj;
                 obj.piece = editor::make_new_piece( object_opts[new_object_type - 1].second );
-                uuid_t uuid = state.project().uuid_gen();
+                UUID uuid = state.project().uuid_gen();
                 obj.piece->uuid = uuid;
                 obj.piece->init_new();
                 list.push_back( std::move( obj ) );
@@ -133,7 +133,7 @@ void show_mapobjects( me_state &state, me_file &f, bool &show )
             state.mark_changed( "me-mapobject-color" );
         }
         ImGui::SameLine();
-        const uuid_t &object_id = list[idx].get_uuid();
+        const UUID &object_id = list[idx].get_uuid();
         if( is_expanded( state, object_id ) ) {
             if( ImGui::ArrowButton( "##collapse", ImGuiDir_Down ) ) {
                 collapse_object( state, object_id );
@@ -166,8 +166,8 @@ void show_mapobjects( me_state &state, me_file &f, bool &show )
         }
     } )
     .with_duplicate( [&]( size_t idx ) {
-        const me_mapobject &src = list[ idx ];
-        editor::me_mapobject copy = src;
+        const MapObject &src = list[ idx ];
+        editor::MapObject copy = src;
         copy.set_uuid( state.project().uuid_gen() );
         list.insert( std::next( list.cbegin(), idx + 1 ), std::move( copy ) );
     } )

@@ -17,12 +17,12 @@
 
 namespace editor
 {
-me_uistate::me_uistate() = default;
-me_uistate::me_uistate( me_uistate && ) = default;
-me_uistate::~me_uistate() = default;
-me_uistate &me_uistate::operator=( me_uistate && ) = default;
+UiState::UiState() = default;
+UiState::UiState( UiState && ) = default;
+UiState::~UiState() = default;
+UiState &UiState::operator=( UiState && ) = default;
 
-void me_uistate::toggle_show_palette( uuid_t uuid )
+void UiState::toggle_show_palette( UUID uuid )
 {
     for( auto &it : open_palettes ) {
         if( it.uuid == uuid ) {
@@ -34,7 +34,7 @@ void me_uistate::toggle_show_palette( uuid_t uuid )
     open_palettes.back().uuid = uuid;
 }
 
-void me_uistate::toggle_show_mapping( uuid_t palette, uuid_t uuid )
+void UiState::toggle_show_mapping( UUID palette, UUID uuid )
 {
     for( auto &it : open_mappings ) {
         if( it.uuid == uuid && it.palette == palette ) {
@@ -47,7 +47,7 @@ void me_uistate::toggle_show_mapping( uuid_t palette, uuid_t uuid )
     open_mappings.back().palette = palette;
 }
 
-void me_uistate::toggle_show_mapobjects( uuid_t uuid )
+void UiState::toggle_show_mapobjects( UUID uuid )
 {
     for( auto &it : open_mapgenobjects ) {
         if( it.uuid == uuid ) {
@@ -59,9 +59,9 @@ void me_uistate::toggle_show_mapobjects( uuid_t uuid )
     open_mapgenobjects.back().uuid = uuid;
 }
 
-void show_camera_controls( me_state &state, bool &show )
+void show_camera_controls( State &state, bool &show )
 {
-    me_uistate &uistate = *state.uistate;
+    UiState &uistate = *state.uistate;
 
     ImGui::SetNextWindowSize( ImVec2( 230.0f, 140.0f ), ImGuiCond_FirstUseEver );
     ImGui::Begin( "Camera Controls", &show );
@@ -94,7 +94,7 @@ void show_camera_controls( me_state &state, bool &show )
     ImGui::End();
 }
 
-void run_ui_for_state( me_state &state )
+void run_ui_for_state( State &state )
 {
     if( !state.uistate ) {
         state.uistate = &get_uistate_for_project( state.project().project_uuid );
@@ -106,11 +106,11 @@ void run_ui_for_state( me_state &state )
     handle_file_exporting( state );
     handle_project_exiting( state );
 
-    me_project &proj = state.project();
+    Project &proj = state.project();
 
-    me_uistate &uistate = *state.uistate;
+    UiState &uistate = *state.uistate;
 
-    me_file *active_file = nullptr;
+    Mapgen *active_file = nullptr;
     if( uistate.active_file_id ) {
         active_file = proj.get_file_by_uuid( *uistate.active_file_id );
         if( !active_file ) {
@@ -147,7 +147,7 @@ void run_ui_for_state( me_state &state )
         if( !it.open ) {
             continue;
         }
-        me_palette *pal = proj.get_palette_by_uuid( it.uuid );
+        Palette *pal = proj.get_palette_by_uuid( it.uuid );
         if( pal ) {
             show_palette( state, *pal, it.open );
         } else {
@@ -158,9 +158,9 @@ void run_ui_for_state( me_state &state )
         if( !it.open ) {
             continue;
         }
-        me_palette *pal = proj.get_palette_by_uuid( it.palette );
+        Palette *pal = proj.get_palette_by_uuid( it.palette );
         if( pal ) {
-            me_palette_entry *entry = pal->find_entry( it.uuid );
+            PaletteEntry *entry = pal->find_entry( it.uuid );
             if( entry ) {
                 show_mapping( state, *pal, *entry, it.open );
             } else {
@@ -174,7 +174,7 @@ void run_ui_for_state( me_state &state )
         if( !it.open ) {
             continue;
         }
-        me_file *f = proj.get_file_by_uuid( it.uuid );
+        Mapgen *f = proj.get_file_by_uuid( it.uuid );
         if( f ) {
             show_mapobjects( state, *f, it.open );
         } else {

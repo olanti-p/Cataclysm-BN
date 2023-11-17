@@ -6,7 +6,7 @@
 namespace editor
 {
 
-void show_toolbar( me_canvas_tools_state &tools, bool &show )
+void show_toolbar( ToolsState &tools, bool &show )
 {
     if( !ImGui::Begin( "Toolbar", &show,
                        ImGuiWindowFlags_AlwaysAutoResize |

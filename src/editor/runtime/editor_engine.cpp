@@ -30,7 +30,7 @@
 static SDL_Window *window = nullptr;
 static SDL_Renderer *renderer = nullptr;
 static std::string ini_file_path;
-static editor::me_main_app *current_app = nullptr;
+static editor::App *current_app = nullptr;
 
 namespace editor
 {
@@ -160,7 +160,7 @@ void bnme_entry_point()
     }
 
     {
-        me_main_app app;
+        App app;
         current_app = &app;
 
         init_app( app );

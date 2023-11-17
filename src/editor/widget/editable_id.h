@@ -22,19 +22,19 @@ void deserialize_eid( JsonIn &jsin, std::string &data );
 } // namespace detail
 
 template<typename T>
-struct editable_id {
+struct EditableID {
     public:
         std::string data;
 
-        editable_id() = default;
-        editable_id( const editable_id<T> & ) = default;
-        editable_id( editable_id<T> && ) = default;
-        editable_id( const std::string &s ) : data( s ) {}
-        editable_id( const string_id<T> &id ) : data( id.str() ) {}
-        ~editable_id() = default;
+        EditableID() = default;
+        EditableID( const EditableID<T> & ) = default;
+        EditableID( EditableID<T> && ) = default;
+        EditableID( const std::string &s ) : data( s ) {}
+        EditableID( const string_id<T> &id ) : data( id.str() ) {}
+        ~EditableID() = default;
 
-        editable_id &operator= ( const editable_id<T> & ) = default;
-        editable_id &operator= ( editable_id<T> && ) = default;
+        EditableID &operator= ( const EditableID<T> & ) = default;
+        EditableID &operator= ( EditableID<T> && ) = default;
 
         bool is_valid() const {
             return string_id<T>( data ).is_valid();
@@ -48,7 +48,7 @@ struct editable_id {
             return string_id<T>( data ).obj();
         }
 
-        static const editable_id<T> NULL_ID() {
+        static const EditableID<T> NULL_ID() {
             return string_id<T>::NULL_ID();
         }
 
@@ -67,26 +67,32 @@ struct editable_id {
 };
 
 template<typename T>
-std::vector<std::string> editable_id<T>::all_opts;
+std::vector<std::string> EditableID<T>::all_opts;
 
 struct snippet_category_tag {};
 struct liquid_item_tag {};
 struct item_group_tag {};
 
-using field_eid = editable_id<field_type>;
-using furn_eid = editable_id<furn_t>;
-using igroup_eid = editable_id<item_group_tag>;
-using item_eid = editable_id<itype>;
-using liquid_eid = editable_id<liquid_item_tag>;
-using mgroup_eid = editable_id<MonsterGroup>;
-using npc_template_eid = editable_id<npc_template>;
-using oter_eid = editable_id<oter_t>;
-using palette_eid = editable_id<mapgen_palette>;
-using snippet_category_eid = editable_id<snippet_category_tag>;
-using ter_eid = editable_id<ter_t>;
-using trait_eid = editable_id<mutation_branch>;
-using trap_eid = editable_id<trap>;
-using vgroup_eid = editable_id<VehicleGroup>;
+// EditableID specified for types
+namespace EID
+{
+
+using Field = EditableID<field_type>;
+using Furn = EditableID<furn_t>;
+using IGroup = EditableID<item_group_tag>;
+using Item = EditableID<itype>;
+using Liquid = EditableID<liquid_item_tag>;
+using MGroup = EditableID<MonsterGroup>;
+using NPCTemplate = EditableID<npc_template>;
+using Oter = EditableID<oter_t>;
+using Palette = EditableID<mapgen_palette>;
+using SnippetCategory = EditableID<snippet_category_tag>;
+using Ter = EditableID<ter_t>;
+using Trait = EditableID<mutation_branch>;
+using Trap = EditableID<trap>;
+using VGroup = EditableID<VehicleGroup>;
+
+} // namespace EID
 
 } // namespace editor
 
