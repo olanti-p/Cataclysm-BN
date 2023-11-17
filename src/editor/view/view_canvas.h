@@ -1,5 +1,5 @@
-#ifndef CATA_SRC_EDITOR_CANVAS_H
-#define CATA_SRC_EDITOR_CANVAS_H
+#ifndef CATA_SRC_EDITOR_VIEW_CANVAS_H
+#define CATA_SRC_EDITOR_VIEW_CANVAS_H
 
 #include "coordinates.h"
 
@@ -63,4 +63,4 @@ void show_canvas( me_state &state, me_file *file_ptr );
 
 } // namespace editor
 
-#endif // CATA_SRC_EDITOR_CANVAS_H
+#endif // CATA_SRC_EDITOR_VIEW_CANVAS_H

@@ -1,7 +1,7 @@
 #include "ui_state.h"
 
-#include "canvas/camera.h"
-#include "canvas/canvas.h"
+#include "view/camera.h"
+#include "view/view_canvas.h"
 #include "history_state.h"
 #include "imgui.h"
 #include "mapgen/palette.h"

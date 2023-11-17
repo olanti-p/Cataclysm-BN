@@ -4,7 +4,7 @@
 #include "pimpl.h"
 
 #include "common/uuid.h"
-#include "canvas/camera.h"
+#include "view/camera.h"
 #include "state/tools_state.h"
 
 #include <set>

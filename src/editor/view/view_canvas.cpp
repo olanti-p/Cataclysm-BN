@@ -1,4 +1,4 @@
-#include "canvas.h"
+#include "view_canvas.h"
 
 #include "common/canvas_2d.h"
 #include "common/color.h"
