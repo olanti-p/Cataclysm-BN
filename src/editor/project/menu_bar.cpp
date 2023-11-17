@@ -42,7 +42,7 @@ void show_main_menu_bar( me_state &state )
             }
             ImGui::EndMenu();
         }
-        if( ImGui::BeginMenu( "View" ) ) {
+        if( ImGui::BeginMenu( "Window" ) ) {
             ImGui::MenuItem( "Project Overview", nullptr, &state.uistate->show_project_overview );
             ImGui::MenuItem( "File Info", nullptr, &state.uistate->show_file_info );
             ImGui::MenuItem( "History", nullptr, &state.uistate->show_file_history );
