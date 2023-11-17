@@ -804,12 +804,16 @@ LUA_SOURCES := $(wildcard $(LUA_SRC_DIR)/*.c)
 CLANG_TIDY_PLUGIN_SOURCES := \
   $(wildcard tools/clang-tidy-plugin/*.cpp tools/clang-tidy-plugin/*/*.cpp)
 TOOLHDR := $(wildcard tools/*/*.h)
+EDITOR_SOURCES := $(wildcard src/editor/**/*.cpp)
+EDITOR_HEADERS := $(wildcard src/editor/**/*.h)
 # Using sort here because it has the side-effect of deduplicating the list
 ASTYLE_SOURCES := $(sort \
   $(SOURCES) \
   $(HEADERS) \
   $(TESTSRC) \
   $(TESTHDR) \
+  $(EDITOR_SOURCES) \
+  $(EDITOR_HEADERS) \
   $(JSON_FORMATTER_SOURCES) \
   $(CLANG_TIDY_PLUGIN_SOURCES) \
   $(TOOLHDR))
