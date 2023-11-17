@@ -16,22 +16,22 @@ namespace editor
 {
 void handle_file_saving( me_state &state )
 {
+    me_save_export_state &sestate = *state.sestate;
+
     if( state.uistate->tools_state->has_ongoing_tool_operation() ) {
+        sestate.want_save = false;
+        sestate.want_save_as = false;
+        sestate.want_exit_after_save = false;
         return;
     }
 
-    me_save_export_state &sestate = *state.sestate;
-
-    if( ImGui::IsKeyDown( ImGuiKey_LeftCtrl ) && ImGui::IsKeyPressed( ImGuiKey_S ) ) {
-        if( ImGui::IsKeyDown( ImGuiKey_LeftShift ) || !sestate.file_save_path ) {
-            sestate.open_save_as = true;
-        } else {
-            sestate.do_save = true;
-        }
+    if( sestate.want_save && !sestate.file_save_path ) {
+        sestate.want_save = false;
+        sestate.want_save_as = true;
     }
 
-    if( sestate.open_save_as ) {
-        sestate.open_save_as = false;
+    if( sestate.want_save_as ) {
+        sestate.want_save_as = false;
         ImGui::SetNextWindowSize( ImVec2( 580, 380 ), ImGuiCond_FirstUseEver );
         ImGuiFileDialog::Instance()->OpenDialog( "SaveToFile",
                 "Save As...", ".json",
@@ -42,21 +42,22 @@ void handle_file_saving( me_state &state )
     if( ImGuiFileDialog::Instance()->Display( "SaveToFile" ) ) {
         if( ImGuiFileDialog::Instance()->IsOk() ) {
             sestate.file_save_path = ImGuiFileDialog::Instance()->GetFilePathName();
-            sestate.do_save = true;
+            sestate.want_save = true;
         } else {
-            sestate.do_exit_after_save = false;
+            sestate.want_exit_after_save = false;
         }
         ImGuiFileDialog::Instance()->Close();
     }
 
-    if( sestate.do_save ) {
-        sestate.do_save = false;
+    if( sestate.want_save ) {
+        sestate.want_save = false;
         assert( sestate.file_save_path );
         write_to_file( *sestate.file_save_path, [&]( std::ostream & oss ) {
             oss << serialize( state.project() );
         } );
         state.histate->last_saved_revision = state.histate->current_revision.num;
-        if( sestate.do_exit_after_save ) {
+        if( sestate.want_exit_after_save ) {
+            sestate.want_exit_after_save = false;
             state.uistate->do_loop = false;
         }
     }
@@ -64,22 +65,21 @@ void handle_file_saving( me_state &state )
 
 void handle_file_exporting( me_state &state )
 {
+    me_save_export_state &sestate = *state.sestate;
+
     if( state.uistate->tools_state->has_ongoing_tool_operation() ) {
+        sestate.want_export = false;
+        sestate.want_export_as = false;
         return;
     }
 
-    me_save_export_state &sestate = *state.sestate;
-
-    if( ImGui::IsKeyDown( ImGuiKey_LeftCtrl ) && ImGui::IsKeyPressed( ImGuiKey_E ) ) {
-        if( ImGui::IsKeyDown( ImGuiKey_LeftShift ) || !sestate.file_export_path ) {
-            sestate.open_export_as = true;
-        } else {
-            sestate.do_export = true;
-        }
+    if( sestate.want_export && !sestate.file_export_path ) {
+        sestate.want_export = false;
+        sestate.want_export_as = true;
     }
 
-    if( sestate.open_export_as ) {
-        sestate.open_export_as = false;
+    if( sestate.want_export_as ) {
+        sestate.want_export_as = false;
         ImGui::SetNextWindowSize( ImVec2( 580, 380 ), ImGuiCond_FirstUseEver );
         ImGuiFileDialog::Instance()->OpenDialog( "ExportToFile",
                 "Export As...", ".json",
@@ -90,19 +90,19 @@ void handle_file_exporting( me_state &state )
     if( ImGuiFileDialog::Instance()->Display( "ExportToFile" ) ) {
         if( ImGuiFileDialog::Instance()->IsOk() ) {
             sestate.file_export_path = ImGuiFileDialog::Instance()->GetFilePathName();
-            sestate.do_export = true;
+            sestate.want_export = true;
         }
         ImGuiFileDialog::Instance()->Close();
     }
 
     if( g->export_editor_project_on_start ) {
         sestate.file_export_path = *g->export_editor_project_on_start;
-        sestate.do_export = true;
+        sestate.want_export = true;
         g->export_editor_project_on_start.reset();
     }
 
-    if( sestate.do_export ) {
-        sestate.do_export = false;
+    if( sestate.want_export ) {
+        sestate.want_export = false;
         assert( sestate.file_export_path );
         write_to_file( *sestate.file_export_path, [&]( std::ostream & oss ) {
             std::string s = editor_export::to_string( state.project() );
@@ -112,11 +112,17 @@ void handle_file_exporting( me_state &state )
     }
 }
 
-void save_on_close_widget_block( me_state &state, bool keep_open )
+void handle_project_exiting( me_state &state )
 {
-    if( !keep_open ) {
+    if( state.uistate->tools_state->has_ongoing_tool_operation() ) {
+        state.uistate->want_close = false;
+        return;
+    }
+
+    if( state.uistate->want_close ) {
         if( state.histate->has_unsaved_changes() ) {
             ImGui::OpenPopup( "###warn-unsaved-on-close" );
+            state.uistate->want_close = false;
         } else {
             state.uistate->do_loop = false;
         }
@@ -135,57 +141,17 @@ void save_on_close_widget_block( me_state &state, bool keep_open )
         }
         ImGui::SameLine();
         if( ImGui::Button( "Cancel", btn_sz ) ) {
+            state.uistate->want_close = false;
             ImGui::CloseCurrentPopup();
         }
         ImGui::SameLine();
         if( ImGui::Button( "Save", btn_sz ) ) {
             ImGui::CloseCurrentPopup();
-            sestate.do_exit_after_save = true;
-            if( sestate.file_save_path ) {
-                sestate.do_save = true;
-            } else {
-                sestate.open_save_as = true;
-            }
+            sestate.want_exit_after_save = true;
+            sestate.want_save = true;
         }
         ImGui::EndPopup();
     }
-}
-
-void save_and_export_widget_block( me_state &state )
-{
-    me_save_export_state &sestate = *state.sestate;
-
-    std::string save_btn = string_format( "%sSave###save-button",
-                                          state.histate->has_unsaved_changes() ? "* " : "" );
-    if( ImGui::Button( save_btn.c_str() ) ) {
-        if( !sestate.file_save_path ) {
-            sestate.open_save_as = true;
-        } else {
-            sestate.do_save = true;
-        }
-    }
-    ImGui::SameLine();
-    if( ImGui::Button( "Save As..." ) ) {
-        sestate.open_save_as = true;
-    }
-
-    handle_file_saving( state );
-
-    std::string export_btn = string_format( "%sExport###export-button",
-                                            state.histate->has_unexported_changes() ? "* " : "" );
-    if( ImGui::Button( export_btn.c_str() ) ) {
-        if( !sestate.file_export_path ) {
-            sestate.open_export_as = true;
-        } else {
-            sestate.do_export = true;
-        }
-    }
-    ImGui::SameLine();
-    if( ImGui::Button( "Export As..." ) ) {
-        sestate.open_export_as = true;
-    }
-
-    handle_file_exporting( state );
 }
 
 } // namespace editor

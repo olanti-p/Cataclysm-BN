@@ -32,10 +32,10 @@ const me_palette *me_project::get_palette_by_uuid( const uuid_t &fid ) const
     return nullptr;
 }
 
-void show_project_ui( me_state &state, me_project &project )
+void show_project_overview_ui( me_state &state, me_project &project, bool &show )
 {
     ImGui::SetNextWindowSize( ImVec2( 250.0f, 200.0f ), ImGuiCond_FirstUseEver );
-    ImGui::Begin( "Project Overview" );
+    ImGui::Begin( "Project Overview", &show );
 
     ImGui::Text( "Mapgens:" );
 
