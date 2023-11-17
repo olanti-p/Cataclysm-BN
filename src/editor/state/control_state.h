@@ -1,14 +1,6 @@
 #ifndef CATA_SRC_EDITOR_CONTROL_STATE_H
 #define CATA_SRC_EDITOR_CONTROL_STATE_H
 
-#include "pimpl.h"
-
-#include "common/uuid.h"
-#include "canvas/camera.h"
-#include "canvas/canvas_tools.h"
-
-#include <set>
-
 namespace editor
 {
 /**
@@ -25,7 +17,7 @@ struct me_control_state {
     me_control_state &operator=( const me_control_state & ) = delete;
     me_control_state &operator=( me_control_state && );
 
-    bool do_loop = true;                    //
+    bool is_editor_running = true;
     bool want_close = false;                // User wants to close the project
     bool want_save = false;                 // User wants to save
     bool want_save_as = false;              // User wants to save as

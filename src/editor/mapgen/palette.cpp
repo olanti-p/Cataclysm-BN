@@ -1,13 +1,13 @@
 #include "palette.h"
 
-#include "canvas/canvas_tools.h"
+#include "state/tools_state.h"
 #include "common/color.h"
 #include "project/file.h"
 #include "map_key_gen.h"
 #include "piece_impl.h"
 #include "project/project.h"
-#include "project/state.h"
-#include "project/uistate.h"
+#include "state/state.h"
+#include "state/ui_state.h"
 #include "widget/widgets.h"
 
 #include "translations.h"

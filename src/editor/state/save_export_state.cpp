@@ -1,17 +1,17 @@
-#include "project/control_state.h"
-#include "state_export.h"
+#include "save_export_state.h"
 
 #include "fstream_utils.h"
 #include "game.h"
 
-#include "canvas/canvas_tools.h"
-#include "project.h"
-#include "history.h"
-#include "save_and_export.h"
+#include "history_state.h"
+#include "project/project.h"
+#include "project/project_export.h"
 #include "state.h"
-#include "uistate.h"
-#include "widget/widgets.h"
+#include "state/control_state.h"
+#include "tools_state.h"
+#include "ui_state.h"
 #include "widget/ImGuiFileDialog.h"
+#include "widget/widgets.h"
 
 namespace editor
 {
@@ -60,7 +60,7 @@ void handle_file_saving( me_state &state )
         state.histate->last_saved_revision = state.histate->current_revision.num;
         if( control.want_exit_after_save ) {
             control.want_exit_after_save = false;
-            control.do_loop = false;
+            control.is_editor_running = false;
         }
     }
 }
@@ -129,7 +129,7 @@ void handle_project_exiting( me_state &state )
             ImGui::OpenPopup( "###warn-unsaved-on-close" );
             control.want_close = false;
         } else {
-            control.do_loop = false;
+            control.is_editor_running = false;
         }
     }
 
@@ -140,7 +140,7 @@ void handle_project_exiting( me_state &state )
         ImVec2 btn_sz( ImGui::GetFrameHeight() * 5.0f, ImGui::GetFrameHeight() );
         if( ImGui::Button( "Don't Save", btn_sz ) ) {
             ImGui::CloseCurrentPopup();
-            control.do_loop = false;
+            control.is_editor_running = false;
         }
         ImGui::SameLine();
         if( ImGui::Button( "Cancel", btn_sz ) ) {

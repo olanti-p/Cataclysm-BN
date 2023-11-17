@@ -1,9 +1,9 @@
 #include "file.h"
 
 #include "mapgen/palette.h"
-#include "state.h"
+#include "state/state.h"
 #include "project.h"
-#include "uistate.h"
+#include "state/ui_state.h"
 #include "widget/widgets.h"
 
 namespace editor

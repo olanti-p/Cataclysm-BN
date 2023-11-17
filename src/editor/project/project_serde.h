@@ -1,5 +1,5 @@
-#ifndef CATA_SRC_EDITOR_STATE_SERDE_H
-#define CATA_SRC_EDITOR_STATE_SERDE_H
+#ifndef CATA_SRC_EDITOR_PROJECT_SERDE_H
+#define CATA_SRC_EDITOR_PROJECT_SERDE_H
 
 namespace editor
 {
@@ -16,4 +16,4 @@ int project_load_version();
 
 } // namespace editor
 
-#endif // CATA_SRC_EDITOR_STATE_SERDE_H
+#endif // CATA_SRC_EDITOR_PROJECT_SERDE_H

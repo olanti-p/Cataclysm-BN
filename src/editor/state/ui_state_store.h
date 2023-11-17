@@ -1,5 +1,5 @@
-#ifndef CATA_SRC_EDITOR_UISTATE_STORE_H
-#define CATA_SRC_EDITOR_UISTATE_STORE_H
+#ifndef CATA_SRC_EDITOR_UI_STATE_STORE_H
+#define CATA_SRC_EDITOR_UI_STATE_STORE_H
 
 #include <string>
 
@@ -13,4 +13,4 @@ void initialize_settings_export();
 
 } // namespace editor
 
-#endif // CATA_SRC_EDITOR_UISTATE_STORE_H
+#endif // CATA_SRC_EDITOR_UI_STATE_STORE_H
