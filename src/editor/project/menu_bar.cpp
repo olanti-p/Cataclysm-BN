@@ -4,31 +4,32 @@
 #include "project/history.h"
 #include "project/save_and_export.h"
 #include "uistate.h"
+#include "control_state.h"
 
 namespace editor
 {
 void show_main_menu_bar( me_state &state )
 {
-    me_save_export_state &sestate = *state.sestate;
+    me_control_state &control = *state.cstate;
 
     if( ImGui::BeginMainMenuBar() ) {
         if( ImGui::BeginMenu( "File" ) ) {
             if( ImGui::MenuItem( "Save", "Ctrl+S" ) ) {
-                sestate.want_save = true;
+                control.want_save = true;
             }
             if( ImGui::MenuItem( "Save As...", "Ctrl+Shift+S" ) ) {
-                sestate.want_save_as = true;
+                control.want_save_as = true;
             }
             ImGui::Separator();
             if( ImGui::MenuItem( "Export", "Ctrl+E" ) ) {
-                sestate.want_export = true;
+                control.want_export = true;
             }
             if( ImGui::MenuItem( "Export As...", "Ctrl+Shift+E" ) ) {
-                sestate.want_export_as = true;
+                control.want_export_as = true;
             }
             ImGui::Separator();
             if( ImGui::MenuItem( "Exit", "Ctrl+Q" ) ) {
-                state.uistate->want_close = true;
+                control.want_close = true;
             }
             ImGui::EndMenu();
         }
@@ -61,22 +62,22 @@ void show_main_menu_bar( me_state &state )
 
     if( ImGui::IsKeyDown( ImGuiKey_LeftCtrl ) && ImGui::IsKeyPressed( ImGuiKey_S ) ) {
         if( ImGui::IsKeyDown( ImGuiKey_LeftShift ) ) {
-            sestate.want_save_as = true;
+            control.want_save_as = true;
         } else {
-            sestate.want_save = true;
+            control.want_save = true;
         }
     }
 
     if( ImGui::IsKeyDown( ImGuiKey_LeftCtrl ) && ImGui::IsKeyPressed( ImGuiKey_E ) ) {
         if( ImGui::IsKeyDown( ImGuiKey_LeftShift ) ) {
-            sestate.want_export_as = true;
+            control.want_export_as = true;
         } else {
-            sestate.want_export = true;
+            control.want_export = true;
         }
     }
 
     if( ImGui::IsKeyDown( ImGuiKey_LeftCtrl ) && ImGui::IsKeyPressed( ImGuiKey_Q ) ) {
-        state.uistate->want_close = true;
+        control.want_close = true;
     }
 
     if( ImGui::IsKeyDown( ImGuiKey_LeftCtrl ) && ImGui::IsKeyPressed( ImGuiKey_Z ) ) {

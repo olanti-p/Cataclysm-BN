@@ -10,6 +10,7 @@ struct me_history_state;
 struct me_project;
 struct me_save_export_state;
 struct me_uistate;
+struct me_control_state;
 
 struct me_state {
     me_state();
@@ -24,6 +25,7 @@ struct me_state {
 
     pimpl<me_history_state> histate;
     pimpl<me_save_export_state> sestate;
+    pimpl<me_control_state> cstate;
     me_uistate *uistate = nullptr;
 
     me_project &project();

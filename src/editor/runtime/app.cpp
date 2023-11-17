@@ -3,6 +3,7 @@
 #include "editor_engine.h"
 #include "title_screen.h"
 
+#include "project/control_state.h"
 #include "project/project.h"
 #include "project/state.h"
 #include "project/uistate.h"
@@ -60,7 +61,7 @@ void update_app_state( me_main_app &app )
             }
         }
         app.title_state->ret.reset();
-    } else if( app.editor_state && !app.editor_state->uistate->do_loop ) {
+    } else if( app.editor_state && !app.editor_state->cstate->do_loop ) {
         app.editor_state.reset();
         set_default_ini_path();
     }
