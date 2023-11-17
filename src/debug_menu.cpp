@@ -108,7 +108,7 @@
 #include "weather_gen.h"
 #include "weighted_list.h"
 
-#include "editor/editor_engine.h"
+#include "editor/runtime/editor_engine.h"
 
 static const mtype_id mon_generator( "mon_generator" );
 
