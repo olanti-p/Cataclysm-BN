@@ -3,8 +3,6 @@ set(MESSAGES_CPP ${CMAKE_SOURCE_DIR}/src/messages.cpp)
 set(RESOURCE_RC ${CMAKE_SOURCE_DIR}/src/resource.rc)
 
 file(GLOB CATACLYSM_BN_SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/imgui/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/editor/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
     ${CMAKE_SOURCE_DIR}/tools/format/format.cpp
 )
@@ -12,8 +10,6 @@ file(GLOB CATACLYSM_BN_SOURCES
 list(REMOVE_ITEM CATACLYSM_BN_SOURCES ${MAIN_CPP} ${MESSAGES_CPP})
 
 file(GLOB CATACLYSM_BN_HEADERS
-    ${CMAKE_CURRENT_SOURCE_DIR}/imgui/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/editor/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/*.h
     ${CMAKE_SOURCE_DIR}/tools/format/format.h
 )
@@ -142,6 +138,12 @@ if (TILES)
     endif ()
 
     set_target_properties( cataclysm-tiles PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}" )
+
+    add_subdirectory(imgui)
+    add_subdirectory(editor)
+
+    target_link_libraries(cataclysm-tiles PRIVATE imgui)
+    target_link_libraries(cataclysm-tiles PRIVATE editor)
 endif ()
 
 # Build curses version if requested
