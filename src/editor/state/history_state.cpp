@@ -154,7 +154,7 @@ void HistoryState::mark_changed( const char *id )
     std::string new_widget_changed_str = id ? id : "<nullptr>";
     if( file_has_changes ) {
         std::cerr << string_format(
-                      "Tried to invoke mark_changed( \"%s\" ), but the file has already been marked as changed with id \"%s\".",
+                      R"(Tried to invoke mark_changed( "%s" ), but the file has already been marked as changed with id "%s".)",
                       new_widget_changed_str,
                       current_widget_changed_str
                   ) << std::endl;
