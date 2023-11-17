@@ -1,5 +1,6 @@
 #include "canvas.h"
 
+#include "common/canvas_2d.h"
 #include "common/color.h"
 #include "camera.h"
 #include "mapgen/palette.h"
@@ -115,16 +116,16 @@ void fill_region(
 /**
  * Find all tiles that match predicate.
 */
-static std::vector<point> find_tiles_via_global( me_file &file,
-        std::function<bool( const uuid_t & )> func )
+static std::vector<point> find_tiles_via_global( const Canvas2D<uuid_t> &canvas,
+        std::function<bool( const uuid_t & )> predicate )
 {
     std::vector<point> ret;
 
-    for( int x = 0; x < file.mapgensize().x(); x++ ) {
-        for( int y = 0; y < file.mapgensize().y(); y++ ) {
+    for( int x = 0; x < canvas.get_size().x; x++ ) {
+        for( int y = 0; y < canvas.get_size().y; y++ ) {
             point p( x, y );
-            const uuid_t &t = file.base.get_uuid_at( p );
-            if( func( t ) ) {
+            const uuid_t &t = canvas.get( p );
+            if( predicate( t ) ) {
                 ret.push_back( p );
             }
         }
@@ -136,19 +137,19 @@ static std::vector<point> find_tiles_via_global( me_file &file,
 /**
  * Find via floodfill all tiles that match predicate.
 */
-static std::vector<point> find_tiles_via_floodfill( me_file &file, const point &initial_pos,
-        std::function<bool( const uuid_t & )> func )
+static std::vector<point> find_tiles_via_floodfill( const Canvas2D<uuid_t> &canvas,
+        const point &initial_pos,
+        std::function<bool( const uuid_t & )> predicate )
 {
     std::vector<point> ret;
 
-    if( !func( file.base.get_uuid_at( initial_pos ) ) ) {
+    if( !predicate( canvas.get( initial_pos ) ) ) {
         return ret;
     }
 
     std::set<point> open;
     std::set<point> closed;
     open.insert( initial_pos );
-    point mgsize = file.mapgensize().raw();
 
     while( !open.empty() ) {
         auto it = open.cbegin();
@@ -158,14 +159,14 @@ static std::vector<point> find_tiles_via_floodfill( me_file &file, const point &
         ret.push_back( p );
         for( const point &d : neighborhood ) {
             point p2 = p + d;
-            if( p2.x < 0 || p2.y < 0 || p2.x >= mgsize.x || p2.y >= mgsize.y ) {
+            if( p2.x < 0 || p2.y < 0 || p2.x >= canvas.get_size().x || p2.y >= canvas.get_size().y ) {
                 continue;
             }
             if( closed.count( p2 ) != 0 ) {
                 continue;
             }
             closed.insert( p2 );
-            if( func( file.base.get_uuid_at( p2 ) ) ) {
+            if( predicate( canvas.get( p2 ) ) ) {
                 open.insert( p2 );
             }
         }
@@ -174,21 +175,22 @@ static std::vector<point> find_tiles_via_floodfill( me_file &file, const point &
     return ret;
 }
 
-static void apply_bucket_tool( me_file &file, const uuid_t &brush, const point_abs_etile &tile_pos,
+static void apply_bucket_tool( Canvas2D<uuid_t> &canvas, const uuid_t &brush,
+                               const point_abs_etile &tile_pos,
                                bool global )
 {
-    const uuid_t tgt = file.base.get_uuid_at( tile_pos.raw() );
+    const uuid_t tgt = canvas.get( tile_pos.raw() );
     const auto predicate = [ = ]( const uuid_t &t ) {
         return t == tgt;
     };
     std::vector<point> tiles;
     if( global ) {
-        tiles = find_tiles_via_global( file, predicate );
+        tiles = find_tiles_via_global( canvas, predicate );
     } else {
-        tiles = find_tiles_via_floodfill( file, tile_pos.raw(), predicate );
+        tiles = find_tiles_via_floodfill( canvas, tile_pos.raw(), predicate );
     }
     for( const point &p : tiles ) {
-        file.base.set_uuid_at( p, brush );
+        canvas.set( p, brush );
     }
 }
 
@@ -247,7 +249,7 @@ void show_canvas( me_state &state, me_file *file_ptr )
             show_tooltip = true;
             tooltip_pos = tile_pos;
             if( is_mouse_in_bounds ) {
-                const uuid_t &uuid = file.base.get_uuid_at( tile_pos.raw() );
+                const uuid_t &uuid = file.base.canvas.get( tile_pos.raw() );
                 tooltip_entry = state.project().get_palette_by_uuid(
                                     file.base.inline_palette_id )->find_entry( uuid );
             }
@@ -287,9 +289,9 @@ void show_canvas( me_state &state, me_file *file_ptr )
                     tools.start_tool_operation();
                 }
                 if( is_mouse_in_bounds ) {
-                    const uuid_t &uuid = file.base.get_uuid_at( tile_pos.raw() );
+                    const uuid_t &uuid = file.base.canvas.get( tile_pos.raw() );
                     if( uuid != tools.get_brush() ) {
-                        file.base.set_uuid_at( tile_pos.raw(), tools.get_brush() );
+                        file.base.canvas.set( tile_pos.raw(), tools.get_brush() );
                         tools.set_tool_operation_changed_data();
                     }
                 }
@@ -297,9 +299,9 @@ void show_canvas( me_state &state, me_file *file_ptr )
             if( ( tools.get_tool() == CanvasTool::Bucket || tools.get_tool() == CanvasTool::BucketGlobal ) &&
                 ImGui::IsMouseClicked( ImGuiMouseButton_Left ) ) {
                 if( is_mouse_in_bounds ) {
-                    const uuid_t &uuid = file.base.get_uuid_at( tile_pos.raw() );
+                    const uuid_t &uuid = file.base.canvas.get( tile_pos.raw() );
                     if( uuid != tools.get_brush() ) {
-                        apply_bucket_tool( file, tools.get_brush(), tile_pos,
+                        apply_bucket_tool( file.base.canvas, tools.get_brush(), tile_pos,
                                            tools.get_tool() == CanvasTool::BucketGlobal );
                         state.mark_changed();
                     }
@@ -307,7 +309,7 @@ void show_canvas( me_state &state, me_file *file_ptr )
             }
             if( ImGui::IsMouseClicked( ImGuiMouseButton_Middle ) ) {
                 if( is_mouse_in_bounds ) {
-                    const uuid_t &uuid = file.base.get_uuid_at( tile_pos.raw() );
+                    const uuid_t &uuid = file.base.canvas.get( tile_pos.raw() );
                     tools.set_brush( uuid );
                 } else {
                     tools.set_brush( UUID_INVALID );
@@ -333,7 +335,7 @@ void show_canvas( me_state &state, me_file *file_ptr )
         for( int x = 0; x < file.mapgensize().x(); x++ ) {
             for( int y = 0; y < file.mapgensize().y(); y++ ) {
                 point_abs_etile p( x, y );
-                uuid_t uuid = file.base.get_uuid_at( p.raw() );
+                uuid_t uuid = file.base.canvas.get( p.raw() );
                 const SpriteRef *img = pal.sprite_from_uuid( uuid );
                 if( img ) {
                     fill_tile_sprited( draw_list, cam, p, *img );
@@ -344,7 +346,7 @@ void show_canvas( me_state &state, me_file *file_ptr )
         for( int x = 0; x < file.mapgensize().x(); x++ ) {
             for( int y = 0; y < file.mapgensize().y(); y++ ) {
                 point_abs_etile p( x, y );
-                uuid_t uuid = file.base.get_uuid_at( p.raw() );
+                uuid_t uuid = file.base.canvas.get( p.raw() );
                 ImVec4 col = pal.color_from_uuid( uuid );
                 const SpriteRef *img = pal.sprite_from_uuid( uuid );
                 if( img ) {
@@ -357,7 +359,7 @@ void show_canvas( me_state &state, me_file *file_ptr )
         for( int x = 0; x < file.mapgensize().x(); x++ ) {
             for( int y = 0; y < file.mapgensize().y(); y++ ) {
                 point_abs_etile p( x, y );
-                const map_key &mk = pal.key_from_uuid( file.base.get_uuid_at( p.raw() ) );
+                const map_key &mk = pal.key_from_uuid( file.base.canvas.get( p.raw() ) );
                 point_abs_epos center = coords::project_combine( p,
                                         point_etile_epos( ETILE_SIZE / 2, ETILE_SIZE / 2 ) );
                 point_abs_screen text_center = cam.world_to_screen( center );

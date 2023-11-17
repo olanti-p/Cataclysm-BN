@@ -1,6 +1,7 @@
 #ifndef CATA_SRC_EDITOR_FILE_H
 #define CATA_SRC_EDITOR_FILE_H
 
+#include "common/canvas_2d.h"
 #include "game_constants.h"
 #include "coordinates.h"
 
@@ -18,22 +19,14 @@ namespace editor
 struct me_state;
 
 struct me_mapgen_base {
-    me_mapgen_base() {
-        set_size( point( SEEX * 2, SEEY * 2 ) );
-    }
+    me_mapgen_base() : canvas( point( SEEX * 2, SEEY * 2 ), UUID_INVALID ) { }
     ~me_mapgen_base();
 
-    point size;
-    // TODO: refer to palette entries by their ids
-    std::vector<uuid_t> rows;
+    Canvas2D<uuid_t> canvas;
     uuid_t inline_palette_id = UUID_INVALID;
 
-    void set_size( const point &s );
-    inline void set_uuid_at( const point &pos, const uuid_t &uuid ) {
-        rows[ pos.y * size.x + pos.x ] = uuid;
-    }
-    inline const uuid_t &get_uuid_at( const point &pos ) const {
-        return rows[ pos.y * size.x + pos.x ];
+    inline void set_size( point new_size ) {
+        canvas.set_size( new_size, UUID_INVALID );
     }
     void remove_usages( const uuid_t &uuid );
 

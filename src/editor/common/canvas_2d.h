@@ -1,0 +1,67 @@
+#ifndef CATA_SRC_EDITOR_2D_CANVAS_H
+#define CATA_SRC_EDITOR_2D_CANVAS_H
+
+#include "point.h"
+#include "json.h"
+
+#include <vector>
+
+namespace editor
+{
+
+template<typename T>
+class Canvas2D
+{
+    private:
+        point size;
+        std::vector<T> data;
+
+    public:
+        Canvas2D( point size, T fill_value = T() ) {
+            set_size( size, fill_value );
+        }
+
+        inline point get_size() const {
+            return size;
+        }
+
+        void set_size( point new_size, T fill_value = T() ) {
+            if( size == new_size ) {
+                return;
+            }
+            // TODO: graciously transfer entries from old size
+            size = new_size;
+            data.clear();
+            data.resize( size.x * size.y, fill_value );
+        }
+
+        inline void set( point pos, T val ) {
+            data[ pos.y * size.x + pos.x ] = std::move( val );
+        }
+
+        inline const T &get( point pos ) const {
+            return data[ pos.y * size.x + pos.x ];
+        }
+
+        inline std::vector<T> &get_data() {
+            return data;
+        }
+
+        void serialize( JsonOut &jsout ) const {
+            jsout.start_object();
+            jsout.member( "size", size );
+            jsout.member( "data", data );
+            jsout.end_object();
+        }
+
+        void deserialize( JsonIn &jsin ) {
+            JsonObject jo = jsin.get_object();
+
+            jo.read( "size", size );
+            jo.read( "data", data );
+        }
+};
+
+} // namespace editor
+
+#endif // CATA_SRC_EDITOR_2D_CANVAS_H
