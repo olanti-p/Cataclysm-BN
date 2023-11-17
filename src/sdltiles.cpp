@@ -74,7 +74,7 @@
 #include "wcwidth.h"
 #include "worldfactory.h"
 
-#include "editor/editor_engine.h"
+#include "editor/runtime/editor_engine.h"
 
 #if defined(__linux__)
 #   include <cstdlib> // getenv()/setenv()

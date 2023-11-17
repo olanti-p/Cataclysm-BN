@@ -178,7 +178,7 @@
 #include "weather.h"
 #include "worldfactory.h"
 
-#include "editor/editor_engine.h"
+#include "editor/runtime/editor_engine.h"
 
 class computer;
 

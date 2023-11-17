@@ -48,7 +48,7 @@
 #include "ui_manager.h"
 #include "worldfactory.h"
 
-#include "editor/editor_engine.h"
+#include "editor/runtime/editor_engine.h"
 
 #if !defined(_MSC_VER)
 #include <sys/time.h>
