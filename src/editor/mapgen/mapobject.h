@@ -9,29 +9,29 @@
 
 namespace editor
 {
-struct me_file;
-struct me_piece;
-struct me_state;
+struct Mapgen;
+struct Piece;
+struct State;
 
-struct me_mapobject {
-    me_mapobject();
-    me_mapobject( const me_mapobject &rhs );
-    me_mapobject( me_mapobject && );
-    ~me_mapobject();
+struct MapObject {
+    MapObject();
+    MapObject( const MapObject &rhs );
+    MapObject( MapObject && );
+    ~MapObject();
 
-    me_mapobject &operator=( const me_mapobject &rhs );
-    me_mapobject &operator=( me_mapobject && );
+    MapObject &operator=( const MapObject &rhs );
+    MapObject &operator=( MapObject && );
 
-    const uuid_t &get_uuid() const;
-    void set_uuid( const uuid_t &uuid );
+    const UUID &get_uuid() const;
+    void set_uuid( const UUID &uuid );
 
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
 
-    std::unique_ptr<me_piece> piece;
-    me_int_range x;
-    me_int_range y;
-    me_int_range repeat;
+    std::unique_ptr<Piece> piece;
+    IntRange x;
+    IntRange y;
+    IntRange repeat;
     ImVec4 color;
     bool visible = true;
 };
@@ -39,7 +39,7 @@ struct me_mapobject {
 /**
  * =============== Windows ===============
  */
-void show_mapobjects( me_state &state, me_file &f, bool &show );
+void show_mapobjects( State &state, Mapgen &f, bool &show );
 
 } // namespace editor
 

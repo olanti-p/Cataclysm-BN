@@ -7,22 +7,22 @@
 
 namespace editor
 {
-struct me_state;
-struct me_camera;
-struct me_file;
+struct State;
+struct Camera;
+struct Mapgen;
 
 /**
  * ============ Mouse helpers ============
  */
 point_abs_screen get_mouse_pos();
-point_abs_etile get_mouse_tile_pos( const me_camera &cam );
+point_abs_etile get_mouse_tile_pos( const Camera &cam );
 
 /**
  * ========== Rendering helpers ==========
  */
 void draw_frame(
     ImDrawList *draw_list,
-    const me_camera &cam,
+    const Camera &cam,
     const point_abs_etile &p1,
     const point_abs_etile &p2,
     ImVec4 col,
@@ -30,19 +30,19 @@ void draw_frame(
 );
 void highlight_tile(
     ImDrawList *draw_list,
-    const me_camera &cam,
+    const Camera &cam,
     point_abs_etile tile,
     ImVec4 col
 );
 void fill_tile(
     ImDrawList *draw_list,
-    const me_camera &cam,
+    const Camera &cam,
     point_abs_etile tile,
     ImVec4 col
 );
 void highlight_region(
     ImDrawList *draw_list,
-    const me_camera &cam,
+    const Camera &cam,
     point_abs_etile p1,
     point_abs_etile p2,
     ImVec4 col_bg,
@@ -50,7 +50,7 @@ void highlight_region(
 );
 void fill_region(
     ImDrawList *draw_list,
-    const me_camera &cam,
+    const Camera &cam,
     point_abs_etile p1,
     point_abs_etile p2,
     ImVec4 col
@@ -59,7 +59,7 @@ void fill_region(
 /**
  * =============== Windows ===============
  */
-void show_canvas( me_state &state, me_file *file_ptr );
+void show_canvas( State &state, Mapgen *file_ptr );
 
 } // namespace editor
 

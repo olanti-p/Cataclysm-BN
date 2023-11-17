@@ -9,15 +9,15 @@ class JsonIn;
 namespace editor
 {
 
-using uuid_t = uint64_t;
-constexpr uuid_t UUID_INVALID = 0;
+using UUID = uint64_t;
+constexpr UUID UUID_INVALID = 0;
 
-struct uuid_generator {
+struct UUIDGenerator {
     private:
-        uuid_t counter = UUID_INVALID;
+        UUID counter = UUID_INVALID;
 
     public:
-        inline uuid_t operator()() {
+        inline UUID operator()() {
             counter++;
             return counter;
         }

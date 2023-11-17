@@ -20,16 +20,16 @@ namespace editor
 {
 // TODO: Simplify this, there can only be a single instance of ui state alive in each project file.
 //       It's 4 am, and it works, so I'm leaving it here as is.
-static std::map<std::string, std::unique_ptr<me_uistate>> pdata;
+static std::map<std::string, std::unique_ptr<UiState>> pdata;
 
-me_uistate &get_uistate_for_project( const std::string &project_uuid )
+UiState &get_uistate_for_project( const std::string &project_uuid )
 {
     auto it = pdata.find( project_uuid );
     if( it != pdata.end() ) {
         assert( it->second );
         return *it->second;
     }
-    me_uistate *ptr = pdata.emplace( project_uuid, std::make_unique<me_uistate>() ).first->second.get();
+    UiState *ptr = pdata.emplace( project_uuid, std::make_unique<UiState>() ).first->second.get();
     assert( ptr );
     return *ptr;
 }
@@ -47,14 +47,14 @@ void MyUserData_ApplyAll( ImGuiContext *ctx, ImGuiSettingsHandler *handler )
 void *MyUserData_ReadOpen( ImGuiContext *ctx, ImGuiSettingsHandler *handler, const char *name )
 {
     std::string project_uuid = name;
-    me_uistate *ptr = &get_uistate_for_project( project_uuid );
+    UiState *ptr = &get_uistate_for_project( project_uuid );
     return ptr;
 }
 
 void MyUserData_ReadLine( ImGuiContext *ctx, ImGuiSettingsHandler *handler, void *entry,
                           const char *line )
 {
-    me_uistate &uistate = *static_cast<me_uistate *>( entry );
+    UiState &uistate = *static_cast<UiState *>( entry );
 
     std::string_view line_str = line;
 
@@ -116,7 +116,7 @@ namespace editor
 namespace detail
 {
 
-void open_palette::serialize( JsonOut &jsout ) const
+void OpenPalette::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
     jsout.member( "uuid", uuid );
@@ -124,7 +124,7 @@ void open_palette::serialize( JsonOut &jsout ) const
     jsout.end_object();
 }
 
-void open_palette::deserialize( JsonIn &jsin )
+void OpenPalette::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
@@ -132,7 +132,7 @@ void open_palette::deserialize( JsonIn &jsin )
     jo.read( "open", open );
 }
 
-void open_mapping::serialize( JsonOut &jsout ) const
+void OpenMapping::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
     jsout.member( "uuid", uuid );
@@ -141,7 +141,7 @@ void open_mapping::serialize( JsonOut &jsout ) const
     jsout.end_object();
 }
 
-void open_mapping::deserialize( JsonIn &jsin )
+void OpenMapping::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
@@ -150,7 +150,7 @@ void open_mapping::deserialize( JsonIn &jsin )
     jo.read( "open", open );
 }
 
-void open_mapgenobject::serialize( JsonOut &jsout ) const
+void OpenMapgenObject::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
     jsout.member( "uuid", uuid );
@@ -158,7 +158,7 @@ void open_mapgenobject::serialize( JsonOut &jsout ) const
     jsout.end_object();
 }
 
-void open_mapgenobject::deserialize( JsonIn &jsin )
+void OpenMapgenObject::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
@@ -168,7 +168,7 @@ void open_mapgenobject::deserialize( JsonIn &jsin )
 
 } // namespace detail
 
-void me_uistate::serialize( JsonOut &jsout ) const
+void UiState::serialize( JsonOut &jsout ) const
 {
     // These are intentionally omitted:
     // - do_loop
@@ -191,7 +191,7 @@ void me_uistate::serialize( JsonOut &jsout ) const
     jsout.end_object();
 }
 
-void me_uistate::deserialize( JsonIn &jsin )
+void UiState::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
@@ -212,7 +212,7 @@ void me_uistate::deserialize( JsonIn &jsin )
     jo.read( "expanded_mapobjects", expanded_mapobjects );
 }
 
-void me_camera::serialize( JsonOut &jsout ) const
+void Camera::serialize( JsonOut &jsout ) const
 {
     // These are intentionally omitted:
     // - drag_delta
@@ -222,7 +222,7 @@ void me_camera::serialize( JsonOut &jsout ) const
     jsout.end_object();
 }
 
-void me_camera::deserialize( JsonIn &jsin )
+void Camera::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
@@ -230,7 +230,7 @@ void me_camera::deserialize( JsonIn &jsin )
     jo.read( "scale", scale );
 }
 
-void me_canvas_tools_state::serialize( JsonOut &jsout ) const
+void ToolsState::serialize( JsonOut &jsout ) const
 {
     // These are intentionally omitted:
     // - ongoing_tool_operation
@@ -242,7 +242,7 @@ void me_canvas_tools_state::serialize( JsonOut &jsout ) const
     jsout.end_object();
 }
 
-void me_canvas_tools_state::deserialize( JsonIn &jsin )
+void ToolsState::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 

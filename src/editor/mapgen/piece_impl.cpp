@@ -7,7 +7,7 @@
 namespace editor
 {
 
-void me_piece_field::show_ui( me_state &state )
+void PieceField::show_ui( State &state )
 {
     ImGui::HelpMarkerInline( "Type of the field." );
     if( ImGui::InputId( "ftype", ftype ) ) {
@@ -23,12 +23,12 @@ void me_piece_field::show_ui( me_state &state )
     }
 }
 
-std::string me_piece_field::fmt_data_summary() const
+std::string PieceField::fmt_data_summary() const
 {
     return string_format( "%s:%d", ftype.data, intensity );
 }
 
-void me_piece_npc::show_ui( me_state &state )
+void PieceNPC::show_ui( State &state )
 {
     ImGui::HelpMarkerInline( "NPC template to use." );
     if( ImGui::InputId( "npc_class", npc_class ) ) {
@@ -53,12 +53,12 @@ void me_piece_npc::show_ui( me_state &state )
     ImGui::Indent( -style::list_indent );
 }
 
-std::string me_piece_npc::fmt_data_summary() const
+std::string PieceNPC::fmt_data_summary() const
 {
     return npc_class.data;
 }
 
-void me_piece_faction::show_ui( me_state &state )
+void PieceFaction::show_ui( State &state )
 {
     ImGui::HelpMarkerInline( "Faction id string.\n\nWARNING: no validation is done here." );
     // TODO: validation
@@ -67,16 +67,16 @@ void me_piece_faction::show_ui( me_state &state )
     }
 }
 
-std::string me_piece_faction::fmt_data_summary() const
+std::string PieceFaction::fmt_data_summary() const
 {
     return id;
 }
 
 static void sign_or_graffiti(
-    me_state &state,
+    State &state,
     bool is_sign,
     bool &use_snippet,
-    snippet_category_eid &snippet,
+    EID::SnippetCategory &snippet,
     std::string &text
 )
 {
@@ -105,12 +105,12 @@ static void sign_or_graffiti(
     }
 }
 
-void me_piece_sign::show_ui( me_state &state )
+void PieceSign::show_ui( State &state )
 {
     sign_or_graffiti( state, true, use_snippet, snippet, text );
 }
 
-std::string me_piece_sign::fmt_data_summary() const
+std::string PieceSign::fmt_data_summary() const
 {
     if( use_snippet ) {
         return string_format( "<%s>", snippet.data );
@@ -119,12 +119,12 @@ std::string me_piece_sign::fmt_data_summary() const
     }
 }
 
-void me_piece_graffiti::show_ui( me_state &state )
+void PieceGraffiti::show_ui( State &state )
 {
     sign_or_graffiti( state, false, use_snippet, snippet, text );
 }
 
-std::string me_piece_graffiti::fmt_data_summary() const
+std::string PieceGraffiti::fmt_data_summary() const
 {
     if( use_snippet ) {
         return string_format( "<%s>", snippet.data );
@@ -133,7 +133,7 @@ std::string me_piece_graffiti::fmt_data_summary() const
     }
 }
 
-void me_piece_vending_machine::show_ui( me_state &state )
+void PieceVendingMachine::show_ui( State &state )
 {
     ImGui::HelpMarkerInline( "Whether this vending machine is reinforced." );
     if( ImGui::Checkbox( "reinforced", &reinforced ) ) {
@@ -155,7 +155,7 @@ void me_piece_vending_machine::show_ui( me_state &state )
     }
 }
 
-std::string me_piece_vending_machine::fmt_data_summary() const
+std::string PieceVendingMachine::fmt_data_summary() const
 {
     if( use_default_group ) {
         return "default_vending_machine";
@@ -164,7 +164,7 @@ std::string me_piece_vending_machine::fmt_data_summary() const
     }
 }
 
-void me_piece_toilet::show_ui( me_state &state )
+void PieceToilet::show_ui( State &state )
 {
     ImGui::HelpMarkerInline( "Whether to use default amount (24)." );
     if( ImGui::Checkbox( "Use default amount", &use_default_amount ) ) {
@@ -182,12 +182,12 @@ void me_piece_toilet::show_ui( me_state &state )
     }
 }
 
-std::string me_piece_toilet::fmt_data_summary() const
+std::string PieceToilet::fmt_data_summary() const
 {
     return "TODO";
 }
 
-void me_piece_gaspump::show_ui( me_state &state )
+void PieceGaspump::show_ui( State &state )
 {
     ImGui::HelpMarkerInline( "Whether to use default amount\n( random value within [10000, 50000] )." );
     if( ImGui::Checkbox( "Use default amount", &use_default_amount ) ) {
@@ -220,12 +220,12 @@ void me_piece_gaspump::show_ui( me_state &state )
     }
 }
 
-std::string me_piece_gaspump::fmt_data_summary() const
+std::string PieceGaspump::fmt_data_summary() const
 {
     return "TODO";
 }
 
-void me_piece_liquid::show_ui( me_state &state )
+void PieceLiquid::show_ui( State &state )
 {
     // TODO: show default amount from item
     ImGui::HelpMarkerInline( "Whether to use default amount\n( derived from item type )." );
@@ -267,12 +267,12 @@ void me_piece_liquid::show_ui( me_state &state )
     }
 }
 
-std::string me_piece_liquid::fmt_data_summary() const
+std::string PieceLiquid::fmt_data_summary() const
 {
     return liquid.data;
 }
 
-void me_piece_igroup::show_ui( me_state &state )
+void PieceIGroup::show_ui( State &state )
 {
     ImGui::HelpMarkerInline(
         "Chance to spawn an item from the group, in percent.\n\n"
@@ -304,22 +304,22 @@ void me_piece_igroup::show_ui( me_state &state )
     }
 }
 
-std::string me_piece_igroup::fmt_data_summary() const
+std::string PieceIGroup::fmt_data_summary() const
 {
     return group_id.data;
 }
 
-void me_piece_loot::show_ui( me_state &state )
+void PieceLoot::show_ui( State &state )
 {
     ImGui::Text( "TODO" );
 }
 
-std::string me_piece_loot::fmt_data_summary() const
+std::string PieceLoot::fmt_data_summary() const
 {
     return "TODO";
 }
 
-void me_piece_mgroup::show_ui( me_state &state )
+void PieceMGroup::show_ui( State &state )
 {
     ImGui::HelpMarkerInline( "Whether to spawn always, or with a chance." );
     if( ImGui::Checkbox( "Always", &spawn_always ) ) {
@@ -350,22 +350,22 @@ void me_piece_mgroup::show_ui( me_state &state )
     ImGui::EndDisabled();
 }
 
-std::string me_piece_mgroup::fmt_data_summary() const
+std::string PieceMGroup::fmt_data_summary() const
 {
     return group_id.data;
 }
 
-void me_piece_monster::show_ui( me_state &state )
+void PieceMonster::show_ui( State &state )
 {
     ImGui::Text( "TODO" );
 }
 
-std::string me_piece_monster::fmt_data_summary() const
+std::string PieceMonster::fmt_data_summary() const
 {
     return "TODO";
 }
 
-void me_piece_vehicle::show_ui( me_state &state )
+void PieceVehicle::show_ui( State &state )
 {
     ImGui::HelpMarkerInline( "Vehicle group to spawn from." );
     if( ImGui::InputId( "group_id", group_id ) ) {
@@ -408,12 +408,12 @@ void me_piece_vehicle::show_ui( me_state &state )
     }
 }
 
-std::string me_piece_vehicle::fmt_data_summary() const
+std::string PieceVehicle::fmt_data_summary() const
 {
     return group_id.data;
 }
 
-void me_piece_item::show_ui( me_state &state )
+void PieceItem::show_ui( State &state )
 {
     ImGui::HelpMarkerInline( "Item type to spawn." );
     if( ImGui::InputId( "item_id", item_id ) ) {
@@ -455,113 +455,113 @@ void me_piece_item::show_ui( me_state &state )
     ImGui::EndDisabled();
 }
 
-std::string me_piece_item::fmt_data_summary() const
+std::string PieceItem::fmt_data_summary() const
 {
     return item_id.data;
 }
 
-void me_piece_trap::show_ui( me_state &state )
+void PieceTrap::show_ui( State &state )
 {
     ImGui::Text( "TODO" );
 }
 
-std::string me_piece_trap::fmt_data_summary() const
+std::string PieceTrap::fmt_data_summary() const
 {
     return "TODO";
 }
 
-void me_piece_furniture::show_ui( me_state &state )
+void PieceFurniture::show_ui( State &state )
 {
     ImGui::Text( "TODO" );
 }
 
-std::string me_piece_furniture::fmt_data_summary() const
+std::string PieceFurniture::fmt_data_summary() const
 {
     return "TODO";
 }
 
-void me_piece_terrain::show_ui( me_state &state )
+void PieceTerrain::show_ui( State &state )
 {
     ImGui::Text( "TODO" );
 }
 
-std::string me_piece_terrain::fmt_data_summary() const
+std::string PieceTerrain::fmt_data_summary() const
 {
     return "TODO";
 }
 
-void me_piece_ter_furn_transform::show_ui( me_state &state )
+void PieceTerFurnTransform::show_ui( State &state )
 {
     ImGui::Text( "TODO" );
 }
 
-std::string me_piece_ter_furn_transform::fmt_data_summary() const
+std::string PieceTerFurnTransform::fmt_data_summary() const
 {
     return "TODO";
 }
 
-void me_piece_make_rubble::show_ui( me_state &state )
+void PieceMakeRubble::show_ui( State &state )
 {
     ImGui::Text( "TODO" );
 }
 
-std::string me_piece_make_rubble::fmt_data_summary() const
+std::string PieceMakeRubble::fmt_data_summary() const
 {
     return "TODO";
 }
 
-void me_piece_computer::show_ui( me_state &state )
+void PieceComputer::show_ui( State &state )
 {
     ImGui::Text( "TODO" );
 }
 
-std::string me_piece_computer::fmt_data_summary() const
+std::string PieceComputer::fmt_data_summary() const
 {
     return "TODO";
 }
 
-void me_piece_sealed_item::show_ui( me_state &state )
+void PieceSealeditem::show_ui( State &state )
 {
     ImGui::Text( "TODO" );
 }
 
-std::string me_piece_sealed_item::fmt_data_summary() const
+std::string PieceSealeditem::fmt_data_summary() const
 {
     return "TODO";
 }
 
-void me_piece_translate::show_ui( me_state &state )
+void PieceTranslate::show_ui( State &state )
 {
     ImGui::Text( "TODO" );
 }
 
-std::string me_piece_translate::fmt_data_summary() const
+std::string PieceTranslate::fmt_data_summary() const
 {
     return "TODO";
 }
 
-void me_piece_zone::show_ui( me_state &state )
+void PieceZone::show_ui( State &state )
 {
     ImGui::Text( "TODO" );
 }
 
-std::string me_piece_zone::fmt_data_summary() const
+std::string PieceZone::fmt_data_summary() const
 {
     return "TODO";
 }
 
-void me_piece_nested::show_ui( me_state &state )
+void PieceNested::show_ui( State &state )
 {
     ImGui::Text( "TODO" );
 }
 
-std::string me_piece_nested::fmt_data_summary() const
+std::string PieceNested::fmt_data_summary() const
 {
     return "TODO";
 }
 
 template<typename T>
-void show_piece_alt( me_state &state, editor::me_weighted_list<T> &list )
+void show_piece_alt( State &state, editor::WeightedList<T> &list )
 {
     ImGui::Indent( style::list_indent );
 
@@ -602,18 +602,18 @@ void show_piece_alt( me_state &state, editor::me_weighted_list<T> &list )
     ImGui::Indent( -style::list_indent );
 }
 
-void me_piece_alt_trap::init_new()
+void PieceAltTrap::init_new()
 {
     list.entries.emplace_back();
     list.entries.back().weight = 1;
 }
 
-void me_piece_alt_trap::show_ui( me_state &state )
+void PieceAltTrap::show_ui( State &state )
 {
     show_piece_alt( state, list );
 }
 
-std::string me_piece_alt_trap::fmt_data_summary() const
+std::string PieceAltTrap::fmt_data_summary() const
 {
     std::string ret = list.entries[0].val.data;
     if( list.entries.size() > 1 ) {
@@ -622,18 +622,18 @@ std::string me_piece_alt_trap::fmt_data_summary() const
     return ret;
 }
 
-void me_piece_alt_furniture::init_new()
+void PieceAltFurniture::init_new()
 {
     list.entries.emplace_back();
     list.entries.back().weight = 1;
 }
 
-void me_piece_alt_furniture::show_ui( me_state &state )
+void PieceAltFurniture::show_ui( State &state )
 {
     show_piece_alt( state, list );
 }
 
-std::string me_piece_alt_furniture::fmt_data_summary() const
+std::string PieceAltFurniture::fmt_data_summary() const
 {
     std::string ret = list.entries[0].val.data;
     if( list.entries.size() > 1 ) {
@@ -642,18 +642,18 @@ std::string me_piece_alt_furniture::fmt_data_summary() const
     return ret;
 }
 
-void me_piece_alt_terrain::init_new()
+void PieceAltTerrain::init_new()
 {
     list.entries.emplace_back();
     list.entries.back().weight = 1;
 }
 
-void me_piece_alt_terrain::show_ui( me_state &state )
+void PieceAltTerrain::show_ui( State &state )
 {
     show_piece_alt( state, list );
 }
 
-std::string me_piece_alt_terrain::fmt_data_summary() const
+std::string PieceAltTerrain::fmt_data_summary() const
 {
     std::string ret = list.entries[0].val.data;
     if( list.entries.size() > 1 ) {

@@ -13,7 +13,7 @@ static void show_canvas_hint()
     ImGui::Text( "Use mouse to paint canvas with palette entries." );
 }
 
-void show_file_info( me_state &state, me_file &file, bool &show )
+void show_file_info( State &state, Mapgen &file, bool &show )
 {
     if( !ImGui::Begin( "File Info", &show ) ) {
         ImGui::End();
@@ -162,7 +162,7 @@ void show_file_info( me_state &state, me_file &file, bool &show )
     ImGui::End();
 }
 
-point_rel_etile me_file::mapgensize() const
+point_rel_etile Mapgen::mapgensize() const
 {
     if( mtype == MapgenType::Nested ) {
         return point_rel_etile( nested.size );
@@ -171,11 +171,11 @@ point_rel_etile me_file::mapgensize() const
     }
 }
 
-me_mapgen_base::~me_mapgen_base() = default;
+MapgenBase::~MapgenBase() = default;
 
-void me_mapgen_base::remove_usages( const uuid_t &uuid )
+void MapgenBase::remove_usages( const UUID &uuid )
 {
-    for( uuid_t &cell : canvas.get_data() ) {
+    for( UUID &cell : canvas.get_data() ) {
         if( cell == uuid ) {
             cell = UUID_INVALID;
         }

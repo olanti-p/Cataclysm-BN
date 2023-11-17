@@ -8,13 +8,13 @@
 namespace editor
 {
 
-struct me_map_key_generator {
+struct MapKeyGenerator {
     private:
         std::vector<map_key> opts;
 
     public:
-        me_map_key_generator();
-        ~me_map_key_generator() = default;
+        MapKeyGenerator();
+        ~MapKeyGenerator() = default;
 
         void blacklist( const map_key &opt );
 

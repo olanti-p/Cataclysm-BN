@@ -8,14 +8,14 @@ namespace editor
  *
  * This handles control flow and window transitions.
  */
-struct me_control_state {
-    me_control_state();
-    me_control_state( const me_control_state & ) = delete;
-    me_control_state( me_control_state && );
-    ~me_control_state();
+struct ControlState {
+    ControlState();
+    ControlState( const ControlState & ) = delete;
+    ControlState( ControlState && );
+    ~ControlState();
 
-    me_control_state &operator=( const me_control_state & ) = delete;
-    me_control_state &operator=( me_control_state && );
+    ControlState &operator=( const ControlState & ) = delete;
+    ControlState &operator=( ControlState && );
 
     bool is_editor_running = true;
     bool want_close = false;                // User wants to close the project

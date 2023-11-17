@@ -5,9 +5,9 @@
 
 namespace editor
 {
-struct me_uistate;
+struct UiState;
 
-me_uistate &get_uistate_for_project( const std::string &project_uuid );
+UiState &get_uistate_for_project( const std::string &project_uuid );
 
 void initialize_settings_export();
 

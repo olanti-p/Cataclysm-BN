@@ -10,7 +10,7 @@ namespace detail
 {
 
 template<typename T>
-struct weighted_list_entry {
+struct WeightedListEntry {
     T val;
     int weight = 0;
 };
@@ -18,8 +18,8 @@ struct weighted_list_entry {
 } // namespace detail
 
 template<typename T>
-struct me_weighted_list {
-    std::vector<detail::weighted_list_entry<T>> entries;
+struct WeightedList {
+    std::vector<detail::WeightedListEntry<T>> entries;
 
     bool is_uniform() const {
         if( entries.empty() ) {

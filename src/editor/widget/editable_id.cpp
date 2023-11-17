@@ -18,7 +18,7 @@ namespace editor
 {
 
 template<>
-const std::vector<std::string> &editable_id<field_type>::get_all_opts()
+const std::vector<std::string> &EditableID<field_type>::get_all_opts()
 {
     if( all_opts.empty() ) {
         all_opts.reserve( field_types::get_all().size() );
@@ -30,7 +30,7 @@ const std::vector<std::string> &editable_id<field_type>::get_all_opts()
 }
 
 template<>
-const std::vector<std::string> &editable_id<furn_t>::get_all_opts()
+const std::vector<std::string> &EditableID<furn_t>::get_all_opts()
 {
     if( all_opts.empty() ) {
         all_opts.reserve( furn_t::get_all().size() );
@@ -42,7 +42,7 @@ const std::vector<std::string> &editable_id<furn_t>::get_all_opts()
 }
 
 template<>
-const std::vector<std::string> &editable_id<item_group_tag>::get_all_opts()
+const std::vector<std::string> &EditableID<item_group_tag>::get_all_opts()
 {
     if( all_opts.empty() ) {
         all_opts.reserve( item_controller->get_all_group_names().size() );
@@ -54,7 +54,7 @@ const std::vector<std::string> &editable_id<item_group_tag>::get_all_opts()
 }
 
 template<>
-const std::vector<std::string> &editable_id<itype>::get_all_opts()
+const std::vector<std::string> &EditableID<itype>::get_all_opts()
 {
     if( all_opts.empty() ) {
         all_opts.reserve( item_controller->all().size() );
@@ -66,7 +66,7 @@ const std::vector<std::string> &editable_id<itype>::get_all_opts()
 }
 
 template<>
-const std::vector<std::string> &editable_id<liquid_item_tag>::get_all_opts()
+const std::vector<std::string> &EditableID<liquid_item_tag>::get_all_opts()
 {
     if( all_opts.empty() ) {
         for( const itype *it : item_controller->all() ) {
@@ -81,7 +81,7 @@ const std::vector<std::string> &editable_id<liquid_item_tag>::get_all_opts()
 }
 
 template<>
-const std::vector<std::string> &editable_id<MonsterGroup>::get_all_opts()
+const std::vector<std::string> &EditableID<MonsterGroup>::get_all_opts()
 {
     if( all_opts.empty() ) {
         all_opts.reserve( MonsterGroupManager::get_all().size() );
@@ -93,7 +93,7 @@ const std::vector<std::string> &editable_id<MonsterGroup>::get_all_opts()
 }
 
 template<>
-const std::vector<std::string> &editable_id<npc_template>::get_all_opts()
+const std::vector<std::string> &EditableID<npc_template>::get_all_opts()
 {
     if( all_opts.empty() ) {
         all_opts.reserve( get_all_npc_templates().size() );
@@ -105,7 +105,7 @@ const std::vector<std::string> &editable_id<npc_template>::get_all_opts()
 }
 
 template<>
-const std::vector<std::string> &editable_id<oter_t>::get_all_opts()
+const std::vector<std::string> &EditableID<oter_t>::get_all_opts()
 {
     if( all_opts.empty() ) {
         all_opts.reserve( overmap_terrains::get_all().size() );
@@ -117,7 +117,7 @@ const std::vector<std::string> &editable_id<oter_t>::get_all_opts()
 }
 
 template<>
-const std::vector<std::string> &editable_id<mapgen_palette>::get_all_opts()
+const std::vector<std::string> &EditableID<mapgen_palette>::get_all_opts()
 {
     if( all_opts.empty() ) {
         all_opts.reserve( mapgen_palette::get_all().size() );
@@ -129,7 +129,7 @@ const std::vector<std::string> &editable_id<mapgen_palette>::get_all_opts()
 }
 
 template<>
-const std::vector<std::string> &editable_id<snippet_category_tag>::get_all_opts()
+const std::vector<std::string> &EditableID<snippet_category_tag>::get_all_opts()
 {
     if( all_opts.empty() ) {
         all_opts.reserve( SNIPPET.snippets_by_category.size() );
@@ -141,7 +141,7 @@ const std::vector<std::string> &editable_id<snippet_category_tag>::get_all_opts(
 }
 
 template<>
-const std::vector<std::string> &editable_id<ter_t>::get_all_opts()
+const std::vector<std::string> &EditableID<ter_t>::get_all_opts()
 {
     if( all_opts.empty() ) {
         all_opts.reserve( ter_t::get_all().size() );
@@ -153,7 +153,7 @@ const std::vector<std::string> &editable_id<ter_t>::get_all_opts()
 }
 
 template<>
-const std::vector<std::string> &editable_id<mutation_branch>::get_all_opts()
+const std::vector<std::string> &EditableID<mutation_branch>::get_all_opts()
 {
     if( all_opts.empty() ) {
         all_opts.reserve( mutation_branch::get_all().size() );
@@ -165,7 +165,7 @@ const std::vector<std::string> &editable_id<mutation_branch>::get_all_opts()
 }
 
 template<>
-const std::vector<std::string> &editable_id<trap>::get_all_opts()
+const std::vector<std::string> &EditableID<trap>::get_all_opts()
 {
     if( all_opts.empty() ) {
         all_opts.reserve( trap::get_all().size() );
@@ -177,7 +177,7 @@ const std::vector<std::string> &editable_id<trap>::get_all_opts()
 }
 
 template<>
-const std::vector<std::string> &editable_id<VehicleGroup>::get_all_opts()
+const std::vector<std::string> &EditableID<VehicleGroup>::get_all_opts()
 {
     if( all_opts.empty() ) {
         all_opts.reserve( vgroups.size() );

@@ -16,31 +16,31 @@
 
 namespace editor
 {
-map_key pick_available_key( const me_palette &pal )
+map_key pick_available_key( const Palette &pal )
 {
-    me_map_key_generator gen;
+    MapKeyGenerator gen;
     for( const auto &it : pal.entries ) {
         gen.blacklist( it.key );
     }
     return gen();
 }
 
-static bool is_expanded( const me_state &state, const uuid_t &piece_id )
+static bool is_expanded( const State &state, const UUID &piece_id )
 {
     return state.uistate->expanded_mapping_pieces.count( piece_id ) != 0;
 }
 
-static void expand_piece( me_state &state, const uuid_t &piece_id )
+static void expand_piece( State &state, const UUID &piece_id )
 {
     state.uistate->expanded_mapping_pieces.insert( piece_id );
 }
 
-static void collapse_piece( me_state &state, const uuid_t &piece_id )
+static void collapse_piece( State &state, const UUID &piece_id )
 {
     state.uistate->expanded_mapping_pieces.erase( piece_id );
 }
 
-void show_mapping( me_state &state, editor::me_palette &p, editor::me_palette_entry &entry,
+void show_mapping( State &state, editor::Palette &p, editor::PaletteEntry &entry,
                    bool &show )
 {
     std::string wnd_id = string_format( "Mappings##wnd-mappings-%d-%d", p.uuid, entry.uuid );
@@ -87,7 +87,7 @@ void show_mapping( me_state &state, editor::me_palette &p, editor::me_palette_en
         {
             if( new_piece_type != 0 ) {
                 auto ptr = editor::make_new_piece( piece_opts[new_piece_type - 1].second );
-                uuid_t uuid = state.project().uuid_gen();
+                UUID uuid = state.project().uuid_gen();
                 ptr->uuid = uuid;
                 ptr->init_new();
                 list.push_back( std::move( ptr ) );
@@ -98,7 +98,7 @@ void show_mapping( me_state &state, editor::me_palette &p, editor::me_palette_en
         return ret;
     } )
     .with_for_each( [&]( size_t idx ) {
-        const uuid_t &piece_id = list[idx]->uuid;
+        const UUID &piece_id = list[idx]->uuid;
         if( is_expanded( state, piece_id ) ) {
             if( ImGui::ArrowButton( "##collapse", ImGuiDir_Down ) ) {
                 collapse_piece( state, piece_id );
@@ -137,13 +137,13 @@ void show_mapping( me_state &state, editor::me_palette &p, editor::me_palette_en
     ImGui::End();
 }
 
-static void show_palette_entries( me_state &state, me_palette &palette )
+static void show_palette_entries( State &state, Palette &palette )
 {
-    std::vector<me_palette_entry> &list = palette.entries;
+    std::vector<PaletteEntry> &list = palette.entries;
     std::unordered_set<map_key> checked;
     std::unordered_set<map_key> dupe_symbols;
 
-    for( const editor::me_palette_entry &entry : list ) {
+    for( const editor::PaletteEntry &entry : list ) {
         if( checked.count( entry.key ) > 0 ) {
             dupe_symbols.insert( entry.key );
         } else {
@@ -151,19 +151,19 @@ static void show_palette_entries( me_state &state, me_palette &palette )
         }
     }
 
-    me_project &proj = state.project();
-    me_canvas_tools_state &tools = *state.uistate->tools_state;
+    Project &proj = state.project();
+    ToolsState &tools = *state.uistate->tools_state;
 
     bool changed = ImGui::VectorWidget()
     .with_add( [&]() -> bool {
         bool ret = false;
         if( ImGui::ImageButton( "add", "me_add" ) )
         {
-            list.emplace_back( me_palette_entry{
+            list.emplace_back( PaletteEntry{
                 proj.uuid_gen(),
                 pick_available_key( palette ),
                 col_default_piece_color,
-                me_mapping(),
+                Mapping(),
                 false,
                 std::nullopt
             } );
@@ -173,8 +173,8 @@ static void show_palette_entries( me_state &state, me_palette &palette )
         return ret;
     } )
     .with_duplicate( [&]( size_t idx ) {
-        const me_palette_entry &src = list[ idx ];
-        list.insert( std::next( list.cbegin(), idx + 1 ), me_palette_entry{
+        const PaletteEntry &src = list[ idx ];
+        list.insert( std::next( list.cbegin(), idx + 1 ), PaletteEntry{
             proj.uuid_gen(),
             pick_available_key( palette ),
             src.color,
@@ -184,8 +184,8 @@ static void show_palette_entries( me_state &state, me_palette &palette )
         } );
     } )
     .with_delete( [&]( size_t idx ) {
-        const uuid_t &uuid = list[ idx ].uuid;
-        for( me_file &file : proj.files ) {
+        const UUID &uuid = list[ idx ].uuid;
+        for( Mapgen &file : proj.files ) {
             file.base.remove_usages( uuid );
         }
         if( tools.get_brush() == uuid ) {
@@ -227,7 +227,7 @@ static void show_palette_entries( me_state &state, me_palette &palette )
         }
         {
             std::optional<std::string> text;
-            me_piece_alt_terrain *ptr = list[idx].mapping.get_first_piece_of_type<me_piece_alt_terrain>();
+            PieceAltTerrain *ptr = list[idx].mapping.get_first_piece_of_type<PieceAltTerrain>();
             if( ptr ) {
                 text = ptr->fmt_data_summary();
             }
@@ -241,7 +241,7 @@ static void show_palette_entries( me_state &state, me_palette &palette )
         }
         {
             std::optional<std::string> text;
-            me_piece_alt_furniture *ptr = list[idx].mapping.get_first_piece_of_type<me_piece_alt_furniture>();
+            PieceAltFurniture *ptr = list[idx].mapping.get_first_piece_of_type<PieceAltFurniture>();
             if( ptr ) {
                 text = ptr->fmt_data_summary();
             }
@@ -282,7 +282,7 @@ static void show_palette_entries( me_state &state, me_palette &palette )
     }
 }
 
-void show_palette( me_state &state, me_palette &p, bool &show )
+void show_palette( State &state, Palette &p, bool &show )
 {
     ImGui::SetNextWindowSize( ImVec2( 670.0f, 120.0f ), ImGuiCond_FirstUseEver );
     ImGui::SetNextWindowPos( ImVec2( 50.0f, 50.0f ), ImGuiCond_FirstUseEver );
@@ -306,12 +306,12 @@ void show_palette( me_state &state, me_palette &p, bool &show )
     ImGui::End();
 }
 
-me_mapping::me_mapping( const me_mapping &rhs )
+Mapping::Mapping( const Mapping &rhs )
 {
     *this = rhs;
 }
 
-me_mapping &me_mapping::operator=( const me_mapping &rhs )
+Mapping &Mapping::operator=( const Mapping &rhs )
 {
     pieces.reserve( rhs.pieces.size() );
     for( const auto &piece : rhs.pieces ) {
@@ -320,7 +320,7 @@ me_mapping &me_mapping::operator=( const me_mapping &rhs )
     return *this;
 }
 
-bool me_mapping::has_piece_of_type( PieceType pt ) const
+bool Mapping::has_piece_of_type( PieceType pt ) const
 {
     for( const auto &piece : pieces ) {
         if( piece->get_type() == pt ) {
@@ -330,12 +330,12 @@ bool me_mapping::has_piece_of_type( PieceType pt ) const
     return false;
 }
 
-const map_key &me_palette::key_from_uuid( const uuid_t &uuid ) const
+const map_key &Palette::key_from_uuid( const UUID &uuid ) const
 {
     if( uuid == UUID_INVALID ) {
         return default_map_key;
     }
-    const me_palette_entry *entry = find_entry( uuid );
+    const PaletteEntry *entry = find_entry( uuid );
     if( entry ) {
         return entry->key;
     }
@@ -344,13 +344,13 @@ const map_key &me_palette::key_from_uuid( const uuid_t &uuid ) const
     std::abort();
 }
 
-const ImVec4 &me_palette::color_from_uuid( const uuid_t &uuid ) const
+const ImVec4 &Palette::color_from_uuid( const UUID &uuid ) const
 {
     if( uuid == UUID_INVALID ) {
         static ImVec4 default_color = ImVec4();
         return default_color;
     }
-    const me_palette_entry *entry = find_entry( uuid );
+    const PaletteEntry *entry = find_entry( uuid );
     if( entry ) {
         return entry->color;
     }
@@ -359,12 +359,12 @@ const ImVec4 &me_palette::color_from_uuid( const uuid_t &uuid ) const
     std::abort();
 }
 
-const SpriteRef *me_palette::sprite_from_uuid( const uuid_t &uuid ) const
+const SpriteRef *Palette::sprite_from_uuid( const UUID &uuid ) const
 {
     if( uuid == UUID_INVALID ) {
         return nullptr;
     }
-    const me_palette_entry *entry = find_entry( uuid );
+    const PaletteEntry *entry = find_entry( uuid );
     if( entry ) {
         if( !entry->sprite_cache_valid ) {
             entry->build_sprite_cache();
@@ -380,7 +380,7 @@ const SpriteRef *me_palette::sprite_from_uuid( const uuid_t &uuid ) const
     std::abort();
 }
 
-me_palette_entry *me_palette::find_entry( const uuid_t &uuid )
+PaletteEntry *Palette::find_entry( const UUID &uuid )
 {
     if( uuid == UUID_INVALID ) {
         return nullptr;
@@ -393,7 +393,7 @@ me_palette_entry *me_palette::find_entry( const uuid_t &uuid )
     return nullptr;
 }
 
-const me_palette_entry *me_palette::find_entry( const uuid_t &uuid ) const
+const PaletteEntry *Palette::find_entry( const UUID &uuid ) const
 {
     if( uuid == UUID_INVALID ) {
         return nullptr;
@@ -406,13 +406,13 @@ const me_palette_entry *me_palette::find_entry( const uuid_t &uuid ) const
     return nullptr;
 }
 
-void me_palette_entry::build_sprite_cache() const
+void PaletteEntry::build_sprite_cache() const
 {
     sprite_cache.reset();
 
     // Try furniture tile
     {
-        const me_piece_alt_furniture *ptr = mapping.get_first_piece_of_type<me_piece_alt_furniture>();
+        const PieceAltFurniture *ptr = mapping.get_first_piece_of_type<PieceAltFurniture>();
         if( ptr ) {
             auto list = ptr->list;
             if( !list.entries.empty() ) {
@@ -423,7 +423,7 @@ void me_palette_entry::build_sprite_cache() const
 
     // Try terrain tile
     if( !sprite_cache ) {
-        const me_piece_alt_terrain *ptr = mapping.get_first_piece_of_type<me_piece_alt_terrain>();
+        const PieceAltTerrain *ptr = mapping.get_first_piece_of_type<PieceAltTerrain>();
         if( ptr ) {
             auto list = ptr->list;
             if( !list.entries.empty() ) {

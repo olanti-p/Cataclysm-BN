@@ -16,19 +16,19 @@ template<typename T> struct enum_traits;
 
 namespace editor
 {
-struct me_state;
+struct State;
 
-struct me_mapgen_base {
-    me_mapgen_base() : canvas( point( SEEX * 2, SEEY * 2 ), UUID_INVALID ) { }
-    ~me_mapgen_base();
+struct MapgenBase {
+    MapgenBase() : canvas( point( SEEX * 2, SEEY * 2 ), UUID_INVALID ) { }
+    ~MapgenBase();
 
-    Canvas2D<uuid_t> canvas;
-    uuid_t inline_palette_id = UUID_INVALID;
+    Canvas2D<UUID> canvas;
+    UUID inline_palette_id = UUID_INVALID;
 
     inline void set_size( point new_size ) {
         canvas.set_size( new_size, UUID_INVALID );
     }
-    void remove_usages( const uuid_t &uuid );
+    void remove_usages( const UUID &uuid );
 
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
@@ -41,30 +41,30 @@ enum class OterMapgenBase {
     _Num,
 };
 
-struct me_mapgen_oter {
-    oter_eid om_terrain;
+struct MapgenOter {
+    EID::Oter om_terrain;
     int weight = 100;
     OterMapgenBase mapgen_base = OterMapgenBase::FillTer;
-    ter_eid fill_ter = ter_eid::NULL_ID();
-    oter_eid predecessor_mapgen;
-    me_int_range rotation;
+    EID::Ter fill_ter = EID::Ter::NULL_ID();
+    EID::Oter predecessor_mapgen;
+    IntRange rotation;
 
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
 };
 
-struct me_mapgen_update {
+struct MapgenUpdate {
     std::string update_mapgen_id;
-    ter_eid fill_ter = ter_eid::NULL_ID();
+    EID::Ter fill_ter = EID::Ter::NULL_ID();
 
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
 };
 
-struct me_mapgen_nested {
+struct MapgenNested {
     std::string nested_mapgen_id;
     point size = point( 24, 24 );
-    me_int_range rotation;
+    IntRange rotation;
 
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
@@ -77,16 +77,16 @@ enum class MapgenType {
     _Num,
 };
 
-struct me_file {
-    uuid_t uuid = UUID_INVALID;
+struct Mapgen {
+    UUID uuid = UUID_INVALID;
 
     MapgenType mtype = MapgenType::Oter;
-    me_mapgen_base base;
-    me_mapgen_oter oter;
-    me_mapgen_update update;
-    me_mapgen_nested nested;
+    MapgenBase base;
+    MapgenOter oter;
+    MapgenUpdate update;
+    MapgenNested nested;
 
-    std::vector<me_mapobject> objects;
+    std::vector<MapObject> objects;
 
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
@@ -105,7 +105,7 @@ struct me_file {
 /**
  * =============== Windows ===============
  */
-void show_file_info( me_state &state, me_file &file, bool &show );
+void show_file_info( State &state, Mapgen &file, bool &show );
 
 } // namespace editor
 

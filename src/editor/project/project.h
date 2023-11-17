@@ -7,33 +7,33 @@
 
 namespace editor
 {
-struct me_state;
+struct State;
 
-struct me_project {
+struct Project {
     std::string project_uuid;
-    uuid_generator uuid_gen;
-    std::vector<me_file> files;
-    std::vector<me_palette> palettes;
+    UUIDGenerator uuid_gen;
+    std::vector<Mapgen> files;
+    std::vector<Palette> palettes;
 
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
 
-    const me_file *get_file_by_uuid( const uuid_t &fid ) const;
-    inline me_file *get_file_by_uuid( const uuid_t &fid ) {
-        const me_project *this_c = this;
-        return const_cast<me_file *>( this_c->get_file_by_uuid( fid ) );
+    const Mapgen *get_file_by_uuid( const UUID &fid ) const;
+    inline Mapgen *get_file_by_uuid( const UUID &fid ) {
+        const Project *this_c = this;
+        return const_cast<Mapgen *>( this_c->get_file_by_uuid( fid ) );
     }
 
-    const me_palette *get_palette_by_uuid( const uuid_t &pid ) const;
-    inline me_palette *get_palette_by_uuid( const uuid_t &pid ) {
-        const me_project *this_c = this;
-        return const_cast<me_palette *>( this_c->get_palette_by_uuid( pid ) );
+    const Palette *get_palette_by_uuid( const UUID &pid ) const;
+    inline Palette *get_palette_by_uuid( const UUID &pid ) {
+        const Project *this_c = this;
+        return const_cast<Palette *>( this_c->get_palette_by_uuid( pid ) );
     }
 };
 
-void show_project_overview_ui( me_state &state, me_project &project, bool &show );
+void show_project_overview_ui( State &state, Project &project, bool &show );
 
-std::unique_ptr<me_project> create_empty_project();
+std::unique_ptr<Project> create_empty_project();
 
 } // namespace editor
 

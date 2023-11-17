@@ -76,14 +76,14 @@ bool InputId(
 }
 
 template<typename T>
-bool InputId( const char *label, editor::editable_id<T> &id, ImGuiInputTextFlags flags = 0,
+bool InputId( const char *label, editor::EditableID<T> &id, ImGuiInputTextFlags flags = 0,
               ImGuiInputTextCallback callback = nullptr, void *user_data = NULL )
 {
-    return detail::InputId( label, id.data, editor::editable_id<T>::get_all_opts(), id.is_valid(),
+    return detail::InputId( label, id.data, editor::EditableID<T>::get_all_opts(), id.is_valid(),
                             flags, callback, user_data );
 }
 
-bool InputIntRange( const char *label, editor::me_int_range &r );
+bool InputIntRange( const char *label, editor::IntRange &r );
 
 bool InputIntClamped( const char *label, int &val, int min, int max,
                       ImGuiInputTextFlags flags = 0 );

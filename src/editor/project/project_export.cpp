@@ -27,13 +27,13 @@ void emit_val( JsonOut &jo, float f );
 void emit_val( JsonOut &jo, bool b );
 void emit_val( JsonOut &jo, const char *str );
 void emit_val( JsonOut &jo, const std::string &str );
-void emit_val( JsonOut &jo, const editor::me_piece *piece );
-void emit_val( JsonOut &jo, const editor::me_mapobject *obj );
+void emit_val( JsonOut &jo, const editor::Piece *piece );
+void emit_val( JsonOut &jo, const editor::MapObject *obj );
 template<typename T>
-void emit_val( JsonOut &jo, const editor::editable_id<T> &eid );
-void emit_val( JsonOut &jo, const editor::me_int_range &r );
+void emit_val( JsonOut &jo, const editor::EditableID<T> &eid );
+void emit_val( JsonOut &jo, const editor::IntRange &r );
 template<typename T>
-void emit_val( JsonOut &jo, const editor::me_weighted_list<T> &list );
+void emit_val( JsonOut &jo, const editor::WeightedList<T> &list );
 
 template<typename T>
 void emit( JsonOut &jo, const std::string &key, T value );
@@ -87,7 +87,7 @@ void emit_val( JsonOut &jo, const std::string &str )
     jo.write( str );
 }
 
-void emit_val( JsonOut &jo, const editor::me_piece *piece )
+void emit_val( JsonOut &jo, const editor::Piece *piece )
 {
     if( editor::is_alt_piece( piece->get_type() ) ) {
         piece->export_func( jo );
@@ -98,7 +98,7 @@ void emit_val( JsonOut &jo, const editor::me_piece *piece )
     }
 }
 
-void emit_val( JsonOut &jo, const editor::me_mapobject *obj )
+void emit_val( JsonOut &jo, const editor::MapObject *obj )
 {
     emit_object( jo, [&]() {
         emit( jo, "x", obj->x );
@@ -109,12 +109,12 @@ void emit_val( JsonOut &jo, const editor::me_mapobject *obj )
 }
 
 template<typename T>
-void emit_val( JsonOut &jo, const editor::editable_id<T> &eid )
+void emit_val( JsonOut &jo, const editor::EditableID<T> &eid )
 {
     jo.write( eid.data );
 }
 
-void emit_val( JsonOut &jo, const editor::me_int_range &r )
+void emit_val( JsonOut &jo, const editor::IntRange &r )
 {
     if( r.min == r.max ) {
         emit_val( jo, r.min );
@@ -127,7 +127,7 @@ void emit_val( JsonOut &jo, const editor::me_int_range &r )
 }
 
 template<typename T>
-void emit_val( JsonOut &jo, const editor::me_weighted_list<T> &list )
+void emit_val( JsonOut &jo, const editor::WeightedList<T> &list )
 {
     if( list.entries.size() == 1 ) {
         emit_val( jo, list.entries[0].val );
@@ -216,7 +216,7 @@ namespace editor
 
 namespace ee = editor_export;
 
-void me_piece_field::export_func( JsonOut &jo ) const
+void PieceField::export_func( JsonOut &jo ) const
 {
     ee::emit( jo, "field", ftype );
     if( intensity != 1 ) {
@@ -227,7 +227,7 @@ void me_piece_field::export_func( JsonOut &jo ) const
     }
 }
 
-void me_piece_npc::export_func( JsonOut &jo ) const
+void PieceNPC::export_func( JsonOut &jo ) const
 {
     ee::emit( jo, "class", npc_class );
     if( target ) {
@@ -242,12 +242,12 @@ void me_piece_npc::export_func( JsonOut &jo ) const
     }
 }
 
-void me_piece_faction::export_func( JsonOut &jo ) const
+void PieceFaction::export_func( JsonOut &jo ) const
 {
     ee::emit( jo, "id", id );
 }
 
-void me_piece_sign::export_func( JsonOut &jo ) const
+void PieceSign::export_func( JsonOut &jo ) const
 {
     if( use_snippet ) {
         ee::emit( jo, "snippet", snippet );
@@ -256,7 +256,7 @@ void me_piece_sign::export_func( JsonOut &jo ) const
     }
 }
 
-void me_piece_graffiti::export_func( JsonOut &jo ) const
+void PieceGraffiti::export_func( JsonOut &jo ) const
 {
     if( use_snippet ) {
         ee::emit( jo, "snippet", snippet );
@@ -265,7 +265,7 @@ void me_piece_graffiti::export_func( JsonOut &jo ) const
     }
 }
 
-void me_piece_vending_machine::export_func( JsonOut &jo ) const
+void PieceVendingMachine::export_func( JsonOut &jo ) const
 {
     if( reinforced ) {
         ee::emit( jo, "reinforced", reinforced );
@@ -275,14 +275,14 @@ void me_piece_vending_machine::export_func( JsonOut &jo ) const
     }
 }
 
-void me_piece_toilet::export_func( JsonOut &jo ) const
+void PieceToilet::export_func( JsonOut &jo ) const
 {
     if( !use_default_amount ) {
         ee::emit( jo, "amount", amount );
     }
 }
 
-void me_piece_gaspump::export_func( JsonOut &jo ) const
+void PieceGaspump::export_func( JsonOut &jo ) const
 {
     if( !use_default_amount ) {
         ee::emit( jo, "amount", amount );
@@ -294,7 +294,7 @@ void me_piece_gaspump::export_func( JsonOut &jo ) const
     }
 }
 
-void me_piece_liquid::export_func( JsonOut &jo ) const
+void PieceLiquid::export_func( JsonOut &jo ) const
 {
     if( !use_default_amount ) {
         ee::emit( jo, "amount", amount );
@@ -305,7 +305,7 @@ void me_piece_liquid::export_func( JsonOut &jo ) const
     }
 }
 
-void me_piece_igroup::export_func( JsonOut &jo ) const
+void PieceIGroup::export_func( JsonOut &jo ) const
 {
     ee::emit( jo, "item", group_id );
     ee::emit( jo, "chance", chance );
@@ -314,12 +314,12 @@ void me_piece_igroup::export_func( JsonOut &jo ) const
     }
 }
 
-void me_piece_loot::export_func( JsonOut &jo ) const
+void PieceLoot::export_func( JsonOut &jo ) const
 {
     // TODO
 }
 
-void me_piece_mgroup::export_func( JsonOut &jo ) const
+void PieceMGroup::export_func( JsonOut &jo ) const
 {
     ee::emit( jo, "monster", group_id );
     if( !spawn_always ) {
@@ -330,12 +330,12 @@ void me_piece_mgroup::export_func( JsonOut &jo ) const
     }
 }
 
-void me_piece_monster::export_func( JsonOut &jo ) const
+void PieceMonster::export_func( JsonOut &jo ) const
 {
     // TODO
 }
 
-void me_piece_vehicle::export_func( JsonOut &jo ) const
+void PieceVehicle::export_func( JsonOut &jo ) const
 {
     ee::emit( jo, "vehicle", group_id );
     ee::emit( jo, "chance", chance );
@@ -357,14 +357,14 @@ void me_piece_vehicle::export_func( JsonOut &jo ) const
     }
 }
 
-void me_piece_item::export_func( JsonOut &jo ) const
+void PieceItem::export_func( JsonOut &jo ) const
 {
     ee::emit( jo, "item", item_id );
     if( amount.min != 1 || amount.max != 1 ) {
         ee::emit( jo, "amount", amount );
     }
     if( spawn_one ) {
-        me_int_range x;
+        IntRange x;
         x.min = 100;
         x.max = 100;
         ee::emit( jo, "chance", x );
@@ -376,67 +376,67 @@ void me_piece_item::export_func( JsonOut &jo ) const
     }
 }
 
-void me_piece_trap::export_func( JsonOut &jo ) const
+void PieceTrap::export_func( JsonOut &jo ) const
 {
     // TODO
 }
 
-void me_piece_furniture::export_func( JsonOut &jo ) const
+void PieceFurniture::export_func( JsonOut &jo ) const
 {
     // TODO
 }
 
-void me_piece_terrain::export_func( JsonOut &jo ) const
+void PieceTerrain::export_func( JsonOut &jo ) const
 {
     // TODO
 }
 
-void me_piece_ter_furn_transform::export_func( JsonOut &jo ) const
+void PieceTerFurnTransform::export_func( JsonOut &jo ) const
 {
     // TODO
 }
 
-void me_piece_make_rubble::export_func( JsonOut &jo ) const
+void PieceMakeRubble::export_func( JsonOut &jo ) const
 {
     // TODO
 }
 
-void me_piece_computer::export_func( JsonOut &jo ) const
+void PieceComputer::export_func( JsonOut &jo ) const
 {
     // TODO
 }
 
-void me_piece_sealed_item::export_func( JsonOut &jo ) const
+void PieceSealeditem::export_func( JsonOut &jo ) const
 {
     // TODO
 }
 
-void me_piece_translate::export_func( JsonOut &jo ) const
+void PieceTranslate::export_func( JsonOut &jo ) const
 {
     // TODO
 }
 
-void me_piece_zone::export_func( JsonOut &jo ) const
+void PieceZone::export_func( JsonOut &jo ) const
 {
     // TODO
 }
 
-void me_piece_nested::export_func( JsonOut &jo ) const
+void PieceNested::export_func( JsonOut &jo ) const
 {
     // TODO
 }
 
-void me_piece_alt_trap::export_func( JsonOut &jo ) const
+void PieceAltTrap::export_func( JsonOut &jo ) const
 {
     ee::emit_val( jo, list );
 }
 
-void me_piece_alt_furniture::export_func( JsonOut &jo ) const
+void PieceAltFurniture::export_func( JsonOut &jo ) const
 {
     ee::emit_val( jo, list );
 }
 
-void me_piece_alt_terrain::export_func( JsonOut &jo ) const
+void PieceAltTerrain::export_func( JsonOut &jo ) const
 {
     ee::emit_val( jo, list );
 }
@@ -459,8 +459,8 @@ std::string get_palette_category( editor::PieceType data )
         case editor::PieceType::Toilet: return "toilets";
         case editor::PieceType::GasPump: return "gaspumps";
         case editor::PieceType::Liquid: return "liquids";
-        case editor::PieceType::Igroup: return "items";
-        case editor::PieceType::Mgroup: return "monsters";
+        case editor::PieceType::IGroup: return "items";
+        case editor::PieceType::MGroup: return "monsters";
         case editor::PieceType::Monster: return "monster";
         case editor::PieceType::Vehicle: return "vehicles";
         case editor::PieceType::Item: return "item";
@@ -502,9 +502,9 @@ std::string get_object_category( editor::PieceType data )
         case editor::PieceType::Toilet: return "place_toilets";
         case editor::PieceType::GasPump: return "place_gaspumps";
         case editor::PieceType::Liquid: return "place_liquids";
-        case editor::PieceType::Igroup: return "place_items";
+        case editor::PieceType::IGroup: return "place_items";
         case editor::PieceType::Loot: return "place_loot";
-        case editor::PieceType::Mgroup: return "place_monsters";
+        case editor::PieceType::MGroup: return "place_monsters";
         case editor::PieceType::Monster: return "place_monster";
         case editor::PieceType::Vehicle: return "place_vehicles";
         case editor::PieceType::Item: return "place_item";
@@ -536,8 +536,8 @@ std::string get_object_category( editor::PieceType data )
  * ============= HIGH-LEVEL FUNCTIONS =============
  */
 
-static void emit_file_contents( JsonOut &jo, const editor::me_project &project,
-                                const editor::me_file &file )
+static void emit_file_contents( JsonOut &jo, const editor::Project &project,
+                                const editor::Mapgen &file )
 {
     emit( jo, "type", "mapgen" );
     emit( jo, "method", "json" );
@@ -577,13 +577,13 @@ static void emit_file_contents( JsonOut &jo, const editor::me_project &project,
         }
 
         if( file.uses_rows() ) {
-            const editor::me_palette &pal = *project.get_palette_by_uuid( file.base.inline_palette_id );
+            const editor::Palette &pal = *project.get_palette_by_uuid( file.base.inline_palette_id );
             emit_array( jo, "rows", [&]() {
-                const editor::Canvas2D<editor::uuid_t> &canvas = file.base.canvas;
+                const editor::Canvas2D<editor::UUID> &canvas = file.base.canvas;
                 for( int y = 0; y < canvas.get_size().y; y++ ) {
                     std::string s;
                     for( int x = 0; x < canvas.get_size().x; x++ ) {
-                        editor::uuid_t uuid = canvas.get( point( x, y ) );
+                        editor::UUID uuid = canvas.get( point( x, y ) );
                         const map_key &mk = pal.key_from_uuid( uuid );
                         s += mk.str;
                     }
@@ -596,9 +596,9 @@ static void emit_file_contents( JsonOut &jo, const editor::me_project &project,
 
                 std::string palette_cat = get_palette_category( pt );
 
-                std::unordered_map<map_key, std::vector<const editor::me_piece *>> matching_pieces;
+                std::unordered_map<map_key, std::vector<const editor::Piece *>> matching_pieces;
 
-                for( const editor::me_palette_entry &it : pal.entries ) {
+                for( const editor::PaletteEntry &it : pal.entries ) {
                     for( const auto &pc : it.mapping.pieces ) {
                         if( pc->get_type() == pt ) {
                             matching_pieces[it.key].push_back( pc.get() );
@@ -642,9 +642,9 @@ static void emit_file_contents( JsonOut &jo, const editor::me_project &project,
 
             std::string object_cat = get_object_category( pt );
 
-            std::vector<const editor::me_mapobject *> matching_objects;
+            std::vector<const editor::MapObject *> matching_objects;
 
-            for( const editor::me_mapobject &it : file.objects ) {
+            for( const editor::MapObject &it : file.objects ) {
                 if( it.piece->get_type() == pt ) {
                     matching_objects.push_back( &it );
                 }
@@ -668,11 +668,11 @@ static void emit_file_contents( JsonOut &jo, const editor::me_project &project,
     } );
 }
 
-std::string to_string( const editor::me_project &project )
+std::string to_string( const editor::Project &project )
 {
     return serialize_wrapper( [&]( JsonOut & jo ) {
         emit_array( jo, [&]() {
-            for( const editor::me_file &file : project.files ) {
+            for( const editor::Mapgen &file : project.files ) {
                 emit_object( jo, [&]() {
                     emit_file_contents( jo, project, file );
                 } );

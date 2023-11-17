@@ -14,57 +14,57 @@
 namespace editor
 {
 
-struct me_piece_field : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_field, PieceType::Field )
+struct PieceField : public Piece {
+    IMPLEMENT_ME_PIECE( PieceField, PieceType::Field )
 
-    field_eid ftype;
+    EID::Field ftype;
     int intensity = 1;
     time_duration age = 0_seconds;
 };
 
-struct me_piece_npc : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_npc, PieceType::NPC )
+struct PieceNPC : public Piece {
+    IMPLEMENT_ME_PIECE( PieceNPC, PieceType::NPC )
 
-    npc_template_eid npc_class;
+    EID::NPCTemplate npc_class;
     bool target = false;
-    std::vector<trait_eid> traits;
+    std::vector<EID::Trait> traits;
 };
 
-struct me_piece_faction : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_faction, PieceType::Faction )
+struct PieceFaction : public Piece {
+    IMPLEMENT_ME_PIECE( PieceFaction, PieceType::Faction )
 
     std::string id;
 };
 
-struct me_piece_sign : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_sign, PieceType::Sign )
+struct PieceSign : public Piece {
+    IMPLEMENT_ME_PIECE( PieceSign, PieceType::Sign )
 
     bool use_snippet = false;
-    snippet_category_eid snippet;
+    EID::SnippetCategory snippet;
     std::string text;
 };
 
-struct me_piece_graffiti : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_graffiti, PieceType::Graffiti )
+struct PieceGraffiti : public Piece {
+    IMPLEMENT_ME_PIECE( PieceGraffiti, PieceType::Graffiti )
 
     bool use_snippet = false;
-    snippet_category_eid snippet;
+    EID::SnippetCategory snippet;
     std::string text;
 };
 
-struct me_piece_vending_machine : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_vending_machine, PieceType::VendingMachine )
+struct PieceVendingMachine : public Piece {
+    IMPLEMENT_ME_PIECE( PieceVendingMachine, PieceType::VendingMachine )
 
     bool reinforced = false;
     bool use_default_group = true;
-    igroup_eid item_group;
+    EID::IGroup item_group;
 };
 
-struct me_piece_toilet : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_toilet, PieceType::Toilet )
+struct PieceToilet : public Piece {
+    IMPLEMENT_ME_PIECE( PieceToilet, PieceType::Toilet )
 
     bool use_default_amount = true;
-    me_int_range amount;
+    IntRange amount;
 };
 
 enum class GasPumpFuel {
@@ -75,51 +75,51 @@ enum class GasPumpFuel {
     _Num,
 };
 
-struct me_piece_gaspump : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_gaspump, PieceType::GasPump )
+struct PieceGaspump : public Piece {
+    IMPLEMENT_ME_PIECE( PieceGaspump, PieceType::GasPump )
 
     bool use_default_amount = true;
-    me_int_range amount;
+    IntRange amount;
     GasPumpFuel fuel;
 };
 
-struct me_piece_liquid : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_liquid, PieceType::Liquid )
+struct PieceLiquid : public Piece {
+    IMPLEMENT_ME_PIECE( PieceLiquid, PieceType::Liquid )
 
     bool use_default_amount = true;
-    me_int_range amount;
-    liquid_eid liquid;
+    IntRange amount;
+    EID::Liquid liquid;
     bool spawn_always = true;
-    me_int_range chance;
+    IntRange chance;
 };
 
-struct me_piece_igroup : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_igroup, PieceType::Igroup )
+struct PieceIGroup : public Piece {
+    IMPLEMENT_ME_PIECE( PieceIGroup, PieceType::IGroup )
 
-    igroup_eid group_id;
-    me_int_range chance;
+    EID::IGroup group_id;
+    IntRange chance;
     bool spawn_once = true;
-    me_int_range repeat;
+    IntRange repeat;
 };
 
-struct me_piece_loot : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_loot, PieceType::Loot )
+struct PieceLoot : public Piece {
+    IMPLEMENT_ME_PIECE( PieceLoot, PieceType::Loot )
 
     // TODO
 };
 
-struct me_piece_mgroup : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_mgroup, PieceType::Mgroup )
+struct PieceMGroup : public Piece {
+    IMPLEMENT_ME_PIECE( PieceMGroup, PieceType::MGroup )
 
-    mgroup_eid group_id;
+    EID::MGroup group_id;
     bool spawn_always = true;
-    me_int_range chance;
+    IntRange chance;
     bool use_default_density = true;
     float density = -1.0f;
 };
 
-struct me_piece_monster : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_monster, PieceType::Monster )
+struct PieceMonster : public Piece {
+    IMPLEMENT_ME_PIECE( PieceMonster, PieceType::Monster )
 
     // TODO
 };
@@ -132,110 +132,110 @@ enum class VehicleStatus {
     _Num,
 };
 
-struct me_piece_vehicle : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_vehicle, PieceType::Vehicle )
+struct PieceVehicle : public Piece {
+    IMPLEMENT_ME_PIECE( PieceVehicle, PieceType::Vehicle )
 
-    vgroup_eid group_id;
-    me_int_range chance;
+    EID::VGroup group_id;
+    IntRange chance;
     VehicleStatus status = VehicleStatus::LightDamage;
     bool random_fuel_amount = true;
     int fuel = 100;
     std::set<int> allowed_rotations;
 };
 
-struct me_piece_item : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_item, PieceType::Item )
+struct PieceItem : public Piece {
+    IMPLEMENT_ME_PIECE( PieceItem, PieceType::Item )
 
-    item_eid item_id;
-    me_int_range amount;
+    EID::Item item_id;
+    IntRange amount;
     bool spawn_one = true;
-    me_int_range chance;
+    IntRange chance;
     bool spawn_once = true;
-    me_int_range repeat;
+    IntRange repeat;
 };
 
-struct me_piece_trap : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_trap, PieceType::Trap )
+struct PieceTrap : public Piece {
+    IMPLEMENT_ME_PIECE( PieceTrap, PieceType::Trap )
 
     // TODO
 };
 
-struct me_piece_furniture : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_furniture, PieceType::Furniture )
+struct PieceFurniture : public Piece {
+    IMPLEMENT_ME_PIECE( PieceFurniture, PieceType::Furniture )
 
     // TODO
 };
 
-struct me_piece_terrain : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_terrain, PieceType::Terrain )
+struct PieceTerrain : public Piece {
+    IMPLEMENT_ME_PIECE( PieceTerrain, PieceType::Terrain )
 
     // TODO
 };
 
-struct me_piece_ter_furn_transform : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_ter_furn_transform, PieceType::TerFurnTransform )
+struct PieceTerFurnTransform : public Piece {
+    IMPLEMENT_ME_PIECE( PieceTerFurnTransform, PieceType::TerFurnTransform )
 
     // TODO
 };
 
-struct me_piece_make_rubble : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_make_rubble, PieceType::MakeRubble )
+struct PieceMakeRubble : public Piece {
+    IMPLEMENT_ME_PIECE( PieceMakeRubble, PieceType::MakeRubble )
 
     // TODO
 };
 
-struct me_piece_computer : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_computer, PieceType::Computer )
+struct PieceComputer : public Piece {
+    IMPLEMENT_ME_PIECE( PieceComputer, PieceType::Computer )
 
     // TODO
 };
 
-struct me_piece_sealed_item : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_sealed_item, PieceType::SealedItem )
+struct PieceSealeditem : public Piece {
+    IMPLEMENT_ME_PIECE( PieceSealeditem, PieceType::SealedItem )
 
     // TODO
 };
 
-struct me_piece_translate : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_translate, PieceType::Translate )
+struct PieceTranslate : public Piece {
+    IMPLEMENT_ME_PIECE( PieceTranslate, PieceType::Translate )
 
     // TODO
 };
 
-struct me_piece_zone : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_zone, PieceType::Zone )
+struct PieceZone : public Piece {
+    IMPLEMENT_ME_PIECE( PieceZone, PieceType::Zone )
 
     // TODO
 };
 
-struct me_piece_nested : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_nested, PieceType::Nested )
+struct PieceNested : public Piece {
+    IMPLEMENT_ME_PIECE( PieceNested, PieceType::Nested )
 
     // TODO
 };
 
-struct me_piece_alt_trap : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_alt_trap, PieceType::AltTrap )
+struct PieceAltTrap : public Piece {
+    IMPLEMENT_ME_PIECE( PieceAltTrap, PieceType::AltTrap )
 
     void init_new() override;
 
-    me_weighted_list<trap_eid> list;
+    WeightedList<EID::Trap> list;
 };
 
-struct me_piece_alt_furniture : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_alt_furniture, PieceType::AltFurniture )
+struct PieceAltFurniture : public Piece {
+    IMPLEMENT_ME_PIECE( PieceAltFurniture, PieceType::AltFurniture )
 
     void init_new() override;
 
-    me_weighted_list<furn_eid> list;
+    WeightedList<EID::Furn> list;
 };
 
-struct me_piece_alt_terrain : public me_piece {
-    IMPLEMENT_ME_PIECE( me_piece_alt_terrain, PieceType::AltTerrain )
+struct PieceAltTerrain : public Piece {
+    IMPLEMENT_ME_PIECE( PieceAltTerrain, PieceType::AltTerrain )
 
     void init_new() override;
 
-    me_weighted_list<ter_eid> list;
+    WeightedList<EID::Ter> list;
 };
 
 } // namespace editor

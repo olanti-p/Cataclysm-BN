@@ -2,9 +2,9 @@
 
 namespace editor
 {
-me_control_state::me_control_state() = default;
-me_control_state::me_control_state( me_control_state && ) = default;
-me_control_state::~me_control_state() = default;
-me_control_state &me_control_state::operator=( me_control_state && ) = default;
+ControlState::ControlState() = default;
+ControlState::ControlState( ControlState && ) = default;
+ControlState::~ControlState() = default;
+ControlState &ControlState::operator=( ControlState && ) = default;
 
 } // namespace editor

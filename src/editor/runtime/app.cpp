@@ -12,18 +12,18 @@
 
 namespace editor
 {
-me_main_app::me_main_app() = default;
-me_main_app::me_main_app( me_main_app && ) = default;
-me_main_app::~me_main_app() = default;
+App::App() = default;
+App::App( App && ) = default;
+App::~App() = default;
 
-me_main_app &me_main_app::operator=( me_main_app && ) = default;
+App &App::operator=( App && ) = default;
 
-void init_app( me_main_app &app )
+void init_app( App &app )
 {
-    app.title_state = std::make_unique<me_titlescreen_state>();
+    app.title_state = std::make_unique<TitleScreen>();
 }
 
-void show_app( me_main_app &app )
+void show_app( App &app )
 {
     if( app.editor_state ) {
         show_me_ui( *app.editor_state );
@@ -32,10 +32,10 @@ void show_app( me_main_app &app )
     }
 }
 
-void update_app_state( me_main_app &app )
+void update_app_state( App &app )
 {
     if( app.title_state && app.title_state->ret ) {
-        const editor::titlescreen_ui_retval &retval = *app.title_state->ret;
+        const editor::TitleScreenReturn &retval = *app.title_state->ret;
         if( retval.exit ) {
             if( retval.exit_to_desktop ) {
                 app.run_state.do_exit_to_dektop = true;
@@ -43,16 +43,16 @@ void update_app_state( me_main_app &app )
                 app.run_state.do_exit_to_game = true;
             }
         } else if( retval.make_new ) {
-            app.editor_state = std::make_unique<me_state>();
+            app.editor_state = std::make_unique<State>();
             std::string project_uuid = app.editor_state->project().project_uuid;
             set_project_ini_path( project_uuid );
         } else if( retval.load_existing ) {
-            std::unique_ptr<me_project> f = std::make_unique<me_project>();
+            std::unique_ptr<Project> f = std::make_unique<Project>();
             auto reader = [&]( JsonIn & jsin ) {
                 f->deserialize( jsin );
             };
             if( read_from_file_json( retval.load_path, reader ) ) {
-                app.editor_state = std::make_unique<me_state>( std::move( f ), &retval.load_path );
+                app.editor_state = std::make_unique<State>( std::move( f ), &retval.load_path );
                 std::string project_uuid = app.editor_state->project().project_uuid;
                 set_project_ini_path( project_uuid );
             } else {

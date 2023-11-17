@@ -22,34 +22,34 @@ class JsonObject;
     PieceType get_type() const override {                               \
         return piece_type;                                              \
     }                                                                   \
-    std::unique_ptr<me_piece> clone() const override {                  \
+    std::unique_ptr<Piece> clone() const override {                     \
         return std::make_unique<piece_class>( *this );                  \
     };                                                                  \
     void serialize( JsonOut &jsout ) const override;                    \
     void deserialize( JsonObject &jsin ) override;                      \
     void export_func( JsonOut& jo ) const override;                     \
-    void show_ui( me_state& state ) override;                           \
+    void show_ui( State& state ) override;                              \
     std::string fmt_data_summary() const override;
 
 namespace editor
 {
-struct me_state;
+struct State;
 
-struct me_piece {
-    me_piece() = default;
-    virtual ~me_piece() = default;
+struct Piece {
+    Piece() = default;
+    virtual ~Piece() = default;
 
     virtual PieceType get_type() const = 0;
 
-    uuid_t uuid = UUID_INVALID;
+    UUID uuid = UUID_INVALID;
 
-    virtual std::unique_ptr<me_piece> clone() const = 0;
+    virtual std::unique_ptr<Piece> clone() const = 0;
 
     virtual void serialize( JsonOut &jsout ) const = 0;
     virtual void deserialize( JsonObject &jsin ) = 0;
     virtual void export_func( JsonOut &jo ) const = 0;
 
-    virtual void show_ui( me_state &state ) = 0;
+    virtual void show_ui( State &state ) = 0;
 
     virtual void init_new() {};
 
@@ -64,8 +64,8 @@ struct me_piece {
     virtual std::string fmt_data_summary() const = 0;
 };
 
-const std::vector<std::unique_ptr<me_piece>> &get_piece_templates();
-std::unique_ptr<me_piece> make_new_piece( PieceType pt );
+const std::vector<std::unique_ptr<Piece>> &get_piece_templates();
+std::unique_ptr<Piece> make_new_piece( PieceType pt );
 
 bool is_alt_piece( PieceType pt );
 bool is_piece_exclusive( PieceType pt );

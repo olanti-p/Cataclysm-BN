@@ -12,9 +12,9 @@
 namespace editor
 {
 
-const me_file *me_project::get_file_by_uuid( const uuid_t &fid ) const
+const Mapgen *Project::get_file_by_uuid( const UUID &fid ) const
 {
-    for( const me_file &file : files ) {
+    for( const Mapgen &file : files ) {
         if( fid == file.uuid ) {
             return &file;
         }
@@ -22,9 +22,9 @@ const me_file *me_project::get_file_by_uuid( const uuid_t &fid ) const
     return nullptr;
 }
 
-const me_palette *me_project::get_palette_by_uuid( const uuid_t &fid ) const
+const Palette *Project::get_palette_by_uuid( const UUID &fid ) const
 {
-    for( const me_palette &palette : palettes ) {
+    for( const Palette &palette : palettes ) {
         if( fid == palette.uuid ) {
             return &palette;
         }
@@ -32,7 +32,7 @@ const me_palette *me_project::get_palette_by_uuid( const uuid_t &fid ) const
     return nullptr;
 }
 
-void show_project_overview_ui( me_state &state, me_project &project, bool &show )
+void show_project_overview_ui( State &state, Project &project, bool &show )
 {
     ImGui::SetNextWindowSize( ImVec2( 250.0f, 200.0f ), ImGuiCond_FirstUseEver );
     ImGui::Begin( "Project Overview", &show );
@@ -41,7 +41,7 @@ void show_project_overview_ui( me_state &state, me_project &project, bool &show 
 
     bool changed_mapgens = ImGui::VectorWidget()
     .with_for_each( [&]( size_t idx ) {
-        uuid_t this_uuid = project.files[idx].uuid;
+        UUID this_uuid = project.files[idx].uuid;
         if( ImGui::ImageButton( "toggle_palette", "me_palette" ) ) {
             state.uistate->toggle_show_palette( project.files[idx].base.inline_palette_id );
         }
@@ -63,10 +63,10 @@ void show_project_overview_ui( me_state &state, me_project &project, bool &show 
         bool ret = false;
         if( ImGui::Button( "New mapgen" ) )
         {
-            uuid_t new_mapgen = project.uuid_gen();
+            UUID new_mapgen = project.uuid_gen();
             project.files.emplace_back();
             project.files.back().uuid = new_mapgen;
-            uuid_t new_palette = project.uuid_gen();
+            UUID new_palette = project.uuid_gen();
             project.files.back().base.inline_palette_id = new_palette;
             project.palettes.emplace_back();
             project.palettes.back().uuid = new_palette;
@@ -75,7 +75,7 @@ void show_project_overview_ui( me_state &state, me_project &project, bool &show 
         return ret;
     } )
     .with_delete( [&]( size_t idx ) {
-        uuid_t pal_uuid = project.files[idx].base.inline_palette_id;
+        UUID pal_uuid = project.files[idx].base.inline_palette_id;
         project.files.erase( std::next( project.files.cbegin(), idx ) );
         for( auto it = project.palettes.cbegin(); it != project.palettes.cend(); it++ ) {
             if( it->uuid == pal_uuid ) {
@@ -85,8 +85,8 @@ void show_project_overview_ui( me_state &state, me_project &project, bool &show 
         }
     } )
     .with_duplicate( [&]( size_t idx ) {
-        me_file copy = project.files[ idx ];
-        me_palette pcopy = *project.get_palette_by_uuid( copy.base.inline_palette_id );
+        Mapgen copy = project.files[ idx ];
+        Palette pcopy = *project.get_palette_by_uuid( copy.base.inline_palette_id );
         copy.uuid = project.uuid_gen();
         pcopy.uuid = project.uuid_gen();
         copy.base.inline_palette_id = pcopy.uuid;
@@ -96,7 +96,7 @@ void show_project_overview_ui( me_state &state, me_project &project, bool &show 
     .run( project.files );
 
     ImGui::Text( "Inline palettes:" );
-    for( const me_palette &pal : project.palettes ) {
+    for( const Palette &pal : project.palettes ) {
         ImGui::Selectable( string_format( "Palette [uuid=%d]", pal.uuid ).c_str(), false );
     }
 
@@ -114,9 +114,9 @@ std::string timestamp_string()
     return string_format( "%u", ms );
 }
 
-std::unique_ptr<me_project> create_empty_project()
+std::unique_ptr<Project> create_empty_project()
 {
-    auto ret = std::make_unique<me_project>();
+    auto ret = std::make_unique<Project>();
     ret->project_uuid = timestamp_string();
     return ret;
 }

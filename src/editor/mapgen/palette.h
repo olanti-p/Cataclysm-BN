@@ -20,19 +20,19 @@ struct SpriteRef;
 
 namespace editor
 {
-struct me_file;
-struct me_project;
+struct Mapgen;
+struct Project;
 
-struct me_mapping {
-    std::vector<std::unique_ptr<me_piece>> pieces;
+struct Mapping {
+    std::vector<std::unique_ptr<Piece>> pieces;
 
-    me_mapping() = default;
-    me_mapping( const me_mapping &rhs );
-    me_mapping( me_mapping && ) = default;
-    ~me_mapping() = default;
+    Mapping() = default;
+    Mapping( const Mapping &rhs );
+    Mapping( Mapping && ) = default;
+    ~Mapping() = default;
 
-    me_mapping &operator=( const me_mapping &rhs );
-    me_mapping &operator=( me_mapping && ) = default;
+    Mapping &operator=( const Mapping &rhs );
+    Mapping &operator=( Mapping && ) = default;
 
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
@@ -50,18 +50,18 @@ struct me_mapping {
 
     template<typename T>
     T *get_first_piece_of_type() {
-        const me_mapping *this_c = this;
+        const Mapping *this_c = this;
         return const_cast<T *>( this_c->get_first_piece_of_type<T>() );
     }
 
     bool has_piece_of_type( PieceType pt ) const;
 };
 
-struct me_palette_entry {
-    uuid_t uuid;
+struct PaletteEntry {
+    UUID uuid;
     map_key key;
     ImVec4 color;
-    me_mapping mapping;
+    Mapping mapping;
 
     mutable bool sprite_cache_valid = false;
     mutable std::optional<SpriteRef> sprite_cache;
@@ -72,24 +72,24 @@ struct me_palette_entry {
     void deserialize( JsonIn &jsin );
 };
 
-struct me_palette {
-    static me_palette make_inline() {
-        me_palette ret;
+struct Palette {
+    static Palette make_inline() {
+        Palette ret;
         ret.is_inline = true;
         return ret;
     }
 
     bool is_inline = false;
-    uuid_t uuid;
-    palette_eid id;
-    std::vector<me_palette_entry> entries;
+    UUID uuid;
+    EID::Palette id;
+    std::vector<PaletteEntry> entries;
 
-    const map_key &key_from_uuid( const uuid_t &uuid ) const;
-    const ImVec4 &color_from_uuid( const uuid_t &uuid ) const;
-    const SpriteRef *sprite_from_uuid( const uuid_t &uuid ) const;
+    const map_key &key_from_uuid( const UUID &uuid ) const;
+    const ImVec4 &color_from_uuid( const UUID &uuid ) const;
+    const SpriteRef *sprite_from_uuid( const UUID &uuid ) const;
 
-    me_palette_entry *find_entry( const uuid_t &uuid );
-    const me_palette_entry *find_entry( const uuid_t &uuid ) const;
+    PaletteEntry *find_entry( const UUID &uuid );
+    const PaletteEntry *find_entry( const UUID &uuid ) const;
 
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
@@ -98,14 +98,14 @@ struct me_palette {
 /**
  * =============== Windows ===============
  */
-map_key pick_available_key( const me_palette &pal );
+map_key pick_available_key( const Palette &pal );
 
 /**
  * =============== Windows ===============
  */
-void show_mapping( me_state &state, editor::me_palette &p, editor::me_palette_entry &entry,
+void show_mapping( State &state, editor::Palette &p, editor::PaletteEntry &entry,
                    bool &show );
-void show_palette( me_state &state, me_palette &p, bool &show );
+void show_palette( State &state, Palette &p, bool &show );
 
 } // namespace editor
 

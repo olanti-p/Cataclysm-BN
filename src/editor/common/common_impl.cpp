@@ -7,21 +7,21 @@ namespace editor
 {
 
 
-void uuid_generator::serialize( JsonOut &jsout ) const
+void UUIDGenerator::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
     jsout.member( "counter", counter );
     jsout.end_object();
 }
 
-void uuid_generator::deserialize( JsonIn &jsin )
+void UUIDGenerator::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
     jo.read( "counter", counter );
 }
 
-void me_int_range::serialize( JsonOut &jsout ) const
+void IntRange::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
     jsout.member( "min", min );
@@ -29,7 +29,7 @@ void me_int_range::serialize( JsonOut &jsout ) const
     jsout.end_object();
 }
 
-void me_int_range::deserialize( JsonIn &jsin )
+void IntRange::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 

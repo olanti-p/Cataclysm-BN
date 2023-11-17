@@ -8,7 +8,7 @@
 namespace editor
 {
 
-struct titlescreen_ui_retval {
+struct TitleScreenReturn {
     bool exit = false;
     bool exit_to_desktop = false;
     bool make_new = false;
@@ -16,24 +16,24 @@ struct titlescreen_ui_retval {
     std::string load_path;
 };
 
-struct me_titlescreen_state {
-    me_titlescreen_state() = default;
-    me_titlescreen_state( const me_titlescreen_state & ) = delete;
-    me_titlescreen_state( me_titlescreen_state && ) = default;
-    ~me_titlescreen_state() = default;
+struct TitleScreen {
+    TitleScreen() = default;
+    TitleScreen( const TitleScreen & ) = delete;
+    TitleScreen( TitleScreen && ) = default;
+    ~TitleScreen() = default;
 
-    me_titlescreen_state &operator=( const me_titlescreen_state & ) = delete;
-    me_titlescreen_state &operator=( me_titlescreen_state && ) = default;
+    TitleScreen &operator=( const TitleScreen & ) = delete;
+    TitleScreen &operator=( TitleScreen && ) = default;
 
     bool open_file_dialog = false;
-    std::optional<titlescreen_ui_retval> ret;
+    std::optional<TitleScreenReturn> ret;
     std::optional<std::string> popup_prompt;
 };
 
 /**
  * ============= Entry point =============
  */
-void show_title_screen( me_titlescreen_state &state );
+void show_title_screen( TitleScreen &state );
 
 } // namespace editor
 
