@@ -577,7 +577,7 @@ static void emit_file_contents( JsonOut &jo, const editor::Project &project,
         }
 
         if( file.uses_rows() ) {
-            const editor::Palette &pal = *project.get_palette_by_uuid( file.base.inline_palette_id );
+            const editor::Palette &pal = *project.get_palette( file.base.inline_palette_id );
             emit_array( jo, "rows", [&]() {
                 const editor::Canvas2D<editor::UUID> &canvas = file.base.canvas;
                 for( int y = 0; y < canvas.get_size().y; y++ ) {
@@ -672,7 +672,7 @@ std::string to_string( const editor::Project &project )
 {
     return serialize_wrapper( [&]( JsonOut & jo ) {
         emit_array( jo, [&]() {
-            for( const editor::Mapgen &file : project.files ) {
+            for( const editor::Mapgen &file : project.mapgens ) {
                 emit_object( jo, [&]() {
                     emit_file_contents( jo, project, file );
                 } );

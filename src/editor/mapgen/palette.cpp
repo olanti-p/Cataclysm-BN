@@ -27,17 +27,17 @@ map_key pick_available_key( const Palette &pal )
 
 static bool is_expanded( const State &state, const UUID &piece_id )
 {
-    return state.uistate->expanded_mapping_pieces.count( piece_id ) != 0;
+    return state.ui->expanded_mapping_pieces.count( piece_id ) != 0;
 }
 
 static void expand_piece( State &state, const UUID &piece_id )
 {
-    state.uistate->expanded_mapping_pieces.insert( piece_id );
+    state.ui->expanded_mapping_pieces.insert( piece_id );
 }
 
 static void collapse_piece( State &state, const UUID &piece_id )
 {
-    state.uistate->expanded_mapping_pieces.erase( piece_id );
+    state.ui->expanded_mapping_pieces.erase( piece_id );
 }
 
 void show_mapping( State &state, editor::Palette &p, editor::PaletteEntry &entry,
@@ -87,7 +87,7 @@ void show_mapping( State &state, editor::Palette &p, editor::PaletteEntry &entry
         {
             if( new_piece_type != 0 ) {
                 auto ptr = editor::make_new_piece( piece_opts[new_piece_type - 1].second );
-                UUID uuid = state.project().uuid_gen();
+                UUID uuid = state.project().uuid_generator();
                 ptr->uuid = uuid;
                 ptr->init_new();
                 list.push_back( std::move( ptr ) );
@@ -152,7 +152,7 @@ static void show_palette_entries( State &state, Palette &palette )
     }
 
     Project &proj = state.project();
-    ToolsState &tools = *state.uistate->tools_state;
+    ToolsState &tools = *state.ui->tools;
 
     bool changed = ImGui::VectorWidget()
     .with_add( [&]() -> bool {
@@ -160,7 +160,7 @@ static void show_palette_entries( State &state, Palette &palette )
         if( ImGui::ImageButton( "add", "me_add" ) )
         {
             list.emplace_back( PaletteEntry{
-                proj.uuid_gen(),
+                proj.uuid_generator(),
                 pick_available_key( palette ),
                 col_default_piece_color,
                 Mapping(),
@@ -175,7 +175,7 @@ static void show_palette_entries( State &state, Palette &palette )
     .with_duplicate( [&]( size_t idx ) {
         const PaletteEntry &src = list[ idx ];
         list.insert( std::next( list.cbegin(), idx + 1 ), PaletteEntry{
-            proj.uuid_gen(),
+            proj.uuid_generator(),
             pick_available_key( palette ),
             src.color,
             src.mapping,
@@ -185,7 +185,7 @@ static void show_palette_entries( State &state, Palette &palette )
     } )
     .with_delete( [&]( size_t idx ) {
         const UUID &uuid = list[ idx ].uuid;
-        for( Mapgen &file : proj.files ) {
+        for( Mapgen &file : proj.mapgens ) {
             file.base.remove_usages( uuid );
         }
         if( tools.get_brush() == uuid ) {
@@ -255,7 +255,7 @@ static void show_palette_entries( State &state, Palette &palette )
         }
         ImGui::SameLine();
         if( ImGui::ArrowButton( "##mapping", ImGuiDir_Right ) ) {
-            state.uistate->toggle_show_mapping( palette.uuid, list[idx].uuid );
+            state.ui->toggle_show_mapping( palette.uuid, list[idx].uuid );
         }
         ImGui::HelpPopup( "Show/hide mappings\nassociated with this symbol." );
 

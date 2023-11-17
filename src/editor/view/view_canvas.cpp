@@ -218,7 +218,7 @@ void show_canvas( State &state, Mapgen *file_ptr )
     }
 
     ImDrawList *draw_list = ImGui::GetWindowDrawList();
-    Camera &cam = *state.uistate->camera;
+    Camera &cam = *state.ui->camera;
     editor::Mapgen &file = *file_ptr;
     ImGui::PushID( file.uuid );
 
@@ -233,7 +233,7 @@ void show_canvas( State &state, Mapgen *file_ptr )
 
     ImGuiIO &io = ImGui::GetIO();
     bool canvas_hovered = ImGui::IsWindowHovered();
-    ToolsState &tools = *state.uistate->tools_state;
+    ToolsState &tools = *state.ui->tools;
     bool brush_stroke_active = false;
 
     bool show_tooltip = false;
@@ -250,7 +250,7 @@ void show_canvas( State &state, Mapgen *file_ptr )
             tooltip_pos = tile_pos;
             if( is_mouse_in_bounds ) {
                 const UUID &uuid = file.base.canvas.get( tile_pos.raw() );
-                tooltip_entry = state.project().get_palette_by_uuid(
+                tooltip_entry = state.project().get_palette(
                                     file.base.inline_palette_id )->find_entry( uuid );
             }
         }
@@ -279,7 +279,7 @@ void show_canvas( State &state, Mapgen *file_ptr )
         }
         if( file.uses_rows() ) {
             // Ensure the brush is in valid state
-            const Palette &pal = *state.project().get_palette_by_uuid( file.base.inline_palette_id );
+            const Palette &pal = *state.project().get_palette( file.base.inline_palette_id );
             if( tools.get_brush() != UUID_INVALID && !pal.find_entry( tools.get_brush() ) ) {
                 tools.set_brush( UUID_INVALID );
             }
@@ -327,7 +327,7 @@ void show_canvas( State &state, Mapgen *file_ptr )
             }
         }
 
-        Palette *pal_ptr = state.project().get_palette_by_uuid( file.base.inline_palette_id );
+        Palette *pal_ptr = state.project().get_palette( file.base.inline_palette_id );
         assert( pal_ptr );
 
         Palette &pal = *pal_ptr;

@@ -17,10 +17,10 @@ namespace editor
 {
 void handle_file_saving( State &state )
 {
-    ControlState &control = *state.cstate;
-    SaveExportState &sestate = *state.sestate;
+    ControlState &control = *state.control;
+    SaveExportState &sestate = *state.save_export;
 
-    if( state.uistate->tools_state->has_ongoing_tool_operation() ) {
+    if( state.ui->tools->has_ongoing_tool_operation() ) {
         control.want_save = false;
         control.want_save_as = false;
         control.want_exit_after_save = false;
@@ -57,7 +57,7 @@ void handle_file_saving( State &state )
         write_to_file( *sestate.file_save_path, [&]( std::ostream & oss ) {
             oss << serialize( state.project() );
         } );
-        state.histate->last_saved_revision = state.histate->current_revision.num;
+        state.history->last_saved_snapshot = state.history->current_snapshot.num;
         if( control.want_exit_after_save ) {
             control.want_exit_after_save = false;
             control.is_editor_running = false;
@@ -67,10 +67,10 @@ void handle_file_saving( State &state )
 
 void handle_file_exporting( State &state )
 {
-    ControlState &control = *state.cstate;
-    SaveExportState &sestate = *state.sestate;
+    ControlState &control = *state.control;
+    SaveExportState &sestate = *state.save_export;
 
-    if( state.uistate->tools_state->has_ongoing_tool_operation() ) {
+    if( state.ui->tools->has_ongoing_tool_operation() ) {
         control.want_export = false;
         control.want_export_as = false;
         return;
@@ -111,21 +111,21 @@ void handle_file_exporting( State &state )
             std::string s = editor_export::to_string( state.project() );
             oss << editor_export::format_string( s );
         } );
-        state.histate->last_exported_revision = state.histate->current_revision.num;
+        state.history->last_exported_snapshot = state.history->current_snapshot.num;
     }
 }
 
 void handle_project_exiting( State &state )
 {
-    ControlState &control = *state.cstate;
+    ControlState &control = *state.control;
 
-    if( state.uistate->tools_state->has_ongoing_tool_operation() ) {
+    if( state.ui->tools->has_ongoing_tool_operation() ) {
         control.want_close = false;
         return;
     }
 
     if( control.want_close ) {
-        if( state.histate->has_unsaved_changes() ) {
+        if( state.history->has_unsaved_changes() ) {
             ImGui::OpenPopup( "###warn-unsaved-on-close" );
             control.want_close = false;
         } else {

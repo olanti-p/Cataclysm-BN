@@ -739,8 +739,8 @@ void Project::serialize( JsonOut &jsout ) const
     jsout.start_object();
     jsout.member( "project_format_version", PROJECT_FORMAT_VERSION );
     jsout.member( "project_uuid", project_uuid );
-    jsout.member( "uuid_gen", uuid_gen );
-    jsout.member( "files", files );
+    jsout.member( "uuid_gen", uuid_generator );
+    jsout.member( "files", mapgens );
     jsout.member( "palettes", palettes );
     jsout.end_object();
 }
@@ -751,8 +751,8 @@ void Project::deserialize( JsonIn &jsin )
 
     jo.read( "project_format_version", project_load_version_val );
     jo.read( "project_uuid", project_uuid );
-    jo.read( "uuid_gen", uuid_gen );
-    jo.read( "files", files );
+    jo.read( "uuid_gen", uuid_generator );
+    jo.read( "files", mapgens );
     jo.read( "palettes", palettes );
 }
 

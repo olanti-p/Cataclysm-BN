@@ -23,10 +23,10 @@ struct State {
     State &operator=( const State & ) = delete;
     State &operator=( State && );
 
-    pimpl<HistoryState> histate;
-    pimpl<SaveExportState> sestate;
-    pimpl<ControlState> cstate;
-    UiState *uistate = nullptr;
+    pimpl<HistoryState> history;
+    pimpl<SaveExportState> save_export;
+    pimpl<ControlState> control;
+    UiState *ui = nullptr;
 
     Project &project();
 

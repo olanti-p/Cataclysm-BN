@@ -59,7 +59,7 @@ void show_file_info( State &state, Mapgen &file, bool &show )
     ImGui::Separator();
 
     if( ImGui::Button( "Show/hide inline palette" ) ) {
-        state.uistate->toggle_show_palette( file.base.inline_palette_id );
+        state.ui->toggle_show_palette( file.base.inline_palette_id );
     }
     ImGui::Separator();
 
