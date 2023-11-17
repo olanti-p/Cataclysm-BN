@@ -173,9 +173,11 @@ void me_uistate::serialize( JsonOut &jsout ) const
     // - do_loop
     jsout.start_object();
     jsout.member( "show_demo_wnd", show_demo_wnd );
-    jsout.member( "show_asset_lib", show_asset_lib );
+    jsout.member( "show_metrics_wnd", show_metrics_wnd );
+    jsout.member( "show_project_overview", show_project_overview );
     jsout.member( "show_file_info", show_file_info );
     jsout.member( "show_file_history", show_file_history );
+    jsout.member( "show_camera_controls", show_camera_controls );
     jsout.member( "show_toolbar", show_toolbar );
     jsout.member( "active_file_id", active_file_id );
     jsout.member( "open_palettes", open_palettes );
@@ -193,9 +195,11 @@ void me_uistate::deserialize( JsonIn &jsin )
     JsonObject jo = jsin.get_object();
 
     jo.read( "show_demo_wnd", show_demo_wnd );
-    jo.read( "show_asset_lib", show_asset_lib );
+    jo.read( "show_metrics_wnd", show_metrics_wnd );
+    jo.read( "show_project_overview", show_project_overview );
     jo.read( "show_file_info", show_file_info );
     jo.read( "show_file_history", show_file_history );
+    jo.read( "show_camera_controls", show_camera_controls );
     jo.read( "show_toolbar", show_toolbar );
     jo.read( "active_file_id", active_file_id );
     jo.read( "open_palettes", open_palettes );

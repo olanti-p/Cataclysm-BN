@@ -85,17 +85,6 @@ void handle_revision_change( me_history_state &state, me_canvas_tools_state &too
     if( tools.has_ongoing_tool_operation() ) {
         return;
     }
-    if( ImGui::IsKeyDown( ImGuiKey_LeftCtrl ) && ImGui::IsKeyPressed( ImGuiKey_Z ) ) {
-        if( ImGui::IsKeyDown( ImGuiKey_LeftShift ) ) {
-            if( state.can_redo() ) {
-                state.queue_redo();
-            }
-        } else {
-            if( state.can_undo() ) {
-                state.queue_undo();
-            }
-        }
-    }
     if( state.switch_to_revision ) {
         auto it = std::find_if( state.file_history.cbegin(),
         state.file_history.cend(), [&]( const me_file_revision & rev ) {

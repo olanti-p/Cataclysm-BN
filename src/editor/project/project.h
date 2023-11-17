@@ -31,7 +31,7 @@ struct me_project {
     }
 };
 
-void show_project_ui( me_state &state, me_project &project );
+void show_project_overview_ui( me_state &state, me_project &project, bool &show );
 
 std::unique_ptr<me_project> create_empty_project();
 

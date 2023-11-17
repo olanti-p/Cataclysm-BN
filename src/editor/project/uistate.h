@@ -64,13 +64,16 @@ struct me_uistate {
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
 
-    bool do_loop = true; // Setting this to false will quit the editor
-    bool show_demo_wnd = false; // Whether to show ImGui Demo window
-    bool show_asset_lib = false; // Whether to show asset library
-    bool show_file_info = true; // Whether to show file info
-    bool show_file_history = true; // Whether to show undo/redo history
-    bool show_toolbar = true; // Whether to show canvas toolbar
-    std::optional<uuid_t> active_file_id; // UUID of active file
+    bool want_close = false;                // User wants to close the project
+    bool do_loop = true;                    // Setting this to false will quit the editor
+    bool show_demo_wnd = false;             // Whether to show ImGui Demo window
+    bool show_metrics_wnd = false;          // Whether to show ImGui Metrics/Debugger window
+    bool show_project_overview = true;      // Whether to show project overview window
+    bool show_file_info = true;             // Whether to show file info
+    bool show_file_history = true;          // Whether to show undo/redo history
+    bool show_camera_controls = true;       // Whether to show camera controls
+    bool show_toolbar = true;               // Whether to show canvas toolbar
+    std::optional<uuid_t> active_file_id;   // UUID of active file
 
     std::vector<detail::open_palette> open_palettes; // List of open palettes
     std::vector<detail::open_mapping> open_mappings; // List of open mappings
@@ -90,7 +93,7 @@ struct me_uistate {
 /**
  * =============== Windows ===============
  */
-void show_ui_control_window( me_state &state );
+void show_camera_controls( me_state &state, bool &show );
 void run_ui_for_state( me_state &state );
 
 } // namespace editor

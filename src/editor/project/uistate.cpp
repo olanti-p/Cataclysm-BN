@@ -4,8 +4,10 @@
 #include "canvas/canvas_tools.h"
 #include "canvas/canvas.h"
 #include "file.h"
+#include "imgui.h"
 #include "mapgen/palette.h"
 #include "project.h"
+#include "project/menu_bar.h"
 #include "uistate_store.h"
 #include "history.h"
 #include "save_and_export.h"
@@ -57,34 +59,12 @@ void me_uistate::toggle_show_mapobjects( uuid_t uuid )
     open_mapgenobjects.back().uuid = uuid;
 }
 
-void show_ui_control_window( me_state &state )
+void show_camera_controls( me_state &state, bool &show )
 {
-    bool keep_open = true;
-    ImGui::Begin( "Advanced Map Editor", &keep_open );
-    ImGui::Text( "Close this window to close the project." );
-
-    save_on_close_widget_block( state, keep_open );
-
     me_uistate &uistate = *state.uistate;
 
-    // Controls
-    if( ImGui::Button( "Toggle Demo Window" ) ) {
-        uistate.show_demo_wnd = !uistate.show_demo_wnd;
-    }
-    ImGui::SameLine();
-    if( ImGui::Button( "Toggle File Info" ) ) {
-        uistate.show_file_info = !uistate.show_file_info;
-    }
-
-    if( ImGui::Button( "Toggle History" ) ) {
-        uistate.show_file_history = !uistate.show_file_history;
-    }
-    ImGui::SameLine();
-    if( ImGui::Button( "Toggle Toolbar" ) ) {
-        uistate.show_toolbar = !uistate.show_toolbar;
-    }
-
-    save_and_export_widget_block( state );
+    ImGui::SetNextWindowSize( ImVec2( 230.0f, 140.0f ), ImGuiCond_FirstUseEver );
+    ImGui::Begin( "Camera Controls", &show );
 
     // Camera
     {
@@ -120,25 +100,35 @@ void run_ui_for_state( me_state &state )
         state.uistate = &get_uistate_for_project( state.project().project_uuid );
     }
 
+    show_main_menu_bar( state );
+
+    handle_file_saving( state );
+    handle_file_exporting( state );
+    handle_project_exiting( state );
+
     me_project &proj = state.project();
-    show_project_ui( state, proj );
+
+    me_uistate &uistate = *state.uistate;
 
     me_file *active_file = nullptr;
-    if( state.uistate->active_file_id ) {
-        active_file = proj.get_file_by_uuid( *state.uistate->active_file_id );
+    if( uistate.active_file_id ) {
+        active_file = proj.get_file_by_uuid( *uistate.active_file_id );
         if( !active_file ) {
-            state.uistate->active_file_id.reset();
+            uistate.active_file_id.reset();
         }
     }
 
     // TODO: multiple files on same canvas
     show_canvas( state, active_file );
-    show_ui_control_window( state );
-
-    me_uistate &uistate = *state.uistate;
 
     if( uistate.show_demo_wnd ) {
         ImGui::ShowDemoWindow( &uistate.show_demo_wnd );
+    }
+    if( uistate.show_metrics_wnd ) {
+        ImGui::ShowMetricsWindow( &uistate.show_metrics_wnd );
+    }
+    if( uistate.show_project_overview ) {
+        show_project_overview_ui( state, proj, uistate.show_project_overview );
     }
     if( uistate.show_file_info && active_file ) {
         show_file_info( state, *active_file, uistate.show_file_info );
@@ -148,6 +138,9 @@ void run_ui_for_state( me_state &state )
     }
     if( uistate.show_toolbar ) {
         show_toolbar( *uistate.tools_state, uistate.show_toolbar );
+    }
+    if( uistate.show_camera_controls ) {
+        show_camera_controls( state, uistate.show_camera_controls );
     }
 
     for( auto &it : uistate.open_palettes ) {
