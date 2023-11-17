@@ -5,7 +5,6 @@
 
 namespace editor
 {
-struct asset_library;
 struct HistoryState;
 struct Project;
 struct SaveExportState;
