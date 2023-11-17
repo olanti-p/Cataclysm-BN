@@ -11,23 +11,23 @@ struct State;
 
 struct Project {
     std::string project_uuid;
-    UUIDGenerator uuid_gen;
-    std::vector<Mapgen> files;
+    UUIDGenerator uuid_generator;
+    std::vector<Mapgen> mapgens;
     std::vector<Palette> palettes;
 
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
 
-    const Mapgen *get_file_by_uuid( const UUID &fid ) const;
-    inline Mapgen *get_file_by_uuid( const UUID &fid ) {
+    const Mapgen *get_mapgen( const UUID &fid ) const;
+    inline Mapgen *get_mapgen( const UUID &fid ) {
         const Project *this_c = this;
-        return const_cast<Mapgen *>( this_c->get_file_by_uuid( fid ) );
+        return const_cast<Mapgen *>( this_c->get_mapgen( fid ) );
     }
 
-    const Palette *get_palette_by_uuid( const UUID &pid ) const;
-    inline Palette *get_palette_by_uuid( const UUID &pid ) {
+    const Palette *get_palette( const UUID &pid ) const;
+    inline Palette *get_palette( const UUID &pid ) {
         const Project *this_c = this;
-        return const_cast<Palette *>( this_c->get_palette_by_uuid( pid ) );
+        return const_cast<Palette *>( this_c->get_palette( pid ) );
     }
 };
 

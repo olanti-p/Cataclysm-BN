@@ -13,19 +13,21 @@ namespace editor
 struct Project;
 struct ToolsState;
 
-struct FileRevision {
+using SnapshotNumber = int32_t;
+
+struct ProjectSnapshot {
     std::unique_ptr<Project> project;
-    int num = 0;
+    SnapshotNumber num = 0;
 
-    FileRevision();
-    FileRevision( const FileRevision & ) = delete;
-    FileRevision( FileRevision && );
-    ~FileRevision();
+    ProjectSnapshot();
+    ProjectSnapshot( const ProjectSnapshot & ) = delete;
+    ProjectSnapshot( ProjectSnapshot && );
+    ~ProjectSnapshot();
 
-    FileRevision &operator=( const FileRevision & ) = delete;
-    FileRevision &operator=( FileRevision && );
+    ProjectSnapshot &operator=( const ProjectSnapshot & ) = delete;
+    ProjectSnapshot &operator=( ProjectSnapshot && );
 
-    FileRevision make_copy() const;
+    ProjectSnapshot make_copy() const;
 };
 
 struct HistoryState {
@@ -39,7 +41,7 @@ struct HistoryState {
     HistoryState &operator=( HistoryState && ) = default;
 
     inline Project &project() {
-        return *current_revision.project;
+        return *current_snapshot.project;
     }
 
     /**
@@ -59,19 +61,19 @@ struct HistoryState {
     }
 
     inline bool can_undo() const {
-        return current_revision.num != file_history[file_history.size() - 1].num;
+        return current_snapshot.num != file_history[file_history.size() - 1].num;
     }
 
     inline void queue_undo() {
-        switch_to_revision = current_revision.num - 1;
+        switch_to_snapshot = current_snapshot.num - 1;
     }
 
     inline bool can_redo() const {
-        return current_revision.num != file_history[0].num;
+        return current_snapshot.num != file_history[0].num;
     }
 
     inline void queue_redo() {
-        switch_to_revision = current_revision.num + 1;
+        switch_to_snapshot = current_snapshot.num + 1;
     }
 
     bool has_unsaved_changes() const;
@@ -81,12 +83,12 @@ struct HistoryState {
     std::optional<ImGuiID> current_widget_changed = 0;
     std::string current_widget_changed_str;
     std::optional<ImGuiID> last_widget_changed = 0;
-    std::optional<int> switch_to_revision;
-    FileRevision current_revision;
-    std::vector<FileRevision> file_history;
+    std::optional<SnapshotNumber> switch_to_snapshot;
+    ProjectSnapshot current_snapshot;
+    std::vector<ProjectSnapshot> file_history;
     int history_capacity = 200;
-    std::optional<int> last_saved_revision;
-    std::optional<int> last_exported_revision;
+    std::optional<SnapshotNumber> last_saved_snapshot;
+    std::optional<SnapshotNumber> last_exported_snapshot;
     int edit_counter = 0;
 };
 

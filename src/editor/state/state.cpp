@@ -20,10 +20,10 @@ State::State( std::unique_ptr<Project> &&project ) : State( std::move( project )
             nullptr ) { }
 
 State::State( std::unique_ptr<Project> &&project,
-              const std::string *loaded_from_path ) : histate( std::move( project ), !!loaded_from_path )
+              const std::string *loaded_from_path ) : history( std::move( project ), !!loaded_from_path )
 {
     if( loaded_from_path ) {
-        sestate->file_save_path = *loaded_from_path;
+        save_export->file_save_path = *loaded_from_path;
     }
 }
 
@@ -34,17 +34,17 @@ State &State::operator=( State && ) = default;
 
 Project &State::project()
 {
-    return histate->project();
+    return history->project();
 }
 
 void State::mark_changed( const char *id )
 {
-    histate->mark_changed( id );
+    history->mark_changed( id );
 }
 
 bool State::is_changed() const
 {
-    return histate->is_changed();
+    return history->is_changed();
 }
 
 } // namespace editor

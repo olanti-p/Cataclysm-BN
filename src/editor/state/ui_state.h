@@ -67,8 +67,8 @@ struct UiState {
     bool show_demo_wnd = false;             // Whether to show ImGui Demo window
     bool show_metrics_wnd = false;          // Whether to show ImGui Metrics/Debugger window
     bool show_project_overview = true;      // Whether to show project overview window
-    bool show_file_info = true;             // Whether to show file info
-    bool show_file_history = true;          // Whether to show undo/redo history
+    bool show_mapgen_info = true;           // Whether to show file info
+    bool show_history = true;               // Whether to show undo/redo history
     bool show_camera_controls = true;       // Whether to show camera controls
     bool show_toolbar = true;               // Whether to show canvas toolbar
     std::optional<UUID> active_file_id;   // UUID of active file
@@ -78,7 +78,7 @@ struct UiState {
     std::vector<detail::OpenMapgenObject> open_mapgenobjects; // List of open mapgenobjects
 
     pimpl<Camera> camera;
-    pimpl<ToolsState> tools_state;
+    pimpl<ToolsState> tools;
 
     std::set<UUID> expanded_mapping_pieces;
     std::set<UUID> expanded_mapobjects;

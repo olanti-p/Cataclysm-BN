@@ -61,7 +61,7 @@ void UiState::toggle_show_mapobjects( UUID uuid )
 
 void show_camera_controls( State &state, bool &show )
 {
-    UiState &uistate = *state.uistate;
+    UiState &uistate = *state.ui;
 
     ImGui::SetNextWindowSize( ImVec2( 230.0f, 140.0f ), ImGuiCond_FirstUseEver );
     ImGui::Begin( "Camera Controls", &show );
@@ -96,8 +96,8 @@ void show_camera_controls( State &state, bool &show )
 
 void run_ui_for_state( State &state )
 {
-    if( !state.uistate ) {
-        state.uistate = &get_uistate_for_project( state.project().project_uuid );
+    if( !state.ui ) {
+        state.ui = &get_uistate_for_project( state.project().project_uuid );
     }
 
     show_main_menu_bar( state );
@@ -108,11 +108,11 @@ void run_ui_for_state( State &state )
 
     Project &proj = state.project();
 
-    UiState &uistate = *state.uistate;
+    UiState &uistate = *state.ui;
 
     Mapgen *active_file = nullptr;
     if( uistate.active_file_id ) {
-        active_file = proj.get_file_by_uuid( *uistate.active_file_id );
+        active_file = proj.get_mapgen( *uistate.active_file_id );
         if( !active_file ) {
             uistate.active_file_id.reset();
         }
@@ -130,14 +130,14 @@ void run_ui_for_state( State &state )
     if( uistate.show_project_overview ) {
         show_project_overview_ui( state, proj, uistate.show_project_overview );
     }
-    if( uistate.show_file_info && active_file ) {
-        show_file_info( state, *active_file, uistate.show_file_info );
+    if( uistate.show_mapgen_info && active_file ) {
+        show_file_info( state, *active_file, uistate.show_mapgen_info );
     }
-    if( uistate.show_file_history ) {
-        show_file_history( *state.histate, uistate.show_file_history );
+    if( uistate.show_history ) {
+        show_file_history( *state.history, uistate.show_history );
     }
     if( uistate.show_toolbar ) {
-        show_toolbar( *uistate.tools_state, uistate.show_toolbar );
+        show_toolbar( *uistate.tools, uistate.show_toolbar );
     }
     if( uistate.show_camera_controls ) {
         show_camera_controls( state, uistate.show_camera_controls );
@@ -147,7 +147,7 @@ void run_ui_for_state( State &state )
         if( !it.open ) {
             continue;
         }
-        Palette *pal = proj.get_palette_by_uuid( it.uuid );
+        Palette *pal = proj.get_palette( it.uuid );
         if( pal ) {
             show_palette( state, *pal, it.open );
         } else {
@@ -158,7 +158,7 @@ void run_ui_for_state( State &state )
         if( !it.open ) {
             continue;
         }
-        Palette *pal = proj.get_palette_by_uuid( it.palette );
+        Palette *pal = proj.get_palette( it.palette );
         if( pal ) {
             PaletteEntry *entry = pal->find_entry( it.uuid );
             if( entry ) {
@@ -174,7 +174,7 @@ void run_ui_for_state( State &state )
         if( !it.open ) {
             continue;
         }
-        Mapgen *f = proj.get_file_by_uuid( it.uuid );
+        Mapgen *f = proj.get_mapgen( it.uuid );
         if( f ) {
             show_mapobjects( state, *f, it.open );
         } else {
@@ -208,7 +208,7 @@ void run_ui_for_state( State &state )
         }
     }
 
-    handle_revision_change( *state.histate, *uistate.tools_state );
+    handle_revision_change( *state.history, *uistate.tools );
 }
 
 } // namespace editor

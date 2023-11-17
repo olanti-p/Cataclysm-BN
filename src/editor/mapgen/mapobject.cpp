@@ -45,17 +45,17 @@ void MapObject::set_uuid( const UUID &uuid )
 
 static bool is_expanded( const State &state, const UUID &object_id )
 {
-    return state.uistate->expanded_mapobjects.count( object_id ) != 0;
+    return state.ui->expanded_mapobjects.count( object_id ) != 0;
 }
 
 static void expand_object( State &state, const UUID &object_id )
 {
-    state.uistate->expanded_mapobjects.insert( object_id );
+    state.ui->expanded_mapobjects.insert( object_id );
 }
 
 static void collapse_object( State &state, const UUID &object_id )
 {
-    state.uistate->expanded_mapobjects.erase( object_id );
+    state.ui->expanded_mapobjects.erase( object_id );
 }
 
 void show_mapobjects( State &state, Mapgen &f, bool &show )
@@ -103,7 +103,7 @@ void show_mapobjects( State &state, Mapgen &f, bool &show )
             if( new_object_type != 0 ) {
                 MapObject obj;
                 obj.piece = editor::make_new_piece( object_opts[new_object_type - 1].second );
-                UUID uuid = state.project().uuid_gen();
+                UUID uuid = state.project().uuid_generator();
                 obj.piece->uuid = uuid;
                 obj.piece->init_new();
                 list.push_back( std::move( obj ) );
@@ -168,7 +168,7 @@ void show_mapobjects( State &state, Mapgen &f, bool &show )
     .with_duplicate( [&]( size_t idx ) {
         const MapObject &src = list[ idx ];
         editor::MapObject copy = src;
-        copy.set_uuid( state.project().uuid_gen() );
+        copy.set_uuid( state.project().uuid_generator() );
         list.insert( std::next( list.cbegin(), idx + 1 ), std::move( copy ) );
     } )
     .run( list );

@@ -61,7 +61,7 @@ void update_app_state( App &app )
             }
         }
         app.title_state->ret.reset();
-    } else if( app.editor_state && !app.editor_state->cstate->is_editor_running ) {
+    } else if( app.editor_state && !app.editor_state->control->is_editor_running ) {
         app.editor_state.reset();
         set_default_ini_path();
     }

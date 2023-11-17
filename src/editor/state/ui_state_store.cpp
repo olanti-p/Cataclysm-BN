@@ -176,8 +176,8 @@ void UiState::serialize( JsonOut &jsout ) const
     jsout.member( "show_demo_wnd", show_demo_wnd );
     jsout.member( "show_metrics_wnd", show_metrics_wnd );
     jsout.member( "show_project_overview", show_project_overview );
-    jsout.member( "show_file_info", show_file_info );
-    jsout.member( "show_file_history", show_file_history );
+    jsout.member( "show_file_info", show_mapgen_info );
+    jsout.member( "show_file_history", show_history );
     jsout.member( "show_camera_controls", show_camera_controls );
     jsout.member( "show_toolbar", show_toolbar );
     jsout.member( "active_file_id", active_file_id );
@@ -185,7 +185,7 @@ void UiState::serialize( JsonOut &jsout ) const
     jsout.member( "open_mappings", open_mappings );
     jsout.member( "open_mapgenobjects", open_mapgenobjects );
     jsout.member( "camera", camera );
-    jsout.member( "tools_state", tools_state );
+    jsout.member( "tools_state", tools );
     jsout.member( "expanded_mapping_pieces", expanded_mapping_pieces );
     jsout.member( "expanded_mapobjects", expanded_mapobjects );
     jsout.end_object();
@@ -198,8 +198,8 @@ void UiState::deserialize( JsonIn &jsin )
     jo.read( "show_demo_wnd", show_demo_wnd );
     jo.read( "show_metrics_wnd", show_metrics_wnd );
     jo.read( "show_project_overview", show_project_overview );
-    jo.read( "show_file_info", show_file_info );
-    jo.read( "show_file_history", show_file_history );
+    jo.read( "show_file_info", show_mapgen_info );
+    jo.read( "show_file_history", show_history );
     jo.read( "show_camera_controls", show_camera_controls );
     jo.read( "show_toolbar", show_toolbar );
     jo.read( "active_file_id", active_file_id );
@@ -207,7 +207,7 @@ void UiState::deserialize( JsonIn &jsin )
     jo.read( "open_mappings", open_mappings );
     jo.read( "open_mapgenobjects", open_mapgenobjects );
     jo.read( "camera", camera );
-    jo.read( "tools_state", tools_state );
+    jo.read( "tools_state", tools );
     jo.read( "expanded_mapping_pieces", expanded_mapping_pieces );
     jo.read( "expanded_mapobjects", expanded_mapobjects );
 }

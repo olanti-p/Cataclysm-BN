@@ -11,7 +11,7 @@ namespace editor
 {
 void show_main_menu_bar( State &state )
 {
-    ControlState &control = *state.cstate;
+    ControlState &control = *state.control;
 
     if( ImGui::BeginMainMenuBar() ) {
         if( ImGui::BeginMenu( "File" ) ) {
@@ -35,29 +35,29 @@ void show_main_menu_bar( State &state )
             ImGui::EndMenu();
         }
         if( ImGui::BeginMenu( "Edit" ) ) {
-            if( ImGui::MenuItem( "Undo", "Ctrl+Z", nullptr, state.histate->can_undo() ) ) {
-                state.histate->queue_undo();
+            if( ImGui::MenuItem( "Undo", "Ctrl+Z", nullptr, state.history->can_undo() ) ) {
+                state.history->queue_undo();
             }
-            if( ImGui::MenuItem( "Redo", "Ctrl+Shift+Z", nullptr, state.histate->can_redo() ) ) {
-                state.histate->queue_redo();
+            if( ImGui::MenuItem( "Redo", "Ctrl+Shift+Z", nullptr, state.history->can_redo() ) ) {
+                state.history->queue_redo();
             }
             ImGui::EndMenu();
         }
         if( ImGui::BeginMenu( "Window" ) ) {
-            ImGui::MenuItem( "Project Overview", nullptr, &state.uistate->show_project_overview );
-            ImGui::MenuItem( "File Info", nullptr, &state.uistate->show_file_info );
-            ImGui::MenuItem( "History", nullptr, &state.uistate->show_file_history );
-            ImGui::MenuItem( "Toolbar", nullptr, &state.uistate->show_toolbar );
-            ImGui::MenuItem( "Camera Controls", nullptr, &state.uistate->show_camera_controls );
+            ImGui::MenuItem( "Project Overview", nullptr, &state.ui->show_project_overview );
+            ImGui::MenuItem( "Mapgen Info", nullptr, &state.ui->show_mapgen_info );
+            ImGui::MenuItem( "History", nullptr, &state.ui->show_history );
+            ImGui::MenuItem( "Toolbar", nullptr, &state.ui->show_toolbar );
+            ImGui::MenuItem( "Camera Controls", nullptr, &state.ui->show_camera_controls );
             ImGui::Separator();
-            ImGui::MenuItem( "ImGui Demo", nullptr, &state.uistate->show_demo_wnd );
-            ImGui::MenuItem( "Debug/Metrics", nullptr, &state.uistate->show_metrics_wnd );
+            ImGui::MenuItem( "ImGui Demo", nullptr, &state.ui->show_demo_wnd );
+            ImGui::MenuItem( "Debug/Metrics", nullptr, &state.ui->show_metrics_wnd );
             ImGui::EndMenu();
         }
         ImGui::EndMainMenuBar();
     }
 
-    if( state.uistate->tools_state->has_ongoing_tool_operation() ) {
+    if( state.ui->tools->has_ongoing_tool_operation() ) {
         return;
     }
 
@@ -83,12 +83,12 @@ void show_main_menu_bar( State &state )
 
     if( ImGui::IsKeyDown( ImGuiKey_LeftCtrl ) && ImGui::IsKeyPressed( ImGuiKey_Z ) ) {
         if( ImGui::IsKeyDown( ImGuiKey_LeftShift ) ) {
-            if( state.histate->can_redo() ) {
-                state.histate->queue_redo();
+            if( state.history->can_redo() ) {
+                state.history->queue_redo();
             }
         } else {
-            if( state.histate->can_undo() ) {
-                state.histate->queue_undo();
+            if( state.history->can_undo() ) {
+                state.history->queue_undo();
             }
         }
     }

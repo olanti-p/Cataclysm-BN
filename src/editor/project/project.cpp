@@ -12,9 +12,9 @@
 namespace editor
 {
 
-const Mapgen *Project::get_file_by_uuid( const UUID &fid ) const
+const Mapgen *Project::get_mapgen( const UUID &fid ) const
 {
-    for( const Mapgen &file : files ) {
+    for( const Mapgen &file : mapgens ) {
         if( fid == file.uuid ) {
             return &file;
         }
@@ -22,7 +22,7 @@ const Mapgen *Project::get_file_by_uuid( const UUID &fid ) const
     return nullptr;
 }
 
-const Palette *Project::get_palette_by_uuid( const UUID &fid ) const
+const Palette *Project::get_palette( const UUID &fid ) const
 {
     for( const Palette &palette : palettes ) {
         if( fid == palette.uuid ) {
@@ -41,33 +41,33 @@ void show_project_overview_ui( State &state, Project &project, bool &show )
 
     bool changed_mapgens = ImGui::VectorWidget()
     .with_for_each( [&]( size_t idx ) {
-        UUID this_uuid = project.files[idx].uuid;
+        UUID this_uuid = project.mapgens[idx].uuid;
         if( ImGui::ImageButton( "toggle_palette", "me_palette" ) ) {
-            state.uistate->toggle_show_palette( project.files[idx].base.inline_palette_id );
+            state.ui->toggle_show_palette( project.mapgens[idx].base.inline_palette_id );
         }
         ImGui::HelpPopup( "Show/hide inline palette for this mapgen." );
         ImGui::SameLine();
         if( ImGui::ImageButton( "toggle_mapobjects", "me_mapobject" ) ) {
-            state.uistate->toggle_show_mapobjects( project.files[idx].uuid );
+            state.ui->toggle_show_mapobjects( project.mapgens[idx].uuid );
         }
         ImGui::HelpPopup( "Show/hide map objects for this mapgen." );
         ImGui::SameLine();
         if( ImGui::Selectable(
                 string_format( "Mapgen #%d", idx ).c_str(),
-                state.uistate->active_file_id && *state.uistate->active_file_id == this_uuid )
+                state.ui->active_file_id && *state.ui->active_file_id == this_uuid )
           ) {
-            state.uistate->active_file_id = this_uuid;
+            state.ui->active_file_id = this_uuid;
         }
     } )
     .with_add( [&]()->bool {
         bool ret = false;
         if( ImGui::Button( "New mapgen" ) )
         {
-            UUID new_mapgen = project.uuid_gen();
-            project.files.emplace_back();
-            project.files.back().uuid = new_mapgen;
-            UUID new_palette = project.uuid_gen();
-            project.files.back().base.inline_palette_id = new_palette;
+            UUID new_mapgen = project.uuid_generator();
+            project.mapgens.emplace_back();
+            project.mapgens.back().uuid = new_mapgen;
+            UUID new_palette = project.uuid_generator();
+            project.mapgens.back().base.inline_palette_id = new_palette;
             project.palettes.emplace_back();
             project.palettes.back().uuid = new_palette;
             ret = true;
@@ -75,8 +75,8 @@ void show_project_overview_ui( State &state, Project &project, bool &show )
         return ret;
     } )
     .with_delete( [&]( size_t idx ) {
-        UUID pal_uuid = project.files[idx].base.inline_palette_id;
-        project.files.erase( std::next( project.files.cbegin(), idx ) );
+        UUID pal_uuid = project.mapgens[idx].base.inline_palette_id;
+        project.mapgens.erase( std::next( project.mapgens.cbegin(), idx ) );
         for( auto it = project.palettes.cbegin(); it != project.palettes.cend(); it++ ) {
             if( it->uuid == pal_uuid ) {
                 project.palettes.erase( it );
@@ -85,15 +85,15 @@ void show_project_overview_ui( State &state, Project &project, bool &show )
         }
     } )
     .with_duplicate( [&]( size_t idx ) {
-        Mapgen copy = project.files[ idx ];
-        Palette pcopy = *project.get_palette_by_uuid( copy.base.inline_palette_id );
-        copy.uuid = project.uuid_gen();
-        pcopy.uuid = project.uuid_gen();
+        Mapgen copy = project.mapgens[ idx ];
+        Palette pcopy = *project.get_palette( copy.base.inline_palette_id );
+        copy.uuid = project.uuid_generator();
+        pcopy.uuid = project.uuid_generator();
         copy.base.inline_palette_id = pcopy.uuid;
-        project.files.insert( std::next( project.files.cbegin(), idx + 1 ), std::move( copy ) );
+        project.mapgens.insert( std::next( project.mapgens.cbegin(), idx + 1 ), std::move( copy ) );
         project.palettes.push_back( std::move( pcopy ) );
     } )
-    .run( project.files );
+    .run( project.mapgens );
 
     ImGui::Text( "Inline palettes:" );
     for( const Palette &pal : project.palettes ) {
