@@ -180,7 +180,7 @@ void UiState::serialize( JsonOut &jsout ) const
     jsout.member( "show_file_history", show_history );
     jsout.member( "show_camera_controls", show_camera_controls );
     jsout.member( "show_toolbar", show_toolbar );
-    jsout.member( "active_file_id", active_file_id );
+    jsout.member( "active_file_id", active_mapgen_id );
     jsout.member( "open_palettes", open_palettes );
     jsout.member( "open_mappings", open_mappings );
     jsout.member( "open_mapgenobjects", open_mapgenobjects );
@@ -202,7 +202,7 @@ void UiState::deserialize( JsonIn &jsin )
     jo.read( "show_file_history", show_history );
     jo.read( "show_camera_controls", show_camera_controls );
     jo.read( "show_toolbar", show_toolbar );
-    jo.read( "active_file_id", active_file_id );
+    jo.read( "active_file_id", active_mapgen_id );
     jo.read( "open_palettes", open_palettes );
     jo.read( "open_mappings", open_mappings );
     jo.read( "open_mapgenobjects", open_mapgenobjects );

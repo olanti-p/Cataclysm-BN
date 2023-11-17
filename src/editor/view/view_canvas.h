@@ -59,7 +59,7 @@ void fill_region(
 /**
  * =============== Windows ===============
  */
-void show_canvas( State &state, Mapgen *file_ptr );
+void show_canvas( State &state, Mapgen *mapgen_ptr );
 
 } // namespace editor
 

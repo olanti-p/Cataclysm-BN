@@ -57,11 +57,11 @@ struct HistoryState {
      * Check whether project has been marked as changed.
      */
     inline bool is_changed() const {
-        return file_has_changes;
+        return project_has_changes;
     }
 
     inline bool can_undo() const {
-        return current_snapshot.num != file_history[file_history.size() - 1].num;
+        return current_snapshot.num != snapshots[snapshots.size() - 1].num;
     }
 
     inline void queue_undo() {
@@ -69,7 +69,7 @@ struct HistoryState {
     }
 
     inline bool can_redo() const {
-        return current_snapshot.num != file_history[0].num;
+        return current_snapshot.num != snapshots[0].num;
     }
 
     inline void queue_redo() {
@@ -79,13 +79,13 @@ struct HistoryState {
     bool has_unsaved_changes() const;
     bool has_unexported_changes() const;
 
-    bool file_has_changes = false;
+    bool project_has_changes = false;
     std::optional<ImGuiID> current_widget_changed = 0;
     std::string current_widget_changed_str;
     std::optional<ImGuiID> last_widget_changed = 0;
     std::optional<SnapshotNumber> switch_to_snapshot;
     ProjectSnapshot current_snapshot;
-    std::vector<ProjectSnapshot> file_history;
+    std::vector<ProjectSnapshot> snapshots;
     int history_capacity = 200;
     std::optional<SnapshotNumber> last_saved_snapshot;
     std::optional<SnapshotNumber> last_exported_snapshot;
@@ -95,9 +95,9 @@ struct HistoryState {
 /**
  * =============== Windows ===============
  */
-void show_file_history( HistoryState &state, bool &show );
+void show_edit_history( HistoryState &state, bool &show );
 
-void handle_revision_change( HistoryState &state, ToolsState &tools );
+void handle_snapshot_change( HistoryState &state, ToolsState &tools );
 
 } // namespace editor
 

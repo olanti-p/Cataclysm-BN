@@ -194,7 +194,7 @@ static void apply_bucket_tool( Canvas2D<UUID> &canvas, const UUID &brush,
     }
 }
 
-void show_canvas( State &state, Mapgen *file_ptr )
+void show_canvas( State &state, Mapgen *mapgen_ptr )
 {
     ImVec2 disp_size = ImGui::GetIO().DisplaySize;
 
@@ -209,9 +209,9 @@ void show_canvas( State &state, Mapgen *file_ptr )
                   ImGuiWindowFlags_NoScrollWithMouse
                 );
 
-    if( !file_ptr ) {
+    if( !mapgen_ptr ) {
         ImGui::BeginDisabled();
-        ImGui::TextCenteredVH( "No active file" );
+        ImGui::TextCenteredVH( "No active mapgen" );
         ImGui::EndDisabled();
         ImGui::End();
         return;
@@ -219,14 +219,14 @@ void show_canvas( State &state, Mapgen *file_ptr )
 
     ImDrawList *draw_list = ImGui::GetWindowDrawList();
     Camera &cam = *state.ui->camera;
-    editor::Mapgen &file = *file_ptr;
-    ImGui::PushID( file.uuid );
+    editor::Mapgen &mapgen = *mapgen_ptr;
+    ImGui::PushID( mapgen.uuid );
 
     highlight_region(
         draw_list,
         cam,
         point_abs_etile( 0, 0 ),
-        point_abs_etile( -1, -1 ) + file.mapgensize(),
+        point_abs_etile( -1, -1 ) + mapgen.mapgensize(),
         col_mapgensize_bg,
         col_mapgensize_border
     );
@@ -241,7 +241,7 @@ void show_canvas( State &state, Mapgen *file_ptr )
     point_abs_etile tooltip_pos;
     if( canvas_hovered ) {
         point_abs_etile tile_pos = get_mouse_tile_pos( cam );
-        point_rel_etile mapgensize = file.mapgensize();
+        point_rel_etile mapgensize = mapgen.mapgensize();
         bool is_mouse_in_bounds = tile_pos.x() >= 0 && tile_pos.y() >= 0 && tile_pos.x() < mapgensize.x() &&
                                   tile_pos.y() < mapgensize.y();
 
@@ -249,9 +249,9 @@ void show_canvas( State &state, Mapgen *file_ptr )
             show_tooltip = true;
             tooltip_pos = tile_pos;
             if( is_mouse_in_bounds ) {
-                const UUID &uuid = file.base.canvas.get( tile_pos.raw() );
+                const UUID &uuid = mapgen.base.canvas.get( tile_pos.raw() );
                 tooltip_entry = state.project().get_palette(
-                                    file.base.inline_palette_id )->find_entry( uuid );
+                                    mapgen.base.inline_palette_id )->find_entry( uuid );
             }
         }
 
@@ -277,9 +277,9 @@ void show_canvas( State &state, Mapgen *file_ptr )
             int delta = delta_wheel * zoom_speed;
             cam.scale = clamp( cam.scale + delta, MIN_SCALE, MAX_SCALE );
         }
-        if( file.uses_rows() ) {
+        if( mapgen.uses_rows() ) {
             // Ensure the brush is in valid state
-            const Palette &pal = *state.project().get_palette( file.base.inline_palette_id );
+            const Palette &pal = *state.project().get_palette( mapgen.base.inline_palette_id );
             if( tools.get_brush() != UUID_INVALID && !pal.find_entry( tools.get_brush() ) ) {
                 tools.set_brush( UUID_INVALID );
             }
@@ -289,9 +289,9 @@ void show_canvas( State &state, Mapgen *file_ptr )
                     tools.start_tool_operation();
                 }
                 if( is_mouse_in_bounds ) {
-                    const UUID &uuid = file.base.canvas.get( tile_pos.raw() );
+                    const UUID &uuid = mapgen.base.canvas.get( tile_pos.raw() );
                     if( uuid != tools.get_brush() ) {
-                        file.base.canvas.set( tile_pos.raw(), tools.get_brush() );
+                        mapgen.base.canvas.set( tile_pos.raw(), tools.get_brush() );
                         tools.set_tool_operation_changed_data();
                     }
                 }
@@ -299,9 +299,9 @@ void show_canvas( State &state, Mapgen *file_ptr )
             if( ( tools.get_tool() == CanvasTool::Bucket || tools.get_tool() == CanvasTool::BucketGlobal ) &&
                 ImGui::IsMouseClicked( ImGuiMouseButton_Left ) ) {
                 if( is_mouse_in_bounds ) {
-                    const UUID &uuid = file.base.canvas.get( tile_pos.raw() );
+                    const UUID &uuid = mapgen.base.canvas.get( tile_pos.raw() );
                     if( uuid != tools.get_brush() ) {
-                        apply_bucket_tool( file.base.canvas, tools.get_brush(), tile_pos,
+                        apply_bucket_tool( mapgen.base.canvas, tools.get_brush(), tile_pos,
                                            tools.get_tool() == CanvasTool::BucketGlobal );
                         state.mark_changed();
                     }
@@ -309,7 +309,7 @@ void show_canvas( State &state, Mapgen *file_ptr )
             }
             if( ImGui::IsMouseClicked( ImGuiMouseButton_Middle ) ) {
                 if( is_mouse_in_bounds ) {
-                    const UUID &uuid = file.base.canvas.get( tile_pos.raw() );
+                    const UUID &uuid = mapgen.base.canvas.get( tile_pos.raw() );
                     tools.set_brush( uuid );
                 } else {
                     tools.set_brush( UUID_INVALID );
@@ -318,7 +318,7 @@ void show_canvas( State &state, Mapgen *file_ptr )
         }
     }
 
-    if( file.uses_rows() ) {
+    if( mapgen.uses_rows() ) {
         if( tools.get_tool() == CanvasTool::Brush && tools.has_ongoing_tool_operation() &&
             !brush_stroke_active ) {
             // Brush stroke ended, queue changes as a single operation
@@ -327,15 +327,15 @@ void show_canvas( State &state, Mapgen *file_ptr )
             }
         }
 
-        Palette *pal_ptr = state.project().get_palette( file.base.inline_palette_id );
+        Palette *pal_ptr = state.project().get_palette( mapgen.base.inline_palette_id );
         assert( pal_ptr );
 
         Palette &pal = *pal_ptr;
 
-        for( int x = 0; x < file.mapgensize().x(); x++ ) {
-            for( int y = 0; y < file.mapgensize().y(); y++ ) {
+        for( int x = 0; x < mapgen.mapgensize().x(); x++ ) {
+            for( int y = 0; y < mapgen.mapgensize().y(); y++ ) {
                 point_abs_etile p( x, y );
-                UUID uuid = file.base.canvas.get( p.raw() );
+                UUID uuid = mapgen.base.canvas.get( p.raw() );
                 const SpriteRef *img = pal.sprite_from_uuid( uuid );
                 if( img ) {
                     fill_tile_sprited( draw_list, cam, p, *img );
@@ -343,10 +343,10 @@ void show_canvas( State &state, Mapgen *file_ptr )
             }
         }
 
-        for( int x = 0; x < file.mapgensize().x(); x++ ) {
-            for( int y = 0; y < file.mapgensize().y(); y++ ) {
+        for( int x = 0; x < mapgen.mapgensize().x(); x++ ) {
+            for( int y = 0; y < mapgen.mapgensize().y(); y++ ) {
                 point_abs_etile p( x, y );
-                UUID uuid = file.base.canvas.get( p.raw() );
+                UUID uuid = mapgen.base.canvas.get( p.raw() );
                 ImVec4 col = pal.color_from_uuid( uuid );
                 const SpriteRef *img = pal.sprite_from_uuid( uuid );
                 if( img ) {
@@ -356,10 +356,10 @@ void show_canvas( State &state, Mapgen *file_ptr )
             }
         }
 
-        for( int x = 0; x < file.mapgensize().x(); x++ ) {
-            for( int y = 0; y < file.mapgensize().y(); y++ ) {
+        for( int x = 0; x < mapgen.mapgensize().x(); x++ ) {
+            for( int y = 0; y < mapgen.mapgensize().y(); y++ ) {
                 point_abs_etile p( x, y );
-                const map_key &mk = pal.key_from_uuid( file.base.canvas.get( p.raw() ) );
+                const map_key &mk = pal.key_from_uuid( mapgen.base.canvas.get( p.raw() ) );
                 point_abs_epos center = coords::project_combine( p,
                                         point_etile_epos( ETILE_SIZE / 2, ETILE_SIZE / 2 ) );
                 point_abs_screen text_center = cam.world_to_screen( center );
@@ -371,7 +371,7 @@ void show_canvas( State &state, Mapgen *file_ptr )
         }
     }
 
-    for( const MapObject &obj : file.objects ) {
+    for( const MapObject &obj : mapgen.objects ) {
         if( !obj.visible ) {
             continue;
         }
@@ -405,7 +405,7 @@ void show_canvas( State &state, Mapgen *file_ptr )
 
     if( show_tooltip ) {
         std::vector<const MapObject *> objects;
-        for( const MapObject &obj : file.objects ) {
+        for( const MapObject &obj : mapgen.objects ) {
             if( obj.x.max < tooltip_pos.x() ||
                 obj.y.max < tooltip_pos.y() ||
                 obj.x.min > tooltip_pos.x() ||

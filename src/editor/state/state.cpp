@@ -23,7 +23,7 @@ State::State( std::unique_ptr<Project> &&project,
               const std::string *loaded_from_path ) : history( std::move( project ), !!loaded_from_path )
 {
     if( loaded_from_path ) {
-        save_export->file_save_path = *loaded_from_path;
+        save_export->project_save_path = *loaded_from_path;
     }
 }
 

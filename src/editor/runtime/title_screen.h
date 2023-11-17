@@ -25,7 +25,7 @@ struct TitleScreen {
     TitleScreen &operator=( const TitleScreen & ) = delete;
     TitleScreen &operator=( TitleScreen && ) = default;
 
-    bool open_file_dialog = false;
+    bool open_project_dialog = false;
     std::optional<TitleScreenReturn> ret;
     std::optional<std::string> popup_prompt;
 };
