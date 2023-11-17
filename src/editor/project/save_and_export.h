@@ -17,13 +17,7 @@ struct me_save_export_state {
     me_save_export_state &operator=( const me_save_export_state & ) = delete;
     me_save_export_state &operator=( me_save_export_state && ) = default;
 
-    bool want_save = false;
-    bool want_save_as = false;
-    bool want_exit_after_save = false;
     std::optional<std::string> file_save_path;
-
-    bool want_export = false;
-    bool want_export_as = false;
     std::optional<std::string> file_export_path;
 };
 

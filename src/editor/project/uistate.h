@@ -64,8 +64,6 @@ struct me_uistate {
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
 
-    bool want_close = false;                // User wants to close the project
-    bool do_loop = true;                    // Setting this to false will quit the editor
     bool show_demo_wnd = false;             // Whether to show ImGui Demo window
     bool show_metrics_wnd = false;          // Whether to show ImGui Metrics/Debugger window
     bool show_project_overview = true;      // Whether to show project overview window
