@@ -6,7 +6,7 @@
 #include "mapgen/palette.h"
 #include "common/uuid.h"
 #include "widget/widgets.h"
-#include "project/file.h"
+#include "mapgen/mapgen.h"
 #include "project/project.h"
 #include "state/state.h"
 #include "state/ui_state.h"

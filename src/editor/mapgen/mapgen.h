@@ -1,5 +1,5 @@
-#ifndef CATA_SRC_EDITOR_FILE_H
-#define CATA_SRC_EDITOR_FILE_H
+#ifndef CATA_SRC_EDITOR_MAPGEN_H
+#define CATA_SRC_EDITOR_MAPGEN_H
 
 #include "common/canvas_2d.h"
 #include "game_constants.h"
@@ -119,4 +119,4 @@ struct enum_traits<editor::MapgenType> {
     static constexpr editor::MapgenType last = editor::MapgenType::_Num;
 };
 
-#endif // CATA_SRC_EDITOR_FILE_H
+#endif // CATA_SRC_EDITOR_MAPGEN_H

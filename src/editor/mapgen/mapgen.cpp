@@ -1,8 +1,7 @@
-#include "file.h"
+#include "mapgen.h"
 
 #include "mapgen/palette.h"
 #include "state/state.h"
-#include "project.h"
 #include "state/ui_state.h"
 #include "widget/widgets.h"
 
