@@ -1,5 +1,6 @@
 #include "mapgen.h"
 
+#include "common/canvas_2d.h"
 #include "imgui.h"
 #include "mapgen/palette.h"
 #include "state/state.h"
@@ -7,6 +8,7 @@
 #include "string_formatter.h"
 #include "widget/editable_id.h"
 #include "widget/widgets.h"
+#include <cfloat>
 #include <vector>
 
 namespace editor
@@ -36,8 +38,52 @@ void show_mapgen_info( State &state, Mapgen &mapgen, bool &show )
     ImGui::Separator();
 
     if( mapgen.mtype == MapgenType::Oter ) {
-        {
-            std::vector<EID::Oter> &oters = mapgen.oter.om_terrain;
+        if( ImGui::Checkbox( "Matrix Mode", &mapgen.oter.matrix_mode ) ) {
+            state.mark_changed();
+        }
+        ImGui::HelpPopup(
+            "In Normal Mode, the mapgen must be of size 24x24 and can be assigned to 1 or multiple OMTs.  "
+            "Recommended for small static specials / buildings, wilderness and mutable specials.\n\n"
+            "In Matrix Mode, the mapgen size will be multiple of 24x24, and each 24x24 chunk within it corresponds to a single OMT.  "
+            "Recommended for large static specials / buildings."
+        );
+        if( mapgen.oter.matrix_mode ) {
+            // Matrix
+            Canvas2D<EID::OterType> &oters = mapgen.oter.om_terrain_matrix;
+
+            point new_size = oters.get_size();
+            ImGui::InputInt( "x", &new_size.x );
+            ImGui::InputInt( "y", &new_size.y );
+            new_size.x = clamp( new_size.x, 1, 8 );
+            new_size.y = clamp( new_size.y, 1, 8 );
+            if( new_size != oters.get_size() ) {
+                state.mark_changed( "oter-matrix-size" );
+                oters.set_size( new_size );
+                mapgen.base.set_size( new_size * 24 );
+            }
+
+            ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable;
+            if( ImGui::BeginTable( "omt-matrix", oters.get_size().x, flags ) ) {
+                for( int y = 0; y < oters.get_size().y; y++ ) {
+                    ImGui::TableNextRow();
+                    ImGui::PushID( y );
+                    for( int x = 0; x < oters.get_size().x; x++ ) {
+                        ImGui::TableSetColumnIndex( x );
+                        ImGui::PushID( x );
+                        ImGui::SetNextItemWidth( -FLT_MIN );
+                        if( ImGui::InputId( "###id-input", oters.get( point( x, y ) ) ) ) {
+                            state.mark_changed();
+                        }
+                        ImGui::PopID();
+                    }
+                    ImGui::PopID();
+                }
+
+                ImGui::EndTable();
+            }
+        } else {
+            // Single mapgen
+            std::vector<EID::OterType> &oters = mapgen.oter.om_terrain;
             std::string label = oters.empty() ? "<none>" : oters[0].data;
             if( oters.size() > 1 ) {
                 label += string_format( " +%d", oters.size() - 1 );
@@ -168,6 +214,8 @@ point_rel_etile Mapgen::mapgensize() const
 {
     if( mtype == MapgenType::Nested ) {
         return point_rel_etile( nested.size );
+    } else if( mtype == editor::MapgenType::Oter && oter.mapgen_base == editor::OterMapgenBase::Rows ) {
+        return point_rel_etile( base.canvas.get_size() );
     } else {
         return point_rel_etile( SEEX * 2, SEEY * 2 );
     }

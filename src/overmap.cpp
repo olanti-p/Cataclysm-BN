@@ -1006,6 +1006,11 @@ const std::vector<oter_t> &overmap_terrains::get_all()
     return terrains.get_all();
 }
 
+const std::vector<oter_type_t> &overmap_terrains::get_all_types()
+{
+    return terrain_types.get_all();
+}
+
 static bool is_amongst_locations( const oter_id &oter,
                                   const cata::flat_set<overmap_location_id> &locations )
 {

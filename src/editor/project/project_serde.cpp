@@ -648,7 +648,9 @@ void MapgenBase::deserialize( JsonIn &jsin )
 void MapgenOter::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
+    jsout.member( "matrix_mode", matrix_mode );
     jsout.member( "om_terrain", om_terrain );
+    jsout.member( "om_terrain_matrix", om_terrain_matrix );
     jsout.member( "weight", weight );
     jsout.member_as_string( "mapgen_base", mapgen_base );
     jsout.member( "fill_ter", fill_ter );
@@ -661,7 +663,9 @@ void MapgenOter::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
+    jo.read( "matrix_mode", matrix_mode );
     jo.read( "om_terrain", om_terrain );
+    jo.read( "om_terrain_matrix", om_terrain_matrix );
     jo.read( "weight", weight );
     jo.read( "mapgen_base", mapgen_base );
     jo.read( "fill_ter", fill_ter );

@@ -20,6 +20,10 @@ class Canvas2D
         Canvas2D( point size, T fill_value = T() ) {
             set_size( size, fill_value );
         }
+        Canvas2D( const Canvas2D<T> & ) = default;
+        Canvas2D( Canvas2D<T> && ) = default;
+        Canvas2D &operator=( const Canvas2D<T> & ) = default;
+        Canvas2D &operator=( Canvas2D<T> && ) = default;
 
         inline point get_size() const {
             return size;
@@ -40,6 +44,10 @@ class Canvas2D
         }
 
         inline const T &get( point pos ) const {
+            return data[ pos.y * size.x + pos.x ];
+        }
+
+        inline T &get( point pos ) {
             return data[ pos.y * size.x + pos.x ];
         }
 

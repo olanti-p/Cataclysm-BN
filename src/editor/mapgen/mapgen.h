@@ -8,6 +8,7 @@
 #include "common/uuid.h"
 #include "mapgen/palette.h"
 #include "mapgen/mapobject.h"
+#include "widget/editable_id.h"
 
 struct ImVec4;
 class JsonOut;
@@ -42,7 +43,10 @@ enum class OterMapgenBase {
 };
 
 struct MapgenOter {
-    std::vector<EID::Oter> om_terrain;
+    bool matrix_mode = true;
+    std::vector<EID::OterType> om_terrain;
+    Canvas2D<EID::OterType> om_terrain_matrix =
+        Canvas2D<EID::OterType>( point( 1, 1 ), EID::OterType::NULL_ID() );
     int weight = 100;
     OterMapgenBase mapgen_base = OterMapgenBase::FillTer;
     EID::Ter fill_ter = EID::Ter::NULL_ID();
