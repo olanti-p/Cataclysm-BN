@@ -100,12 +100,12 @@ void add_mapgen( State &state, NewMapgenState &mapgen )
 
     if( mapgen.create_new_palette ) {
         UUID new_palette_uuid = project.uuid_generator();
-        new_mapgen.base.inline_palette_id = new_palette_uuid;
+        new_mapgen.base.palette = new_palette_uuid;
         project.palettes.emplace_back();
         Palette &new_palette = project.palettes.back();
         new_palette.uuid = new_palette_uuid;
     } else {
-        new_mapgen.base.inline_palette_id = mapgen.palette;
+        new_mapgen.base.palette = mapgen.palette;
     }
 }
 

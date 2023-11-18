@@ -23,7 +23,7 @@ struct MapgenBase {
     ~MapgenBase();
 
     Canvas2D<UUID> canvas;
-    UUID inline_palette_id = UUID_INVALID;
+    UUID palette = UUID_INVALID;
 
     inline void set_size( point new_size ) {
         canvas.set_size( new_size, UUID_INVALID );
