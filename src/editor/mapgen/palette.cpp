@@ -295,11 +295,7 @@ void show_palette( State &state, Palette &p, bool &show )
     }
     ImGui::PushID( p.uuid );
 
-    if( p.is_inline ) {
-        ImGui::Text( "<inline palette>" );
-    } else {
-        ImGui::Text( "id: %s", p.id.data.c_str() );
-    }
+    ImGui::Text( "id: %s", p.id.data.c_str() );
 
     if( ImGui::InputText( "Name", &p.name ) ) {
         state.mark_changed( "palette-name" );

@@ -49,7 +49,7 @@ void show_project_overview_ui( State &state, Project &project, bool &show )
         if( ImGui::ImageButton( "toggle_palette", "me_palette" ) ) {
             state.ui->toggle_show_palette( mapgen.base.palette );
         }
-        ImGui::HelpPopup( "Show/hide inline palette for this mapgen." );
+        ImGui::HelpPopup( "Show/hide palette for this mapgen." );
         ImGui::SameLine();
         if( ImGui::ImageButton( "toggle_mapobjects", "me_mapobject" ) ) {
             state.ui->toggle_show_mapobjects( mapgen.uuid );
@@ -87,7 +87,7 @@ void show_project_overview_ui( State &state, Project &project, bool &show )
     } )
     .run( project.mapgens );
 
-    ImGui::Text( "Inline palettes:" );
+    ImGui::Text( "Palettes:" );
     for( const Palette &pal : project.palettes ) {
         ImGui::Selectable( pal.display_name().c_str(), false );
     }

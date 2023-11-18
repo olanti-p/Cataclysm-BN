@@ -587,7 +587,6 @@ void Palette::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
     jsout.member( "uuid", uuid );
-    jsout.member( "is_inline", is_inline );
     jsout.member( "id", id );
     jsout.member( "name", name );
     jsout.member( "entries", entries );
@@ -599,7 +598,6 @@ void Palette::deserialize( JsonIn &jsin )
     JsonObject jo = jsin.get_object();
 
     jo.read( "uuid", uuid );
-    jo.read( "is_inline", is_inline );
     jo.read( "id", id );
     jo.read( "name", name );
     jo.read( "entries", entries );
