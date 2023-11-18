@@ -1,13 +1,17 @@
 #include "project.h"
 
+#include "common/uuid.h"
+#include "imgui.h"
 #include "mapgen/mapgen.h"
 #include "mapgen/palette.h"
+#include "new_mapgen.h"
 #include "state/state.h"
-#include "common/uuid.h"
-#include "widget/widgets.h"
 #include "state/ui_state.h"
+#include "widget/widgets.h"
 
 #include <chrono>
+#include <cstddef>
+#include <memory>
 
 namespace editor
 {
@@ -60,19 +64,11 @@ void show_project_overview_ui( State &state, Project &project, bool &show )
         }
     } )
     .with_add( [&]()->bool {
-        bool ret = false;
         if( ImGui::Button( "New mapgen" ) )
         {
-            UUID new_mapgen = project.uuid_generator();
-            project.mapgens.emplace_back();
-            project.mapgens.back().uuid = new_mapgen;
-            UUID new_palette = project.uuid_generator();
-            project.mapgens.back().base.inline_palette_id = new_palette;
-            project.palettes.emplace_back();
-            project.palettes.back().uuid = new_palette;
-            ret = true;
+            state.ui->new_mapgen_window = std::make_unique<NewMapgenState>();
         }
-        return ret;
+        return false;
     } )
     .with_delete( [&]( size_t idx ) {
         UUID pal_uuid = project.mapgens[idx].base.inline_palette_id;

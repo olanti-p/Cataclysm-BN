@@ -14,6 +14,7 @@
 #include "ui_state_store.h"
 #include "uistate.h"
 #include "widget/widgets.h"
+#include "project/new_mapgen.h"
 
 namespace editor
 {
@@ -141,6 +142,11 @@ void run_ui_for_state( State &state )
     }
     if( uistate.show_camera_controls ) {
         show_camera_controls( state, uistate.show_camera_controls );
+    }
+    if( uistate.new_mapgen_window ) {
+        if( !show_new_mapgen_window( state, *uistate.new_mapgen_window ) ) {
+            uistate.new_mapgen_window.reset();
+        }
     }
 
     for( auto &it : uistate.open_palettes ) {
