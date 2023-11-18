@@ -633,7 +633,7 @@ void MapgenBase::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
     jsout.member( "canvas", canvas );
-    jsout.member( "inline_palette_id", inline_palette_id );
+    jsout.member( "inline_palette_id", palette );
     jsout.end_object();
 }
 
@@ -642,7 +642,7 @@ void MapgenBase::deserialize( JsonIn &jsin )
     JsonObject jo = jsin.get_object();
 
     jo.read( "canvas", canvas );
-    jo.read( "inline_palette_id", inline_palette_id );
+    jo.read( "inline_palette_id", palette );
 }
 
 void MapgenOter::serialize( JsonOut &jsout ) const

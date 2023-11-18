@@ -251,7 +251,7 @@ void show_canvas( State &state, Mapgen *mapgen_ptr )
             if( is_mouse_in_bounds ) {
                 const UUID &uuid = mapgen.base.canvas.get( tile_pos.raw() );
                 tooltip_entry = state.project().get_palette(
-                                    mapgen.base.inline_palette_id )->find_entry( uuid );
+                                    mapgen.base.palette )->find_entry( uuid );
             }
         }
 
@@ -279,7 +279,7 @@ void show_canvas( State &state, Mapgen *mapgen_ptr )
         }
         if( mapgen.uses_rows() ) {
             // Ensure the brush is in valid state
-            const Palette &pal = *state.project().get_palette( mapgen.base.inline_palette_id );
+            const Palette &pal = *state.project().get_palette( mapgen.base.palette );
             if( tools.get_brush() != UUID_INVALID && !pal.find_entry( tools.get_brush() ) ) {
                 tools.set_brush( UUID_INVALID );
             }
@@ -327,7 +327,7 @@ void show_canvas( State &state, Mapgen *mapgen_ptr )
             }
         }
 
-        Palette *pal_ptr = state.project().get_palette( mapgen.base.inline_palette_id );
+        Palette *pal_ptr = state.project().get_palette( mapgen.base.palette );
         assert( pal_ptr );
 
         Palette &pal = *pal_ptr;
