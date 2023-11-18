@@ -73,13 +73,6 @@ struct PaletteEntry {
 };
 
 struct Palette {
-    static Palette make_inline() {
-        Palette ret;
-        ret.is_inline = true;
-        return ret;
-    }
-
-    bool is_inline = false;
     UUID uuid;
     EID::Palette id;
     std::string name;
