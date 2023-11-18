@@ -42,7 +42,7 @@ enum class OterMapgenBase {
 };
 
 struct MapgenOter {
-    EID::Oter om_terrain;
+    std::vector<EID::Oter> om_terrain;
     int weight = 100;
     OterMapgenBase mapgen_base = OterMapgenBase::FillTer;
     EID::Ter fill_ter = EID::Ter::NULL_ID();
