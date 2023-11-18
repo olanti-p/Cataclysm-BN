@@ -1,5 +1,6 @@
 #include "palette.h"
 
+#include "imgui.h"
 #include "state/tools_state.h"
 #include "common/color.h"
 #include "mapgen.h"
@@ -300,6 +301,11 @@ void show_palette( State &state, Palette &p, bool &show )
         ImGui::Text( "id: %s", p.id.data.c_str() );
     }
 
+    if( ImGui::InputText( "Name", &p.name ) ) {
+        state.mark_changed( "palette-name" );
+    }
+    ImGui::HelpPopup( "Display name.  Has no effect, just for convenience." );
+
     show_palette_entries( state, p );
 
     ImGui::PopID();
@@ -404,6 +410,17 @@ const PaletteEntry *Palette::find_entry( const UUID &uuid ) const
         }
     }
     return nullptr;
+}
+
+std::string Palette::display_name() const
+{
+    if( !name.empty() ) {
+        return name;
+    } else if( !id.data.empty() ) {
+        return id.data;
+    } else {
+        return string_format( "[uuid=%d]", uuid );
+    }
 }
 
 void PaletteEntry::build_sprite_cache() const

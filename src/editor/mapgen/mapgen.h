@@ -88,6 +88,10 @@ struct Mapgen {
 
     std::vector<MapObject> objects;
 
+    std::string name;
+
+    std::string display_name() const;
+
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
 
