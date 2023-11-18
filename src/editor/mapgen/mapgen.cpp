@@ -1,9 +1,13 @@
 #include "mapgen.h"
 
+#include "imgui.h"
 #include "mapgen/palette.h"
 #include "state/state.h"
 #include "state/ui_state.h"
+#include "string_formatter.h"
+#include "widget/editable_id.h"
 #include "widget/widgets.h"
+#include <vector>
 
 namespace editor
 {
@@ -32,10 +36,31 @@ void show_mapgen_info( State &state, Mapgen &mapgen, bool &show )
     ImGui::Separator();
 
     if( mapgen.mtype == MapgenType::Oter ) {
-        if( ImGui::InputId( "om_terrain", mapgen.oter.om_terrain ) ) {
-            state.mark_changed();
+        {
+            std::vector<EID::Oter> &oters = mapgen.oter.om_terrain;
+            std::string label = oters.empty() ? "<none>" : oters[0].data;
+            if( oters.size() > 1 ) {
+                label += string_format( " +%d", oters.size() - 1 );
+            }
+            label += "###oter-list-header";
+            bool header_expanded = ImGui::CollapsingHeader( label.c_str() );
+            ImGui::HelpPopup( "Overmap terrain types this mapgen is assigned to." );
+            if( header_expanded ) {
+                bool oters_changed = ImGui::VectorWidget()
+                .with_for_each( [&]( size_t idx ) {
+                    ImGui::PushID( idx );
+                    if( ImGui::InputId( "tmp", oters[idx] ) ) {
+                        state.mark_changed();
+                    }
+                    ImGui::PopID();
+                } )
+                .run( oters );
+
+                if( oters_changed ) {
+                    state.mark_changed();
+                }
+            }
         }
-        ImGui::HelpPopup( "Overmap terrain type to assign this mapgen to." );
         if( ImGui::InputIntClamped( "weight", mapgen.oter.weight, 0, 10000 ) ) {
             state.mark_changed( "mapgen-info-oter-weight-input" );
         }

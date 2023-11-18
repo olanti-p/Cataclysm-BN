@@ -10,6 +10,7 @@
 #include "json.h"
 #include "../../tools/format/format.h"
 #include "common/weighted_list.h"
+#include "widget/editable_id.h"
 
 #include <sstream>
 
@@ -543,7 +544,7 @@ static void emit_mapgen_contents( JsonOut &jo, const editor::Project &project,
     emit( jo, "method", "json" );
 
     if( mapgen.mtype == editor::MapgenType::Oter ) {
-        emit( jo, "om_terrain", mapgen.oter.om_terrain );
+        emit_single_or_array( jo, "om_terrain", mapgen.oter.om_terrain );
         emit( jo, "weight", mapgen.oter.weight );
     } else if( mapgen.mtype == editor::MapgenType::Nested ) {
         emit( jo, "nested_mapgen_id", mapgen.nested.nested_mapgen_id );
