@@ -26,43 +26,6 @@ void show_mapgen_info( State &state, Mapgen &mapgen, bool &show )
     }
     ImGui::HelpPopup( "Display name.  Has no effect, just for convenience." );
 
-    ImGui::Text( "Mapgen type:" );
-    if( ImGui::RadioButton( "Oter", mapgen.mtype == MapgenType::Oter ) ) {
-        mapgen.mtype = MapgenType::Oter;
-        mapgen.base.set_size( mapgen.mapgensize().raw() );
-        state.mark_changed();
-    }
-    ImGui::HelpPopup(
-        "Overmap terrain mapgen.\n\n"
-        "Must be assigned to one (or more) overmap terrain types.\n"
-        "When game generates local map for an omt, it randomly selects one of the overmap mapgens associated "
-        "with given omt's type and runs it, then applies automatic transformations such as rotation.\n"
-        "Each omt type must have at least 1 omt mapgen assigned to it."
-    );
-    ImGui::SameLine();
-    if( ImGui::RadioButton( "Update", mapgen.mtype == MapgenType::Update ) ) {
-        mapgen.mtype = MapgenType::Update;
-        mapgen.base.set_size( mapgen.mapgensize().raw() );
-        state.mark_changed();
-    }
-    ImGui::HelpPopup(
-        "Update mapgen.\n\n"
-        "Invoked by basecamp upgrade routines.\n"
-        "Can be used for automatic calculation of camp blueprint requirements."
-    );
-    ImGui::SameLine();
-    if( ImGui::RadioButton( "Nested", mapgen.mtype == MapgenType::Nested ) ) {
-        mapgen.mtype = MapgenType::Nested;
-        mapgen.base.set_size( mapgen.mapgensize().raw() );
-        state.mark_changed();
-    }
-    ImGui::HelpPopup(
-        "Nested mapgen.\n\n"
-        "Can be invoked by omt and upgrate mapgens.\n"
-        "This is essentially a 'chunk' of any size up to 24x24 that can be procedurally placed by the calling mapgen."
-    );
-    ImGui::Separator();
-
     if( ImGui::Button( "Show/hide inline palette" ) ) {
         state.ui->toggle_show_palette( mapgen.base.inline_palette_id );
     }
