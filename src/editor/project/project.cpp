@@ -82,12 +82,8 @@ void show_project_overview_ui( State &state, Project &project, bool &show )
     } )
     .with_duplicate( [&]( size_t idx ) {
         Mapgen copy = project.mapgens[ idx ];
-        Palette pcopy = *project.get_palette( copy.base.palette );
         copy.uuid = project.uuid_generator();
-        pcopy.uuid = project.uuid_generator();
-        copy.base.palette = pcopy.uuid;
         project.mapgens.insert( std::next( project.mapgens.cbegin(), idx + 1 ), std::move( copy ) );
-        project.palettes.push_back( std::move( pcopy ) );
     } )
     .run( project.mapgens );
 
