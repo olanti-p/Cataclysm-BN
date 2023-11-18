@@ -40,11 +40,11 @@ void show_edit_history( HistoryState &state, bool &show )
 
     ImGui::HelpMarkerInline(
         "Undo/redo support.\n\n"
-        "In order to enable undo and redo, the editor has to keep track of the old versions (snapshots) of the project.  "
-        "This is done entirely in memory, so remembering too much snapshots may exhaust available RAM at some point "
-        "and trigger program termination by the OS.  You can manually control how much snapshots will be kept alive "
-        "using the widget below.\n"
-        "\nHotkeys:\n"
+        "To provide undo and redo functionality, the editor keeps track of snapshots (old and future versions) of the project.  "
+        "This is done entirely in memory, so remembering too much snapshots may exhaust available RAM "
+        "and slow down your OS or result in a crash.  You can manually control how much snapshots will be kept alive "
+        "using the \"History limit\" widget.\n\n"
+        "Hotkeys:\n"
         "  Ctrl+Z - Undo (advance to older snapshot)\n"
         "  Ctrl+Shift+Z - Redo (advance to newer snapshot)\n"
     );
@@ -55,9 +55,8 @@ void show_edit_history( HistoryState &state, bool &show )
 
     ImGui::HelpMarkerInline(
         "The list below keeps track of project snapshots.\n\n"
-        "Click on a snapshot to make it active.  "
-        "Every edit automatically generates a new snapshot and places it at the top.\n"
-        "\nMarkers use in the list:\n"
+        "Click on a snapshot to switch to it.\n\n"
+        "Markers used in the list:\n"
         "  [S] This snapshot is the one saved in the project file.\n"
         "  [E] This snapshot is the one that was used for export.\n"
     );
