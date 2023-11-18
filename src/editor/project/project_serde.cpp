@@ -588,6 +588,7 @@ void Palette::serialize( JsonOut &jsout ) const
     jsout.start_object();
     jsout.member( "uuid", uuid );
     jsout.member( "id", id );
+    jsout.member( "inherits_from", inherits_from );
     jsout.member( "name", name );
     jsout.member( "entries", entries );
     jsout.end_object();
@@ -599,6 +600,7 @@ void Palette::deserialize( JsonIn &jsin )
 
     jo.read( "uuid", uuid );
     jo.read( "id", id );
+    jo.read( "inherits_from", inherits_from );
     jo.read( "name", name );
     jo.read( "entries", entries );
 }
