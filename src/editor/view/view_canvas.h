@@ -60,6 +60,7 @@ void fill_region(
  * =============== Windows ===============
  */
 void show_canvas( State &state, Mapgen *mapgen_ptr );
+void handle_view_change( State &state );
 
 } // namespace editor
 

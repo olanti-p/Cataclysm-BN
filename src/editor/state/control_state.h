@@ -24,6 +24,7 @@ struct ControlState {
     bool want_exit_after_save = false;      // User wants to exit after save
     bool want_export = false;               // User wants to export
     bool want_export_as = false;            // User wants to export as
+    int want_change_view = 0;               // User wants to change view
 };
 
 } // namespace editor

@@ -122,6 +122,7 @@ void run_ui_for_state( State &state )
 
     // TODO: multiple mapgens on same canvas
     show_canvas( state, active_mapgen );
+    handle_view_change( state );
 
     if( uistate.show_demo_wnd ) {
         ImGui::ShowDemoWindow( &uistate.show_demo_wnd );
