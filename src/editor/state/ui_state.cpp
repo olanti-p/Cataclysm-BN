@@ -130,11 +130,11 @@ void run_ui_for_state( State &state )
     if( uistate.show_metrics_wnd ) {
         ImGui::ShowMetricsWindow( &uistate.show_metrics_wnd );
     }
-    if( uistate.show_project_overview ) {
-        show_project_overview_ui( state, proj, uistate.show_project_overview );
-    }
     if( uistate.show_mapgen_info && active_mapgen ) {
         show_mapgen_info( state, *active_mapgen, uistate.show_mapgen_info );
+    }
+    if( uistate.show_project_overview ) {
+        show_project_overview_ui( state, proj, uistate.show_project_overview );
     }
     if( uistate.show_history ) {
         show_edit_history( *state.history, uistate.show_history );
