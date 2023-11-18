@@ -15,6 +15,7 @@ struct State;
 struct Camera;
 struct ToolsState;
 struct NewMapgenState;
+struct NewPaletteState;
 
 namespace detail
 {
@@ -85,6 +86,7 @@ struct UiState {
     std::set<UUID> expanded_mapobjects;
 
     std::unique_ptr<NewMapgenState> new_mapgen_window;
+    std::unique_ptr<NewPaletteState> new_palette_window;
 
     void toggle_show_palette( UUID uuid );
     void toggle_show_mapping( UUID palette, UUID uuid );
