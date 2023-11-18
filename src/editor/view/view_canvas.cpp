@@ -3,8 +3,11 @@
 #include "common/canvas_2d.h"
 #include "common/color.h"
 #include "camera.h"
+#include "common/math.h"
+#include "imgui.h"
 #include "mapgen/palette.h"
 #include "common/uuid.h"
+#include "state/control_state.h"
 #include "widget/widgets.h"
 #include "mapgen/mapgen.h"
 #include "project/project.h"
@@ -194,6 +197,15 @@ static void apply_bucket_tool( Canvas2D<UUID> &canvas, const UUID &brush,
     }
 }
 
+static void handle_view_change_hotkey( State &state )
+{
+    ImGuiIO &io = ImGui::GetIO();
+    if( ImGui::IsKeyDown( ImGuiKey_ModAlt ) && std::abs( io.MouseWheel ) > 0.5f ) {
+        int delta_wheel = static_cast<int>( std::round( io.MouseWheel ) );
+        state.control->want_change_view = -delta_wheel;
+    }
+}
+
 void show_canvas( State &state, Mapgen *mapgen_ptr )
 {
     ImVec2 disp_size = ImGui::GetIO().DisplaySize;
@@ -213,6 +225,11 @@ void show_canvas( State &state, Mapgen *mapgen_ptr )
         ImGui::BeginDisabled();
         ImGui::TextCenteredVH( "No active mapgen" );
         ImGui::EndDisabled();
+
+        if( ImGui::IsWindowHovered() ) {
+            handle_view_change_hotkey( state );
+        }
+
         ImGui::End();
         return;
     }
@@ -240,6 +257,8 @@ void show_canvas( State &state, Mapgen *mapgen_ptr )
     const PaletteEntry *tooltip_entry = nullptr;
     point_abs_etile tooltip_pos;
     if( canvas_hovered ) {
+        handle_view_change_hotkey( state );
+
         point_abs_etile tile_pos = get_mouse_tile_pos( cam );
         point_rel_etile mapgensize = mapgen.mapgensize();
         bool is_mouse_in_bounds = tile_pos.x() >= 0 && tile_pos.y() >= 0 && tile_pos.x() < mapgensize.x() &&
@@ -262,7 +281,7 @@ void show_canvas( State &state, Mapgen *mapgen_ptr )
             cam.pos += cam.drag_delta;
             cam.drag_delta = point_rel_epos();
         }
-        if( std::abs( io.MouseWheel ) > 0.5f ) {
+        if( !ImGui::IsKeyDown( ImGuiKey_ModAlt ) && std::abs( io.MouseWheel ) > 0.5f ) {
             int zoom_speed;
             if( cam.scale >= 64 ) {
                 zoom_speed = 16;
@@ -437,6 +456,31 @@ void show_canvas( State &state, Mapgen *mapgen_ptr )
 
     ImGui::PopID();
     ImGui::End();
+}
+
+void handle_view_change( State &state )
+{
+    const std::vector<Mapgen> &mapgens = state.project().mapgens;
+    if( mapgens.empty() ) {
+        return;
+    }
+    if( state.control->want_change_view != 0 ) {
+        if( !state.ui->active_mapgen_id ) {
+            state.ui->active_mapgen_id = mapgens[0].uuid;
+        } else {
+            int cur_idx = 0;
+            for( int i = 0; i < static_cast<int>( mapgens.size() ); i++ ) {
+                if( mapgens[i].uuid == state.ui->active_mapgen_id ) {
+                    cur_idx = i;
+                    break;
+                }
+            }
+            int new_idx = cur_idx + state.control->want_change_view;
+            new_idx = wrap_index( new_idx, state.project().mapgens.size() );
+            state.ui->active_mapgen_id = mapgens[new_idx].uuid;
+        }
+        state.control->want_change_view = 0;
+    }
 }
 
 } // namespace editor
