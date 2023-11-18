@@ -482,7 +482,7 @@ void TextCenteredVH( const std::string &text )
 
 bool IsDisabled()
 {
-    return ImGui::GetCurrentContext()->DisabledStackSize != 0;
+    return ImGui::GetCurrentContext()->CurrentItemFlags & ImGuiItemFlags_Disabled;
 }
 
 void BeginErrorArea()
