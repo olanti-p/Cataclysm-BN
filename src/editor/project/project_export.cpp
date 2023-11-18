@@ -544,7 +544,20 @@ static void emit_mapgen_contents( JsonOut &jo, const editor::Project &project,
     emit( jo, "method", "json" );
 
     if( mapgen.mtype == editor::MapgenType::Oter ) {
-        emit_single_or_array( jo, "om_terrain", mapgen.oter.om_terrain );
+        if( mapgen.oter.matrix_mode ) {
+            emit_single_or_array( jo, "om_terrain", mapgen.oter.om_terrain );
+        } else {
+            point size = mapgen.oter.om_terrain_matrix.get_size();
+            emit_array( jo, "om_terrain", [&]() {
+                for( int y = 0; y < size.y; y++ ) {
+                    emit_array( jo, [&]() {
+                        for( int x = 0; x < size.x; x++ ) {
+                            emit_val( jo, mapgen.oter.om_terrain_matrix.get( point( x, y ) ) );
+                        }
+                    } );
+                }
+            } );
+        }
         emit( jo, "weight", mapgen.oter.weight );
     } else if( mapgen.mtype == editor::MapgenType::Nested ) {
         emit( jo, "nested_mapgen_id", mapgen.nested.nested_mapgen_id );

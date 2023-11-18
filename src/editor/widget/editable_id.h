@@ -85,6 +85,7 @@ using Liquid = EditableID<liquid_item_tag>;
 using MGroup = EditableID<MonsterGroup>;
 using NPCTemplate = EditableID<npc_template>;
 using Oter = EditableID<oter_t>;
+using OterType = EditableID<oter_type_t>;
 using Palette = EditableID<mapgen_palette>;
 using SnippetCategory = EditableID<snippet_category_tag>;
 using Ter = EditableID<ter_t>;
