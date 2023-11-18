@@ -132,7 +132,7 @@ void show_mapgen_info( State &state, Mapgen &mapgen, bool &show )
         }
     } else if( mapgen.mtype == MapgenType::Update ) {
         if( ImGui::InputText( "update_mapgen_id", &mapgen.update.update_mapgen_id ) ) {
-            state.mark_changed();
+            state.mark_changed( "update-mapgen-id" );
         }
         ImGui::HelpPopup( "ID of this update mapgen." );
         if( ImGui::InputId( "fill_ter", mapgen.update.fill_ter ) ) {
@@ -141,7 +141,7 @@ void show_mapgen_info( State &state, Mapgen &mapgen, bool &show )
         ImGui::HelpPopup( "Terrain type to fill empty spots with." );
     } else { // MapgenType::Nested
         if( ImGui::InputText( "nested_mapgen_id", &mapgen.nested.nested_mapgen_id ) ) {
-            state.mark_changed();
+            state.mark_changed( "nested-mapgen-id" );
         }
         ImGui::HelpPopup( "ID of this nested mapgen." );
         if( ImGui::InputIntRange( "rotation", mapgen.nested.rotation ) ) {
