@@ -589,6 +589,7 @@ void Palette::serialize( JsonOut &jsout ) const
     jsout.member( "uuid", uuid );
     jsout.member( "is_inline", is_inline );
     jsout.member( "id", id );
+    jsout.member( "name", name );
     jsout.member( "entries", entries );
     jsout.end_object();
 }
@@ -600,6 +601,7 @@ void Palette::deserialize( JsonIn &jsin )
     jo.read( "uuid", uuid );
     jo.read( "is_inline", is_inline );
     jo.read( "id", id );
+    jo.read( "name", name );
     jo.read( "entries", entries );
 }
 
@@ -712,6 +714,7 @@ void Mapgen::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
     jsout.member( "uuid", uuid );
+    jsout.member( "name", name );
     jsout.member_as_string( "mtype", mtype );
     jsout.member( "base", base );
     jsout.member( "oter", oter );
@@ -726,6 +729,7 @@ void Mapgen::deserialize( JsonIn &jsin )
     JsonObject jo = jsin.get_object();
 
     jo.read( "uuid", uuid );
+    jo.read( "name", name );
     jo.read( "mtype", mtype );
     jo.read( "base", base );
     jo.read( "oter", oter );

@@ -41,22 +41,22 @@ void show_project_overview_ui( State &state, Project &project, bool &show )
 
     bool changed_mapgens = ImGui::VectorWidget()
     .with_for_each( [&]( size_t idx ) {
-        UUID this_uuid = project.mapgens[idx].uuid;
+        Mapgen &mapgen = project.mapgens[idx];
         if( ImGui::ImageButton( "toggle_palette", "me_palette" ) ) {
-            state.ui->toggle_show_palette( project.mapgens[idx].base.inline_palette_id );
+            state.ui->toggle_show_palette( mapgen.base.inline_palette_id );
         }
         ImGui::HelpPopup( "Show/hide inline palette for this mapgen." );
         ImGui::SameLine();
         if( ImGui::ImageButton( "toggle_mapobjects", "me_mapobject" ) ) {
-            state.ui->toggle_show_mapobjects( project.mapgens[idx].uuid );
+            state.ui->toggle_show_mapobjects( mapgen.uuid );
         }
         ImGui::HelpPopup( "Show/hide map objects for this mapgen." );
         ImGui::SameLine();
         if( ImGui::Selectable(
-                string_format( "Mapgen #%d", idx ).c_str(),
-                state.ui->active_mapgen_id && *state.ui->active_mapgen_id == this_uuid )
+                mapgen.display_name().c_str(),
+                state.ui->active_mapgen_id && *state.ui->active_mapgen_id == mapgen.uuid )
           ) {
-            state.ui->active_mapgen_id = this_uuid;
+            state.ui->active_mapgen_id = mapgen.uuid;
         }
     } )
     .with_add( [&]()->bool {
@@ -97,7 +97,7 @@ void show_project_overview_ui( State &state, Project &project, bool &show )
 
     ImGui::Text( "Inline palettes:" );
     for( const Palette &pal : project.palettes ) {
-        ImGui::Selectable( string_format( "Palette [uuid=%d]", pal.uuid ).c_str(), false );
+        ImGui::Selectable( pal.display_name().c_str(), false );
     }
 
     if( changed_mapgens ) {

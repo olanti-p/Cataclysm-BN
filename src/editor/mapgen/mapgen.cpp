@@ -21,6 +21,11 @@ void show_mapgen_info( State &state, Mapgen &mapgen, bool &show )
     }
     ImGui::PushID( mapgen.uuid );
 
+    if( ImGui::InputText( "Name", &mapgen.name ) ) {
+        state.mark_changed( "mapgen-name" );
+    }
+    ImGui::HelpPopup( "Display name.  Has no effect, just for convenience." );
+
     ImGui::Text( "Mapgen type:" );
     if( ImGui::RadioButton( "Oter", mapgen.mtype == MapgenType::Oter ) ) {
         mapgen.mtype = MapgenType::Oter;
@@ -160,6 +165,15 @@ void show_mapgen_info( State &state, Mapgen &mapgen, bool &show )
 
     ImGui::PopID();
     ImGui::End();
+}
+
+std::string Mapgen::display_name() const
+{
+    if( !name.empty() ) {
+        return name;
+    } else {
+        return string_format( "[uuid=%d]", uuid );
+    }
 }
 
 point_rel_etile Mapgen::mapgensize() const

@@ -82,6 +82,7 @@ struct Palette {
     bool is_inline = false;
     UUID uuid;
     EID::Palette id;
+    std::string name;
     std::vector<PaletteEntry> entries;
 
     const map_key &key_from_uuid( const UUID &uuid ) const;
@@ -90,6 +91,8 @@ struct Palette {
 
     PaletteEntry *find_entry( const UUID &uuid );
     const PaletteEntry *find_entry( const UUID &uuid ) const;
+
+    std::string display_name() const;
 
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
