@@ -1,6 +1,7 @@
 #include "app.h"
 
 #include "editor_engine.h"
+#include "imgui.h"
 #include "title_screen.h"
 
 #include "state/control_state.h"
@@ -32,6 +33,14 @@ void show_app( App &app )
     }
 }
 
+static void clear_inputs()
+{
+    // Make sure our mouse click / etc. does not propagate into editing action
+    ImGui::GetIO().ClearEventsQueue();
+    ImGui::GetIO().ClearInputCharacters();
+    ImGui::GetIO().ClearInputKeys();
+}
+
 void update_app_state( App &app )
 {
     if( app.title_state && app.title_state->ret ) {
@@ -43,10 +52,12 @@ void update_app_state( App &app )
                 app.run_state.do_exit_to_game = true;
             }
         } else if( retval.make_new ) {
+            clear_inputs();
             app.editor_state = std::make_unique<State>();
             std::string project_uuid = app.editor_state->project().project_uuid;
             set_project_ini_path( project_uuid );
         } else if( retval.load_existing ) {
+            clear_inputs();
             std::unique_ptr<Project> f = std::make_unique<Project>();
             auto reader = [&]( JsonIn & jsin ) {
                 f->deserialize( jsin );
