@@ -13,6 +13,7 @@
 #include "widget_combofilter.h"
 #include "common/int_range.h"
 #include "common/sprite_ref.h"
+#include "common/uuid.h"
 
 #include "calendar.h"
 
@@ -24,6 +25,7 @@ namespace editor
 {
 enum class AssetType : int;
 struct editor_state;
+struct Palette;
 } // namespace editor
 
 namespace ImGui
@@ -108,6 +110,9 @@ void EndErrorArea();
 void HelpMarker( const char *desc );
 void HelpMarkerInline( const char *desc );
 void HelpPopup( const char *desc );
+
+bool PaletteSelector( const char *label, editor::UUID &current_item,
+                      std::vector<editor::Palette> &options );
 
 class VectorWidget
 {

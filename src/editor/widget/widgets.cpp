@@ -1,11 +1,13 @@
 #include "widget/widgets.h"
 
+#include "common/uuid.h"
 #include "imgui_internal.h"
 
 #include "cata_tiles.h"
 #include "catacharset.h"
 #include "color.h"
 #include "mapgen.h"
+#include "mapgen/palette.h"
 #include "sdl_utils.h"
 #include "sdltiles.h"
 #include "string_utils.h"
@@ -626,6 +628,41 @@ bool VectorWidget::run_internal( size_t num )
         ret = true;
     }
     return ret;
+}
+
+bool PaletteSelector( const char *label, editor::UUID &current_item,
+                      std::vector<editor::Palette> &options )
+{
+    bool changed = false;
+    bool is_error = true;
+    std::string preview;
+    for( const editor::Palette &palette : options ) {
+        if( palette.uuid == current_item ) {
+            is_error = false;
+            preview = palette.display_name();
+            break;
+        }
+    }
+    if( is_error ) {
+        ImGui::BeginErrorArea();
+    }
+    if( ImGui::BeginCombo( label, preview.c_str() ) ) {
+        for( const editor::Palette &palette : options ) {
+            ImGui::PushID( palette.uuid );
+            bool is_selected = palette.uuid == current_item;
+            std::string label = palette.display_name();
+            if( ImGui::Selectable( label.c_str(), is_selected ) ) {
+                current_item = palette.uuid;
+                changed = true;
+            }
+            ImGui::PopID();
+        }
+        ImGui::EndCombo();
+    }
+    if( is_error ) {
+        ImGui::EndErrorArea();
+    }
+    return changed;
 }
 
 } // namespace ImGui
