@@ -1,5 +1,6 @@
 #include "view_canvas.h"
 
+#include "common/algo.h"
 #include "common/canvas_2d.h"
 #include "common/color.h"
 #include "camera.h"
@@ -8,6 +9,7 @@
 #include "mapgen/palette.h"
 #include "common/uuid.h"
 #include "state/control_state.h"
+#include "tool/tool.h"
 #include "widget/widgets.h"
 #include "mapgen/mapgen.h"
 #include "project/project.h"
@@ -25,6 +27,12 @@ point_abs_screen get_mouse_pos()
 {
     ImVec2 mouse_pos = ImGui::GetMousePos();
     return point_abs_screen( mouse_pos.x, mouse_pos.y );
+}
+
+point_abs_epos get_mouse_view_pos( const Camera &cam )
+{
+    point_abs_screen screen_pos = get_mouse_pos();
+    return cam.screen_to_world( screen_pos );
 }
 
 point_abs_etile get_mouse_tile_pos( const Camera &cam )
@@ -116,87 +124,6 @@ void fill_region(
     draw_frame( draw_list, cam, p1, p2, col, true );
 }
 
-/**
- * Find all tiles that match predicate.
-*/
-static std::vector<point> find_tiles_via_global( const Canvas2D<UUID> &canvas,
-        std::function<bool( const UUID & )> predicate )
-{
-    std::vector<point> ret;
-
-    for( int x = 0; x < canvas.get_size().x; x++ ) {
-        for( int y = 0; y < canvas.get_size().y; y++ ) {
-            point p( x, y );
-            const UUID &t = canvas.get( p );
-            if( predicate( t ) ) {
-                ret.push_back( p );
-            }
-        }
-    }
-
-    return ret;
-}
-
-/**
- * Find via floodfill all tiles that match predicate.
-*/
-static std::vector<point> find_tiles_via_floodfill( const Canvas2D<UUID> &canvas,
-        const point &initial_pos,
-        std::function<bool( const UUID & )> predicate )
-{
-    std::vector<point> ret;
-
-    if( !predicate( canvas.get( initial_pos ) ) ) {
-        return ret;
-    }
-
-    std::set<point> open;
-    std::set<point> closed;
-    open.insert( initial_pos );
-
-    while( !open.empty() ) {
-        auto it = open.cbegin();
-        point p = *it;
-        open.erase( it );
-        closed.insert( p );
-        ret.push_back( p );
-        for( const point &d : neighborhood ) {
-            point p2 = p + d;
-            if( p2.x < 0 || p2.y < 0 || p2.x >= canvas.get_size().x || p2.y >= canvas.get_size().y ) {
-                continue;
-            }
-            if( closed.count( p2 ) != 0 ) {
-                continue;
-            }
-            closed.insert( p2 );
-            if( predicate( canvas.get( p2 ) ) ) {
-                open.insert( p2 );
-            }
-        }
-    }
-
-    return ret;
-}
-
-static void apply_bucket_tool( Canvas2D<UUID> &canvas, const UUID &brush,
-                               const point_abs_etile &tile_pos,
-                               bool global )
-{
-    const UUID tgt = canvas.get( tile_pos.raw() );
-    const auto predicate = [ = ]( const UUID & t ) {
-        return t == tgt;
-    };
-    std::vector<point> tiles;
-    if( global ) {
-        tiles = find_tiles_via_global( canvas, predicate );
-    } else {
-        tiles = find_tiles_via_floodfill( canvas, tile_pos.raw(), predicate );
-    }
-    for( const point &p : tiles ) {
-        canvas.set( p, brush );
-    }
-}
-
 static void handle_view_change_hotkey( State &state )
 {
     ImGuiIO &io = ImGui::GetIO();
@@ -206,13 +133,13 @@ static void handle_view_change_hotkey( State &state )
     }
 }
 
-void show_canvas( State &state, Mapgen *mapgen_ptr )
+void show_editor_view( State &state, Mapgen *mapgen_ptr )
 {
     ImVec2 disp_size = ImGui::GetIO().DisplaySize;
 
     ImGui::SetNextWindowPos( ImVec2( 0, 0 ) );
     ImGui::SetNextWindowSize( disp_size );
-    ImGui::Begin( "<canvas>", nullptr,
+    ImGui::Begin( "<editor_view>", nullptr,
                   ImGuiWindowFlags_NoNav |
                   ImGuiWindowFlags_NoDecoration |
                   ImGuiWindowFlags_NoFocusOnAppearing |
@@ -249,20 +176,41 @@ void show_canvas( State &state, Mapgen *mapgen_ptr )
     );
 
     ImGuiIO &io = ImGui::GetIO();
-    bool canvas_hovered = ImGui::IsWindowHovered();
+    bool view_hovered = ImGui::IsWindowHovered();
     ToolsState &tools = *state.ui->tools;
-    bool brush_stroke_active = false;
+
+    const Palette &pal = *state.project().get_palette( mapgen.base.palette );
+    if( tools.get_main_tile() != UUID_INVALID && !pal.find_entry( tools.get_main_tile() ) ) {
+        tools.set_main_tile( UUID_INVALID );
+    }
+
+    point_abs_etile tile_pos = get_mouse_tile_pos( cam );
+    point_rel_etile mapgensize = mapgen.mapgensize();
+    bool is_mouse_in_bounds = tile_pos.x() >= 0 && tile_pos.y() >= 0 && tile_pos.x() < mapgensize.x() &&
+                              tile_pos.y() < mapgensize.y();
+    tools::ToolSettings *settings = &state.ui->tools->get_settings( tools.get_tool() );
+
+    tools::ToolTarget target {
+        view_hovered,
+        mapgen.uses_rows(),
+        false,
+        tile_pos,
+        get_mouse_view_pos( cam ),
+        mapgen,
+        settings,
+        tools.get_main_tile(),
+    };
+    tools::ToolControl &tool_control = state.control->get_tool_control( tools.get_tool() );
+    tool_control.handle_tool_operation( target );
+    if( target.made_changes ) {
+        state.mark_changed();
+    }
 
     bool show_tooltip = false;
     const PaletteEntry *tooltip_entry = nullptr;
     point_abs_etile tooltip_pos;
-    if( canvas_hovered ) {
+    if( view_hovered ) {
         handle_view_change_hotkey( state );
-
-        point_abs_etile tile_pos = get_mouse_tile_pos( cam );
-        point_rel_etile mapgensize = mapgen.mapgensize();
-        bool is_mouse_in_bounds = tile_pos.x() >= 0 && tile_pos.y() >= 0 && tile_pos.x() < mapgensize.x() &&
-                                  tile_pos.y() < mapgensize.y();
 
         if( ImGui::IsKeyDown( ImGuiKey_ModCtrl ) ) {
             show_tooltip = true;
@@ -297,60 +245,18 @@ void show_canvas( State &state, Mapgen *mapgen_ptr )
             cam.scale = clamp( cam.scale + delta, MIN_SCALE, MAX_SCALE );
         }
         if( mapgen.uses_rows() ) {
-            // Ensure the brush is in valid state
-            const Palette &pal = *state.project().get_palette( mapgen.base.palette );
-            if( tools.get_brush() != UUID_INVALID && !pal.find_entry( tools.get_brush() ) ) {
-                tools.set_brush( UUID_INVALID );
-            }
-            if( tools.get_tool() == CanvasTool::Brush && ImGui::IsMouseDown( ImGuiMouseButton_Left ) ) {
-                brush_stroke_active = true;
-                if( !tools.has_ongoing_tool_operation() ) {
-                    tools.start_tool_operation();
-                }
-                if( is_mouse_in_bounds ) {
-                    const UUID &uuid = mapgen.base.canvas.get( tile_pos.raw() );
-                    if( uuid != tools.get_brush() ) {
-                        mapgen.base.canvas.set( tile_pos.raw(), tools.get_brush() );
-                        tools.set_tool_operation_changed_data();
-                    }
-                }
-            }
-            if( ( tools.get_tool() == CanvasTool::Bucket || tools.get_tool() == CanvasTool::BucketGlobal ) &&
-                ImGui::IsMouseClicked( ImGuiMouseButton_Left ) ) {
-                if( is_mouse_in_bounds ) {
-                    const UUID &uuid = mapgen.base.canvas.get( tile_pos.raw() );
-                    if( uuid != tools.get_brush() ) {
-                        apply_bucket_tool( mapgen.base.canvas, tools.get_brush(), tile_pos,
-                                           tools.get_tool() == CanvasTool::BucketGlobal );
-                        state.mark_changed();
-                    }
-                }
-            }
             if( ImGui::IsMouseClicked( ImGuiMouseButton_Middle ) ) {
                 if( is_mouse_in_bounds ) {
                     const UUID &uuid = mapgen.base.canvas.get( tile_pos.raw() );
-                    tools.set_brush( uuid );
+                    tools.set_main_tile( uuid );
                 } else {
-                    tools.set_brush( UUID_INVALID );
+                    tools.set_main_tile( UUID_INVALID );
                 }
             }
         }
     }
 
     if( mapgen.uses_rows() ) {
-        if( tools.get_tool() == CanvasTool::Brush && tools.has_ongoing_tool_operation() &&
-            !brush_stroke_active ) {
-            // Brush stroke ended, queue changes as a single operation
-            if( tools.end_tool_operation() ) {
-                state.mark_changed();
-            }
-        }
-
-        Palette *pal_ptr = state.project().get_palette( mapgen.base.palette );
-        assert( pal_ptr );
-
-        Palette &pal = *pal_ptr;
-
         for( int x = 0; x < mapgen.mapgensize().x(); x++ ) {
             for( int y = 0; y < mapgen.mapgensize().y(); y++ ) {
                 point_abs_etile p( x, y );
@@ -417,7 +323,7 @@ void show_canvas( State &state, Mapgen *mapgen_ptr )
         ImGui::TextColored( col_text, "%s", label.c_str() );
     }
 
-    if( canvas_hovered ) {
+    if( view_hovered ) {
         point_abs_etile tile_pos = get_mouse_tile_pos( cam );
         highlight_tile( draw_list, cam, tile_pos, col_cursor );
     }

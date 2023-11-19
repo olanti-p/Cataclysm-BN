@@ -97,7 +97,7 @@ struct HistoryState {
  */
 void show_edit_history( HistoryState &state, bool &show );
 
-void handle_snapshot_change( HistoryState &state, ToolsState &tools );
+void handle_snapshot_change( HistoryState &state );
 
 } // namespace editor
 

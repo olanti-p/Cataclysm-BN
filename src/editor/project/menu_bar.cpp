@@ -57,7 +57,7 @@ void show_main_menu_bar( State &state )
         ImGui::EndMainMenuBar();
     }
 
-    if( state.ui->tools->has_ongoing_tool_operation() ) {
+    if( state.control->has_ongoing_tool_operation() ) {
         return;
     }
 

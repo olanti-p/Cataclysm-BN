@@ -2,12 +2,14 @@
 #define CATA_SRC_EDITOR_MAPGEN_H
 
 #include "common/canvas_2d.h"
+#include "cuboid_rectangle.h"
 #include "game_constants.h"
 #include "coordinates.h"
 
 #include "common/uuid.h"
 #include "mapgen/palette.h"
 #include "mapgen/mapobject.h"
+#include "point.h"
 #include "widget/editable_id.h"
 
 struct ImVec4;
@@ -108,6 +110,13 @@ struct Mapgen {
     }
 
     point_rel_etile mapgensize() const;
+
+    inline half_open_rectangle<point_abs_etile> get_bounds() const {
+        return {
+            point_abs_etile( 0, 0 ),
+            point_abs_etile( mapgensize().raw() )
+        };
+    }
 };
 
 /**

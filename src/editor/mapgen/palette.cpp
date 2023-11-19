@@ -189,20 +189,20 @@ static void show_palette_entries( State &state, Palette &palette )
         for( Mapgen &mapgen : proj.mapgens ) {
             mapgen.base.remove_usages( uuid );
         }
-        if( tools.get_brush() == uuid ) {
-            tools.set_brush( UUID_INVALID );
+        if( tools.get_main_tile() == uuid ) {
+            tools.set_main_tile( UUID_INVALID );
         }
         list.erase( std::next( list.cbegin(), idx ) );
     } )
     .with_for_each( [&]( size_t idx ) {
-        if( list[idx].uuid == tools.get_brush() ) {
+        if( list[idx].uuid == tools.get_main_tile() ) {
             if( ImGui::ImageButton( "unpick", "me_clear_rows_brush" ) ) {
-                tools.set_brush( UUID_INVALID );
+                tools.set_main_tile( UUID_INVALID );
             }
             ImGui::HelpPopup( "Unselect (turns brush into eraser)." );
         } else {
             if( ImGui::ImageButton( "pick", "me_set_rows_brush" ) ) {
-                tools.set_brush( list[idx].uuid );
+                tools.set_main_tile( list[idx].uuid );
             }
             ImGui::HelpPopup( "Select as active for brush." );
         }

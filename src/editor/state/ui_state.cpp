@@ -2,6 +2,7 @@
 
 #include "view/camera.h"
 #include "view/view_canvas.h"
+#include "control_state.h"
 #include "history_state.h"
 #include "imgui.h"
 #include "mapgen/palette.h"
@@ -121,7 +122,7 @@ void run_ui_for_state( State &state )
     }
 
     // TODO: multiple mapgens on same canvas
-    show_canvas( state, active_mapgen );
+    show_editor_view( state, active_mapgen );
     handle_view_change( state );
 
     if( uistate.show_demo_wnd ) {
@@ -140,7 +141,7 @@ void run_ui_for_state( State &state )
         show_edit_history( *state.history, uistate.show_history );
     }
     if( uistate.show_toolbar ) {
-        show_toolbar( *uistate.tools, uistate.show_toolbar );
+        show_toolbar( state, uistate.show_toolbar );
     }
     if( uistate.show_camera_controls ) {
         show_camera_controls( state, uistate.show_camera_controls );
@@ -221,7 +222,9 @@ void run_ui_for_state( State &state )
         }
     }
 
-    handle_snapshot_change( *state.history, *uistate.tools );
+    if( !state.control->has_ongoing_tool_operation() ) {
+        handle_snapshot_change( *state.history );
+    }
 }
 
 } // namespace editor
