@@ -4,6 +4,8 @@
 
 #include "enum_traits.h"
 
+#include <array>
+
 template<typename E>
 constexpr size_t num_enum_values()
 {
