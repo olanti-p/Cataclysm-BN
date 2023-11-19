@@ -79,11 +79,8 @@ void show_edit_history( HistoryState &state, bool &show )
     ImGui::End();
 }
 
-void handle_snapshot_change( HistoryState &state, ToolsState &tools )
+void handle_snapshot_change( HistoryState &state )
 {
-    if( tools.has_ongoing_tool_operation() ) {
-        return;
-    }
     if( state.switch_to_snapshot ) {
         auto it = std::find_if( state.snapshots.cbegin(),
         state.snapshots.cend(), [&]( const ProjectSnapshot & rev ) {

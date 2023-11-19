@@ -15,6 +15,7 @@ struct Mapgen;
  * ============ Mouse helpers ============
  */
 point_abs_screen get_mouse_pos();
+point_abs_epos get_mouse_view_pos( const Camera &cam );
 point_abs_etile get_mouse_tile_pos( const Camera &cam );
 
 /**
@@ -59,7 +60,7 @@ void fill_region(
 /**
  * =============== Windows ===============
  */
-void show_canvas( State &state, Mapgen *mapgen_ptr );
+void show_editor_view( State &state, Mapgen *mapgen_ptr );
 void handle_view_change( State &state );
 
 } // namespace editor

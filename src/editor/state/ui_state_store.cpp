@@ -1,10 +1,14 @@
 #include "ui_state_store.h"
 
-#include "runtime/editor_engine.h"
-#include "ui_state.h"
-#include "tools_state.h"
-#include "json.h"
+#include "all_enum_values.h"
+#include "enum_conversions.h"
 #include "fstream_utils.h"
+#include "json.h"
+#include "runtime/editor_engine.h"
+#include "tool/bucket.h"
+#include "tool/tool.h"
+#include "tools_state.h"
+#include "ui_state.h"
 
 #include <iostream>
 #include <map>
@@ -95,18 +99,19 @@ namespace io
 {
 
 template<>
-std::string enum_to_string<editor::CanvasTool>( editor::CanvasTool data )
+std::string enum_to_string<editor::tools::ToolKind>( editor::tools::ToolKind data )
 {
+    using editor::tools::ToolKind;
     switch( data ) {
         // *INDENT-OFF*
-        case editor::CanvasTool::Brush: return "Brush";
-        case editor::CanvasTool::Bucket: return "Bucket";
-        case editor::CanvasTool::BucketGlobal: return "BucketGlobal";
+        case ToolKind::Brush: return "Brush";
+        case ToolKind::Bucket: return "Bucket";
+        case ToolKind::Cursor: return "Cursor";
         // *INDENT-ON*
-        case editor::CanvasTool::_Num:
+        case ToolKind::_Num:
             break;
     }
-    debugmsg( "Invalid editor::CanvasTool" );
+    debugmsg( "Invalid ToolKind" );
     abort();
 }
 } // namespace io
@@ -232,13 +237,17 @@ void Camera::deserialize( JsonIn &jsin )
 
 void ToolsState::serialize( JsonOut &jsout ) const
 {
-    // These are intentionally omitted:
-    // - ongoing_tool_operation
-    // - ongoing_brush_stroke
-    // - brush_stroke_changed_data
     jsout.start_object();
     jsout.member_as_string( "tool", tool );
-    jsout.member( "brush", brush );
+    jsout.member( "brush", selected_tile );
+    jsout.member( "tool_settings" );
+    jsout.start_object();
+    for( const auto &it : tool_settings ) {
+        std::string key = io::enum_to_string( it.first );
+        jsout.member( key );
+        it.second->serialize( jsout );
+    }
+    jsout.end_object();
     jsout.end_object();
 }
 
@@ -247,7 +256,48 @@ void ToolsState::deserialize( JsonIn &jsin )
     JsonObject jo = jsin.get_object();
 
     jo.read( "tool", tool );
-    jo.read( "brush", brush );
+    jo.read( "brush", selected_tile );
+    JsonObject joset = jo.get_object( "tool_settings" );
+    for( tools::ToolKind kind : all_enum_values<tools::ToolKind>() ) {
+        std::string key = io::enum_to_string( kind );
+        if( joset.has_object( key ) ) {
+            JsonIn *raw = joset.get_raw( key );
+            tool_settings[kind] = tools::get_tool_definition( kind ).make_settings();
+            tool_settings[kind]->deserialize( *raw );
+        }
+    }
 }
 
 } // namespace editor
+
+namespace editor::tools
+{
+void ToolSettings::serialize( JsonOut &jsout ) const
+{
+    jsout.start_object();
+    jsout.end_object();
+}
+
+void ToolSettings::deserialize( JsonIn &jsin )
+{
+    JsonObject jo = jsin.get_object();
+    // ...and do nothing with it
+}
+
+void BucketSettings::serialize( JsonOut &jsout ) const
+{
+    jsout.start_object();
+    jsout.member( "global", global );
+    jsout.member( "in_selection", in_selection );
+    jsout.end_object();
+}
+
+void BucketSettings::deserialize( JsonIn &jsin )
+{
+    JsonObject jo = jsin.get_object();
+
+    jo.read( "global", global );
+    jo.read( "in_selection", in_selection );
+}
+
+} // namespace editor::tools

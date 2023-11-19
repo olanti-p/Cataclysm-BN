@@ -1,36 +1,35 @@
 #include "tools_state.h"
 
+#include "tool/cursor.h"
+#include "tool/tool.h"
 #include "widget/widgets.h"
 #include "imgui.h"
+#include <memory>
 
 namespace editor
 {
+ToolsState::ToolsState() = default;
+ToolsState::~ToolsState() = default;
 
-void show_toolbar( ToolsState &tools, bool &show )
+void ToolsState::set_main_tile( const UUID &uuid )
 {
-    if( !ImGui::Begin( "Toolbar", &show,
-                       ImGuiWindowFlags_AlwaysAutoResize |
-                       ImGuiWindowFlags_NoCollapse |
-                       ImGuiWindowFlags_NoResize
-                     ) ) {
-        ImGui::End();
-        return;
-    }
+    selected_tile = uuid;
+}
 
-    if( ImGui::RadioButton( "Brush", tools.get_tool() == CanvasTool::Brush ) ) {
-        tools.set_tool( CanvasTool::Brush );
-    }
-    ImGui::HelpPopup( "Hold LMB to draw with selected tile." );
-    if( ImGui::RadioButton( "Bucket", tools.get_tool() == CanvasTool::Bucket ) ) {
-        tools.set_tool( CanvasTool::Bucket );
-    }
-    ImGui::HelpPopup( "Click LMB to flood fill with selected tile." );
-    if( ImGui::RadioButton( "Bucket (global)", tools.get_tool() == CanvasTool::BucketGlobal ) ) {
-        tools.set_tool( CanvasTool::BucketGlobal );
-    }
-    ImGui::HelpPopup( "Click LMB to replace all such tiles with selected tile." );
+void ToolsState::set_tool( tools::ToolKind t )
+{
+    tool = t;
+}
 
-    ImGui::End();
+tools::ToolSettings &ToolsState::get_settings( tools::ToolKind t )
+{
+    auto it = tool_settings.find( t );
+    if( it == tool_settings.end() ) {
+        auto it_new = tool_settings.insert( { t, tools::get_tool_definition( t ).make_settings() } );
+        return *it_new.first->second;
+    } else {
+        return *it->second;
+    }
 }
 
 } // namespace editor

@@ -20,7 +20,7 @@ void handle_project_saving( State &state )
     ControlState &control = *state.control;
     SaveExportState &sestate = *state.save_export;
 
-    if( state.ui->tools->has_ongoing_tool_operation() ) {
+    if( state.control->has_ongoing_tool_operation() ) {
         control.want_save = false;
         control.want_save_as = false;
         control.want_exit_after_save = false;
@@ -70,7 +70,7 @@ void handle_project_exporting( State &state )
     ControlState &control = *state.control;
     SaveExportState &sestate = *state.save_export;
 
-    if( state.ui->tools->has_ongoing_tool_operation() ) {
+    if( state.control->has_ongoing_tool_operation() ) {
         control.want_export = false;
         control.want_export_as = false;
         return;
@@ -119,7 +119,7 @@ void handle_project_exiting( State &state )
 {
     ControlState &control = *state.control;
 
-    if( state.ui->tools->has_ongoing_tool_operation() ) {
+    if( state.control->has_ongoing_tool_operation() ) {
         control.want_close = false;
         return;
     }
