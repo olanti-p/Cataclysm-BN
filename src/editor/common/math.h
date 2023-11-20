@@ -1,6 +1,10 @@
 #ifndef CATA_SRC_EDITOR_MATH_H
 #define CATA_SRC_EDITOR_MATH_H
 
+#include "point.h"
+
+#include <vector>
+
 inline int divide_wrapping( int v, int m )
 {
     if( v >= 0 ) {
@@ -22,5 +26,7 @@ inline int wrap_index( int idx, int size )
     divide_wrapping( idx, size, ret );
     return ret;
 }
+
+std::vector<point> line_bresenham( point a, point b );
 
 #endif // CATA_SRC_EDITOR_MATH_H
