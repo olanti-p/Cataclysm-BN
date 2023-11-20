@@ -1,5 +1,6 @@
 #include "project.h"
 
+#include "common/timestamp.h"
 #include "common/uuid.h"
 #include "imgui.h"
 #include "mapgen/mapgen.h"
@@ -134,17 +135,10 @@ void show_project_overview_ui( State &state, Project &project, bool &show )
     ImGui::End();
 }
 
-std::string timestamp_string()
-{
-    using namespace std::chrono;
-    uint64_t ms = duration_cast<milliseconds>( system_clock::now().time_since_epoch() ).count();
-    return string_format( "%u", ms );
-}
-
 std::unique_ptr<Project> create_empty_project()
 {
     auto ret = std::make_unique<Project>();
-    ret->project_uuid = timestamp_string();
+    ret->project_uuid = get_timestamp_ms_now();
     return ret;
 }
 
