@@ -24,6 +24,7 @@ enum class ToolKind {
     Bucket,
     Line,
     Rectangle,
+    RectSelection,
     _Num,
 };
 
