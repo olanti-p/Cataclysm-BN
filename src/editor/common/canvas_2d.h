@@ -1,6 +1,7 @@
 #ifndef CATA_SRC_EDITOR_2D_CANVAS_H
 #define CATA_SRC_EDITOR_2D_CANVAS_H
 
+#include "cuboid_rectangle.h"
 #include "point.h"
 #include "json.h"
 
@@ -67,6 +68,13 @@ class Canvas2D
 
             jo.read( "size", size );
             jo.read( "data", data );
+        }
+
+        inline half_open_rectangle<point> get_bounds() const {
+            return {
+                point_zero,
+                size
+            };
         }
 };
 

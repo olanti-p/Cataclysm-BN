@@ -107,6 +107,7 @@ std::string enum_to_string<editor::tools::ToolKind>( editor::tools::ToolKind dat
         case ToolKind::Brush: return "Brush";
         case ToolKind::Bucket: return "Bucket";
         case ToolKind::Cursor: return "Cursor";
+        case ToolKind::Line: return "Line";
         // *INDENT-ON*
         case ToolKind::_Num:
             break;

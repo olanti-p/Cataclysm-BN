@@ -11,6 +11,7 @@
 #include "tool/brush.h"
 #include "tool/bucket.h"
 #include "tool/cursor.h"
+#include "tool/line_tool.h"
 #include "widget/widgets.h"
 
 #include <unordered_map>
@@ -36,6 +37,10 @@ const ToolDefinition &get_tool_definition( ToolKind kind )
         }
         case ToolKind::Cursor: {
             static Cursor tool;
+            return tool;
+        }
+        case ToolKind::Line: {
+            static Line tool;
             return tool;
         }
         case ToolKind::_Num:

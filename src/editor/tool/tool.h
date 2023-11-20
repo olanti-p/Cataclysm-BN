@@ -21,6 +21,7 @@ enum class ToolKind {
     Cursor,
     Brush,
     Bucket,
+    Line,
     _Num,
 };
 
