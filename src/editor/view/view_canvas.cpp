@@ -1,23 +1,25 @@
 #include "view_canvas.h"
 
-#include "common/canvas_2d.h"
-#include "common/sprite_ref.h"
-#include "common/color.h"
 #include "camera.h"
+#include "common/canvas_2d.h"
+#include "common/color.h"
 #include "common/math.h"
-#include "drawing.h"
-#include "mouse.h"
-#include "imgui.h"
-#include "mapgen/palette.h"
+#include "common/sprite_ref.h"
 #include "common/uuid.h"
-#include "state/control_state.h"
-#include "tool/tool.h"
-#include "widget/widgets.h"
+#include "coordinates.h"
+#include "drawing.h"
+#include "imgui.h"
 #include "mapgen/mapgen.h"
+#include "mapgen/palette.h"
+#include "mouse.h"
 #include "project/project.h"
+#include "state/control_state.h"
 #include "state/state.h"
-#include "state/ui_state.h"
 #include "state/tools_state.h"
+#include "state/ui_state.h"
+#include "tool/tool.h"
+#include "view/ruler.h"
+#include "widget/widgets.h"
 
 #include <set>
 #include <functional>
@@ -227,6 +229,40 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
     if( view_hovered ) {
         point_abs_etile tile_pos = get_mouse_tile_pos( cam );
         highlight_tile( draw_list, cam, tile_pos, col_cursor );
+    }
+
+    bool show_ruler = false;
+    std::optional<point_abs_etile> &ruler = state.control->ruler.start;
+    if( view_hovered && ImGui::IsKeyDown( ImGuiKey_ModAlt ) ) {
+        if( !ruler ) {
+            ruler = tile_pos;
+        }
+        if( *ruler != tile_pos ) {
+            show_ruler = true;
+        }
+    } else {
+        ruler.reset();
+    }
+
+    if( show_ruler ) {
+        ImVec4 col_border = col_ruler;
+        ImVec4 col_bg = col_ruler;
+        col_bg.w *= 0.4f;
+        assert( ruler );
+        point_abs_etile p1( std::min( tile_pos.x(), ruler->x() ), std::min( tile_pos.y(), ruler->y() ) );
+        point_abs_etile p2( std::max( tile_pos.x(), ruler->x() ), std::max( tile_pos.y(), ruler->y() ) );
+
+        highlight_region( draw_list, cam, p1, p2, col_bg, col_border );
+
+        ImGui::BeginTooltip();
+        point delta = ( *ruler - tile_pos ).raw().abs();
+        if( delta.x != 0 ) {
+            ImGui::Text( "X %d", delta.x + 1 );
+        }
+        if( delta.y != 0 ) {
+            ImGui::Text( "Y %d", delta.y + 1 );
+        }
+        ImGui::EndTooltip();
     }
 
     if( show_tooltip ) {
