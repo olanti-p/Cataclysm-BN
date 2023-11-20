@@ -19,9 +19,27 @@ void draw_frame(
     bool filled
 )
 {
-    ImVec2 p_min = cam.world_to_screen( project_combine( p1, point_etile_epos() ) ).raw();
-    ImVec2 p_max = cam.world_to_screen( project_combine( p2, point_etile_epos( ETILE_SIZE - 1,
-                                        ETILE_SIZE - 1 ) ) ).raw();
+    draw_frame(
+        draw_list,
+        cam,
+        project_combine( p1, point_etile_epos() ),
+        project_combine( p2, point_etile_epos( ETILE_SIZE - 1, ETILE_SIZE - 1 ) ),
+        col,
+        filled
+    );
+}
+
+void draw_frame(
+    ImDrawList *draw_list,
+    const Camera &cam,
+    const point_abs_epos &p1,
+    const point_abs_epos &p2,
+    ImVec4 col,
+    bool filled
+)
+{
+    ImVec2 p_min = cam.world_to_screen( p1 ).raw();
+    ImVec2 p_max = cam.world_to_screen( p2 ).raw();
     if( filled ) {
         draw_list->AddRectFilled( p_min, p_max, ImColor( col ), 0.0f, ImDrawFlags_None );
     } else {

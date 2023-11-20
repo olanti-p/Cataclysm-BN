@@ -4,6 +4,7 @@
 #include "common/uuid.h"
 #include "coordinates.h"
 #include "enum_traits.h"
+#include "state/selection_mask.h"
 
 #include <cassert>
 #include <memory>
@@ -80,6 +81,7 @@ struct ToolTarget {
     ToolSettings *settings;
     UUID main_tile = UUID_INVALID;
     ToolHighlight &highlight;
+    SelectionMask *selection = nullptr;
 
     bool is_hovered_over_canvas() const;
 };

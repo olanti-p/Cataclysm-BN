@@ -20,6 +20,15 @@ void draw_frame(
     bool filled
 );
 
+void draw_frame(
+    ImDrawList *draw_list,
+    const Camera &cam,
+    const point_abs_epos &p1,
+    const point_abs_epos &p2,
+    ImVec4 col,
+    bool filled
+);
+
 void highlight_tile(
     ImDrawList *draw_list,
     const Camera &cam,
