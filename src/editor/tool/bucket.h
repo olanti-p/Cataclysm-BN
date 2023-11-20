@@ -2,6 +2,7 @@
 #define CATA_SRC_EDITOR_TOOL_BUCKET_H
 
 #include "common/canvas_2d.h"
+#include "state/selection_mask.h"
 #include "tool.h"
 
 namespace editor::tools
@@ -20,8 +21,13 @@ struct BucketSettings : public ToolSettings {
 struct BucketControl : public ToolControl {
     void handle_tool_operation( ToolTarget &target ) override;
 
-    std::vector<point> find_affected_tiles( BucketSettings &settings, Canvas2D<UUID> &canvas, point pos,
-                                            UUID new_value ) const;
+    std::vector<point> find_affected_tiles(
+        BucketSettings &settings,
+        Canvas2D<UUID> &canvas,
+        SelectionMask &selection,
+        point pos,
+        UUID new_value
+    ) const;
     static void apply( Canvas2D<UUID> &canvas, const std::vector<point> &tiles, UUID new_value );
 };
 
