@@ -14,7 +14,7 @@ namespace editor
 */
 std::vector<point> find_tiles_via_global(
     const Canvas2D<UUID> &canvas,
-    std::function<bool( const UUID & )> predicate
+    std::function<bool( point p, const UUID & )> predicate
 );
 
 /**
@@ -23,7 +23,7 @@ std::vector<point> find_tiles_via_global(
 std::vector<point> find_tiles_via_floodfill(
     const Canvas2D<UUID> &canvas,
     const point &initial_pos,
-    std::function<bool( const UUID & )> predicate
+    std::function<bool( point p, const UUID & )> predicate
 );
 
 } // namespace editor

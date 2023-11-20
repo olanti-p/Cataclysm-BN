@@ -36,7 +36,8 @@ void BucketControl::handle_tool_operation( ToolTarget &target )
         point pos = target.cursor_tile_pos.raw();
         UUID new_value = target.main_tile;
         BucketSettings *settings = dynamic_cast<BucketSettings *>( target.settings );
-        std::vector<point> affected = find_affected_tiles( *settings, canvas, pos, new_value );
+        std::vector<point> affected =
+            find_affected_tiles( *settings, canvas, *target.selection, pos, new_value );
         if( !affected.empty() ) {
             apply( canvas, affected, new_value );
             target.made_changes = true;
@@ -45,8 +46,13 @@ void BucketControl::handle_tool_operation( ToolTarget &target )
 }
 
 std::vector<point>
-BucketControl::find_affected_tiles( BucketSettings &settings, Canvas2D<UUID> &canvas, point pos,
-                                    UUID new_value ) const
+BucketControl::find_affected_tiles(
+    BucketSettings &settings,
+    Canvas2D<UUID> &canvas,
+    SelectionMask &selection,
+    point pos,
+    UUID new_value
+) const
 {
     std::vector<point> ret;
 
@@ -54,7 +60,12 @@ BucketControl::find_affected_tiles( BucketSettings &settings, Canvas2D<UUID> &ca
     if( old_value == new_value ) {
         return ret;
     }
-    const auto predicate = [ = ]( const UUID & t ) {
+    bool in_selection = settings.in_selection;
+
+    const auto predicate = [ = ]( point p, const UUID & t ) {
+        if( in_selection && !selection.data.get( p ) ) {
+            return false;
+        }
         return t == old_value;
     };
     if( settings.global ) {

@@ -4,7 +4,7 @@ namespace editor
 {
 
 std::vector<point> find_tiles_via_global( const Canvas2D<UUID> &canvas,
-        std::function<bool( const UUID & )> predicate )
+        std::function<bool( point p, const UUID & )> predicate )
 {
     std::vector<point> ret;
 
@@ -12,7 +12,7 @@ std::vector<point> find_tiles_via_global( const Canvas2D<UUID> &canvas,
         for( int y = 0; y < canvas.get_size().y; y++ ) {
             point p( x, y );
             const UUID &t = canvas.get( p );
-            if( predicate( t ) ) {
+            if( predicate( p, t ) ) {
                 ret.push_back( p );
             }
         }
@@ -23,11 +23,11 @@ std::vector<point> find_tiles_via_global( const Canvas2D<UUID> &canvas,
 
 std::vector<point> find_tiles_via_floodfill( const Canvas2D<UUID> &canvas,
         const point &initial_pos,
-        std::function<bool( const UUID & )> predicate )
+        std::function<bool( point p, const UUID & )> predicate )
 {
     std::vector<point> ret;
 
-    if( !predicate( canvas.get( initial_pos ) ) ) {
+    if( !predicate( initial_pos, canvas.get( initial_pos ) ) ) {
         return ret;
     }
 
@@ -50,7 +50,7 @@ std::vector<point> find_tiles_via_floodfill( const Canvas2D<UUID> &canvas,
                 continue;
             }
             closed.insert( p2 );
-            if( predicate( canvas.get( p2 ) ) ) {
+            if( predicate( p2, canvas.get( p2 ) ) ) {
                 open.insert( p2 );
             }
         }
