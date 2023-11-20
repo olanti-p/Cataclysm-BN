@@ -44,6 +44,8 @@ struct ToolControl {
     virtual bool operation_in_progress() const {
         return false;
     }
+
+    virtual void show_tooltip( ToolTarget & /*target*/ ) {};
 };
 
 struct ToolDefinition {
@@ -56,15 +58,26 @@ struct ToolDefinition {
     virtual std::unique_ptr<ToolSettings> make_settings() const = 0;
 };
 
+struct ToolHighlight {
+    std::vector<point_abs_etile> tiles;
+    std::vector<std::pair<point_abs_etile, point_abs_etile>> areas;
+
+    inline bool active() const {
+        return !tiles.empty() || !areas.empty();
+    }
+};
+
 struct ToolTarget {
     bool view_hovered = false;
     bool has_canvas = false;
     bool made_changes = false;
+    bool want_tooltip = false;
     point_abs_etile cursor_tile_pos;
     point_abs_epos cursor_view_pos;
     Mapgen &mapgen;
     ToolSettings *settings;
     UUID main_tile = UUID_INVALID;
+    ToolHighlight &highlight;
 
     bool is_hovered_over_canvas() const;
 };

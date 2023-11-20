@@ -92,16 +92,19 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
     bool is_mouse_in_bounds = tile_pos.x() >= 0 && tile_pos.y() >= 0 && tile_pos.x() < mapgensize.x() &&
                               tile_pos.y() < mapgensize.y();
     tools::ToolSettings *settings = &state.ui->tools->get_settings( tools.get_tool() );
+    tools::ToolHighlight tool_highlight;
 
     tools::ToolTarget target {
         view_hovered,
         mapgen.uses_rows(),
+        false,
         false,
         tile_pos,
         get_mouse_view_pos( cam ),
         mapgen,
         settings,
         tools.get_main_tile(),
+        tool_highlight,
     };
     tools::ToolControl &tool_control = state.control->get_tool_control( tools.get_tool() );
     tool_control.handle_tool_operation( target );
@@ -231,6 +234,22 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
         highlight_tile( draw_list, cam, tile_pos, col_cursor );
     }
 
+    if( target.highlight.active() ) {
+        for( const point_abs_etile &p : target.highlight.tiles ) {
+            ImVec4 col_bg = col_tool;
+            col_bg.w *= 0.4f;
+            fill_tile( draw_list, cam, p, col_bg );
+            highlight_tile( draw_list, cam, p, col_tool );
+        }
+        for( const auto &p : target.highlight.areas ) {
+            point_abs_etile p1( std::min( p.first.x(), p.second.x() ), std::min( p.first.y(), p.second.y() ) );
+            point_abs_etile p2( std::max( p.first.x(), p.second.x() ), std::max( p.first.y(), p.second.y() ) );
+            ImVec4 col_bg = col_tool;
+            col_bg.w *= 0.4f;
+            highlight_region( draw_list, cam, p1, p2, col_bg, col_tool );
+        }
+    }
+
     bool show_ruler = false;
     std::optional<point_abs_etile> &ruler = state.control->ruler.start;
     if( view_hovered && ImGui::IsKeyDown( ImGuiKey_ModAlt ) ) {
@@ -244,6 +263,8 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
         ruler.reset();
     }
 
+    bool tooltip_needs_separator = false;
+
     if( show_ruler ) {
         ImVec4 col_border = col_ruler;
         ImVec4 col_bg = col_ruler;
@@ -255,6 +276,9 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
         highlight_region( draw_list, cam, p1, p2, col_bg, col_border );
 
         ImGui::BeginTooltip();
+        if( tooltip_needs_separator ) {
+            ImGui::SeparatorText( "Ruler" );
+        }
         point delta = ( *ruler - tile_pos ).raw().abs();
         if( delta.x != 0 ) {
             ImGui::Text( "X %d", delta.x + 1 );
@@ -263,6 +287,18 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
             ImGui::Text( "Y %d", delta.y + 1 );
         }
         ImGui::EndTooltip();
+        tooltip_needs_separator = true;
+    }
+
+    if( target.want_tooltip ) {
+        ImGui::BeginTooltip();
+        if( tooltip_needs_separator ) {
+            std::string label = tools::get_tool_definition( tools.get_tool() ).get_tool_display_name();
+            ImGui::SeparatorText( label.c_str() );
+        }
+        tool_control.show_tooltip( target );
+        ImGui::EndTooltip();
+        tooltip_needs_separator = true;
     }
 
     if( show_tooltip ) {
@@ -280,6 +316,9 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
 
         if( tooltip_entry || !objects.empty() ) {
             ImGui::BeginTooltip();
+            if( tooltip_needs_separator ) {
+                ImGui::SeparatorText( "Info" );
+            }
             if( tooltip_entry ) {
                 const PaletteEntry &e = *tooltip_entry;
                 for( const auto &it : e.mapping.pieces ) {
@@ -294,6 +333,7 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
                 ImGui::Text( "%s", obj->piece->fmt_summary().c_str() );
             }
             ImGui::EndTooltip();
+            tooltip_needs_separator = true;
         }
     }
 
