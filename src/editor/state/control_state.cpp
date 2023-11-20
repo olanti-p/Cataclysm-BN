@@ -27,7 +27,7 @@ tools::ToolControl &ControlState::get_tool_control( tools::ToolKind t )
 
 void ControlState::set_tool_control( tools::ToolKind t )
 {
-    if( t != tool_control_kind ) {
+    if( t != tool_control_kind || !tool_control ) {
         tool_control_kind = t;
         tool_control = tools::get_tool_definition( t ).make_control();
     }
