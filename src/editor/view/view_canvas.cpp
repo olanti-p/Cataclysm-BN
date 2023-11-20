@@ -14,6 +14,7 @@
 #include "mouse.h"
 #include "project/project.h"
 #include "state/control_state.h"
+#include "state/selection_mask.h"
 #include "state/state.h"
 #include "state/tools_state.h"
 #include "state/ui_state.h"
@@ -21,6 +22,8 @@
 #include "view/ruler.h"
 #include "widget/widgets.h"
 
+#include <array>
+#include <cmath>
 #include <set>
 #include <functional>
 
@@ -36,6 +39,84 @@ static void handle_view_change_hotkey( State &state )
     if( ImGui::IsKeyDown( ImGuiKey_ModAlt ) && std::abs( io.MouseWheel ) > 0.5f ) {
         int delta_wheel = static_cast<int>( std::round( io.MouseWheel ) );
         state.control->want_change_view = -delta_wheel;
+    }
+}
+
+static void draw_selection_mask( ImDrawList *draw_list, SelectionMask &selection, Camera &cam )
+{
+    Canvas2D<Bool> &mask = selection.data;
+    const auto get_mask_boundless = [&]( point p ) -> bool {
+        if( mask.get_bounds().contains( p ) )
+        {
+            return mask.get( p );
+        } else
+        {
+            return false;
+        }
+    };
+
+    // TODO: make this not static
+    static float animation_timer = 0.0f;
+    animation_timer += ImGui::GetIO().DeltaTime;
+    while( animation_timer > 100.0f ) {
+        animation_timer -= 100.0f;
+    }
+    constexpr float animation_cycle_time = 1.0f;
+    float cycle_stage = std::fmod( animation_timer, animation_cycle_time ) / animation_cycle_time;
+    int animation_step = static_cast<int>( std::trunc( cycle_stage * 4.0f ) ) % 4;
+
+    // TODO: smoother animation
+    // TODO: less triangles
+    std::array<ImVec4, 4> colors = {
+        ( animation_step == 0 || animation_step == 3 ) ? col_sel_anim_0 : col_sel_anim_1,
+        ( animation_step == 1 || animation_step == 0 ) ? col_sel_anim_0 : col_sel_anim_1,
+        ( animation_step == 2 || animation_step == 1 ) ? col_sel_anim_0 : col_sel_anim_1,
+        ( animation_step == 3 || animation_step == 2 ) ? col_sel_anim_0 : col_sel_anim_1,
+    };
+
+    for( int y = -1; y < mask.get_size().y; y++ ) {
+        for( int x = -1; x < mask.get_size().x; x++ ) {
+            bool value_this = get_mask_boundless( point( x, y ) );
+            bool value_right = get_mask_boundless( point( x + 1, y ) );
+            bool value_below = get_mask_boundless( point( x, y + 1 ) );
+
+            if( value_this != value_below ) {
+                point_abs_etile pos_below( x, y + 1 );
+                point_abs_epos p1 = coords::project_combine( pos_below, point_etile_epos( 0, -2 ) );
+                point_abs_epos p2 = p1 + point_rel_epos( ETILE_SIZE / 4, 3 );
+                for( int i = 0; i < 4; i++ ) {
+                    int col_idx = value_this ? 3 - i : i;
+                    draw_frame(
+                        draw_list,
+                        cam,
+                        p1,
+                        p2,
+                        colors[ col_idx ],
+                        true
+                    );
+                    p1.x() += ETILE_SIZE / 4;
+                    p2.x() += ETILE_SIZE / 4;
+                }
+            }
+            if( value_this != value_right ) {
+                point_abs_etile pos_right( x + 1, y );
+                point_abs_epos p1 = coords::project_combine( pos_right, point_etile_epos( -2, 0 ) );
+                point_abs_epos p2 = p1 + point_rel_epos( 3, ETILE_SIZE / 4 );
+                for( int i = 0; i < 4; i++ ) {
+                    int col_idx = value_this ? i : 3 - i;
+                    draw_frame(
+                        draw_list,
+                        cam,
+                        p1,
+                        p2,
+                        colors[ col_idx ],
+                        true
+                    );
+                    p1.y() += ETILE_SIZE / 4;
+                    p2.y() += ETILE_SIZE / 4;
+                }
+            }
+        }
     }
 }
 
@@ -96,6 +177,7 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
                               tile_pos.y() < mapgensize.y();
     tools::ToolSettings *settings = &state.ui->tools->get_settings( tools.get_tool() );
     tools::ToolHighlight tool_highlight;
+    SelectionMask *selection = state.control->get_canvas_selection_mask( mapgen );
 
     tools::ToolTarget target {
         view_hovered,
@@ -108,6 +190,7 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
         settings,
         tools.get_main_tile(),
         tool_highlight,
+        selection,
     };
     tools::ToolControl &tool_control = state.control->get_tool_control( tools.get_tool() );
     tool_control.handle_tool_operation( target );
@@ -230,6 +313,10 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
         point_abs_screen text_pos = text_center - text_size.raw() / 2;
         ImGui::SetCursorPos( text_pos.raw() );
         ImGui::TextColored( col_text, "%s", label.c_str() );
+    }
+
+    if( selection ) {
+        draw_selection_mask( draw_list, *selection, cam );
     }
 
     if( view_hovered ) {

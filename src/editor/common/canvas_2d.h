@@ -5,6 +5,7 @@
 #include "point.h"
 #include "json.h"
 
+#include <algorithm>
 #include <vector>
 
 namespace editor
@@ -54,6 +55,10 @@ class Canvas2D
 
         inline std::vector<T> &get_data() {
             return data;
+        }
+
+        inline void set_all( T val ) {
+            std::fill( data.begin(), data.end(), val );
         }
 
         void serialize( JsonOut &jsout ) const {
