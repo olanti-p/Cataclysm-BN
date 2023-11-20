@@ -242,11 +242,10 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
             highlight_tile( draw_list, cam, p, col_tool );
         }
         for( const auto &p : target.highlight.areas ) {
-            point_abs_etile p1( std::min( p.first.x(), p.second.x() ), std::min( p.first.y(), p.second.y() ) );
-            point_abs_etile p2( std::max( p.first.x(), p.second.x() ), std::max( p.first.y(), p.second.y() ) );
+            auto rect = normalize_rect( p.first, p.second );
             ImVec4 col_bg = col_tool;
             col_bg.w *= 0.4f;
-            highlight_region( draw_list, cam, p1, p2, col_bg, col_tool );
+            highlight_region( draw_list, cam, rect.first, rect.second, col_bg, col_tool );
         }
     }
 
@@ -270,10 +269,8 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
         ImVec4 col_bg = col_ruler;
         col_bg.w *= 0.4f;
         assert( ruler );
-        point_abs_etile p1( std::min( tile_pos.x(), ruler->x() ), std::min( tile_pos.y(), ruler->y() ) );
-        point_abs_etile p2( std::max( tile_pos.x(), ruler->x() ), std::max( tile_pos.y(), ruler->y() ) );
-
-        highlight_region( draw_list, cam, p1, p2, col_bg, col_border );
+        auto rect = normalize_rect( tile_pos, *ruler );
+        highlight_region( draw_list, cam, rect.first, rect.second, col_bg, col_border );
 
         ImGui::BeginTooltip();
         if( tooltip_needs_separator ) {
