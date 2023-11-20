@@ -3,7 +3,10 @@
 #include "fstream_utils.h"
 #include "game.h"
 
+#include "common/timestamp.h"
 #include "history_state.h"
+#include "imgui.h"
+#include "path_info.h"
 #include "project/project.h"
 #include "project/project_export.h"
 #include "state.h"
@@ -13,8 +16,69 @@
 #include "widget/ImGuiFileDialog.h"
 #include "widget/widgets.h"
 
+#include <optional>
+#include <vector>
+#include <filesystem>
+
 namespace editor
 {
+static std::string autosave_folder()
+{
+    return PATH_INFO::config_dir() + "autosave/";
+}
+
+static void prune_old_autosaves( int num_autosaves_to_keep )
+{
+    std::vector<std::string> files;
+    std::string ext( ".json" );
+    for( auto &p : std::filesystem::directory_iterator( autosave_folder() ) ) {
+        if( p.path().extension() == ext ) {
+            files.push_back( p.path().stem().string() );
+        }
+    }
+
+    std::sort( files.begin(), files.end() );
+
+    for( int i = 0; i < num_autosaves_to_keep; i++ ) {
+        if( files.empty() ) {
+            break;
+        }
+        files.pop_back();
+    }
+
+    for( const std::string &file : files ) {
+        std::string path = autosave_folder() + file + ext;
+        std::filesystem::remove( path );
+    }
+}
+
+void handle_project_autosave( State &state )
+{
+    if( !state.ui->autosave_enabled ) {
+        return;
+    }
+    SaveExportState &sestate = *state.save_export;
+    sestate.elapsed_since_autosave += ImGui::GetIO().DeltaTime;
+    if( sestate.elapsed_since_autosave <= state.ui->autosave_interval ) {
+        return;
+    }
+    if( state.control->has_ongoing_tool_operation() ) {
+        return;
+    }
+    std::optional<SnapshotNumber> &autosaved_snapshot = state.history->last_autosaved_snapshot;
+    SnapshotNumber current_snapshot = state.history->current_snapshot.num;
+    if( autosaved_snapshot && *autosaved_snapshot == current_snapshot ) {
+        return;
+    }
+    std::string autosave_path = autosave_folder() + get_timestamp_ms_now() + ".json";
+    write_to_file( autosave_path, [&]( std::ostream & oss ) {
+        oss << serialize( state.project() );
+    } );
+    sestate.elapsed_since_autosave = 0.0f;
+    autosaved_snapshot = current_snapshot;
+    prune_old_autosaves( state.ui->autosave_limit );
+}
+
 void handle_project_saving( State &state )
 {
     ControlState &control = *state.control;
@@ -155,6 +219,34 @@ void handle_project_exiting( State &state )
         }
         ImGui::EndPopup();
     }
+}
+
+void show_autosave_settings( UiState &ui, bool &show )
+{
+    ImGui::SetNextWindowSize( ImVec2( 230.0f, 130.0f ), ImGuiCond_FirstUseEver );
+    if( !ImGui::Begin( "Autosave Settings", &show ) ) {
+        ImGui::End();
+        return;
+    }
+    ImGui::Checkbox( "Enabled", &ui.autosave_enabled );
+    ImGui::BeginDisabled( !ui.autosave_enabled );
+    ImGui::HelpMarkerInline(
+        "Amount of autosaves that will be kept on disk.\n\n"
+        "Oldest autosaves are removed first.\n\n"
+        "WARNING: This is a per-project setting, but autosave slots are shared between projects!\n\n"
+        "TODO: make this a persistent global option saved in \"options.json\"."
+    );
+    ImGui::InputIntClamped( "Limit", ui.autosave_limit, 1, 100,
+                            ImGuiInputTextFlags_AutoSelectAll );
+    ImGui::HelpMarkerInline(
+        "Interval in seconds between autosaves.\n\n"
+        "Autosave won't be created if there were no changes in the project."
+    );
+    ImGui::InputIntClamped( "Interval", ui.autosave_interval, 5, 3600,
+                            ImGuiInputTextFlags_AutoSelectAll );
+    ImGui::EndDisabled();
+
+    ImGui::End();
 }
 
 } // namespace editor

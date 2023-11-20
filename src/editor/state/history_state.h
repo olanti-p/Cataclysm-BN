@@ -12,6 +12,7 @@ namespace editor
 {
 struct Project;
 struct ToolsState;
+struct UiState;
 
 using SnapshotNumber = int32_t;
 
@@ -89,6 +90,7 @@ struct HistoryState {
     int history_capacity = 200;
     std::optional<SnapshotNumber> last_saved_snapshot;
     std::optional<SnapshotNumber> last_exported_snapshot;
+    std::optional<SnapshotNumber> last_autosaved_snapshot;
     int edit_counter = 0;
 };
 

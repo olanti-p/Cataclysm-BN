@@ -180,8 +180,6 @@ void OpenMapgenObject::deserialize( JsonIn &jsin )
 
 void UiState::serialize( JsonOut &jsout ) const
 {
-    // These are intentionally omitted:
-    // - do_loop
     jsout.start_object();
     jsout.member( "show_demo_wnd", show_demo_wnd );
     jsout.member( "show_metrics_wnd", show_metrics_wnd );
@@ -190,6 +188,10 @@ void UiState::serialize( JsonOut &jsout ) const
     jsout.member( "show_file_history", show_history );
     jsout.member( "show_camera_controls", show_camera_controls );
     jsout.member( "show_toolbar", show_toolbar );
+    jsout.member( "show_autosave_params", show_autosave_params );
+    jsout.member( "autosave_enabled", autosave_enabled );
+    jsout.member( "autosave_interval", autosave_interval );
+    jsout.member( "autosave_limit", autosave_limit );
     jsout.member( "active_file_id", active_mapgen_id );
     jsout.member( "open_palettes", open_palettes );
     jsout.member( "open_mappings", open_mappings );
@@ -212,6 +214,10 @@ void UiState::deserialize( JsonIn &jsin )
     jo.read( "show_file_history", show_history );
     jo.read( "show_camera_controls", show_camera_controls );
     jo.read( "show_toolbar", show_toolbar );
+    jo.read( "show_autosave_params", show_autosave_params );
+    jo.read( "autosave_enabled", autosave_enabled );
+    jo.read( "autosave_interval", autosave_interval );
+    jo.read( "autosave_limit", autosave_limit );
     jo.read( "active_file_id", active_mapgen_id );
     jo.read( "open_palettes", open_palettes );
     jo.read( "open_mappings", open_mappings );

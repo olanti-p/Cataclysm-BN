@@ -107,6 +107,7 @@ void run_ui_for_state( State &state )
 
     show_main_menu_bar( state );
 
+    handle_project_autosave( state );
     handle_project_saving( state );
     handle_project_exporting( state );
     handle_project_exiting( state );
@@ -147,6 +148,9 @@ void run_ui_for_state( State &state )
     }
     if( uistate.show_camera_controls ) {
         show_camera_controls( state, uistate.show_camera_controls );
+    }
+    if( uistate.show_autosave_params ) {
+        show_autosave_settings( uistate, uistate.show_autosave_params );
     }
     if( uistate.new_mapgen_window ) {
         if( !show_new_mapgen_window( state, *uistate.new_mapgen_window ) ) {
