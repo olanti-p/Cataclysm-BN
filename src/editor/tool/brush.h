@@ -12,12 +12,12 @@ struct BrushSettings : public ToolSettings {
 };
 
 struct BrushControl : public ToolControl {
-    bool is_stoke_active = false;
+    bool is_stroke_active = false;
     bool stroke_changed_data = false;
 
     void handle_tool_operation( ToolTarget &target ) override;
     inline bool operation_in_progress() const override {
-        return is_stoke_active;
+        return is_stroke_active;
     }
 
     void start_stroke();

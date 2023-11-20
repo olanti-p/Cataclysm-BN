@@ -22,33 +22,33 @@ std::string Brush::get_tool_hint() const
 void BrushControl::handle_tool_operation( ToolTarget &target )
 {
     if( !target.is_hovered_over_canvas() ) {
-        if( is_stoke_active ) {
+        if( is_stroke_active ) {
             end_stroke( target );
         }
         return;
     }
     if( ImGui::IsMouseDown( ImGuiMouseButton_Left ) ) {
-        if( !is_stoke_active ) {
+        if( !is_stroke_active ) {
             start_stroke();
         }
         Canvas2D<UUID> &canvas = target.mapgen.base.canvas;
         apply( canvas, target.cursor_tile_pos.raw(), target.main_tile );
-    } else if( is_stoke_active ) {
+    } else if( is_stroke_active ) {
         end_stroke( target );
     }
 }
 
 void BrushControl::start_stroke()
 {
-    assert( !is_stoke_active );
-    is_stoke_active = true;
+    assert( !is_stroke_active );
+    is_stroke_active = true;
     stroke_changed_data = false;
 }
 
 void BrushControl::end_stroke( ToolTarget &target )
 {
-    assert( is_stoke_active );
-    is_stoke_active = false;
+    assert( is_stroke_active );
+    is_stroke_active = false;
     target.made_changes = stroke_changed_data;
 }
 
