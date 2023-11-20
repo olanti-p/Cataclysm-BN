@@ -7,6 +7,7 @@
 #include "runtime/editor_engine.h"
 #include "tool/bucket.h"
 #include "tool/tool.h"
+#include "tool/rectangle_tool.h"
 #include "tools_state.h"
 #include "ui_state.h"
 
@@ -108,6 +109,7 @@ std::string enum_to_string<editor::tools::ToolKind>( editor::tools::ToolKind dat
         case ToolKind::Bucket: return "Bucket";
         case ToolKind::Cursor: return "Cursor";
         case ToolKind::Line: return "Line";
+        case ToolKind::Rectangle: return "Rectangle";
         // *INDENT-ON*
         case ToolKind::_Num:
             break;
@@ -299,6 +301,20 @@ void BucketSettings::deserialize( JsonIn &jsin )
 
     jo.read( "global", global );
     jo.read( "in_selection", in_selection );
+}
+
+void RectangleSettings::serialize( JsonOut &jsout ) const
+{
+    jsout.start_object();
+    jsout.member( "filled", filled );
+    jsout.end_object();
+}
+
+void RectangleSettings::deserialize( JsonIn &jsin )
+{
+    JsonObject jo = jsin.get_object();
+
+    jo.read( "filled", filled );
 }
 
 } // namespace editor::tools
