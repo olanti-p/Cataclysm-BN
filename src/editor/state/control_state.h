@@ -2,6 +2,7 @@
 #define CATA_SRC_EDITOR_CONTROL_STATE_H
 
 #include "tool/tool.h"
+#include "view/ruler.h"
 
 #include <memory>
 
@@ -30,6 +31,8 @@ struct ControlState {
         bool want_export = false;               // User wants to export
         bool want_export_as = false;            // User wants to export as
         int want_change_view = 0;               // User wants to change view
+
+        RulerState ruler;
 
         bool has_ongoing_tool_operation();
         tools::ToolControl &get_tool_control( tools::ToolKind t );

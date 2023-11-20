@@ -79,6 +79,7 @@ void show_camera_controls( State &state, bool &show )
             "- Scroll over the view to zoom.\n"
             "- Use widgets below to manually control zoom and position.\n"
             "- Hold Ctrl to see summary of highlighted tile.\n"
+            "- Hold Alt to measure distance or area.\n"
             "\nIn canvas mode:\n"
             "- Press MMB (mouse wheel) on tile to select it.\n"
             "- Press MMB outside bounds (or on empty tile) to clear selection."
