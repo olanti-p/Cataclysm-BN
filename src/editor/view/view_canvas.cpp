@@ -1,10 +1,12 @@
 #include "view_canvas.h"
 
-#include "common/algo.h"
 #include "common/canvas_2d.h"
+#include "common/sprite_ref.h"
 #include "common/color.h"
 #include "camera.h"
 #include "common/math.h"
+#include "drawing.h"
+#include "mouse.h"
 #include "imgui.h"
 #include "mapgen/palette.h"
 #include "common/uuid.h"
@@ -22,107 +24,6 @@
 
 namespace editor
 {
-
-point_abs_screen get_mouse_pos()
-{
-    ImVec2 mouse_pos = ImGui::GetMousePos();
-    return point_abs_screen( mouse_pos.x, mouse_pos.y );
-}
-
-point_abs_epos get_mouse_view_pos( const Camera &cam )
-{
-    point_abs_screen screen_pos = get_mouse_pos();
-    return cam.screen_to_world( screen_pos );
-}
-
-point_abs_etile get_mouse_tile_pos( const Camera &cam )
-{
-    point_abs_screen screen_pos = get_mouse_pos();
-    point_abs_epos epos = cam.screen_to_world( screen_pos );
-
-    point_abs_etile ret;
-    point_etile_epos rem;
-    std::tie( ret, rem ) = project_remain<coords::etile>( epos );
-
-    return ret;
-}
-
-void draw_frame(
-    ImDrawList *draw_list,
-    const Camera &cam,
-    const point_abs_etile &p1,
-    const point_abs_etile &p2,
-    ImVec4 col,
-    bool filled
-)
-{
-    ImVec2 p_min = cam.world_to_screen( project_combine( p1, point_etile_epos() ) ).raw();
-    ImVec2 p_max = cam.world_to_screen( project_combine( p2, point_etile_epos( ETILE_SIZE - 1,
-                                        ETILE_SIZE - 1 ) ) ).raw();
-    if( filled ) {
-        draw_list->AddRectFilled( p_min, p_max, ImColor( col ), 0.0f, ImDrawFlags_None );
-    } else {
-        draw_list->AddRect( p_min, p_max, ImColor( col ), 0.0f, ImDrawFlags_None, 1.0f );
-    }
-}
-
-void highlight_tile(
-    ImDrawList *draw_list,
-    const Camera &cam,
-    point_abs_etile tile,
-    ImVec4 col
-)
-{
-    draw_frame( draw_list, cam, tile, tile, col, false );
-}
-
-void fill_tile(
-    ImDrawList *draw_list,
-    const Camera &cam,
-    point_abs_etile tile,
-    ImVec4 col
-)
-{
-    draw_frame( draw_list, cam, tile, tile, col, true );
-}
-
-static void fill_tile_sprited(
-    ImDrawList *draw_list,
-    const Camera &cam,
-    point_abs_etile tile,
-    const SpriteRef &img
-)
-{
-    ImVec2 p_min = cam.world_to_screen( project_combine( tile, point_etile_epos() ) ).raw();
-    ImVec2 p_max = cam.world_to_screen( project_combine( tile, point_etile_epos( ETILE_SIZE - 1,
-                                        ETILE_SIZE - 1 ) ) ).raw();
-    auto uvs = img.make_uvs();
-    draw_list->AddImage( img.get_tex_id(), p_min, p_max, uvs.first, uvs.second );
-}
-
-void highlight_region(
-    ImDrawList *draw_list,
-    const Camera &cam,
-    point_abs_etile p1,
-    point_abs_etile p2,
-    ImVec4 col_bg,
-    ImVec4 col_border
-)
-{
-    draw_frame( draw_list, cam, p1, p2, col_bg, true );
-    draw_frame( draw_list, cam, p1, p2, col_border, false );
-}
-
-void fill_region(
-    ImDrawList *draw_list,
-    const Camera &cam,
-    point_abs_etile p1,
-    point_abs_etile p2,
-    ImVec4 col
-)
-{
-    draw_frame( draw_list, cam, p1, p2, col, true );
-}
 
 static void handle_view_change_hotkey( State &state )
 {
