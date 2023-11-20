@@ -73,6 +73,10 @@ struct UiState {
     bool show_history = true;               // Whether to show undo/redo history
     bool show_camera_controls = true;       // Whether to show camera controls
     bool show_toolbar = true;               // Whether to show canvas toolbar
+    bool show_autosave_params = true;       // Whether to show autosave settings
+    bool autosave_enabled = true;
+    int autosave_interval = 10;             // Seconds
+    int autosave_limit = 5;                 // Amount of autosaves to keep
     std::optional<UUID> active_mapgen_id;   // UUID of active mapgen
 
     std::vector<detail::OpenPalette> open_palettes; // List of open palettes

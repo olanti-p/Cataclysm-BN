@@ -2,6 +2,7 @@
 
 #include "state/tools_state.h"
 #include "project/project.h"
+#include "state/ui_state.h"
 #include "widget/widgets.h"
 
 // Cata's DebugLog define conflicts with function in ImGui
@@ -59,17 +60,20 @@ void show_edit_history( HistoryState &state, bool &show )
         "Markers used in the list:\n"
         "  [S] This snapshot is the one saved in the project file.\n"
         "  [E] This snapshot is the one that was used for export.\n"
+        "  [A] This snapshot is the one that was autosaved.\n"
     );
     ImGui::Text( "Edit counter (debug): %d", state.edit_counter );
 
     for( const ProjectSnapshot &entry : state.snapshots ) {
         bool is_saved = state.last_saved_snapshot && *state.last_saved_snapshot == entry.num;
         bool is_exported = state.last_exported_snapshot && *state.last_exported_snapshot == entry.num;
+        bool is_autosaved = state.last_autosaved_snapshot && *state.last_autosaved_snapshot == entry.num;
         std::string fname = string_format(
-                                "Version %d%s%s",
+                                "Version %d%s%s%s",
                                 entry.num,
                                 is_saved ? " [S]" : "",
-                                is_exported ? " [E]" : ""
+                                is_exported ? " [E]" : "",
+                                is_autosaved ? " [A]" : ""
                             );
         if( ImGui::Selectable( fname.c_str(), entry.num == state.current_snapshot.num ) ) {
             state.switch_to_snapshot = entry.num;

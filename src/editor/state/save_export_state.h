@@ -7,6 +7,7 @@
 namespace editor
 {
 struct State;
+struct UiState;
 
 struct SaveExportState {
     SaveExportState() = default;
@@ -19,11 +20,14 @@ struct SaveExportState {
 
     std::optional<std::string> project_save_path;
     std::optional<std::string> project_export_path;
+    float elapsed_since_autosave = 0.0f;
 };
 
+void handle_project_autosave( State &state );
 void handle_project_saving( State &state );
 void handle_project_exporting( State &state );
 void handle_project_exiting( State &state );
+void show_autosave_settings( UiState &ui, bool &show );
 
 } // namespace editor
 

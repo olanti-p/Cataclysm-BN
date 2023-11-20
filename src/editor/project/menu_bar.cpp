@@ -54,6 +54,12 @@ void show_main_menu_bar( State &state )
             ImGui::MenuItem( "Debug/Metrics", nullptr, &state.ui->show_metrics_wnd );
             ImGui::EndMenu();
         }
+        if( ImGui::BeginMenu( "Preferences" ) ) {
+            if( ImGui::MenuItem( "Autosave..." ) ) {
+                state.ui->show_autosave_params = true;
+            }
+            ImGui::EndMenu();
+        }
         ImGui::EndMainMenuBar();
     }
 
