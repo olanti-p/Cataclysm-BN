@@ -8,6 +8,7 @@
 #include "tool/bucket.h"
 #include "tool/tool.h"
 #include "tool/rectangle_tool.h"
+#include "tool/rect_selection.h"
 #include "tools_state.h"
 #include "ui_state.h"
 
@@ -110,6 +111,7 @@ std::string enum_to_string<editor::tools::ToolKind>( editor::tools::ToolKind dat
         case ToolKind::Cursor: return "Cursor";
         case ToolKind::Line: return "Line";
         case ToolKind::Rectangle: return "Rectangle";
+        case ToolKind::RectSelection: return "RectSelection";
         // *INDENT-ON*
         case ToolKind::_Num:
             break;
@@ -311,6 +313,20 @@ void RectangleSettings::serialize( JsonOut &jsout ) const
 }
 
 void RectangleSettings::deserialize( JsonIn &jsin )
+{
+    JsonObject jo = jsin.get_object();
+
+    jo.read( "filled", filled );
+}
+
+void RectSelectionSettings::serialize( JsonOut &jsout ) const
+{
+    jsout.start_object();
+    jsout.member( "filled", filled );
+    jsout.end_object();
+}
+
+void RectSelectionSettings::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
