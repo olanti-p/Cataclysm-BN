@@ -22,6 +22,7 @@ enum class ToolKind {
     Brush,
     Bucket,
     Line,
+    Rectangle,
     _Num,
 };
 
