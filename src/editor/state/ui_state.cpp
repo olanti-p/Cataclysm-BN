@@ -2,6 +2,7 @@
 
 #include "view/camera.h"
 #include "view/view_canvas.h"
+#include "view/mouse.h"
 #include "control_state.h"
 #include "history_state.h"
 #include "imgui.h"
