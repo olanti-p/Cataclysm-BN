@@ -29,6 +29,9 @@ namespace editor
 
 static void handle_view_change_hotkey( State &state )
 {
+    if( state.control->has_ongoing_tool_operation() ) {
+        return;
+    }
     ImGuiIO &io = ImGui::GetIO();
     if( ImGui::IsKeyDown( ImGuiKey_ModAlt ) && std::abs( io.MouseWheel ) > 0.5f ) {
         int delta_wheel = static_cast<int>( std::round( io.MouseWheel ) );
