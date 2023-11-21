@@ -36,6 +36,10 @@ struct EditableID {
         EditableID &operator= ( const EditableID<T> & ) = default;
         EditableID &operator= ( EditableID<T> && ) = default;
 
+        inline bool operator==( const EditableID<T> &rhs ) const {
+            return data == rhs.data;
+        }
+
         bool is_valid() const {
             return string_id<T>( data ).is_valid();
         }

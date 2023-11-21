@@ -13,6 +13,9 @@ template<typename T>
 struct WeightedListEntry {
     T val;
     int weight = 0;
+
+    WeightedListEntry() = default;
+    WeightedListEntry( T val, int weight ) : val( val ), weight( weight ) {}
 };
 
 } // namespace detail

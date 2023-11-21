@@ -1,15 +1,16 @@
 #include "palette.h"
 
+#include "common/color.h"
 #include "common/sprite_ref.h"
 #include "imgui.h"
-#include "state/control_state.h"
-#include "state/tools_state.h"
-#include "common/color.h"
-#include "mapgen.h"
 #include "map_key_gen.h"
+#include "mapgen.h"
+#include "mapgen/palette_making.h"
 #include "piece_impl.h"
 #include "project/project.h"
+#include "state/control_state.h"
 #include "state/state.h"
+#include "state/tools_state.h"
 #include "state/ui_state.h"
 #include "string_formatter.h"
 #include "widget/editable_id.h"
@@ -23,15 +24,6 @@
 
 namespace editor
 {
-map_key pick_available_key( const Palette &pal )
-{
-    MapKeyGenerator gen;
-    for( const auto &it : pal.entries ) {
-        gen.blacklist( it.key );
-    }
-    return gen();
-}
-
 static bool is_expanded( const State &state, const UUID &piece_id )
 {
     return state.ui->expanded_mapping_pieces.count( piece_id ) != 0;
@@ -147,39 +139,6 @@ void show_mapping( State &state, editor::Palette &p, editor::PaletteEntry &entry
 
     ImGui::PopID();
     ImGui::End();
-}
-
-static PaletteEntry make_simple_entry( Project &project, Palette &palette, Mapping &&mapping )
-{
-    return PaletteEntry{
-        project.uuid_generator(),
-        pick_available_key( palette ),
-        col_default_piece_color,
-        "",
-        std::move( mapping ),
-        false,
-        std::nullopt
-    };
-}
-
-static Mapping make_mapping( const EID::Ter *ter, const EID::Furn *furn )
-{
-    Mapping ret;
-    if( ter ) {
-        std::unique_ptr<PieceAltTerrain> piece = std::make_unique<PieceAltTerrain>();
-        piece->init_new();
-        piece->list.entries[0].weight = 1;
-        piece->list.entries[0].val = *ter;
-        ret.pieces.emplace_back( std::move( piece ) );
-    }
-    if( furn ) {
-        std::unique_ptr<PieceAltFurniture> piece = std::make_unique<PieceAltFurniture>();
-        piece->init_new();
-        piece->list.entries[0].weight = 1;
-        piece->list.entries[0].val = *furn;
-        ret.pieces.emplace_back( std::move( piece ) );
-    }
-    return ret;
 }
 
 static bool show_palette_add_entry_section( State &state, Palette &palette,

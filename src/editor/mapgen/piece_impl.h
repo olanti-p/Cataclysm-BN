@@ -5,9 +5,10 @@
 
 #include "calendar.h"
 #include "enum_traits.h"
-#include "widget/editable_id.h"
-#include "common/int_range.h"
-#include "common/weighted_list.h"
+// FIXME: conflicts with include paths
+#include "editor/widget/editable_id.h"
+#include "editor/common/int_range.h"
+#include "editor/common/weighted_list.h"
 
 #include <set>
 

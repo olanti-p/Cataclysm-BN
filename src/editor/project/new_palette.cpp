@@ -1,12 +1,13 @@
 #include "new_palette.h"
 
-#include "imgui.h"
-#include "mapgen/palette.h"
-#include "state/state.h"
 #include "common/uuid.h"
-#include "widget/widgets.h"
-#include "state/ui_state.h"
+#include "imgui.h"
+#include "mapgen/palette_making.h"
+#include "mapgen/palette.h"
 #include "project.h"
+#include "state/state.h"
+#include "state/ui_state.h"
+#include "widget/widgets.h"
 
 #include <chrono>
 #include <cstddef>
@@ -21,18 +22,34 @@ bool show_new_palette_window( State &state, NewPaletteState &palette )
         palette.cancelled = true;
     }
 
-    ImGui::Checkbox( "Create inheriting palette", &palette.inherits );
-    ImGui::BeginDisabled( !palette.inherits );
-    ImGui::PaletteSelector( "Inherit from", palette.inherits_from, state.project().palettes );
-    ImGui::EndDisabled();
-
-    ImGui::Separator();
-
     ImGui::InputText( "Name", &palette.name );
     ImGui::HelpPopup( "Display name.  Has no effect, just for convenience." );
 
+    if( ImGui::RadioButton( "Create New", palette.kind == NewPaletteKind::BrandNew ) ) {
+        palette.kind = NewPaletteKind::BrandNew;
+    }
+    if( ImGui::RadioButton( "Import", palette.kind == NewPaletteKind::Imported ) ) {
+        palette.kind = NewPaletteKind::Imported;
+    }
+
+    if( palette.kind == NewPaletteKind::Imported ) {
+        ImGui::InputId( "Source", palette.import_from );
+    } else {
+        ImGui::Text( "-- TODO: inheriting palettes --" );
+        /*
+        ImGui::Checkbox( "Create inheriting palette", &palette.inherits );
+        ImGui::BeginDisabled( !palette.inherits );
+        ImGui::PaletteSelector( "Inherit from", palette.inherits_from, state.project().palettes );
+        ImGui::EndDisabled();
+        */
+    }
+
     bool input_ok = true;
-    if( palette.inherits && !state.project().get_palette( palette.inherits_from ) ) {
+    if( palette.kind == NewPaletteKind::BrandNew && palette.inherits &&
+        !state.project().get_palette( palette.inherits_from ) ) {
+        input_ok = false;
+    }
+    if( palette.kind == NewPaletteKind::Imported && !palette.import_from.is_valid() ) {
         input_ok = false;
     }
 
@@ -66,6 +83,9 @@ void add_palette( State &state, NewPaletteState &palette )
 
     if( palette.inherits ) {
         new_palette.inherits_from = palette.inherits_from;
+    }
+    if( palette.kind == NewPaletteKind::Imported ) {
+        import_palette_data( state.project(), new_palette, palette.import_from );
     }
 }
 
