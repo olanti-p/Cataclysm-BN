@@ -52,7 +52,7 @@ struct MapgenOter {
     int weight = 100;
     OterMapgenBase mapgen_base = OterMapgenBase::FillTer;
     EID::Ter fill_ter = EID::Ter::NULL_ID();
-    EID::Oter predecessor_mapgen;
+    EID::OterType predecessor_mapgen;
     IntRange rotation;
 
     void serialize( JsonOut &jsout ) const;
