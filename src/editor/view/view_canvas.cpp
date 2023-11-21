@@ -1,6 +1,7 @@
 #include "view_canvas.h"
 
 #include "camera.h"
+#include "common/algo.h"
 #include "common/canvas_2d.h"
 #include "common/color.h"
 #include "common/math.h"
@@ -332,7 +333,7 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
             highlight_tile( draw_list, cam, p, col_tool );
         }
         for( const auto &p : target.highlight.areas ) {
-            auto rect = normalize_rect( p.first, p.second );
+            auto rect = editor::normalize_rect( p.first, p.second );
             ImVec4 col_bg = col_tool;
             col_bg.w *= 0.4f;
             highlight_region( draw_list, cam, rect.first, rect.second, col_bg, col_tool );
@@ -359,7 +360,7 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
         ImVec4 col_bg = col_ruler;
         col_bg.w *= 0.4f;
         assert( ruler );
-        auto rect = normalize_rect( tile_pos, *ruler );
+        auto rect = editor::normalize_rect( tile_pos, *ruler );
         highlight_region( draw_list, cam, rect.first, rect.second, col_bg, col_border );
 
         ImGui::BeginTooltip();

@@ -3,7 +3,6 @@
 
 #include "cuboid_rectangle.h"
 #include "point.h"
-#include "json.h"
 
 #include <algorithm>
 #include <vector>
@@ -57,22 +56,12 @@ class Canvas2D
             return data;
         }
 
+        inline const std::vector<T> &get_data() const {
+            return data;
+        }
+
         inline void set_all( T val ) {
             std::fill( data.begin(), data.end(), val );
-        }
-
-        void serialize( JsonOut &jsout ) const {
-            jsout.start_object();
-            jsout.member( "size", size );
-            jsout.member( "data", data );
-            jsout.end_object();
-        }
-
-        void deserialize( JsonIn &jsin ) {
-            JsonObject jo = jsin.get_object();
-
-            jo.read( "size", size );
-            jo.read( "data", data );
         }
 
         inline half_open_rectangle<point> get_bounds() const {

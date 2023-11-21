@@ -4,6 +4,7 @@
 #include "mapgen/mapgen.h"
 #include "project.h"
 #include "common/weighted_list_serde.h"
+#include "common/canvas_2d_serde.h"
 
 #include "imgui.h"
 
