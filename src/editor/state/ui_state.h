@@ -79,7 +79,8 @@ struct UiState {
     int autosave_limit = 5;                 // Amount of autosaves to keep
     std::optional<UUID> active_mapgen_id;   // UUID of active mapgen
 
-    std::vector<detail::OpenPalette> open_palettes; // List of open palettes
+    std::vector<detail::OpenPalette> open_palettes_verbose; // List of open palettes (verbose)
+    std::vector<detail::OpenPalette> open_palettes_simple; // List of open palettes (simple)
     std::vector<detail::OpenMapping> open_mappings; // List of open mappings
     std::vector<detail::OpenMapgenObject> open_mapgenobjects; // List of open mapgenobjects
 
@@ -92,7 +93,8 @@ struct UiState {
     std::unique_ptr<NewMapgenState> new_mapgen_window;
     std::unique_ptr<NewPaletteState> new_palette_window;
 
-    void toggle_show_palette( UUID uuid );
+    void toggle_show_palette_verbose( UUID uuid );
+    void toggle_show_palette_simple( UUID uuid );
     void toggle_show_mapping( UUID palette, UUID uuid );
     void toggle_show_mapobjects( UUID uuid );
 };

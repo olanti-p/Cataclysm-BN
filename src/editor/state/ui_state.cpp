@@ -26,16 +26,28 @@ UiState::UiState( UiState && ) = default;
 UiState::~UiState() = default;
 UiState &UiState::operator=( UiState && ) = default;
 
-void UiState::toggle_show_palette( UUID uuid )
+void UiState::toggle_show_palette_verbose( UUID uuid )
 {
-    for( auto &it : open_palettes ) {
+    for( auto &it : open_palettes_verbose ) {
         if( it.uuid == uuid ) {
             it.open = false;
             return;
         }
     }
-    open_palettes.emplace_back();
-    open_palettes.back().uuid = uuid;
+    open_palettes_verbose.emplace_back();
+    open_palettes_verbose.back().uuid = uuid;
+}
+
+void UiState::toggle_show_palette_simple( UUID uuid )
+{
+    for( auto &it : open_palettes_simple ) {
+        if( it.uuid == uuid ) {
+            it.open = false;
+            return;
+        }
+    }
+    open_palettes_simple.emplace_back();
+    open_palettes_simple.back().uuid = uuid;
 }
 
 void UiState::toggle_show_mapping( UUID palette, UUID uuid )
@@ -163,13 +175,24 @@ void run_ui_for_state( State &state )
         }
     }
 
-    for( auto &it : uistate.open_palettes ) {
+    for( auto &it : uistate.open_palettes_verbose ) {
         if( !it.open ) {
             continue;
         }
         Palette *pal = proj.get_palette( it.uuid );
         if( pal ) {
-            show_palette( state, *pal, it.open );
+            show_palette_verbose( state, *pal, it.open );
+        } else {
+            it.open = false;
+        }
+    }
+    for( auto &it : uistate.open_palettes_simple ) {
+        if( !it.open ) {
+            continue;
+        }
+        Palette *pal = proj.get_palette( it.uuid );
+        if( pal ) {
+            show_palette_simple( state, *pal, it.open );
         } else {
             it.open = false;
         }
@@ -201,14 +224,32 @@ void run_ui_for_state( State &state )
             it.open = false;
         }
     }
-    for( auto it = uistate.open_palettes.cbegin(); it != uistate.open_palettes.cend(); ) {
+    for(
+        auto it = uistate.open_palettes_verbose.cbegin();
+        it != uistate.open_palettes_verbose.cend();
+    ) {
         if( !it->open ) {
             for( auto &mit : uistate.open_mappings ) {
                 if( mit.palette == it->uuid ) {
                     mit.open = false;
                 }
             }
-            it = uistate.open_palettes.erase( it );
+            it = uistate.open_palettes_verbose.erase( it );
+        } else {
+            it++;
+        }
+    }
+    for(
+        auto it = uistate.open_palettes_simple.cbegin();
+        it != uistate.open_palettes_simple.cend();
+    ) {
+        if( !it->open ) {
+            for( auto &mit : uistate.open_mappings ) {
+                if( mit.palette == it->uuid ) {
+                    mit.open = false;
+                }
+            }
+            it = uistate.open_palettes_simple.erase( it );
         } else {
             it++;
         }

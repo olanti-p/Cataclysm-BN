@@ -193,7 +193,8 @@ void UiState::serialize( JsonOut &jsout ) const
     jsout.member( "autosave_interval", autosave_interval );
     jsout.member( "autosave_limit", autosave_limit );
     jsout.member( "active_file_id", active_mapgen_id );
-    jsout.member( "open_palettes", open_palettes );
+    jsout.member( "open_palettes", open_palettes_verbose );
+    jsout.member( "open_palettes_simple", open_palettes_simple );
     jsout.member( "open_mappings", open_mappings );
     jsout.member( "open_mapgenobjects", open_mapgenobjects );
     jsout.member( "camera", camera );
@@ -219,7 +220,8 @@ void UiState::deserialize( JsonIn &jsin )
     jo.read( "autosave_interval", autosave_interval );
     jo.read( "autosave_limit", autosave_limit );
     jo.read( "active_file_id", active_mapgen_id );
-    jo.read( "open_palettes", open_palettes );
+    jo.read( "open_palettes", open_palettes_verbose );
+    jo.read( "open_palettes_simple", open_palettes_simple );
     jo.read( "open_mappings", open_mappings );
     jo.read( "open_mapgenobjects", open_mapgenobjects );
     jo.read( "camera", camera );

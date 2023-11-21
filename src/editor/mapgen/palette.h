@@ -102,7 +102,8 @@ map_key pick_available_key( const Palette &pal );
  */
 void show_mapping( State &state, editor::Palette &p, editor::PaletteEntry &entry,
                    bool &show );
-void show_palette( State &state, Palette &p, bool &show );
+void show_palette_verbose( State &state, Palette &p, bool &show );
+void show_palette_simple( State &state, Palette &p, bool &show );
 
 } // namespace editor
 
