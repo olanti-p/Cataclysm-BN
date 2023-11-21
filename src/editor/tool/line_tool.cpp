@@ -18,7 +18,9 @@ std::string Line::get_tool_display_name() const
 
 std::string Line::get_tool_hint() const
 {
-    return "Drag LMB to draw a line.";
+    return "Drag LMB to draw a line.\n\n"
+           "Hold Shift to snap the line to 45 degrees.\n"
+           "Press Esc while dragging to cancel.";
 }
 
 void LineControl::handle_tool_operation( ToolTarget &target )
