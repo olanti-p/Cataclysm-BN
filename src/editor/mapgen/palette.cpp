@@ -1,5 +1,6 @@
 #include "palette.h"
 
+#include "common/sprite_ref.h"
 #include "imgui.h"
 #include "state/tools_state.h"
 #include "common/color.h"
@@ -9,6 +10,7 @@
 #include "project/project.h"
 #include "state/state.h"
 #include "state/ui_state.h"
+#include "string_formatter.h"
 #include "widget/widgets.h"
 
 #include "translations.h"
@@ -138,7 +140,7 @@ void show_mapping( State &state, editor::Palette &p, editor::PaletteEntry &entry
     ImGui::End();
 }
 
-static void show_palette_entries( State &state, Palette &palette )
+static void show_palette_entries_verbose( State &state, Palette &palette )
 {
     std::vector<PaletteEntry> &list = palette.entries;
     std::unordered_set<map_key> checked;
@@ -196,9 +198,13 @@ static void show_palette_entries( State &state, Palette &palette )
     } )
     .with_for_each( [&]( size_t idx ) {
         if( list[idx].uuid == tools.get_main_tile() ) {
+            ImGui::PushStyleColor( ImGuiCol_Button, col_selected_palette_entry );
+            ImGui::PushStyleColor( ImGuiCol_ButtonHovered, col_selected_palette_entry );
+            ImGui::PushStyleColor( ImGuiCol_ButtonActive, col_selected_palette_entry );
             if( ImGui::ImageButton( "unpick", "me_clear_rows_brush" ) ) {
                 tools.set_main_tile( UUID_INVALID );
             }
+            ImGui::PopStyleColor( 3 );
             ImGui::HelpPopup( "Unselect (turns brush into eraser)." );
         } else {
             if( ImGui::ImageButton( "pick", "me_set_rows_brush" ) ) {
@@ -283,12 +289,12 @@ static void show_palette_entries( State &state, Palette &palette )
     }
 }
 
-void show_palette( State &state, Palette &p, bool &show )
+void show_palette_verbose( State &state, Palette &p, bool &show )
 {
     ImGui::SetNextWindowSize( ImVec2( 670.0f, 120.0f ), ImGuiCond_FirstUseEver );
     ImGui::SetNextWindowPos( ImVec2( 50.0f, 50.0f ), ImGuiCond_FirstUseEver );
 
-    std::string wnd_id = string_format( "Palette##palette-%d", p.uuid );
+    std::string wnd_id = string_format( "Palette###palette-%d-verbose", p.uuid );
     if( !ImGui::Begin( wnd_id.c_str(), &show ) ) {
         ImGui::End();
         return;
@@ -309,7 +315,66 @@ void show_palette( State &state, Palette &p, bool &show )
     }
     ImGui::HelpPopup( "Display name.  Has no effect, just for convenience." );
 
-    show_palette_entries( state, p );
+    if( ImGui::Button( "Toggle simple palette" ) ) {
+        state.ui->toggle_show_palette_simple( p.uuid );
+    }
+
+    show_palette_entries_verbose( state, p );
+
+    ImGui::PopID();
+    ImGui::End();
+}
+
+static void show_palette_entries_simple( State &state, Palette &palette )
+{
+    UUID selected = state.ui->tools->get_main_tile();
+    ImGuiStyle &style = ImGui::GetStyle();
+    int buttons_count = palette.entries.size();
+    float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+    ImVec2 button_sz( 40, 40 );
+    for( int n = 0; n < buttons_count; n++ ) {
+        const PaletteEntry &entry = palette.entries[n];
+        const SpriteRef *img = palette.sprite_from_uuid( entry.uuid );
+        ImGui::PushID( n );
+        bool is_selected = selected == entry.uuid;
+        if( is_selected ) {
+            ImGui::PushStyleColor( ImGuiCol_Button, col_selected_palette_entry );
+            ImGui::PushStyleColor( ImGuiCol_ButtonHovered, col_selected_palette_entry );
+            ImGui::PushStyleColor( ImGuiCol_ButtonActive, col_selected_palette_entry );
+        }
+        if( ImGui::ImageButton( "button", *img, button_sz ) && !is_selected ) {
+            state.ui->tools->set_main_tile( entry.uuid );
+        }
+        if( is_selected ) {
+            ImGui::PopStyleColor( 3 );
+        }
+        float last_button_x2 = ImGui::GetItemRectMax().x;
+        float next_button_x2 = last_button_x2 + style.ItemSpacing.x + button_sz.x;
+        if( n + 1 < buttons_count && next_button_x2 < window_visible_x2 ) {
+            ImGui::SameLine();
+        }
+        ImGui::PopID();
+    }
+}
+
+void show_palette_simple( State &state, Palette &p, bool &show )
+{
+    ImGui::SetNextWindowSize( ImVec2( 670.0f, 120.0f ), ImGuiCond_FirstUseEver );
+    ImGui::SetNextWindowPos( ImVec2( 50.0f, 50.0f ), ImGuiCond_FirstUseEver );
+
+    std::string name = p.display_name();
+    std::string wnd_id = string_format( "Palette %s###palette-%d-simple", name, p.uuid );
+    if( !ImGui::Begin( wnd_id.c_str(), &show ) ) {
+        ImGui::End();
+        return;
+    }
+    ImGui::PushID( p.uuid );
+    ImGui::Text( "%s", name.c_str() );
+    if( ImGui::Button( "Toggle verbose mode" ) ) {
+        state.ui->toggle_show_palette_verbose( p.uuid );
+    }
+
+    show_palette_entries_simple( state, p );
 
     ImGui::PopID();
     ImGui::End();

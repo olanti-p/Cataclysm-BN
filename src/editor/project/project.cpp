@@ -50,7 +50,7 @@ void show_project_overview_ui( State &state, Project &project, bool &show )
     .with_for_each( [&]( size_t idx ) {
         Mapgen &mapgen = project.mapgens[idx];
         if( ImGui::ImageButton( "toggle_palette", "me_palette" ) ) {
-            state.ui->toggle_show_palette( mapgen.base.palette );
+            state.ui->toggle_show_palette_simple( mapgen.base.palette );
         }
         ImGui::HelpPopup( "Show/hide palette for this mapgen." );
         ImGui::SameLine();
@@ -92,12 +92,12 @@ void show_project_overview_ui( State &state, Project &project, bool &show )
     .with_for_each( [&]( size_t idx ) {
         Palette &palette = project.palettes[idx];
         if( ImGui::ImageButton( "toggle_palette", "me_palette" ) ) {
-            state.ui->toggle_show_palette( palette.uuid );
+            state.ui->toggle_show_palette_simple( palette.uuid );
         }
         ImGui::HelpPopup( "Show/hide palette." );
         ImGui::SameLine();
         if( ImGui::Selectable( palette.display_name().c_str() ) ) {
-            state.ui->toggle_show_palette( palette.uuid );
+            state.ui->toggle_show_palette_verbose( palette.uuid );
         }
     } )
     .with_add( [&]()->bool {

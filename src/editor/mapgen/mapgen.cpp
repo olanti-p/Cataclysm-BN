@@ -33,7 +33,7 @@ void show_mapgen_info( State &state, Mapgen &mapgen, bool &show )
     ImGui::HelpPopup( "Display name.  Has no effect, just for convenience." );
 
     if( ImGui::Button( "Show/hide palette" ) ) {
-        state.ui->toggle_show_palette( mapgen.base.palette );
+        state.ui->toggle_show_palette_simple( mapgen.base.palette );
     }
     ImGui::Separator();
 
