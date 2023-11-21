@@ -5,12 +5,27 @@
 #include "state/selection_mask.h"
 #include "tool/tool.h"
 #include "view/ruler.h"
+#include "widget/editable_id.h"
 
 #include <memory>
 #include <unordered_map>
 
 namespace editor
 {
+enum class QuickAddMode {
+    Ter,
+    Furn,
+    Both,
+};
+
+struct QuickPaletteAddState {
+    UUID palette = UUID_INVALID;
+    bool active = false;
+    QuickAddMode mode = QuickAddMode::Ter;
+    EID::Ter eid_ter;
+    EID::Furn eid_furn;
+};
+
 /**
  * Editor control state.
  *
@@ -40,6 +55,8 @@ struct ControlState {
         bool has_ongoing_tool_operation();
         tools::ToolControl &get_tool_control( tools::ToolKind t );
         SelectionMask *get_canvas_selection_mask( const Mapgen &mapgen );
+
+        QuickPaletteAddState quick_add_state;
 
     private:
         void set_tool_control( tools::ToolKind t );
