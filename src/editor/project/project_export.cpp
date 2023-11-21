@@ -678,7 +678,7 @@ static void emit_mapgen_contents( JsonOut &jo, const editor::Project &project,
             }
 
             emit_array( jo, object_cat, [&]() {
-                for( const editor::me_mapobject *obj : matching_objects ) {
+                for( const editor::MapObject *obj : matching_objects ) {
                     emit_val( jo, obj );
                 }
             } );
