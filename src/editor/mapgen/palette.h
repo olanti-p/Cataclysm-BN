@@ -61,12 +61,14 @@ struct PaletteEntry {
     UUID uuid;
     map_key key;
     ImVec4 color;
+    std::string name;
     Mapping mapping;
 
     mutable bool sprite_cache_valid = false;
     mutable std::optional<SpriteRef> sprite_cache;
 
     void build_sprite_cache() const;
+    std::string display_name() const;
 
     void serialize( JsonOut &jsout ) const;
     void deserialize( JsonIn &jsin );
@@ -104,6 +106,7 @@ void show_mapping( State &state, editor::Palette &p, editor::PaletteEntry &entry
                    bool &show );
 void show_palette_verbose( State &state, Palette &p, bool &show );
 void show_palette_simple( State &state, Palette &p, bool &show );
+void show_palette_entry_tooltip( const PaletteEntry &entry );
 
 } // namespace editor
 
