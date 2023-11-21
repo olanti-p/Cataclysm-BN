@@ -1,29 +1,7 @@
-# Bright Nights Mapgen Editor
+# Usage (short tutorial)
 
-## Setup
-
-1. Run `cataclysm-bnme`
-2. Create a new world, add `Map Editor` mod to it and other mods you plan to work with, give it a convenient name (e.g. `BNME`).
-3. Create a new character in that world (default will do), then save and exit.
-4. Create `run_editor.bat` (or `run_editor.sh`), and paste the following (replace `BNME` with the name of your world):
-    ```
-    cataclysm-bnme --editor --world BNME
-    ```
-
-5. On Windows, double click the `.bat` to run. On Linux, enable execution for script and then run it from terminal.
-6. (Optional) You may have to skip some debug messages, depending on how broken your mods are.
-
-If you need to work with multiple sets of mod, you can repeat steps 2-4 for each mod set, just have to rename the world and the `.bat`/`.sh` file accordingly.
-
-The command in `.bat`/`.sh` is just a shortcut to bring you straight to the editor, you can launch it manually as well:
-1. Run `cataclysm-bnme`
-2. Load the world (e.g. `BNME`)
-3. Open debug menu
-4. `[m] Map` -> `[A] Advanced Map editor`
-
-WARNING: running an editor **will** make the world unplayable for regular game. Make sure you don't run it in same world as your favorite 2-years-old-rolling-around-in-death-fortress-alpha-cyborg-mage survivor.
-
-## Usage (short tutorial)
+TODO: update tutorial
+TODO: pictures
 
 Click `New Project`. You'll see multiple windows:
 
