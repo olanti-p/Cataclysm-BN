@@ -2,6 +2,7 @@
 
 #include "common/sprite_ref.h"
 #include "imgui.h"
+#include "state/control_state.h"
 #include "state/tools_state.h"
 #include "common/color.h"
 #include "mapgen.h"
@@ -11,10 +12,13 @@
 #include "state/state.h"
 #include "state/ui_state.h"
 #include "string_formatter.h"
+#include "widget/editable_id.h"
 #include "widget/widgets.h"
 
 #include "translations.h"
 
+#include <memory>
+#include <optional>
 #include <unordered_set>
 
 namespace editor
@@ -145,6 +149,140 @@ void show_mapping( State &state, editor::Palette &p, editor::PaletteEntry &entry
     ImGui::End();
 }
 
+static PaletteEntry make_simple_entry( Project &project, Palette &palette, Mapping &&mapping )
+{
+    return PaletteEntry{
+        project.uuid_generator(),
+        pick_available_key( palette ),
+        col_default_piece_color,
+        "",
+        std::move( mapping ),
+        false,
+        std::nullopt
+    };
+}
+
+static Mapping make_mapping( const EID::Ter *ter, const EID::Furn *furn )
+{
+    Mapping ret;
+    if( ter ) {
+        std::unique_ptr<PieceAltTerrain> piece = std::make_unique<PieceAltTerrain>();
+        piece->init_new();
+        piece->list.entries[0].weight = 1;
+        piece->list.entries[0].val = *ter;
+        ret.pieces.emplace_back( std::move( piece ) );
+    }
+    if( furn ) {
+        std::unique_ptr<PieceAltFurniture> piece = std::make_unique<PieceAltFurniture>();
+        piece->init_new();
+        piece->list.entries[0].weight = 1;
+        piece->list.entries[0].val = *furn;
+        ret.pieces.emplace_back( std::move( piece ) );
+    }
+    return ret;
+}
+
+static bool show_palette_add_entry_section( State &state, Palette &palette,
+        std::vector<PaletteEntry> &list )
+{
+    bool ret = false;
+    ControlState &control = *state.control;
+    QuickPaletteAddState &qstate = control.quick_add_state;
+    if( qstate.palette == palette.uuid ) {
+        qstate.active = true;
+        switch( qstate.mode ) {
+            case QuickAddMode::Ter: {
+                if( ImGui::ImageButton( "cancel", "me_delete" ) ) {
+                    qstate.active = false;
+                }
+                ImGui::HelpPopup( "Cancel" );
+                ImGui::SameLine();
+                if( ImGui::InputId( "Terrain", qstate.eid_ter ) ) {
+                    list.emplace_back( make_simple_entry( state.project(), palette,
+                                                          make_mapping( &qstate.eid_ter, nullptr ) ) );
+                    ret = true;
+                    qstate.active = false;
+                }
+                break;
+            }
+            case QuickAddMode::Furn: {
+                if( ImGui::ImageButton( "cancel", "me_delete" ) ) {
+                    qstate.active = false;
+                }
+                ImGui::HelpPopup( "Cancel" );
+                ImGui::SameLine();
+                if( ImGui::InputId( "Furniture", qstate.eid_furn ) ) {
+                    list.emplace_back( make_simple_entry( state.project(), palette,
+                                                          make_mapping( nullptr, &qstate.eid_furn ) ) );
+                    ret = true;
+                    qstate.active = false;
+                }
+                break;
+            }
+            case QuickAddMode::Both: {
+                if( ImGui::ImageButton( "cancel", "me_delete" ) ) {
+                    qstate.active = false;
+                }
+                ImGui::HelpPopup( "Cancel" );
+                ImGui::SameLine();
+                ImGui::InputId( "Furniture", qstate.eid_furn );
+                bool disabled = !qstate.eid_furn.is_valid() || !qstate.eid_ter.is_valid();
+                ImGui::BeginDisabled( disabled );
+                if( ImGui::ImageButton( "confirm", "me_add" ) ) {
+                    list.emplace_back( make_simple_entry( state.project(), palette,
+                                                          make_mapping( &qstate.eid_ter, &qstate.eid_furn ) ) );
+                    ret = true;
+                    qstate.active = false;
+                }
+                ImGui::EndDisabled();
+                ImGui::HelpPopup( "Confirm" );
+                ImGui::SameLine();
+                ImGui::InputId( "Terrain", qstate.eid_ter );
+                break;
+            }
+            default: {
+                ImGui::Text( "<Not Implemented>" );
+                break;
+            }
+        }
+    } else {
+        // In default mode
+        if( ImGui::Button( "New Empty" ) ) {
+            list.emplace_back( make_simple_entry( state.project(), palette, make_mapping( nullptr,
+                                                  nullptr ) ) );
+            ret = true;
+        }
+        ImGui::HelpPopup( "Add a new empty entry." );
+        ImGui::SameLine();
+        if( ImGui::Button( "New Ter" ) ) {
+            qstate = QuickPaletteAddState();
+            qstate.active = true;
+            qstate.palette = palette.uuid;
+            qstate.mode = QuickAddMode::Ter;
+        }
+        ImGui::HelpPopup( "Add a new entry with NO furniture and 1 terrain option." );
+        ImGui::SameLine();
+        if( ImGui::Button( "New Furn" ) ) {
+            qstate = QuickPaletteAddState();
+            qstate.active = true;
+            qstate.palette = palette.uuid;
+            qstate.mode = QuickAddMode::Furn;
+        }
+        ImGui::HelpPopup( "Add a new entry with 1 furniture option and NO terrain underneath." );
+        ImGui::SameLine();
+        if( ImGui::Button( "New Furn+Ter" ) ) {
+            qstate = QuickPaletteAddState();
+            qstate.active = true;
+            qstate.palette = palette.uuid;
+            qstate.mode = QuickAddMode::Both;
+        }
+        ImGui::HelpPopup( "Add a new entry with 1 furniture option and 1 terrain option." );
+        // 2-in-1 hack: provides helpful hint AND keeps window alignment for Furn+Ter quick action
+        ImGui::Text( "You can fully customize entry data after creation." );
+    }
+    return ret;
+}
+
 static void show_palette_entries_verbose( State &state, Palette &palette )
 {
     std::vector<PaletteEntry> &list = palette.entries;
@@ -164,22 +302,7 @@ static void show_palette_entries_verbose( State &state, Palette &palette )
 
     bool changed = ImGui::VectorWidget()
     .with_add( [&]() -> bool {
-        bool ret = false;
-        if( ImGui::ImageButton( "add", "me_add" ) )
-        {
-            list.emplace_back( PaletteEntry{
-                proj.uuid_generator(),
-                pick_available_key( palette ),
-                col_default_piece_color,
-                "",
-                Mapping(),
-                false,
-                std::nullopt
-            } );
-            ret = true;
-        }
-        ImGui::HelpPopup( "Add new entry." );
-        return ret;
+        return show_palette_add_entry_section( state, palette, list );
     } )
     .with_duplicate( [&]( size_t idx ) {
         const PaletteEntry &src = list[ idx ];

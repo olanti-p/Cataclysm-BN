@@ -127,6 +127,7 @@ void run_ui_for_state( State &state )
     Project &proj = state.project();
 
     UiState &uistate = *state.ui;
+    ControlState &control = *state.control;
 
     Mapgen *active_mapgen = nullptr;
     if( uistate.active_mapgen_id ) {
@@ -135,6 +136,7 @@ void run_ui_for_state( State &state )
             uistate.active_mapgen_id.reset();
         }
     }
+    control.quick_add_state.active = false;
 
     // TODO: multiple mapgens on same canvas
     show_editor_view( state, active_mapgen );
@@ -267,6 +269,9 @@ void run_ui_for_state( State &state )
         } else {
             it++;
         }
+    }
+    if( !control.quick_add_state.active ) {
+        control.quick_add_state = QuickPaletteAddState();
     }
 
     if( !state.control->has_ongoing_tool_operation() ) {
