@@ -55,6 +55,11 @@ void show_mapping( State &state, editor::Palette &p, editor::PaletteEntry &entry
     }
     ImGui::PushID( entry.uuid );
 
+    if( ImGui::InputText( "Name", &entry.name ) ) {
+        state.mark_changed( "entry-name" );
+    }
+    ImGui::HelpPopup( "Display name.  Has no effect, just for convenience." );
+
     auto &list = entry.mapping.pieces;
 
     bool changed = ImGui::VectorWidget()
@@ -166,6 +171,7 @@ static void show_palette_entries_verbose( State &state, Palette &palette )
                 proj.uuid_generator(),
                 pick_available_key( palette ),
                 col_default_piece_color,
+                "",
                 Mapping(),
                 false,
                 std::nullopt
@@ -181,6 +187,7 @@ static void show_palette_entries_verbose( State &state, Palette &palette )
             proj.uuid_generator(),
             pick_available_key( palette ),
             src.color,
+            src.name,
             src.mapping,
             false,
             std::nullopt
@@ -345,6 +352,11 @@ static void show_palette_entries_simple( State &state, Palette &palette )
         if( ImGui::ImageButton( "button", *img, button_sz ) && !is_selected ) {
             state.ui->tools->set_main_tile( entry.uuid );
         }
+        if( ImGui::IsItemHovered( ImGuiHoveredFlags_DelayShort ) ) {
+            ImGui::BeginTooltip();
+            show_palette_entry_tooltip( entry );
+            ImGui::EndTooltip();
+        }
         if( is_selected ) {
             ImGui::PopStyleColor( 3 );
         }
@@ -378,6 +390,19 @@ void show_palette_simple( State &state, Palette &p, bool &show )
 
     ImGui::PopID();
     ImGui::End();
+}
+
+void show_palette_entry_tooltip( const PaletteEntry &entry )
+{
+    std::string name = entry.display_name();
+    if( !name.empty() ) {
+        ImGui::Text( "%s", name.c_str() );
+    }
+    for( const auto &it : entry.mapping.pieces ) {
+        ImGui::TextDisabled( "MAP" );
+        ImGui::SameLine();
+        ImGui::Text( "%s", it->fmt_summary().c_str() );
+    }
 }
 
 Mapping::Mapping( const Mapping &rhs )
@@ -518,6 +543,11 @@ void PaletteEntry::build_sprite_cache() const
     }
 
     sprite_cache_valid = true;
+}
+
+std::string PaletteEntry::display_name() const
+{
+    return name;
 }
 
 } // namespace editor

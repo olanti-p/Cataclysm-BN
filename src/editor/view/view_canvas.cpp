@@ -407,12 +407,7 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
                 ImGui::SeparatorText( "Info" );
             }
             if( tooltip_entry ) {
-                const PaletteEntry &e = *tooltip_entry;
-                for( const auto &it : e.mapping.pieces ) {
-                    ImGui::TextDisabled( "MAP" );
-                    ImGui::SameLine();
-                    ImGui::Text( "%s", it->fmt_summary().c_str() );
-                }
+                show_palette_entry_tooltip( *tooltip_entry );
             }
             for( const MapObject *obj : objects ) {
                 ImGui::TextDisabled( "OBJ" );
