@@ -2,5 +2,5 @@
 
 ## Known bugs:
 
-- Terrain and furniture sprites with non-standard sizes (e.g. trees, or fridge) get squeezed to fit
-- Performance drops (UI becomes sluggish) with the resing amount of different tiles and objects on map
+- Rendering slows down (UI becomes sluggish) when there are many different graphical tiles to render
+- Game sometimes crashes when loading data while minimized/unfocused
