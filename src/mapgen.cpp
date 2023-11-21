@@ -6698,3 +6698,193 @@ const mapgen_palette &string_id<mapgen_palette>::obj() const
 {
     return mapgen_palette::get( *this );
 }
+
+#include "editor/mapgen/piece_impl.h"
+#include "editor/common/weighted_list.h"
+
+//
+// - Hey, Fred, why don't we put all the jmapgen_piece subclasses into mapgen.cpp?
+// - Why would we do that, Joe? It's gonna be an ASS to work with them, and this file is already 6k lines!
+// - Well, we'll get to have one less header file in the project.
+// - ... You're a genious, Joe!
+//
+// That is the most likely cause of why I have to suffer through this bullshit.
+// TODO: perhaps unfuck this in a way that does not generate a 1.2kloc merge conflict.
+//
+
+namespace editor
+{
+
+bool PieceField::try_import( const jmapgen_piece &piece )
+{
+    return false; // TODO
+}
+
+bool PieceNPC::try_import( const jmapgen_piece &piece )
+{
+    return false; // TODO
+}
+
+bool PieceFaction::try_import( const jmapgen_piece &piece )
+{
+    return false; // TODO
+}
+
+bool PieceSign::try_import( const jmapgen_piece &piece )
+{
+    return false; // TODO
+}
+
+bool PieceGraffiti::try_import( const jmapgen_piece &piece )
+{
+    return false; // TODO
+}
+
+bool PieceVendingMachine::try_import( const jmapgen_piece &piece )
+{
+    return false; // TODO
+}
+
+bool PieceToilet::try_import( const jmapgen_piece &piece )
+{
+    return false; // TODO
+}
+
+bool PieceGaspump::try_import( const jmapgen_piece &piece )
+{
+    return false; // TODO
+}
+
+bool PieceLiquid::try_import( const jmapgen_piece &piece )
+{
+    return false; // TODO
+}
+
+bool PieceIGroup::try_import( const jmapgen_piece &piece )
+{
+    return false; // TODO
+}
+
+bool PieceLoot::try_import( const jmapgen_piece &piece )
+{
+    return false; // TODO
+}
+
+bool PieceMGroup::try_import( const jmapgen_piece &piece )
+{
+    return false; // TODO
+}
+
+bool PieceMonster::try_import( const jmapgen_piece &piece )
+{
+    return false; // TODO
+}
+
+bool PieceVehicle::try_import( const jmapgen_piece &piece )
+{
+    return false; // TODO
+}
+
+bool PieceItem::try_import( const jmapgen_piece &piece )
+{
+    return false; // TODO
+}
+
+bool PieceTrap::try_import( const jmapgen_piece &piece )
+{
+    return false; // TODO
+}
+
+bool PieceFurniture::try_import( const jmapgen_piece &piece )
+{
+    return false; // TODO
+}
+
+bool PieceTerrain::try_import( const jmapgen_piece &piece )
+{
+    return false; // TODO
+}
+
+bool PieceTerFurnTransform::try_import( const jmapgen_piece &piece )
+{
+    return false; // TODO
+}
+
+bool PieceMakeRubble::try_import( const jmapgen_piece &piece )
+{
+    return false; // TODO
+}
+
+bool PieceComputer::try_import( const jmapgen_piece &piece )
+{
+    return false; // TODO
+}
+
+bool PieceSealeditem::try_import( const jmapgen_piece &piece )
+{
+    return false; // TODO
+}
+
+bool PieceTranslate::try_import( const jmapgen_piece &piece )
+{
+    return false; // TODO
+}
+
+bool PieceZone::try_import( const jmapgen_piece &piece )
+{
+    return false; // TODO
+}
+
+bool PieceNested::try_import( const jmapgen_piece &piece )
+{
+    return false; // TODO
+}
+
+template<typename T, typename P>
+void import_alternativly( editor::WeightedList<T> &list, const std::vector<P> &source )
+{
+    for( const auto &entry : source ) {
+        T new_id( entry.id->id.str() );
+        if( !list.entries.empty() && list.entries.back().val == new_id ) {
+            // Undo the weighted list optimization
+            list.entries.back().weight += 1;
+        } else {
+            list.entries.emplace_back( std::move( new_id ), 1 );
+        }
+    }
+}
+
+bool PieceAltTrap::try_import( const jmapgen_piece &piece )
+{
+    const jmapgen_alternativly<jmapgen_trap> *casted =
+        dynamic_cast<const jmapgen_alternativly<jmapgen_trap>*>( &piece );
+    if( !casted ) {
+        return false;
+    }
+    import_alternativly<EID::Trap, jmapgen_trap>( list, casted->alternatives );
+    return true;
+}
+
+bool PieceAltFurniture::try_import( const jmapgen_piece &piece )
+{
+    const jmapgen_alternativly<jmapgen_furniture> *casted =
+        dynamic_cast<const jmapgen_alternativly<jmapgen_furniture>*>( &piece );
+    if( !casted ) {
+        return false;
+    }
+    import_alternativly<EID::Furn, jmapgen_furniture>( list, casted->alternatives );
+    return true;
+}
+
+bool PieceAltTerrain::try_import( const jmapgen_piece &piece )
+{
+    const jmapgen_alternativly<jmapgen_terrain> *casted =
+        dynamic_cast<const jmapgen_alternativly<jmapgen_terrain>*>( &piece );
+    if( !casted ) {
+        return false;
+    }
+    import_alternativly<EID::Ter, jmapgen_terrain>( list, casted->alternatives );
+    return true;
+}
+
+} // namespace editor

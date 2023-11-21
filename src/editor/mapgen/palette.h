@@ -97,11 +97,6 @@ struct Palette {
 /**
  * =============== Windows ===============
  */
-map_key pick_available_key( const Palette &pal );
-
-/**
- * =============== Windows ===============
- */
 void show_mapping( State &state, editor::Palette &p, editor::PaletteEntry &entry,
                    bool &show );
 void show_palette_verbose( State &state, Palette &p, bool &show );

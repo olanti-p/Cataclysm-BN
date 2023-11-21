@@ -3,16 +3,18 @@
 
 #include "calendar.h"
 
-#include "piece_type.h"
-#include "widget/editable_id.h"
-#include "common/int_range.h"
-#include "common/uuid.h"
+// FIXME: conflicts in include paths
+#include "editor/mapgen/piece_type.h"
+#include "editor/widget/editable_id.h"
+#include "editor/common/int_range.h"
+#include "editor/common/uuid.h"
 
 #include <memory>
 #include <string>
 
 class JsonOut;
 class JsonObject;
+class jmapgen_piece;
 
 #define IMPLEMENT_ME_PIECE(piece_class, piece_type)                     \
     piece_class() = default;                                            \
@@ -28,6 +30,7 @@ class JsonObject;
     void serialize( JsonOut &jsout ) const override;                    \
     void deserialize( JsonObject &jsin ) override;                      \
     void export_func( JsonOut& jo ) const override;                     \
+    bool try_import( const jmapgen_piece& piece ) override;             \
     void show_ui( State& state ) override;                              \
     std::string fmt_data_summary() const override;
 
@@ -48,6 +51,7 @@ struct Piece {
     virtual void serialize( JsonOut &jsout ) const = 0;
     virtual void deserialize( JsonObject &jsin ) = 0;
     virtual void export_func( JsonOut &jo ) const = 0;
+    virtual bool try_import( const jmapgen_piece &piece ) = 0;
 
     virtual void show_ui( State &state ) = 0;
 

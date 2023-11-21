@@ -2,15 +2,25 @@
 #define CATA_SRC_EDITOR_NEW_PALETTE_H
 
 #include "common/uuid.h"
+#include "widget/editable_id.h"
 
 #include <string>
 
 namespace editor
 {
+struct Palette;
+struct Project;
 struct State;
+
+enum class NewPaletteKind {
+    BrandNew,
+    Imported,
+};
 
 struct NewPaletteState {
     std::string name;
+    NewPaletteKind kind = NewPaletteKind::BrandNew;
+    EID::Palette import_from;
     bool inherits = false;
     UUID inherits_from = UUID_INVALID;
 
