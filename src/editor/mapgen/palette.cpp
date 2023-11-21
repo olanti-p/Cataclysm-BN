@@ -339,6 +339,7 @@ static void show_palette_entries_simple( State &state, Palette &palette )
     int buttons_count = palette.entries.size();
     float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
     ImVec2 button_sz( 40, 40 );
+    ImVec2 button_sz_text = button_sz + ImGui::GetStyle().FramePadding * 2;
     for( int n = 0; n < buttons_count; n++ ) {
         const PaletteEntry &entry = palette.entries[n];
         const SpriteRef *img = palette.sprite_from_uuid( entry.uuid );
@@ -349,7 +350,14 @@ static void show_palette_entries_simple( State &state, Palette &palette )
             ImGui::PushStyleColor( ImGuiCol_ButtonHovered, col_selected_palette_entry );
             ImGui::PushStyleColor( ImGuiCol_ButtonActive, col_selected_palette_entry );
         }
-        if( ImGui::ImageButton( "button", *img, button_sz ) && !is_selected ) {
+        bool btn_result;
+        if( img ) {
+            btn_result = ImGui::ImageButton( "button", *img, button_sz );
+        } else {
+            std::string label = string_format( "%s###button", entry.key.str );
+            btn_result = ImGui::Button( label.c_str(), button_sz_text );
+        }
+        if( btn_result && !is_selected ) {
             state.ui->tools->set_main_tile( entry.uuid );
         }
         if( ImGui::IsItemHovered( ImGuiHoveredFlags_DelayShort ) ) {
