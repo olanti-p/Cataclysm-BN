@@ -18,7 +18,10 @@ std::string RectSelection::get_tool_display_name() const
 
 std::string RectSelection::get_tool_hint() const
 {
-    return "Drag LMB to select in a rectangular shape.";
+    return "Drag LMB to select in a rectangular shape.\n\n"
+           "Hold Shift to select in a square shape.\n"
+           "Press Ctrl+A to select everything.\n"
+           "Press Esc to dismiss selection.";
 }
 
 void RectSelectionSettings::show()

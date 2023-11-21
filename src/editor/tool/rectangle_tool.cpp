@@ -18,7 +18,9 @@ std::string Rectangle::get_tool_display_name() const
 
 std::string Rectangle::get_tool_hint() const
 {
-    return "Drag LMB to draw a rectangle.";
+    return "Drag LMB to draw a rectangle.\n\n"
+           "Hold Shift to draw a square.\n"
+           "Press Esc while dragging to cancel.";
 }
 
 void RectangleSettings::show()
