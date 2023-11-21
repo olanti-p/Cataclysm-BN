@@ -1,6 +1,6 @@
 #include "rect_selection.h"
 
-#include "common/math.h"
+#include "common/algo.h"
 #include "coordinates.h"
 #include "imgui.h"
 #include "line.h"
@@ -78,7 +78,8 @@ void RectSelectionControl::handle_tool_operation( ToolTarget &target )
 std::vector<point> RectSelectionControl::make_rectangle( point_abs_etile p1, point_abs_etile p2,
         bool filled ) const
 {
-    auto corners = normalize_rect( p1, p2 );
+    // TODO: deduplicate with Rectangle tool
+    auto corners = editor::normalize_rect( p1, p2 );
     std::vector<point> ret;
     if( filled ) {
         for( int y = corners.first.y(); y <= corners.second.y(); y++ ) {
@@ -119,6 +120,7 @@ void RectSelectionControl::apply( SelectionMask &selection, const std::vector<po
 
 point_abs_etile RectSelectionControl::get_rectangle_end( ToolTarget &target ) const
 {
+    // TODO: deduplicate with Rectangle tool
     if( start && ImGui::IsKeyDown( ImGuiKey_ModShift ) ) {
         point delta = target.cursor_tile_pos.raw() - start->raw();
         point delta_abs = delta.abs();
@@ -142,6 +144,7 @@ point_abs_etile RectSelectionControl::get_rectangle_end( ToolTarget &target ) co
 
 void RectSelectionControl::show_tooltip( ToolTarget &target )
 {
+    // TODO: deduplicate with Rectangle tool
     if( !start ) {
         ImGui::Text( "<ERROR:null rectangle start>" );
         return;

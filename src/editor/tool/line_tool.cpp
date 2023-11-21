@@ -1,6 +1,6 @@
 #include "line_tool.h"
 
-#include "common/math.h"
+#include "common/algo.h"
 #include "coordinates.h"
 #include "imgui.h"
 #include "line.h"
@@ -67,7 +67,7 @@ void LineControl::handle_tool_operation( ToolTarget &target )
 
 std::vector<point> LineControl::make_line( point_abs_etile p1, point_abs_etile p2 ) const
 {
-    return line_bresenham( p1.raw(), p2.raw() );
+    return editor::line_bresenham( p1.raw(), p2.raw() );
 }
 
 void LineControl::apply( Canvas2D<UUID> &canvas, const std::vector<point> &line, UUID new_value )

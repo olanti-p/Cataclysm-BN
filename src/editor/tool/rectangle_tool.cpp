@@ -1,6 +1,6 @@
 #include "rectangle_tool.h"
 
-#include "common/math.h"
+#include "common/algo.h"
 #include "coordinates.h"
 #include "imgui.h"
 #include "line.h"
@@ -73,7 +73,7 @@ void RectangleControl::handle_tool_operation( ToolTarget &target )
 std::vector<point> RectangleControl::make_rectangle( point_abs_etile p1, point_abs_etile p2,
         bool filled ) const
 {
-    auto corners = normalize_rect( p1, p2 );
+    auto corners = editor::normalize_rect( p1, p2 );
     std::vector<point> ret;
     if( filled ) {
         for( int y = corners.first.y(); y <= corners.second.y(); y++ ) {

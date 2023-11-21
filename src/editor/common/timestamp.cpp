@@ -1,5 +1,7 @@
 #include "timestamp.h"
 
+#include "string_formatter.h"
+
 #include <chrono>
 
 namespace editor
