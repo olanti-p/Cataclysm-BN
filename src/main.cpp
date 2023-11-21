@@ -44,6 +44,9 @@
 #include "rng.h"
 #include "type_id.h"
 #include "ui_manager.h"
+#include "avatar.h"
+#include "worldfactory.h"
+#include "mod_manager.h"
 
 #if defined(PREFIX)
 #   undef PREFIX
@@ -51,6 +54,8 @@
 #endif
 
 class ui_adaptor;
+
+#include "editor/runtime/welcome_screen.h"
 
 #if defined(TILES)
 #   define SDL_MAIN_HANDLED
@@ -800,17 +805,79 @@ int main( int argc, char *argv[] )
     prompt_select_lang_on_startup();
     replay_buffered_debugmsg_prompts();
 
-    while( true ) {
-        if( !world.empty() ) {
-            if( !g->load( world ) ) {
-                break;
+    world_generator->init();
+    const std::string bnme_world_id( "BNME-world" );
+    const mod_id bnme_mod_id( "me_interface" );
+    std::vector<mod_id> bnme_modlist;
+    if( world_generator->has_world( bnme_world_id ) ) {
+        bnme_modlist = world_generator->get_world( bnme_world_id )->active_mod_order;
+    } else {
+        bnme_modlist = {{
+                mod_management::get_default_core_content_pack(),
+                bnme_mod_id,
             }
-            world.clear(); // ensure quit returns to opening screen
+        };
+    }
 
-        } else {
-            main_menu menu;
-            if( !menu.opening_screen() ) {
-                break;
+    // It's best to recreate world from scratch to avoid side effects
+    const auto &remake_world = [&]() -> WORLDPTR {
+        if( world_generator->has_world( bnme_world_id ) )
+        {
+            world_generator->delete_world( bnme_world_id, true );
+        }
+        return world_generator->make_new_world_bnme( bnme_world_id, bnme_modlist );
+    };
+
+    while( true ) {
+        editor::WelcomeResult res = editor::show_welcome_screen();
+        if( res.quit_to_desktop ) {
+            return 0;
+        }
+        if( res.edit_mods ) {
+            WORLDPTR world = remake_world();
+            world_generator->edit_active_world_mods( world );
+            bnme_modlist = world->active_mod_order;
+            // Prevent footguns
+            if( std::find( bnme_modlist.begin(), bnme_modlist.end(), bnme_mod_id ) == bnme_modlist.end() ) {
+                bnme_modlist.emplace_back( bnme_mod_id );
+                world->active_mod_order = bnme_modlist;
+                world->save();
+            }
+            continue;
+        }
+        if( res.open_editor ) {
+            g->enter_editor_on_start = true;
+            WORLDPTR world = remake_world();
+            world_generator->set_active_world( world );
+            try {
+                g->setup();
+            } catch( const std::exception &err ) {
+                debugmsg( "Error: %s", err.what() );
+                continue;
+            }
+            if( !get_avatar().create( character_type::NOW ) ) {
+                get_avatar() = avatar();
+                world_generator->set_active_world( nullptr );
+                continue;
+            }
+            if( !g->start_game() ) {
+                get_avatar() = avatar();
+                world_generator->set_active_world( nullptr );
+                continue;
+            }
+        }
+        if( res.quit_to_game ) {
+            if( !world.empty() ) {
+                if( !g->load( world ) ) {
+                    break;
+                }
+                world.clear(); // ensure quit returns to opening screen
+
+            } else {
+                main_menu menu;
+                if( !menu.opening_screen() ) {
+                    break;
+                }
             }
         }
 

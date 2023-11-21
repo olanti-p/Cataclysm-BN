@@ -739,8 +739,9 @@ class game
 #if defined(__ANDROID__)
         void load_shortcuts( std::istream &fin );
 #endif
+    public:
         bool start_game(); // Starts a new game in the active world
-
+    private:
         //private save functions.
         // returns false if saving failed for whatever reason
         bool save_factions_missions_npcs();
