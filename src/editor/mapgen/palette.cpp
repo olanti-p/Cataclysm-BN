@@ -1,22 +1,10 @@
 #include "palette.h"
 
 #include "mapgen/piece_impl.h"
+#include "mapgen_map_key.h"
 
 namespace editor
 {
-
-void show_palette_entry_tooltip( const PaletteEntry &entry )
-{
-    std::string name = entry.display_name();
-    if( !name.empty() ) {
-        ImGui::Text( "%s", name.c_str() );
-    }
-    for( const auto &it : entry.mapping.pieces ) {
-        ImGui::TextDisabled( "MAP" );
-        ImGui::SameLine();
-        ImGui::Text( "%s", it->fmt_summary().c_str() );
-    }
-}
 
 Mapping::Mapping( const Mapping &rhs )
 {
@@ -74,9 +62,9 @@ const std::string &Palette::display_key_from_uuid( const UUID &uuid ) const
 const ImVec4 &Palette::color_from_uuid( const UUID &uuid ) const
 {
     if( uuid != UUID_INVALID ) {
-    const PaletteEntry *entry = find_entry( uuid );
-    if( entry ) {
-        return entry->color;
+        const PaletteEntry *entry = find_entry( uuid );
+        if( entry ) {
+            return entry->color;
         }
     }
 

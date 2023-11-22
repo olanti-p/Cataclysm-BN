@@ -1,12 +1,82 @@
 #include "palette.h"
 
+#include "imgui.h"
 #include "common/color.h"
+#include "project/project.h"
+#include "state/control_state.h"
 #include "state/state.h"
 #include "state/ui_state.h"
 #include "widget/widgets.h"
+#include "mapgen/palette_view.h"
+
+#include <algorithm>
+#include <vector>
 
 namespace editor
 {
+static int find_dragged_idx( const Palette &palette, UUID uuid )
+{
+    for( size_t i = 0; i < palette.entries.size(); i++ ) {
+        if( palette.entries[i].uuid == uuid ) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+static void handle_drag_and_drop( State &state, Palette &palette, int idx )
+{
+    const char *payload_id = "PALETTE_ENTRY";
+
+    std::vector<PaletteEntry> &entries = palette.entries;
+    const int num_entries = static_cast<int>( entries.size() );
+    bool is_last_entry = idx == num_entries;
+    if( !is_last_entry ) {
+        if( ImGui::BeginDragDropSource() ) {
+            PaletteEntryDragState dd;
+            dd.palette = palette.uuid;
+            dd.entry = entries[idx].uuid;
+            ImGui::SetDragDropPayload( payload_id, &dd, sizeof( dd ) );
+            ImGui::Text( "Move to reorder elements." );
+            ImGui::EndDragDropSource();
+        }
+    }
+    if( ImGui::BeginDragDropTarget() ) {
+        if( const ImGuiPayload *payload = ImGui::AcceptDragDropPayload( payload_id ) ) {
+            assert( payload->DataSize == sizeof( PaletteEntryDragState ) );
+            PaletteEntryDragState dd = *( const PaletteEntryDragState * )payload->Data;
+
+            Palette &source_palette = *state.project().get_palette( dd.palette );
+            int dragged_idx = find_dragged_idx( source_palette, dd.entry );
+
+            if( &source_palette != &palette ) {
+                // Dragging between different palettes
+
+                PaletteEntry entry = std::move( source_palette.entries[dragged_idx] );
+                source_palette.entries.erase( source_palette.entries.begin() + dragged_idx );
+
+                if( is_last_entry ) {
+                    entries.emplace_back( std::move( entry ) );
+                } else {
+                    entries.insert( entries.begin() + idx, std::move( entry ) );
+                }
+                state.mark_changed();
+            } else if( !is_last_entry || dragged_idx != ( num_entries - 1 ) ) {
+                // We don't want to react to the last element being dragged to the end
+
+                PaletteEntry entry = std::move( entries[dragged_idx] );
+                entries.erase( entries.begin() + dragged_idx );
+                if( is_last_entry ) {
+                    entries.emplace_back( std::move( entry ) );
+                } else {
+                    entries.insert( entries.begin() + idx, std::move( entry ) );
+                }
+                state.mark_changed();
+            }
+        }
+        ImGui::EndDragDropTarget();
+    }
+}
 
 static void show_palette_entries_simple( State &state, Palette &palette )
 {
@@ -16,12 +86,27 @@ static void show_palette_entries_simple( State &state, Palette &palette )
     float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
     ImVec2 button_sz( 40, 40 );
     ImVec2 button_sz_text = button_sz + ImGui::GetStyle().FramePadding * 2;
-    for( int n = 0; n < buttons_count; n++ ) {
-        const PaletteEntry &entry = palette.entries[n];
+    for( int idx = 0; idx <= buttons_count; idx++ ) {
+        if( idx == buttons_count ) {
+            // Pseudo button, to allow dropping elements at the end
+            ImGui::PushStyleColor( ImGuiCol_Button, col_transparent );
+            ImGui::PushStyleColor( ImGuiCol_ButtonHovered, col_transparent );
+            ImGui::PushStyleColor( ImGuiCol_ButtonActive, col_transparent );
+            ImGui::Button( "###drop-target", button_sz_text );
+            ImGui::PopStyleColor( 3 );
+            handle_drag_and_drop( state, palette, idx );
+            continue;
+        }
+        const PaletteEntry &entry = palette.entries[idx];
         const SpriteRef *img = palette.sprite_from_uuid( entry.uuid );
-        ImGui::PushID( n );
+        ImGui::PushID( idx );
         bool is_selected = selected == entry.uuid;
-        if( is_selected ) {
+        bool is_highlighted = state.control->highlight_entry_in_palette == entry.uuid;
+        if( is_highlighted ) {
+            ImGui::PushStyleColor( ImGuiCol_Button, col_highlighted_palette_entry );
+            ImGui::PushStyleColor( ImGuiCol_ButtonHovered, col_highlighted_palette_entry );
+            ImGui::PushStyleColor( ImGuiCol_ButtonActive, col_highlighted_palette_entry );
+        } else if( is_selected ) {
             ImGui::PushStyleColor( ImGuiCol_Button, col_selected_palette_entry );
             ImGui::PushStyleColor( ImGuiCol_ButtonHovered, col_selected_palette_entry );
             ImGui::PushStyleColor( ImGuiCol_ButtonActive, col_selected_palette_entry );
@@ -33,6 +118,10 @@ static void show_palette_entries_simple( State &state, Palette &palette )
             std::string label = string_format( "%s###button", entry.key.str );
             btn_result = ImGui::Button( label.c_str(), button_sz_text );
         }
+        if( is_selected || is_highlighted ) {
+            ImGui::PopStyleColor( 3 );
+        }
+        handle_drag_and_drop( state, palette, idx );
         if( btn_result && !is_selected ) {
             state.ui->tools->set_main_tile( entry.uuid );
         }
@@ -41,12 +130,9 @@ static void show_palette_entries_simple( State &state, Palette &palette )
             show_palette_entry_tooltip( entry );
             ImGui::EndTooltip();
         }
-        if( is_selected ) {
-            ImGui::PopStyleColor( 3 );
-        }
         float last_button_x2 = ImGui::GetItemRectMax().x;
         float next_button_x2 = last_button_x2 + style.ItemSpacing.x + button_sz.x;
-        if( n + 1 < buttons_count && next_button_x2 < window_visible_x2 ) {
+        if( idx + 1 <= buttons_count && next_button_x2 < window_visible_x2 ) {
             ImGui::SameLine();
         }
         ImGui::PopID();
