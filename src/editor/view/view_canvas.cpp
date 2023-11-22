@@ -12,6 +12,7 @@
 #include "imgui.h"
 #include "mapgen/mapgen.h"
 #include "mapgen/palette.h"
+#include "mapgen/palette_view.h"
 #include "mouse.h"
 #include "project/project.h"
 #include "state/control_state.h"
@@ -277,14 +278,14 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
         for( int x = 0; x < mapgen.mapgensize().x(); x++ ) {
             for( int y = 0; y < mapgen.mapgensize().y(); y++ ) {
                 point_abs_etile p( x, y );
-                const map_key &mk = pal.key_from_uuid( mapgen.base.canvas.get( p.raw() ) );
+                const std::string &mk = pal.display_key_from_uuid( mapgen.base.canvas.get( p.raw() ) );
                 point_abs_epos center = coords::project_combine( p,
                                         point_etile_epos( ETILE_SIZE / 2, ETILE_SIZE / 2 ) );
                 point_abs_screen text_center = cam.world_to_screen( center );
-                point_rel_screen text_size( ImGui::CalcTextSize( mk.str.c_str() ) );
+                point_rel_screen text_size( ImGui::CalcTextSize( mk.c_str() ) );
                 point_abs_screen text_pos = text_center - text_size.raw() / 2;
                 ImGui::SetCursorPos( text_pos.raw() );
-                ImGui::Text( "%s", mk.str.c_str() );
+                ImGui::Text( "%s", mk.c_str() );
             }
         }
     }

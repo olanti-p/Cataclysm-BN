@@ -82,6 +82,7 @@ struct Palette {
     std::optional<UUID> inherits_from;
 
     const map_key &key_from_uuid( const UUID &uuid ) const;
+    const std::string &display_key_from_uuid( const UUID &uuid ) const;
     const ImVec4 &color_from_uuid( const UUID &uuid ) const;
     const SpriteRef *sprite_from_uuid( const UUID &uuid ) const;
 
