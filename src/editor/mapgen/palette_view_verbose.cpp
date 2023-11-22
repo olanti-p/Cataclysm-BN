@@ -1,3 +1,4 @@
+#include "mapgen/palette_view.h"
 #include "palette.h"
 
 #include "common/color.h"
@@ -120,6 +121,7 @@ void show_mapping( State &state, editor::Palette &p, editor::PaletteEntry &entry
     } )
     .with_default_delete()
     .with_default_move()
+    .with_default_drag_drop()
     .run( list );
 
     if( changed ) {
@@ -365,6 +367,9 @@ static void show_palette_entries_verbose( State &state, Palette &palette )
         }
     } )
     .with_default_move()
+    .with_drag_drop( [&]( size_t idx ) -> bool {
+        return handle_palette_entry_drag_and_drop( state.project(), palette, idx );
+    } )
     .run( list );
 
     if( changed ) {

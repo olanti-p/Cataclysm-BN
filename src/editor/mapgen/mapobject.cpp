@@ -172,6 +172,7 @@ void show_mapobjects( State &state, Mapgen &f, bool &show )
         list.insert( std::next( list.cbegin(), idx + 1 ), std::move( copy ) );
     } )
     .with_default_move()
+    .with_default_drag_drop()
     .with_default_delete()
     .run( list );
 

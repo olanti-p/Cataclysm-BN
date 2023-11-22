@@ -82,6 +82,7 @@ void show_project_overview_ui( State &state, Project &project, bool &show )
         project.mapgens.insert( std::next( project.mapgens.cbegin(), idx + 1 ), std::move( copy ) );
     } )
     .with_default_move()
+    .with_default_drag_drop()
     .run( project.mapgens );
 
     ImGui::PopID();
@@ -126,6 +127,7 @@ void show_project_overview_ui( State &state, Project &project, bool &show )
         project.palettes.insert( std::next( project.palettes.cbegin(), idx + 1 ), std::move( copy ) );
     } )
     .with_default_move()
+    .with_default_drag_drop()
     .run( project.palettes );
 
     ImGui::PopID();

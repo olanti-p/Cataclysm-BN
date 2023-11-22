@@ -1,16 +1,22 @@
 #include "widget/widgets.h"
 
-#include "common/uuid.h"
-#include "imgui_internal.h"
-
 #include "cata_tiles.h"
 #include "catacharset.h"
 #include "color.h"
+#include "common/color.h"
+#include "common/uuid.h"
+#include "imgui.h"
 #include "mapgen.h"
 #include "mapgen/palette.h"
 #include "sdl_utils.h"
 #include "sdltiles.h"
 #include "string_utils.h"
+#include <optional>
+
+#ifdef DebugLog
+#  undef DebugLog
+#endif
+#include "imgui_internal.h"
 
 SpriteRef::SpriteRef( const std::string &id )
 {
@@ -531,14 +537,56 @@ void HelpPopup( const char *desc )
     help_popup_common( desc, ImGuiHoveredFlags_DelayNormal );
 }
 
+static void handle_drag_drop_source( size_t idx, const char *payload_id )
+{
+    if( ImGui::BeginDragDropSource() ) {
+        ImGui::SetDragDropPayload( payload_id, &idx, sizeof( idx ) );
+        ImGui::Text( "Drag to reorder elements." );
+        ImGui::EndDragDropSource();
+    }
+}
+
+static std::optional<size_t> handle_drag_drop_target( const char *payload_id )
+{
+    if( ImGui::BeginDragDropTarget() ) {
+        if( const ImGuiPayload *payload = ImGui::AcceptDragDropPayload( payload_id ) ) {
+            assert( payload->DataSize == sizeof( size_t ) );
+            size_t dd = *( const size_t * )payload->Data;
+            return dd;
+        }
+        ImGui::EndDragDropTarget();
+    }
+    return std::nullopt;
+}
+
 bool VectorWidget::run_internal( size_t num )
 {
+    std::string dd_payload_id = string_format( "vector-widget-%d", ImGui::GetID( "vector-widget" ) );
+    bool dd_handled = false;
+
     std::optional<size_t> del;
     std::optional<size_t> dupe;
     std::optional<size_t> move_from;
     std::optional<size_t> move_to;
     for( size_t i = 0; i < num; i++ ) {
         ImGui::PushID( i );
+
+        if( use_default_drag_drop || f_drag_drop ) {
+            ImGui::ImageButton( "drag", "me_draggable" );
+            if( use_default_drag_drop ) {
+                handle_drag_drop_source( i, dd_payload_id.c_str() );
+                std::optional<size_t> tgt = handle_drag_drop_target( dd_payload_id.c_str() );
+                if( tgt ) {
+                    move_from = tgt;
+                    move_to = i;
+                }
+            } else {
+                dd_handled = f_drag_drop( i );
+            }
+            ImGui::HelpPopup( "Drag to reorder elements." );
+            ImGui::SameLine();
+        }
+
         if( f_delete ) {
             bool disabled = f_can_delete && !f_can_delete( i );
             ImGui::BeginDisabled( disabled );
@@ -561,7 +609,7 @@ bool VectorWidget::run_internal( size_t num )
             ImGui::SameLine();
         }
 
-        if( f_move ) {
+        if( use_explicit_move_buttons ) {
             if( i == 0 ) {
                 ImGui::BeginDisabled();
             }
@@ -611,12 +659,32 @@ bool VectorWidget::run_internal( size_t num )
 
         ImGui::PopID();
     }
+    if( use_default_drag_drop || f_drag_drop ) {
+        // Invisible "end of array" drop target
+        ImGui::PushStyleColor( ImGuiCol_Button, editor::col_transparent );
+        ImGui::PushStyleColor( ImGuiCol_ButtonHovered, editor::col_transparent );
+        ImGui::PushStyleColor( ImGuiCol_ButtonActive, editor::col_transparent );
+        ImGui::Button( "###end-of-array", ImVec2( -1.0, 0.0 ) );
+        ImGui::PopStyleColor( 3 );
+        if( use_default_drag_drop ) {
+            std::optional<size_t> tgt = handle_drag_drop_target( dd_payload_id.c_str() );
+            if( tgt ) {
+                move_from = tgt;
+                move_to = num - 1;
+            }
+        } else {
+            dd_handled = f_drag_drop( num );
+        }
+    }
     bool ret = false;
+    if( dd_handled ) {
+        ret = true;
+    }
     if( del ) {
         f_delete( *del );
         ret = true;
     }
-    if( move_from ) {
+    if( move_from && move_to && move_from != move_to ) {
         f_move( *move_from, *move_to );
         ret = true;
     }
