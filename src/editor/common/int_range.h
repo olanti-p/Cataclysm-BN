@@ -3,6 +3,7 @@
 
 class JsonOut;
 class JsonIn;
+struct jmapgen_int;
 
 namespace editor
 {
@@ -10,6 +11,10 @@ namespace editor
 struct IntRange {
     int min = 0;
     int max = 0;
+
+    IntRange() = default;
+    IntRange( const jmapgen_int &range );
+    ~IntRange() = default;
 
     inline operator bool() const {
         return min != 0 || max != 0;

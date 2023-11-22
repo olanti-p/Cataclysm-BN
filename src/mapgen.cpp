@@ -70,6 +70,7 @@
 #include "tileray.h"
 #include "translations.h"
 #include "trap.h"
+#include "type_id.h"
 #include "value_ptr.h"
 #include "vehicle.h"
 #include "vehicle_part.h"
@@ -6701,6 +6702,7 @@ const mapgen_palette &string_id<mapgen_palette>::obj() const
 
 #include "editor/mapgen/piece_impl.h"
 #include "editor/common/weighted_list.h"
+#include "editor/widget/editable_id.h"
 
 //
 // - Hey, Fred, why don't we put all the jmapgen_piece subclasses into mapgen.cpp?
@@ -6717,52 +6719,143 @@ namespace editor
 
 bool PieceField::try_import( const jmapgen_piece &piece )
 {
-    return false; // TODO
+    const jmapgen_field *casted = dynamic_cast<const jmapgen_field *>( &piece );
+    if( !casted ) {
+        return false;
+    }
+    ftype = EID::Field( casted->ftype.id() );
+    intensity = casted->intensity;
+    age = casted->age;
+    return true;
 }
 
 bool PieceNPC::try_import( const jmapgen_piece &piece )
 {
-    return false; // TODO
+    const jmapgen_npc *casted = dynamic_cast<const jmapgen_npc *>( &piece );
+    if( !casted ) {
+        return false;
+    }
+    npc_class = casted->npc_class;
+    target = casted->target;
+    traits.clear();
+    for( const std::string &trait : casted->traits ) {
+        traits.emplace_back( trait );
+    }
+    return true;
 }
 
 bool PieceFaction::try_import( const jmapgen_piece &piece )
 {
-    return false; // TODO
+    const jmapgen_faction *casted = dynamic_cast<const jmapgen_faction *>( &piece );
+    if( !casted ) {
+        return false;
+    }
+    id = casted->id.str();
+    return true;
 }
 
 bool PieceSign::try_import( const jmapgen_piece &piece )
 {
-    return false; // TODO
+    const jmapgen_sign *casted = dynamic_cast<const jmapgen_sign *>( &piece );
+    if( !casted ) {
+        return false;
+    }
+    if( casted->snippet.empty() ) {
+        text = casted->signage;
+        use_snippet = false;
+    } else {
+        snippet = casted->snippet;
+        use_snippet = true;
+    }
+    return true;
 }
 
 bool PieceGraffiti::try_import( const jmapgen_piece &piece )
 {
-    return false; // TODO
+    const jmapgen_graffiti *casted = dynamic_cast<const jmapgen_graffiti *>( &piece );
+    if( !casted ) {
+        return false;
+    }
+    if( casted->snippet.empty() ) {
+        text = casted->text;
+        use_snippet = false;
+    } else {
+        snippet = casted->snippet;
+        use_snippet = true;
+    }
+    return true;
 }
 
 bool PieceVendingMachine::try_import( const jmapgen_piece &piece )
 {
-    return false; // TODO
+    const jmapgen_vending_machine *casted = dynamic_cast<const jmapgen_vending_machine *>( &piece );
+    if( !casted ) {
+        return false;
+    }
+    reinforced = casted->reinforced;
+    if( casted->item_group == item_group_id( "default_vending_machine" ) ) {
+        use_default_group = true;
+    } else {
+        use_default_group = false;
+        item_group = casted->item_group.str();
+    }
+    return true;
 }
 
 bool PieceToilet::try_import( const jmapgen_piece &piece )
 {
-    return false; // TODO
+    const jmapgen_toilet *casted = dynamic_cast<const jmapgen_toilet *>( &piece );
+    if( !casted ) {
+        return false;
+    }
+    amount = casted->amount;
+    use_default_amount = ( amount.min == 0 && amount.max == 0 );
+    return true;
 }
 
 bool PieceGaspump::try_import( const jmapgen_piece &piece )
 {
-    return false; // TODO
+    const jmapgen_gaspump *casted = dynamic_cast<const jmapgen_gaspump *>( &piece );
+    if( !casted ) {
+        return false;
+    }
+    amount = casted->amount;
+    use_default_amount = ( amount.min == 0 && amount.max == 0 );
+    if( casted->fuel == "gasoline" ) {
+        fuel = GasPumpFuel::Gasoline;
+    } else if( casted->fuel == "diesel" ) {
+        fuel = GasPumpFuel::Diesel;
+    } else {
+        fuel = GasPumpFuel::Random;
+    }
+    return true;
 }
 
 bool PieceLiquid::try_import( const jmapgen_piece &piece )
 {
-    return false; // TODO
+    const jmapgen_liquid_item *casted = dynamic_cast<const jmapgen_liquid_item *>( &piece );
+    if( !casted ) {
+        return false;
+    }
+    amount = casted->amount;
+    use_default_amount = ( amount.min == 0 && amount.max == 0 );
+    liquid = casted->liquid.str();
+    chance = casted->chance;
+    spawn_always = ( chance.min == 1 && chance.max == 1 );
+    return true;
 }
 
 bool PieceIGroup::try_import( const jmapgen_piece &piece )
 {
-    return false; // TODO
+    const jmapgen_item_group *casted = dynamic_cast<const jmapgen_item_group *>( &piece );
+    if( !casted ) {
+        return false;
+    }
+    group_id = EID::IGroup( casted->group_id.str() );
+    chance = IntRange( casted->chance );
+    repeat = IntRange( casted->repeat );
+    spawn_once = ( repeat.min == 1 && repeat.max == 1 );
+    return true;
 }
 
 bool PieceLoot::try_import( const jmapgen_piece &piece )
