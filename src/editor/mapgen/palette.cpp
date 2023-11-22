@@ -52,23 +52,37 @@ const map_key &Palette::key_from_uuid( const UUID &uuid ) const
         return entry->key;
     }
 
-    std::cerr << "Tried to find palette key, but uuid was not found " << uuid << std::endl;
-    std::abort();
+    // Entry not found in palette
+    return default_map_key;
+}
+
+const std::string &Palette::display_key_from_uuid( const UUID &uuid ) const
+{
+    if( uuid == UUID_INVALID ) {
+        return default_map_key.str;
+    }
+    const PaletteEntry *entry = find_entry( uuid );
+    if( entry ) {
+        return entry->key.str;
+    }
+
+    // Entry not found in palette
+    static const std::string error_string( "<?>" );
+    return error_string;
 }
 
 const ImVec4 &Palette::color_from_uuid( const UUID &uuid ) const
 {
-    if( uuid == UUID_INVALID ) {
-        static ImVec4 default_color = ImVec4();
-        return default_color;
-    }
+    if( uuid != UUID_INVALID ) {
     const PaletteEntry *entry = find_entry( uuid );
     if( entry ) {
         return entry->color;
+        }
     }
 
-    std::cerr << "Tried to find palette color, but uuid was not found " << uuid << std::endl;
-    std::abort();
+    // Entry not found in palette
+    static ImVec4 default_color = ImVec4();
+    return default_color;
 }
 
 const SpriteRef *Palette::sprite_from_uuid( const UUID &uuid ) const
@@ -88,8 +102,8 @@ const SpriteRef *Palette::sprite_from_uuid( const UUID &uuid ) const
         }
     }
 
-    std::cerr << "Tried to find sprite, but uuid was not found " << uuid << std::endl;
-    std::abort();
+    // Entry not found in palette
+    return nullptr;
 }
 
 PaletteEntry *Palette::find_entry( const UUID &uuid )
