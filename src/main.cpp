@@ -806,26 +806,26 @@ int main( int argc, char *argv[] )
     replay_buffered_debugmsg_prompts();
 
     world_generator->init();
-    const std::string bnme_world_id( "BNME-world" );
-    const mod_id bnme_mod_id( "me_interface" );
-    std::vector<mod_id> bnme_modlist;
-    if( world_generator->has_world( bnme_world_id ) ) {
-        bnme_modlist = world_generator->get_world( bnme_world_id )->active_mod_order;
+    const std::string bnmt_world_id( "BNMT-world" );
+    const mod_id bnmt_mod_id( "me_interface" );
+    std::vector<mod_id> bnmt_modlist;
+    if( world_generator->has_world( bnmt_world_id ) ) {
+        bnmt_modlist = world_generator->get_world( bnmt_world_id )->active_mod_order;
     } else {
-        bnme_modlist = {{
+        bnmt_modlist = {{
                 mod_management::get_default_core_content_pack(),
-                bnme_mod_id,
+                bnmt_mod_id,
             }
         };
     }
 
     // It's best to recreate world from scratch to avoid side effects
     const auto &remake_world = [&]() -> WORLDPTR {
-        if( world_generator->has_world( bnme_world_id ) )
+        if( world_generator->has_world( bnmt_world_id ) )
         {
-            world_generator->delete_world( bnme_world_id, true );
+            world_generator->delete_world( bnmt_world_id, true );
         }
-        return world_generator->make_new_world_bnme( bnme_world_id, bnme_modlist );
+        return world_generator->make_new_world_bnmt( bnmt_world_id, bnmt_modlist );
     };
 
     while( true ) {
@@ -836,11 +836,11 @@ int main( int argc, char *argv[] )
         if( res.edit_mods ) {
             WORLDPTR world = remake_world();
             world_generator->edit_active_world_mods( world );
-            bnme_modlist = world->active_mod_order;
+            bnmt_modlist = world->active_mod_order;
             // Prevent footguns
-            if( std::find( bnme_modlist.begin(), bnme_modlist.end(), bnme_mod_id ) == bnme_modlist.end() ) {
-                bnme_modlist.emplace_back( bnme_mod_id );
-                world->active_mod_order = bnme_modlist;
+            if( std::find( bnmt_modlist.begin(), bnmt_modlist.end(), bnmt_mod_id ) == bnmt_modlist.end() ) {
+                bnmt_modlist.emplace_back( bnmt_mod_id );
+                world->active_mod_order = bnmt_modlist;
                 world->save();
             }
             continue;

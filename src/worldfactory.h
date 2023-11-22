@@ -96,7 +96,7 @@ class worldfactory
         // Generate a world
         WORLDPTR make_new_world( bool show_prompt = true, const std::string &world_to_copy = "" );
         WORLDPTR make_new_world( special_game_type special_type );
-        WORLDPTR make_new_world_bnme( const std::string &worldname, const std::vector<mod_id> &mods );
+        WORLDPTR make_new_world_bnmt( const std::string &worldname, const std::vector<mod_id> &mods );
         // Used for unit tests - does NOT verify if the mods can be loaded
         WORLDPTR make_new_world( const std::vector<mod_id> &mods );
         // Returns the *existing* world of given name.

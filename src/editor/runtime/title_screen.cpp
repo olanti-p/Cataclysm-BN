@@ -22,7 +22,7 @@ static void show_titlescreen_window( TitleScreen &state )
                 );
 
     ImGui::TextCentered( "Bright Nights" );
-    ImGui::TextCentered( "Mapgen Editor" );
+    ImGui::TextCentered( "Mapping  Tool" );
     ImGui::Separator();
 
     // Controls

@@ -218,7 +218,7 @@ WORLDPTR worldfactory::make_new_world( special_game_type special_type )
     return ( all_worlds[worldname] = std::move( special_world ) ).get();
 }
 
-WORLDPTR worldfactory::make_new_world_bnme( const std::string &worldname,
+WORLDPTR worldfactory::make_new_world_bnmt( const std::string &worldname,
         const std::vector<mod_id> &mods )
 {
     std::unique_ptr<WORLD> new_world = std::make_unique<WORLD>();

@@ -151,7 +151,7 @@ point::operator ImVec2()
 
 namespace editor
 {
-void bnme_entry_point()
+void bnmt_entry_point()
 {
     static bool settings_export_initialized = false;
     if( !settings_export_initialized ) {

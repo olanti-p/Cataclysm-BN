@@ -300,7 +300,7 @@ static int map_uilist()
         { uilist_entry( DEBUG_REVEAL_MAP, true, 'r', _( "Reveal map" ) ) },
         { uilist_entry( DEBUG_KILL_AREA, true, 'a', _( "Kill in Area" ) ) },
         { uilist_entry( DEBUG_KILL_NPCS, true, 'k', _( "Kill NPCs" ) ) },
-        { uilist_entry( DEBUG_ADV_MAP_EDITOR, true, 'A', _( "Advanced Map editor" ) ) },
+        { uilist_entry( DEBUG_ADV_MAP_EDITOR, true, 'A', _( "Launch BNMT - Bright Nights Mapping Tool" ) ) },
         { uilist_entry( DEBUG_MAP_EDITOR, true, 'M', _( "Map editor" ) ) },
         { uilist_entry( DEBUG_CHANGE_WEATHER, true, 'w', _( "Change weather" ) ) },
         { uilist_entry( DEBUG_WIND_DIRECTION, true, 'd', _( "Change wind direction" ) ) },
@@ -1598,7 +1598,7 @@ void debug()
             break;
 
         case DEBUG_ADV_MAP_EDITOR:
-            editor::bnme_entry_point();
+            editor::bnmt_entry_point();
             break;
 
         case DEBUG_MAP_EDITOR:

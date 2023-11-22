@@ -1,20 +1,20 @@
-# Bright Nights Mapgen Editor
+# Bright Nights Mapping Tool
 
-Mapgen editor for [Cataclysm: Bright Nights](https://github.com/cataclysmbnteam/Cataclysm-BN).
+Map making tool for [Cataclysm: Bright Nights](https://github.com/cataclysmbnteam/Cataclysm-BN).
 
 ## How to install
-See [INSTALL.md](doc/BNME/INSTALL.md)
+See [INSTALL.md](doc/BNMT/INSTALL.md)
 
 ## How to compile
-See [COMPILING.md](doc/BNME/COMPILING.md)
+See [COMPILING.md](doc/BNMT/COMPILING.md)
 
 ## How to use
-See [TUTORIAL.md](doc/BNME/TUTORIAL.md)
+See [TUTORIAL.md](doc/BNMT/TUTORIAL.md)
 
 ## Bugs
-See [BUGS.md](doc/BNME/BUGS.md) for list of known bugs.
+See [BUGS.md](doc/BNMT/BUGS.md) for list of known bugs.
 
-If you don't see your issue there, please check the [Issue tracker on GitHub](https://github.com/olanti-p/BNME/issues).
+If you don't see your issue there, please check the [Issue tracker on GitHub](https://github.com/olanti-p/BNMT/issues).
 
 Please open a new issue only if you don't find yours in the lists.
 
@@ -24,7 +24,7 @@ Feel free to reach me on Discord, `olanti-p#0624`.
 I'm available on official Bright Nights Discord server: https://discord.gg/XW7XhXuZ89
 
 ## License
-BNME is licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported License.
+BNMT is licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported License.
 
 ## Original BN readme
 See [README_BN.md](README_BN.md)
