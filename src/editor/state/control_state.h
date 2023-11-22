@@ -58,11 +58,17 @@ struct ControlState {
 
         QuickPaletteAddState quick_add_state;
 
+        void show_warning_popup( const std::string &data );
+        void handle_warning_popup();
+
     private:
         void set_tool_control( tools::ToolKind t );
         std::unique_ptr<tools::ToolControl> tool_control;
         tools::ToolKind tool_control_kind = tools::ToolKind::Cursor;
         std::unordered_map<UUID, SelectionMask> canvas_selection_states;
+
+        bool want_show_warning_popup = false;
+        std::string warning_popup_data;
 };
 
 } // namespace editor

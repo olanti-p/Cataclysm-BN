@@ -277,6 +277,8 @@ void run_ui_for_state( State &state )
     if( !state.control->has_ongoing_tool_operation() ) {
         handle_snapshot_change( *state.history );
     }
+
+    state.control->handle_warning_popup();
 }
 
 } // namespace editor
