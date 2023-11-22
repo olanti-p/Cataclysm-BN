@@ -330,7 +330,7 @@ void RectangleSettings::deserialize( JsonIn &jsin )
 void RectSelectionSettings::serialize( JsonOut &jsout ) const
 {
     jsout.start_object();
-    jsout.member( "filled", filled );
+    // TODO: modes
     jsout.end_object();
 }
 
@@ -338,7 +338,7 @@ void RectSelectionSettings::deserialize( JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
-    jo.read( "filled", filled );
+    // TODO: modes
 }
 
 } // namespace editor::tools

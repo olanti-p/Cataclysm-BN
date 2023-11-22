@@ -10,13 +10,14 @@ namespace editor::tools
 
 struct RectSelectionControl : public ToolControl {
     std::optional<point_abs_etile> start;
+    bool dismissing_selection = false;
 
     void handle_tool_operation( ToolTarget &target ) override;
     inline bool operation_in_progress() const override {
         return start.has_value();
     }
 
-    std::vector<point> make_rectangle( point_abs_etile p1, point_abs_etile p2, bool filled ) const;
+    std::vector<point> make_rectangle( point_abs_etile p1, point_abs_etile p2 ) const;
     void apply( SelectionMask &selection, const std::vector<point> &rect );
     point_abs_etile get_rectangle_end( ToolTarget &target ) const;
 
@@ -24,8 +25,6 @@ struct RectSelectionControl : public ToolControl {
 };
 
 struct RectSelectionSettings : public ToolSettings {
-    bool filled = false;
-
     void serialize( JsonOut &jsout ) const override;
     void deserialize( JsonIn &jsin ) override;
 

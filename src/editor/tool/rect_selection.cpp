@@ -19,14 +19,14 @@ std::string RectSelection::get_tool_display_name() const
 std::string RectSelection::get_tool_hint() const
 {
     return "Drag LMB to select in a rectangular shape.\n\n"
-           "Hold Shift to select in a square shape.\n"
+           "Hold Shift to add to existing selection.\n"
            "Press Ctrl+A to select everything.\n"
-           "Press Esc to dismiss selection.";
+           "Press Esc or click outside selected area to dismiss selection.";
 }
 
 void RectSelectionSettings::show()
 {
-    ImGui::Checkbox( "Filled", &filled );
+    // TODO: selection modes
 }
 
 void RectSelectionControl::handle_tool_operation( ToolTarget &target )
@@ -35,20 +35,34 @@ void RectSelectionControl::handle_tool_operation( ToolTarget &target )
         start.reset();
         return;
     }
-    RectSelectionSettings &settings = *dynamic_cast<RectSelectionSettings *>( target.settings );
+    //RectSelectionSettings &settings = *dynamic_cast<RectSelectionSettings *>( target.settings );
     if( target.view_hovered ) {
         if( ImGui::IsMouseClicked( ImGuiMouseButton_Left ) ) {
+            dismissing_selection = true;
+        }
+        if( ImGui::IsMouseDragging( ImGuiMouseButton_Left ) && !start ) {
             // Stroke start
             start = target.cursor_tile_pos;
+            dismissing_selection = false;
         }
-        if( ImGui::IsMouseReleased( ImGuiMouseButton_Left ) && start ) {
-            // Stroke end
-            point_abs_etile p1 = *start;
-            point_abs_etile p2 = get_rectangle_end( target );
+        if( ImGui::IsMouseReleased( ImGuiMouseButton_Left ) ) {
+            if( start ) {
+                // Stroke end
+                point_abs_etile p1 = *start;
+                point_abs_etile p2 = get_rectangle_end( target );
 
-            std::vector<point> rect = make_rectangle( p1, p2, settings.filled );
-            apply( *target.selection, rect );
-            start.reset();
+                std::vector<point> rect = make_rectangle( p1, p2 );
+                if( !ImGui::IsKeyDown( ImGuiKey_ModShift ) ) {
+                    target.selection->clear_all();
+                }
+                apply( *target.selection, rect );
+                start.reset();
+            } else if( dismissing_selection ) {
+                dismissing_selection = false;
+                if( !ImGui::IsKeyDown( ImGuiKey_ModShift ) ) {
+                    target.selection->clear_all();
+                }
+            }
         }
         if( ImGui::IsKeyDown( ImGuiKey_ModCtrl ) && ImGui::IsKeyPressed( ImGuiKey_A ) ) {
             // Abort & select all
@@ -64,7 +78,7 @@ void RectSelectionControl::handle_tool_operation( ToolTarget &target )
             target.want_tooltip = true;
             point_abs_etile p1 = *start;
             point_abs_etile p2 = get_rectangle_end( target );
-            std::vector<point> rect = make_rectangle( p1, p2, settings.filled );
+            std::vector<point> rect = make_rectangle( p1, p2 );
             for( const point &p : rect ) {
                 target.highlight.tiles.emplace_back( p );
             }
@@ -75,35 +89,15 @@ void RectSelectionControl::handle_tool_operation( ToolTarget &target )
     }
 }
 
-std::vector<point> RectSelectionControl::make_rectangle( point_abs_etile p1, point_abs_etile p2,
-        bool filled ) const
+std::vector<point> RectSelectionControl::make_rectangle( point_abs_etile p1,
+        point_abs_etile p2 ) const
 {
     // TODO: deduplicate with Rectangle tool
     auto corners = editor::normalize_rect( p1, p2 );
     std::vector<point> ret;
-    if( filled ) {
-        for( int y = corners.first.y(); y <= corners.second.y(); y++ ) {
-            for( int x = corners.first.x(); x <= corners.second.x(); x++ ) {
-                ret.emplace_back( x, y );
-            }
-        }
-    } else {
-        int x1 = corners.first.x();
-        int x2 = corners.second.x();
-        int y1 = corners.first.y();
-        int y2 = corners.second.y();
-
-        for( int x = x1; x <= x2; x++ ) {
-            ret.emplace_back( x, y1 );
-            if( y1 != y2 ) {
-                ret.emplace_back( x, y2 );
-            }
-        }
-        for( int y = y1 + 1; y <= y2 - 1; y++ ) {
-            ret.emplace_back( x1, y );
-            if( x1 != x2 ) {
-                ret.emplace_back( x2, y );
-            }
+    for( int y = corners.first.y(); y <= corners.second.y(); y++ ) {
+        for( int x = corners.first.x(); x <= corners.second.x(); x++ ) {
+            ret.emplace_back( x, y );
         }
     }
     return ret;
@@ -120,26 +114,7 @@ void RectSelectionControl::apply( SelectionMask &selection, const std::vector<po
 
 point_abs_etile RectSelectionControl::get_rectangle_end( ToolTarget &target ) const
 {
-    // TODO: deduplicate with Rectangle tool
-    if( start && ImGui::IsKeyDown( ImGuiKey_ModShift ) ) {
-        point delta = target.cursor_tile_pos.raw() - start->raw();
-        point delta_abs = delta.abs();
-        int dist = std::min( delta_abs.x, delta_abs.y );
-        point vec;
-        if( delta.x > 0 ) {
-            vec.x = 1;
-        } else if( delta.x < 0 ) {
-            vec.x = -1;
-        }
-        if( delta.y > 0 ) {
-            vec.y = 1;
-        } else if( delta.y < 0 ) {
-            vec.y = -1;
-        }
-        return *start + ( vec * dist );
-    } else {
-        return target.cursor_tile_pos;
-    }
+    return target.cursor_tile_pos;
 }
 
 void RectSelectionControl::show_tooltip( ToolTarget &target )
