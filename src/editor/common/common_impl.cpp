@@ -2,10 +2,16 @@
 #include "int_range.h"
 
 #include "json.h"
+#include "../../mapgen.h"
 
 namespace editor
 {
 
+IntRange::IntRange( const jmapgen_int &range )
+{
+    min = range.val;
+    max = range.valmax;
+}
 
 void UUIDGenerator::serialize( JsonOut &jsout ) const
 {
