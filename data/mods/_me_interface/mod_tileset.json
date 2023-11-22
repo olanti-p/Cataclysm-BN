@@ -28,7 +28,8 @@
           { "id": "me_palette", "fg": 7 },
           { "id": "me_mapobject", "fg": 8 },
           { "id": "me_visible", "fg": 9 },
-          { "id": "me_hidden", "fg": 10 }
+          { "id": "me_hidden", "fg": 10 },
+          { "id": "me_draggable", "fg": 11 }
         ]
       }
     ]
