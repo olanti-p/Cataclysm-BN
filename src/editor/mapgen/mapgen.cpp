@@ -103,6 +103,7 @@ void show_mapgen_info( State &state, Mapgen &mapgen, bool &show )
                 .with_default_add()
                 .with_default_delete()
                 .with_default_move()
+                .with_default_drag_drop()
                 .run( oters );
 
                 if( oters_changed ) {

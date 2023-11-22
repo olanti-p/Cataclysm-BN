@@ -121,6 +121,7 @@ class VectorWidget
         std::function<void( size_t, size_t )> f_move;
         std::function<void( size_t )> f_duplicate;
         std::function<void( size_t )> f_delete;
+        std::function<bool( size_t )> f_drag_drop;
         std::function<bool()> f_add;
 
         std::function<bool( size_t )> f_can_duplicate;
@@ -130,6 +131,8 @@ class VectorWidget
         bool use_default_duplicate = false;
         bool use_default_delete = false;
         bool use_default_add = false;
+        bool use_explicit_move_buttons = false;
+        bool use_default_drag_drop = false;
 
         bool run_internal( size_t num );
 
@@ -147,8 +150,23 @@ class VectorWidget
             return *this;
         }
 
+        inline VectorWidget &with_explicit_move_buttons() {
+            use_explicit_move_buttons = true;
+            return *this;
+        }
+
         inline VectorWidget &with_default_move() {
             use_default_move = true;
+            return *this;
+        }
+
+        inline VectorWidget &with_default_drag_drop() {
+            use_default_drag_drop = true;
+            return *this;
+        }
+
+        inline VectorWidget &with_drag_drop( std::function<bool( size_t )> &&f ) {
+            f_drag_drop = f;
             return *this;
         }
 

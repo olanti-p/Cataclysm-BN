@@ -24,8 +24,10 @@ static int find_dragged_idx( const Palette &palette, UUID uuid )
     return -1;
 }
 
-static void handle_drag_and_drop( State &state, Palette &palette, int idx )
+bool handle_palette_entry_drag_and_drop( Project &project, Palette &palette, int idx )
 {
+    bool ret = false;
+
     const char *payload_id = "PALETTE_ENTRY";
 
     std::vector<PaletteEntry> &entries = palette.entries;
@@ -37,7 +39,7 @@ static void handle_drag_and_drop( State &state, Palette &palette, int idx )
             dd.palette = palette.uuid;
             dd.entry = entries[idx].uuid;
             ImGui::SetDragDropPayload( payload_id, &dd, sizeof( dd ) );
-            ImGui::Text( "Move to reorder elements." );
+            ImGui::Text( "Drag to reorder elements." );
             ImGui::EndDragDropSource();
         }
     }
@@ -46,7 +48,7 @@ static void handle_drag_and_drop( State &state, Palette &palette, int idx )
             assert( payload->DataSize == sizeof( PaletteEntryDragState ) );
             PaletteEntryDragState dd = *( const PaletteEntryDragState * )payload->Data;
 
-            Palette &source_palette = *state.project().get_palette( dd.palette );
+            Palette &source_palette = *project.get_palette( dd.palette );
             int dragged_idx = find_dragged_idx( source_palette, dd.entry );
 
             if( &source_palette != &palette ) {
@@ -60,9 +62,10 @@ static void handle_drag_and_drop( State &state, Palette &palette, int idx )
                 } else {
                     entries.insert( entries.begin() + idx, std::move( entry ) );
                 }
-                state.mark_changed();
-            } else if( !is_last_entry || dragged_idx != ( num_entries - 1 ) ) {
-                // We don't want to react to the last element being dragged to the end
+                ret = true;
+            } else if( dragged_idx != idx && ( !is_last_entry || dragged_idx != ( num_entries - 1 ) ) ) {
+                // We don't want to react to the element being dragged onto itself.
+                // We don't want to react to the last element being dragged to the end.
 
                 PaletteEntry entry = std::move( entries[dragged_idx] );
                 entries.erase( entries.begin() + dragged_idx );
@@ -71,11 +74,13 @@ static void handle_drag_and_drop( State &state, Palette &palette, int idx )
                 } else {
                     entries.insert( entries.begin() + idx, std::move( entry ) );
                 }
-                state.mark_changed();
+                ret = true;
             }
         }
         ImGui::EndDragDropTarget();
     }
+
+    return ret;
 }
 
 static void show_palette_entries_simple( State &state, Palette &palette )
@@ -94,7 +99,9 @@ static void show_palette_entries_simple( State &state, Palette &palette )
             ImGui::PushStyleColor( ImGuiCol_ButtonActive, col_transparent );
             ImGui::Button( "###drop-target", button_sz_text );
             ImGui::PopStyleColor( 3 );
-            handle_drag_and_drop( state, palette, idx );
+            if( handle_palette_entry_drag_and_drop( state.project(), palette, idx ) ) {
+                state.mark_changed();
+            }
             continue;
         }
         const PaletteEntry &entry = palette.entries[idx];
@@ -121,7 +128,9 @@ static void show_palette_entries_simple( State &state, Palette &palette )
         if( is_selected || is_highlighted ) {
             ImGui::PopStyleColor( 3 );
         }
-        handle_drag_and_drop( state, palette, idx );
+        if( handle_palette_entry_drag_and_drop( state.project(), palette, idx ) ) {
+            state.mark_changed();
+        }
         if( btn_result && !is_selected ) {
             state.ui->tools->set_main_tile( entry.uuid );
         }

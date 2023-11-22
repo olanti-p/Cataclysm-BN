@@ -50,6 +50,7 @@ void PieceNPC::show_ui( State &state )
     .with_default_add()
     .with_default_delete()
     .with_default_move()
+    .with_default_drag_drop()
     .run( traits );
     if( changed ) {
         state.mark_changed();
@@ -602,6 +603,7 @@ void show_piece_alt( State &state, editor::WeightedList<T> &list )
         .with_default_add()
         .with_default_delete()
         .with_default_move()
+        .with_default_drag_drop()
         .run( list.entries ) ) {
         state.mark_changed();
     }
