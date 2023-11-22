@@ -171,6 +171,8 @@ void show_mapobjects( State &state, Mapgen &f, bool &show )
         copy.set_uuid( state.project().uuid_generator() );
         list.insert( std::next( list.cbegin(), idx + 1 ), std::move( copy ) );
     } )
+    .with_default_move()
+    .with_default_delete()
     .run( list );
 
     if( changed ) {

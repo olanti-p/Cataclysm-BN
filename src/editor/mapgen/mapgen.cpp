@@ -100,6 +100,9 @@ void show_mapgen_info( State &state, Mapgen &mapgen, bool &show )
                     }
                     ImGui::PopID();
                 } )
+                .with_default_add()
+                .with_default_delete()
+                .with_default_move()
                 .run( oters );
 
                 if( oters_changed ) {

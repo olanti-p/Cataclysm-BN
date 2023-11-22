@@ -126,6 +126,11 @@ class VectorWidget
         std::function<bool( size_t )> f_can_duplicate;
         std::function<bool( size_t )> f_can_delete;
 
+        bool use_default_move = false;
+        bool use_default_duplicate = false;
+        bool use_default_delete = false;
+        bool use_default_add = false;
+
         bool run_internal( size_t num );
 
     public:
@@ -142,6 +147,11 @@ class VectorWidget
             return *this;
         }
 
+        inline VectorWidget &with_default_move() {
+            use_default_move = true;
+            return *this;
+        }
+
         inline VectorWidget &with_can_duplicate( std::function<bool( size_t )> &&f ) {
             f_can_duplicate = f;
             return *this;
@@ -149,6 +159,11 @@ class VectorWidget
 
         inline VectorWidget &with_duplicate( std::function<void( size_t )> &&f ) {
             f_duplicate = f;
+            return *this;
+        }
+
+        inline VectorWidget &with_default_duplicate() {
+            use_default_duplicate = true;
             return *this;
         }
 
@@ -162,8 +177,18 @@ class VectorWidget
             return *this;
         }
 
+        inline VectorWidget &with_default_delete() {
+            use_default_delete = true;
+            return *this;
+        }
+
         inline VectorWidget &with_add( std::function<bool()> &&f ) {
             f_add = f;
+            return *this;
+        }
+
+        inline VectorWidget &with_default_add() {
+            use_default_add = true;
             return *this;
         }
 
@@ -174,7 +199,7 @@ class VectorWidget
                     ImGui::Text( "Element [%d]", static_cast<int>( idx ) );
                 };
             }
-            if( !f_move ) {
+            if( !f_move && use_default_move ) {
                 f_move = [&]( size_t src, size_t dst ) {
                     // TODO: optimize with std::rotate
                     T elem = std::move( vec[src] );
@@ -183,18 +208,18 @@ class VectorWidget
                 };
             }
             if constexpr( def_dupe ) {
-                if( !f_duplicate ) {
+                if( !f_duplicate && use_default_duplicate ) {
                     f_duplicate = [&]( size_t idx ) {
                         vec.insert( std::next( vec.cbegin(), idx + 1 ), vec[idx] );
                     };
                 }
             }
-            if( !f_delete ) {
+            if( !f_delete && use_default_delete ) {
                 f_delete = [&]( size_t idx ) {
                     vec.erase( std::next( vec.cbegin(), idx ) );
                 };
             }
-            if( !f_add ) {
+            if( !f_add && use_default_add ) {
                 f_add = [&]() -> bool {
                     bool ret = false;
                     if( ImGui::ImageButton( "add", "me_add" ) ) {
