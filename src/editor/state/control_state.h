@@ -50,6 +50,8 @@ struct ControlState {
         bool want_export_as = false;            // User wants to export as
         int want_change_view = 0;               // User wants to change view
 
+        UUID highlight_entry_in_palette = UUID_INVALID;
+
         RulerState ruler;
 
         bool has_ongoing_tool_operation();

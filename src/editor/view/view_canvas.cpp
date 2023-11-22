@@ -169,9 +169,6 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
     ToolsState &tools = *state.ui->tools;
 
     const Palette &pal = *state.project().get_palette( mapgen.base.palette );
-    if( tools.get_main_tile() != UUID_INVALID && !pal.find_entry( tools.get_main_tile() ) ) {
-        tools.set_main_tile( UUID_INVALID );
-    }
 
     point_abs_etile tile_pos = get_mouse_tile_pos( cam );
     point_rel_etile mapgensize = mapgen.mapgensize();
@@ -202,6 +199,8 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
 
     bool show_tooltip = false;
     const PaletteEntry *tooltip_entry = nullptr;
+    UUID tooltip_entry_uuid = UUID_INVALID;
+    bool tooltip_entry_error = false;
     point_abs_etile tooltip_pos;
     if( view_hovered ) {
         handle_view_change_hotkey( state );
@@ -213,6 +212,8 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
                 const UUID &uuid = mapgen.base.canvas.get( tile_pos.raw() );
                 tooltip_entry = state.project().get_palette(
                                     mapgen.base.palette )->find_entry( uuid );
+                tooltip_entry_uuid = uuid;
+                tooltip_entry_error = !tooltip_entry;
             }
         }
 
@@ -390,6 +391,8 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
         tooltip_needs_separator = true;
     }
 
+    state.control->highlight_entry_in_palette = tooltip_entry_uuid;
+
     if( show_tooltip ) {
         std::vector<const MapObject *> objects;
         for( const MapObject &obj : mapgen.objects ) {
@@ -403,13 +406,16 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
             objects.push_back( &obj );
         }
 
-        if( tooltip_entry || !objects.empty() ) {
+        if( tooltip_entry || tooltip_entry_error || !objects.empty() ) {
             ImGui::BeginTooltip();
             if( tooltip_needs_separator ) {
                 ImGui::SeparatorText( "Info" );
             }
             if( tooltip_entry ) {
                 show_palette_entry_tooltip( *tooltip_entry );
+            }
+            if( tooltip_entry_error ) {
+                ImGui::Text( "ERROR: Tile not present in palette!" );
             }
             for( const MapObject *obj : objects ) {
                 ImGui::TextDisabled( "OBJ" );
