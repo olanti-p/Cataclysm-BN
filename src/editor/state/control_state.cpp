@@ -1,6 +1,7 @@
 #include "control_state.h"
 
 #include "common/canvas_2d.h"
+#include "imgui.h"
 #include "tool/cursor.h"
 #include "mapgen/mapgen.h"
 
@@ -55,6 +56,28 @@ SelectionMask *ControlState::get_canvas_selection_mask( const Mapgen &mapgen )
         mask = make_selection_mask( mapgen );
     }
     return &mask;
+}
+
+void ControlState::show_warning_popup( const std::string &data )
+{
+    want_show_warning_popup = true;
+    warning_popup_data = data;
+}
+
+void ControlState::handle_warning_popup()
+{
+    if( want_show_warning_popup ) {
+        want_show_warning_popup = false;
+        ImGui::OpenPopup( "Warning" );
+    }
+
+    if( ImGui::BeginPopupModal( "Warning" ) ) {
+        ImGui::Text( "%s", warning_popup_data.c_str() );
+        if( ImGui::Button( "Dismiss" ) ) {
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::EndPopup();
+    }
 }
 
 } // namespace editor
