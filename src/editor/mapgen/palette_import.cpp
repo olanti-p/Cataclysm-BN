@@ -16,10 +16,15 @@
 namespace editor
 {
 
-void import_palette_data( Project &project, Palette &palette, const EID::Palette &source_id )
+PaletteImportReport import_palette_data( Project &project, Palette &palette,
+        const EID::Palette &source_id )
 {
     palette_id id( source_id.data );
     const mapgen_palette &source = *id;
+    palette.name = id.str();
+
+    int num_total = 0;
+    int num_failed = 0;
 
     std::unordered_set<map_key> all_keys;
 
@@ -72,10 +77,11 @@ void import_palette_data( Project &project, Palette &palette, const EID::Palette
                             new_piece.reset();
                         }
                     }
+                    num_total += 1;
                     if( new_piece ) {
                         mapping.pieces.emplace_back( std::move( new_piece ) );
                     } else {
-                        // TODO: report import error
+                        num_failed += 1;
                     }
                 }
             }
@@ -84,6 +90,8 @@ void import_palette_data( Project &project, Palette &palette, const EID::Palette
         entry.key = key;
         palette.entries.emplace_back( std::move( entry ) );
     }
+
+    return PaletteImportReport{ num_total, num_failed };
 }
 
 } // namespace editor
