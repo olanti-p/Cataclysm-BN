@@ -46,7 +46,11 @@ void PieceNPC::show_ui( State &state )
         if( ImGui::InputId( "##trait-input", traits[idx] ) ) {
             state.mark_changed();
         }
-    } ).run( traits );
+    } )
+    .with_default_add()
+    .with_default_delete()
+    .with_default_move()
+    .run( traits );
     if( changed ) {
         state.mark_changed();
     }
@@ -595,6 +599,9 @@ void show_piece_alt( State &state, editor::WeightedList<T> &list )
         ImGui::VectorWidget()
         .with_for_each( show_val )
         .with_can_delete( can_delete )
+        .with_default_add()
+        .with_default_delete()
+        .with_default_move()
         .run( list.entries ) ) {
         state.mark_changed();
     }

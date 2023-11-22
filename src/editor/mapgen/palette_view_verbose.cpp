@@ -118,6 +118,8 @@ void show_mapping( State &state, editor::Palette &p, editor::PaletteEntry &entry
     .with_duplicate( [&]( size_t idx ) {
         list.insert( std::next( list.cbegin(), idx + 1 ), list[idx]->clone() );
     } )
+    .with_default_delete()
+    .with_default_move()
     .run( list );
 
     if( changed ) {
@@ -362,6 +364,7 @@ static void show_palette_entries_verbose( State &state, Palette &palette )
             ImGui::HelpPopup( additional_summary.c_str() );
         }
     } )
+    .with_default_move()
     .run( list );
 
     if( changed ) {
