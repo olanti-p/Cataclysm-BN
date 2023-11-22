@@ -1459,7 +1459,7 @@ bool game::do_turn()
 
                 if( enter_editor_on_start ) {
                     enter_editor_on_start = false;
-                    editor::bnme_entry_point();
+                    editor::bnmt_entry_point();
                     continue;
                 }
 

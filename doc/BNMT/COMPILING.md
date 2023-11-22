@@ -1,4 +1,4 @@
-# Bright Nights Mapgen Editor
+# Bright Nights Mapping Tool
 
 ## Compiling
 

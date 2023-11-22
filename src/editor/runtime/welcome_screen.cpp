@@ -37,7 +37,7 @@ WelcomeResult show_welcome_screen()
         menu.settext( _(
                           "+--=== B N M E ===--+\n"
                           "|   Bright Nights   |\n"
-                          "|   Mapgen Editor   |\n"
+                          "|   Mapping  Tool   |\n"
                           "+-------------------+\n"
                       ) );
         menu.addentry( Command::OpenEditor, true, 'e', _( "Open Editor" ) );

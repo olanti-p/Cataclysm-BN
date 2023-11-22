@@ -7,7 +7,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Please check [list of known bugs](https://github.com/olanti-p/BNME/blob/main/doc/BNME/BUGS.md) and the [bug tracker](https://github.com/olanti-p/BNME/issues) before opening a new issue.
+        Please check [list of known bugs](https://github.com/olanti-p/BNMT/blob/main/doc/BNMT/BUGS.md) and the [bug tracker](https://github.com/olanti-p/BNMT/issues) before opening a new issue.
         
 
   - type: textarea
@@ -52,7 +52,7 @@ body:
         - Please update your OS version with a more precise version.
       placeholder: |
         - OS: [e.g. iOS 8 or Windows 10 or Ubuntu 18.04]
-        - Game Version: [from the main menu, e.g. bnme-v0.1.23]
+        - Game Version: [from the main menu, e.g. bnmt-v0.1.23]
         - Mods loaded: [e.g.bn, boats, hacktheplanet, StatsThroughSkills]
     validations:
       required: true
