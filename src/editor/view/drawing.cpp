@@ -90,8 +90,8 @@ void highlight_region(
     ImVec4 col_border
 )
 {
-    draw_frame( draw_list, cam, p1, p2, col_bg, true );
-    draw_frame( draw_list, cam, p1, p2, col_border, false );
+    fill_region( draw_list, cam, p1, p2, col_bg );
+    outline_region( draw_list, cam, p1, p2, col_border );
 }
 
 void fill_region(
@@ -103,6 +103,17 @@ void fill_region(
 )
 {
     draw_frame( draw_list, cam, p1, p2, col, true );
+}
+
+void outline_region(
+    ImDrawList *draw_list,
+    const Camera &cam,
+    point_abs_etile p1,
+    point_abs_etile p2,
+    ImVec4 col
+)
+{
+    draw_frame( draw_list, cam, p1, p2, col, false );
 }
 
 } // namespace editor

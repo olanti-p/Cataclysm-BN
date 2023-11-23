@@ -189,6 +189,7 @@ void UiState::serialize( JsonOut &jsout ) const
     jsout.member( "show_camera_controls", show_camera_controls );
     jsout.member( "show_toolbar", show_toolbar );
     jsout.member( "show_autosave_params", show_autosave_params );
+    jsout.member( "show_omt_grid", show_omt_grid );
     jsout.member( "autosave_enabled", autosave_enabled );
     jsout.member( "autosave_interval", autosave_interval );
     jsout.member( "autosave_limit", autosave_limit );
@@ -217,6 +218,7 @@ void UiState::deserialize( JsonIn &jsin )
     jo.read( "show_camera_controls", show_camera_controls );
     jo.read( "show_toolbar", show_toolbar );
     jo.read( "show_autosave_params", show_autosave_params );
+    jo.read( "show_omt_grid", show_omt_grid );
     jo.read( "autosave_enabled", autosave_enabled );
     jo.read( "autosave_interval", autosave_interval );
     jo.read( "autosave_limit", autosave_limit );

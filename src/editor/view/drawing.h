@@ -67,6 +67,14 @@ void fill_region(
     ImVec4 col
 );
 
+void outline_region(
+    ImDrawList *draw_list,
+    const Camera &cam,
+    point_abs_etile p1,
+    point_abs_etile p2,
+    ImVec4 col
+);
+
 } // namespace editor
 
 #endif // CATA_SRC_EDITOR_DRAWING_H
