@@ -1,15 +1,14 @@
 #include "project_serde.h"
 
-#include "mapgen/piece_impl.h"
-#include "mapgen/mapgen.h"
-#include "project.h"
-#include "common/weighted_list_serde.h"
 #include "common/canvas_2d_serde.h"
-
+#include "common/weighted_list_serde.h"
 #include "imgui.h"
-
 #include "json.h"
 #include "mapgen.h"
+#include "mapgen/mapgen.h"
+#include "mapgen/piece_impl.h"
+#include "mapgen/selection_mask.h"
+#include "project.h"
 
 void serialize( const std::unique_ptr<editor::Piece> &ptr, JsonOut &jsout )
 {
@@ -728,6 +727,7 @@ void Mapgen::serialize( JsonOut &jsout ) const
     jsout.member( "update", update );
     jsout.member( "nested", nested );
     jsout.member( "objects", objects );
+    jsout.member( "selection_mask", selection_mask );
     jsout.end_object();
 }
 
@@ -743,6 +743,7 @@ void Mapgen::deserialize( JsonIn &jsin )
     jo.read( "update", update );
     jo.read( "nested", nested );
     jo.read( "objects", objects );
+    jo.read( "selection_mask", selection_mask );
 }
 
 void Project::serialize( JsonOut &jsout ) const
@@ -765,6 +766,20 @@ void Project::deserialize( JsonIn &jsin )
     jo.read( "uuid_gen", uuid_generator );
     jo.read( "files", mapgens );
     jo.read( "palettes", palettes );
+}
+
+void SelectionMask::serialize( JsonOut &jsout ) const
+{
+    jsout.start_object();
+    jsout.member( "data", data );
+    jsout.end_object();
+}
+
+void SelectionMask::deserialize( JsonIn &jsin )
+{
+    JsonObject jo = jsin.get_object();
+
+    jo.read( "data", data );
 }
 
 } // namespace editor

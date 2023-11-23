@@ -1,6 +1,9 @@
 #ifndef CATA_SRC_EDITOR_BOOL_H
 #define CATA_SRC_EDITOR_BOOL_H
 
+class JsonOut;
+class JsonIn;
+
 namespace editor
 {
 
@@ -10,7 +13,7 @@ namespace editor
 struct Bool {
     public:
         constexpr Bool() = default;
-        constexpr Bool( bool v ) : value( v ) {}
+        constexpr explicit Bool( bool v ) : value( v ) {}
 
         constexpr Bool( const Bool & ) = default;
         constexpr Bool( Bool && ) = default;
@@ -27,6 +30,9 @@ struct Bool {
         constexpr bool operator!=( const Bool &rhs ) const {
             return value != rhs.value;
         }
+
+        void serialize( JsonOut &jsout ) const;
+        void deserialize( JsonIn &jsin );
 
     private:
         bool value = false;
