@@ -19,7 +19,6 @@ struct SaveExportState {
     SaveExportState &operator=( SaveExportState && ) = default;
 
     std::optional<std::string> project_save_path;
-    std::optional<std::string> project_export_path;
     float elapsed_since_autosave = 0.0f;
 };
 
