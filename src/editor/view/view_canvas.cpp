@@ -16,7 +16,7 @@
 #include "mouse.h"
 #include "project/project.h"
 #include "state/control_state.h"
-#include "state/selection_mask.h"
+#include "mapgen/selection_mask.h"
 #include "state/state.h"
 #include "state/tools_state.h"
 #include "state/ui_state.h"
@@ -176,7 +176,7 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
                               tile_pos.y() < mapgensize.y();
     tools::ToolSettings *settings = &state.ui->tools->get_settings( tools.get_tool() );
     tools::ToolHighlight tool_highlight;
-    SelectionMask *selection = state.control->get_canvas_selection_mask( mapgen );
+    SelectionMask *selection = mapgen.get_selection_mask();
 
     tools::ToolTarget target {
         view_hovered,

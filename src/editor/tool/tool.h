@@ -4,7 +4,6 @@
 #include "common/uuid.h"
 #include "coordinates.h"
 #include "enum_traits.h"
-#include "state/selection_mask.h"
 
 #include <cassert>
 #include <memory>
@@ -13,6 +12,7 @@
 namespace editor
 {
 struct Mapgen;
+struct SelectionMask;
 } // namespace editor
 
 namespace editor::tools

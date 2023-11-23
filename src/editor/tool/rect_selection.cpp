@@ -56,11 +56,13 @@ void RectSelectionControl::handle_tool_operation( ToolTarget &target )
                     target.selection->clear_all();
                 }
                 apply( *target.selection, rect );
+                target.made_changes = true;
                 start.reset();
             } else if( dismissing_selection ) {
                 dismissing_selection = false;
                 if( !ImGui::IsKeyDown( ImGuiKey_ModShift ) ) {
                     target.selection->clear_all();
+                    target.made_changes = true;
                 }
             }
         }
@@ -68,11 +70,13 @@ void RectSelectionControl::handle_tool_operation( ToolTarget &target )
             // Abort & select all
             start.reset();
             target.selection->set_all();
+            target.made_changes = true;
         }
         if( ImGui::IsKeyPressed( ImGuiKey_Escape ) ) {
             // Abort & clear selection
             start.reset();
             target.selection->clear_all();
+            target.made_changes = true;
         }
         if( start ) {
             target.want_tooltip = true;
@@ -107,7 +111,7 @@ void RectSelectionControl::apply( SelectionMask &selection, const std::vector<po
 {
     for( const auto &p : rect ) {
         if( selection.data.get_bounds().contains( p ) ) {
-            selection.data.set( p, true );
+            selection.data.set( p, Bool( true ) );
         }
     }
 }

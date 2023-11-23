@@ -2,7 +2,6 @@
 #define CATA_SRC_EDITOR_CONTROL_STATE_H
 
 #include "common/uuid.h"
-#include "state/selection_mask.h"
 #include "tool/tool.h"
 #include "view/ruler.h"
 #include "widget/editable_id.h"
@@ -56,7 +55,6 @@ struct ControlState {
 
         bool has_ongoing_tool_operation();
         tools::ToolControl &get_tool_control( tools::ToolKind t );
-        SelectionMask *get_canvas_selection_mask( const Mapgen &mapgen );
 
         QuickPaletteAddState quick_add_state;
 
@@ -67,7 +65,6 @@ struct ControlState {
         void set_tool_control( tools::ToolKind t );
         std::unique_ptr<tools::ToolControl> tool_control;
         tools::ToolKind tool_control_kind = tools::ToolKind::Cursor;
-        std::unordered_map<UUID, SelectionMask> canvas_selection_states;
 
         bool want_show_warning_popup = false;
         std::string warning_popup_data;

@@ -10,6 +10,7 @@
 #include "mapgen/palette.h"
 #include "mapgen/mapobject.h"
 #include "point.h"
+#include "selection_mask.h"
 #include "widget/editable_id.h"
 
 struct ImVec4;
@@ -28,9 +29,6 @@ struct MapgenBase {
     Canvas2D<UUID> canvas;
     UUID palette = UUID_INVALID;
 
-    inline void set_size( point new_size ) {
-        canvas.set_size( new_size, UUID_INVALID );
-    }
     void remove_usages( const UUID &uuid );
 
     void serialize( JsonOut &jsout ) const;
@@ -84,39 +82,47 @@ enum class MapgenType {
 };
 
 struct Mapgen {
-    UUID uuid = UUID_INVALID;
+    public:
+        UUID uuid = UUID_INVALID;
 
-    MapgenType mtype = MapgenType::Oter;
-    MapgenBase base;
-    MapgenOter oter;
-    MapgenUpdate update;
-    MapgenNested nested;
+        MapgenType mtype = MapgenType::Oter;
+        MapgenBase base;
+        MapgenOter oter;
+        MapgenUpdate update;
+        MapgenNested nested;
 
-    std::vector<MapObject> objects;
+        std::vector<MapObject> objects;
 
-    std::string name;
+        std::string name;
 
-    std::string display_name() const;
+        std::string display_name() const;
 
-    void serialize( JsonOut &jsout ) const;
-    void deserialize( JsonIn &jsin );
+        void serialize( JsonOut &jsout ) const;
+        void deserialize( JsonIn &jsin );
 
-    inline bool uses_rows() const {
-        return mtype == editor::MapgenType::Nested ||
-               (
-                   mtype == editor::MapgenType::Oter &&
-                   oter.mapgen_base == editor::OterMapgenBase::Rows
-               );
-    }
+        inline bool uses_rows() const {
+            return mtype == editor::MapgenType::Nested ||
+                   (
+                       mtype == editor::MapgenType::Oter &&
+                       oter.mapgen_base == editor::OterMapgenBase::Rows
+                   );
+        }
 
-    point_rel_etile mapgensize() const;
+        point_rel_etile mapgensize() const;
 
-    inline half_open_rectangle<point_abs_etile> get_bounds() const {
-        return {
-            point_abs_etile( 0, 0 ),
-            point_abs_etile( mapgensize().raw() )
-        };
-    }
+        inline half_open_rectangle<point_abs_etile> get_bounds() const {
+            return {
+                point_abs_etile( 0, 0 ),
+                point_abs_etile( mapgensize().raw() )
+            };
+        }
+
+        void set_canvas_size( point new_size );
+
+        SelectionMask *get_selection_mask();
+
+    private:
+        SelectionMask selection_mask;
 };
 
 /**

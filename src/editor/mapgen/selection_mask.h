@@ -9,10 +9,17 @@ namespace editor
 {
 
 struct SelectionMask {
-    Canvas2D<Bool> data = Canvas2D<Bool>( point_zero );
+    SelectionMask() : data( point_zero ) {};
+    SelectionMask( point size ) : data( size ) {}
+    ~SelectionMask() = default;
+
+    Canvas2D<Bool> data;
 
     void clear_all();
     void set_all();
+
+    void serialize( JsonOut &jsout ) const;
+    void deserialize( JsonIn &jsin );
 };
 
 } // namespace editor

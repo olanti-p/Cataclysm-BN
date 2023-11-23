@@ -2,8 +2,12 @@
 #define CATA_SRC_EDITOR_TOOL_RECT_SELECTION_H
 
 #include "coordinates.h"
-#include "state/selection_mask.h"
 #include "tool.h"
+
+namespace editor
+{
+struct SelectionMask;
+} // namespace editor
 
 namespace editor::tools
 {

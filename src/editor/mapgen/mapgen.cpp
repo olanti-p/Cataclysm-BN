@@ -3,6 +3,7 @@
 #include "common/canvas_2d.h"
 #include "imgui.h"
 #include "mapgen/palette.h"
+#include "selection_mask.h"
 #include "state/state.h"
 #include "state/ui_state.h"
 #include "string_formatter.h"
@@ -59,7 +60,7 @@ void show_mapgen_info( State &state, Mapgen &mapgen, bool &show )
             if( new_size != oters.get_size() ) {
                 state.mark_changed( "oter-matrix-size" );
                 oters.set_size( new_size );
-                mapgen.base.set_size( new_size * 24 );
+                mapgen.set_canvas_size( new_size * 24 );
             }
 
             ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable;
@@ -194,7 +195,7 @@ void show_mapgen_info( State &state, Mapgen &mapgen, bool &show )
         // Only square nested mapgens are possible
         if( ImGui::InputIntClamped( "mapgensize", mapgen.nested.size.x, 1, SEEX * 2 ) ) {
             mapgen.nested.size.y = mapgen.nested.size.x;
-            mapgen.base.set_size( mapgen.mapgensize().raw() );
+            mapgen.set_canvas_size( mapgen.mapgensize().raw() );
             state.mark_changed();
         }
         ImGui::HelpPopup( "Size of this nested mapgen." );
@@ -222,6 +223,26 @@ point_rel_etile Mapgen::mapgensize() const
         return point_rel_etile( base.canvas.get_size() );
     } else {
         return point_rel_etile( SEEX * 2, SEEY * 2 );
+    }
+}
+
+void Mapgen::set_canvas_size( point new_size )
+{
+    base.canvas.set_size( new_size, UUID_INVALID );
+    selection_mask = SelectionMask( new_size );
+}
+
+SelectionMask *Mapgen::get_selection_mask()
+{
+    if( uses_rows() ) {
+        if( selection_mask.data.get_size() != mapgensize().raw() ) {
+            // Repair broken projects
+            // TODO: remove this?
+            selection_mask = SelectionMask( mapgensize().raw() );
+        }
+        return &selection_mask;
+    } else {
+        return nullptr;
     }
 }
 
