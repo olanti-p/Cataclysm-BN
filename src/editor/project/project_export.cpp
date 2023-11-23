@@ -544,7 +544,7 @@ static void emit_mapgen_contents( JsonOut &jo, const editor::Project &project,
     emit( jo, "method", "json" );
 
     if( mapgen.mtype == editor::MapgenType::Oter ) {
-        if( mapgen.oter.matrix_mode ) {
+        if( !mapgen.oter.matrix_mode ) {
             emit_single_or_array( jo, "om_terrain", mapgen.oter.om_terrain );
         } else {
             point size = mapgen.oter.om_terrain_matrix.get_size();
