@@ -58,6 +58,7 @@ void show_main_menu_bar( State &state )
             if( ImGui::MenuItem( "Autosave..." ) ) {
                 state.ui->show_autosave_params = true;
             }
+            ImGui::MenuItem( "Show OMT grid", nullptr, &state.ui->show_omt_grid );
             ImGui::EndMenu();
         }
         ImGui::EndMainMenuBar();

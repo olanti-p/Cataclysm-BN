@@ -21,6 +21,7 @@
 #include "state/tools_state.h"
 #include "state/ui_state.h"
 #include "tool/tool.h"
+#include "uistate.h"
 #include "view/ruler.h"
 #include "widget/widgets.h"
 
@@ -155,13 +156,12 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
     editor::Mapgen &mapgen = *mapgen_ptr;
     ImGui::PushID( mapgen.uuid );
 
-    highlight_region(
+    fill_region(
         draw_list,
         cam,
         point_abs_etile( 0, 0 ),
         point_abs_etile( -1, -1 ) + mapgen.mapgensize(),
-        col_mapgensize_bg,
-        col_mapgensize_border
+        col_mapgensize_bg
     );
 
     ImGuiIO &io = ImGui::GetIO();
@@ -289,6 +289,31 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
                 ImGui::Text( "%s", mk.c_str() );
             }
         }
+    }
+
+    if( mapgen.oter.matrix_mode && state.ui->show_omt_grid ) {
+        point size = mapgen.oter.om_terrain_matrix.get_size();
+        constexpr point_rel_etile oter_size( SEEX * 2, SEEY * 2 );
+        for( int y = 0; y < size.y; y++ ) {
+            for( int x = 0; x < size.x; x++ ) {
+                const point_abs_etile pos_zero( oter_size.x() * x, oter_size.y() * y );
+                outline_region(
+                    draw_list,
+                    cam,
+                    pos_zero,
+                    pos_zero + point_rel_etile( -1, -1 ) + oter_size,
+                    col_mapgensize_border
+                );
+            }
+        }
+    } else {
+        outline_region(
+            draw_list,
+            cam,
+            point_abs_etile( 0, 0 ),
+            point_abs_etile( -1, -1 ) + mapgen.mapgensize(),
+            col_mapgensize_border
+        );
     }
 
     for( const MapObject &obj : mapgen.objects ) {

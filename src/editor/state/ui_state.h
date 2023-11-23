@@ -74,9 +74,13 @@ struct UiState {
     bool show_camera_controls = true;       // Whether to show camera controls
     bool show_toolbar = true;               // Whether to show canvas toolbar
     bool show_autosave_params = true;       // Whether to show autosave settings
+
+    bool show_omt_grid = false;             // Whether to show omt grid on canvas
+
     bool autosave_enabled = true;
     int autosave_interval = 10;             // Seconds
     int autosave_limit = 5;                 // Amount of autosaves to keep
+
     std::optional<UUID> active_mapgen_id;   // UUID of active mapgen
 
     std::vector<detail::OpenPalette> open_palettes_verbose; // List of open palettes (verbose)
