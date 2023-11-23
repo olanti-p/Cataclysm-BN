@@ -21,7 +21,8 @@ std::string RectSelection::get_tool_hint() const
     return "Drag LMB to select in a rectangular shape.\n\n"
            "Hold Shift to add to existing selection.\n"
            "Press Ctrl+A to select everything.\n"
-           "Press Esc or click outside selected area to dismiss selection.";
+           "Press Esc while dragging to cancel selection.\n"
+           "Press Esc or click without dragging to dismiss selection.";
 }
 
 void RectSelectionSettings::show()
@@ -40,7 +41,7 @@ void RectSelectionControl::handle_tool_operation( ToolTarget &target )
         if( ImGui::IsMouseClicked( ImGuiMouseButton_Left ) ) {
             dismissing_selection = true;
         }
-        if( ImGui::IsMouseDragging( ImGuiMouseButton_Left ) && !start ) {
+        if( ImGui::IsMouseDragging( ImGuiMouseButton_Left ) && !start && !selection_aborted ) {
             // Stroke start
             start = target.cursor_tile_pos;
             dismissing_selection = false;
@@ -69,14 +70,22 @@ void RectSelectionControl::handle_tool_operation( ToolTarget &target )
         if( ImGui::IsKeyDown( ImGuiKey_ModCtrl ) && ImGui::IsKeyPressed( ImGuiKey_A ) ) {
             // Abort & select all
             start.reset();
+            selection_aborted = true;
             target.selection->set_all();
             target.made_changes = true;
         }
         if( ImGui::IsKeyPressed( ImGuiKey_Escape ) ) {
-            // Abort & clear selection
-            start.reset();
-            target.selection->clear_all();
-            target.made_changes = true;
+            // Abort / clear selection
+            if( start ) {
+                start.reset();
+                selection_aborted = true;
+            } else {
+                target.selection->clear_all();
+                target.made_changes = true;
+            }
+        }
+        if( !ImGui::IsMouseDown( ImGuiMouseButton_Left ) ) {
+            selection_aborted = false;
         }
         if( start ) {
             target.want_tooltip = true;
