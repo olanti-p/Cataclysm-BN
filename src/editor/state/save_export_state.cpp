@@ -132,7 +132,7 @@ void handle_project_saving( State &state )
 void handle_project_exporting( State &state )
 {
     ControlState &control = *state.control;
-    SaveExportState &sestate = *state.save_export;
+    UiState &ui = *state.ui;
 
     if( state.control->has_ongoing_tool_operation() ) {
         control.want_export = false;
@@ -140,7 +140,7 @@ void handle_project_exporting( State &state )
         return;
     }
 
-    if( control.want_export && !sestate.project_export_path ) {
+    if( control.want_export && !ui.project_export_path ) {
         control.want_export = false;
         control.want_export_as = true;
     }
@@ -150,28 +150,28 @@ void handle_project_exporting( State &state )
         ImGui::SetNextWindowSize( ImVec2( 580, 380 ), ImGuiCond_FirstUseEver );
         ImGuiFileDialog::Instance()->OpenDialog( "ExportToFile",
                 "Export As...", ".json",
-                sestate.project_export_path ? *sestate.project_export_path : ".",
+                ui.project_export_path ? *ui.project_export_path : ".",
                 1, nullptr, ImGuiFileDialogFlags_ConfirmOverwrite );
     }
 
     if( ImGuiFileDialog::Instance()->Display( "ExportToFile" ) ) {
         if( ImGuiFileDialog::Instance()->IsOk() ) {
-            sestate.project_export_path = ImGuiFileDialog::Instance()->GetFilePathName();
+            ui.project_export_path = ImGuiFileDialog::Instance()->GetFilePathName();
             control.want_export = true;
         }
         ImGuiFileDialog::Instance()->Close();
     }
 
     if( g->export_editor_project_on_start ) {
-        sestate.project_export_path = *g->export_editor_project_on_start;
+        ui.project_export_path = *g->export_editor_project_on_start;
         control.want_export = true;
         g->export_editor_project_on_start.reset();
     }
 
     if( control.want_export ) {
         control.want_export = false;
-        assert( sestate.project_export_path );
-        write_to_file( *sestate.project_export_path, [&]( std::ostream & oss ) {
+        assert( ui.project_export_path );
+        write_to_file( *ui.project_export_path, [&]( std::ostream & oss ) {
             std::string s = editor_export::to_string( state.project() );
             oss << editor_export::format_string( s );
         } );

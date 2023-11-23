@@ -93,6 +93,8 @@ struct UiState {
     std::unique_ptr<NewMapgenState> new_mapgen_window;
     std::unique_ptr<NewPaletteState> new_palette_window;
 
+    std::optional<std::string> project_export_path;
+
     void toggle_show_palette_verbose( UUID uuid );
     void toggle_show_palette_simple( UUID uuid );
     void toggle_show_mapping( UUID palette, UUID uuid );

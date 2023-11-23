@@ -201,6 +201,7 @@ void UiState::serialize( JsonOut &jsout ) const
     jsout.member( "tools_state", tools );
     jsout.member( "expanded_mapping_pieces", expanded_mapping_pieces );
     jsout.member( "expanded_mapobjects", expanded_mapobjects );
+    jsout.member( "project_export_path", project_export_path );
     jsout.end_object();
 }
 
@@ -228,6 +229,7 @@ void UiState::deserialize( JsonIn &jsin )
     jo.read( "tools_state", tools );
     jo.read( "expanded_mapping_pieces", expanded_mapping_pieces );
     jo.read( "expanded_mapobjects", expanded_mapobjects );
+    jo.read( "project_export_path", project_export_path );
 }
 
 void Camera::serialize( JsonOut &jsout ) const
