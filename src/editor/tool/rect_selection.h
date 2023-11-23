@@ -15,6 +15,7 @@ namespace editor::tools
 struct RectSelectionControl : public ToolControl {
     std::optional<point_abs_etile> start;
     bool dismissing_selection = false;
+    bool selection_aborted = false;
 
     void handle_tool_operation( ToolTarget &target ) override;
     inline bool operation_in_progress() const override {
