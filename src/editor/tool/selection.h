@@ -1,5 +1,5 @@
-#ifndef CATA_SRC_EDITOR_TOOL_RECT_SELECTION_H
-#define CATA_SRC_EDITOR_TOOL_RECT_SELECTION_H
+#ifndef CATA_SRC_EDITOR_TOOL_SELECTION_H
+#define CATA_SRC_EDITOR_TOOL_SELECTION_H
 
 #include "coordinates.h"
 #include "tool.h"
@@ -12,7 +12,7 @@ struct SelectionMask;
 namespace editor::tools
 {
 
-struct RectSelectionControl : public ToolControl {
+struct SelectionControl : public ToolControl {
     std::optional<point_abs_etile> start;
     bool dismissing_selection = false;
     bool selection_aborted = false;
@@ -29,25 +29,25 @@ struct RectSelectionControl : public ToolControl {
     void show_tooltip( ToolTarget &target ) override;
 };
 
-struct RectSelectionSettings : public ToolSettings {
+struct SelectionSettings : public ToolSettings {
     void serialize( JsonOut &jsout ) const override;
     void deserialize( JsonIn &jsin ) override;
 
     void show() override;
 };
 
-struct RectSelection : public ToolDefinition {
+struct Selection : public ToolDefinition {
     std::string get_tool_display_name() const override;
     std::string get_tool_hint() const override;
 
     std::unique_ptr<ToolControl> make_control() const override {
-        return std::make_unique<RectSelectionControl>();
+        return std::make_unique<SelectionControl>();
     }
     std::unique_ptr<ToolSettings> make_settings() const override {
-        return std::make_unique<RectSelectionSettings>();
+        return std::make_unique<SelectionSettings>();
     }
 };
 
 } // namespace editor::tools
 
-#endif // CATA_SRC_EDITOR_TOOL_RECT_SELECTION_H
+#endif // CATA_SRC_EDITOR_TOOL_SELECTION_H

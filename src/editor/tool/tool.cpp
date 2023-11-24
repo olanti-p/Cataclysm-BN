@@ -12,8 +12,8 @@
 #include "tool/bucket.h"
 #include "tool/cursor.h"
 #include "tool/line_tool.h"
-#include "tool/rect_selection.h"
 #include "tool/rectangle_tool.h"
+#include "tool/selection.h"
 #include "widget/widgets.h"
 
 #include <unordered_map>
@@ -49,8 +49,8 @@ const ToolDefinition &get_tool_definition( ToolKind kind )
             static Rectangle tool;
             return tool;
         }
-        case ToolKind::RectSelection: {
-            static RectSelection tool;
+        case ToolKind::Selection: {
+            static Selection tool;
             return tool;
         }
         case ToolKind::_Num:
