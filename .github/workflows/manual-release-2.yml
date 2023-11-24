@@ -140,7 +140,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          x86_64-w64-mingw32.static-cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DTILES=1 -DSOUND=1 -DCURSES=0 -DLUA=1 -DUSE_HOME_DIR=0 -DUSE_PREFIX_DATA_DIR=0 
+          cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DTILES=1 -DSOUND=1 -DCURSES=0 -DLUA=1 -DUSE_HOME_DIR=0 -DUSE_PREFIX_DATA_DIR=0 
       - name: Build BNMT (Linux)
         if: runner.os == 'Linux' && matrix.mxe == 'none' && matrix.android == 'none'
         run: |
@@ -151,7 +151,7 @@ jobs:
         env:
           PLATFORM: /opt/mxe/usr/bin/${{ matrix.mxe }}-w64-mingw32.static.gcc11-
         run: |
-          x86_64-w64-mingw32.static-cmake --build build --target cataclysm-tiles
+          cmake --build build --target cataclysm-tiles
       - name: Package
         run: |
           python3 build-scripts/make_release.py
