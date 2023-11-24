@@ -407,6 +407,8 @@ const std::map<std::string, weighted_int_list<std::shared_ptr<mapgen_function_js
         &get_all_nested_mapgen();
 const std::map<std::string, std::vector<std::unique_ptr<update_mapgen_function_json>> >
         &get_all_update_mapgen();
+class mapgen_factory;
+const mapgen_factory &get_all_oter_mapgen();
 
 /// move to building_generation
 enum room_type {

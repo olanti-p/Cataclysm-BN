@@ -7,6 +7,7 @@
 #include "mapgen.h"
 #include "mapgen/mapgen.h"
 #include "mapgen/piece_impl.h"
+#include "mapgen/piece_type.h"
 #include "mapgen/selection_mask.h"
 #include "project.h"
 
@@ -23,7 +24,7 @@ void deserialize( std::unique_ptr<editor::Piece> &ptr, JsonIn &jsin )
 {
     JsonObject jo = jsin.get_object();
 
-    editor::PieceType pt;
+    editor::PieceType pt = editor::PieceType::NumJmTypes;
     jo.read( "piece_type", pt );
     editor::UUID uuid;
     jo.read( "uuid", uuid );
