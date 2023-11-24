@@ -89,13 +89,14 @@ void show_camera_controls( State &state, bool &show )
         ImGui::HelpPopup(
             "Camera controls:\n\n"
             "- Drag the view with RMB to pan.\n"
-            "- Scroll over the view to zoom.\n"
-            "- Use widgets below to manually control zoom and position.\n"
+            "- Scroll with the mouse wheel over the view to zoom.\n"
             "- Hold Ctrl to see summary of highlighted tile.\n"
             "- Hold Alt to measure distance or area.\n"
+            "- Hold Alt while scrolling to switch between mapgens.\n"
+            "- Use widgets in this window to manually control zoom and position.\n"
             "\nIn canvas mode:\n"
-            "- Press MMB (mouse wheel) on tile to select it.\n"
-            "- Press MMB outside bounds (or on empty tile) to clear selection."
+            "- Press MMB (mouse wheel) on tile to pick it.\n"
+            "- Press MMB outside bounds (or on empty tile) to dismiss picked tile."
         );
         ImGui::DragInt( "Zoom", &uistate.camera->scale, 0.2f, MIN_SCALE, MAX_SCALE );
         ImGui::DragPoint( "Pos", &uistate.camera->pos, 1.0f, -10000, 10000 );
