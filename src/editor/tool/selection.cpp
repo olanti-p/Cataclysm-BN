@@ -1,4 +1,4 @@
-#include "rect_selection.h"
+#include "selection.h"
 
 #include "common/algo.h"
 #include "coordinates.h"
@@ -11,12 +11,12 @@
 namespace editor::tools
 {
 
-std::string RectSelection::get_tool_display_name() const
+std::string Selection::get_tool_display_name() const
 {
-    return "Select (Rectangle)";
+    return "Select";
 }
 
-std::string RectSelection::get_tool_hint() const
+std::string Selection::get_tool_hint() const
 {
     return "Drag LMB to select in a rectangular shape.\n\n"
            "Hold Shift to add to existing selection.\n"
@@ -25,12 +25,12 @@ std::string RectSelection::get_tool_hint() const
            "Press Esc or click without dragging to dismiss selection.";
 }
 
-void RectSelectionSettings::show()
+void SelectionSettings::show()
 {
     // TODO: selection modes
 }
 
-void RectSelectionControl::handle_tool_operation( ToolTarget &target )
+void SelectionControl::handle_tool_operation( ToolTarget &target )
 {
     if( !target.has_canvas || !target.selection ) {
         start.reset();
@@ -102,7 +102,7 @@ void RectSelectionControl::handle_tool_operation( ToolTarget &target )
     }
 }
 
-std::vector<point> RectSelectionControl::make_rectangle( point_abs_etile p1,
+std::vector<point> SelectionControl::make_rectangle( point_abs_etile p1,
         point_abs_etile p2 ) const
 {
     // TODO: deduplicate with Rectangle tool
@@ -116,7 +116,7 @@ std::vector<point> RectSelectionControl::make_rectangle( point_abs_etile p1,
     return ret;
 }
 
-void RectSelectionControl::apply( SelectionMask &selection, const std::vector<point> &rect )
+void SelectionControl::apply( SelectionMask &selection, const std::vector<point> &rect )
 {
     for( const auto &p : rect ) {
         if( selection.data.get_bounds().contains( p ) ) {
@@ -125,12 +125,12 @@ void RectSelectionControl::apply( SelectionMask &selection, const std::vector<po
     }
 }
 
-point_abs_etile RectSelectionControl::get_rectangle_end( ToolTarget &target ) const
+point_abs_etile SelectionControl::get_rectangle_end( ToolTarget &target ) const
 {
     return target.cursor_tile_pos;
 }
 
-void RectSelectionControl::show_tooltip( ToolTarget &target )
+void SelectionControl::show_tooltip( ToolTarget &target )
 {
     // TODO: deduplicate with Rectangle tool
     if( !start ) {
