@@ -145,6 +145,7 @@ jobs:
         if: runner.os == 'Linux' && matrix.mxe == 'none' && matrix.android == 'none'
         run: |
           cmake --build build --target cataclysm-tiles
+          strip build/src/cataclysm-tiles
       - name: Build BNMT (windows)
         if: matrix.mxe != 'none'
         env:
