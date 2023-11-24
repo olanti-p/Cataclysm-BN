@@ -235,7 +235,7 @@ void Mapgen::set_canvas_size( point new_size )
 SelectionMask *Mapgen::get_selection_mask()
 {
     if( uses_rows() ) {
-        if( selection_mask.data.get_size() != mapgensize().raw() ) {
+        if( selection_mask.get_size() != mapgensize().raw() ) {
             // Repair broken projects
             // TODO: remove this?
             selection_mask = SelectionMask( mapgensize().raw() );

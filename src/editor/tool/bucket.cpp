@@ -63,7 +63,7 @@ BucketControl::find_affected_tiles(
     bool in_selection = settings.in_selection;
 
     const auto predicate = [ = ]( point p, const UUID & t ) {
-        if( in_selection && !selection.data.get( p ) ) {
+        if( in_selection && !selection.get( p ) ) {
             return false;
         }
         return t == old_value;

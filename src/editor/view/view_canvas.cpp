@@ -47,11 +47,10 @@ static void handle_view_change_hotkey( State &state )
 
 static void draw_selection_mask( ImDrawList *draw_list, SelectionMask &selection, Camera &cam )
 {
-    Canvas2D<Bool> &mask = selection.data;
     const auto get_mask_boundless = [&]( point p ) -> bool {
-        if( mask.get_bounds().contains( p ) )
+        if( selection.get_bounds().contains( p ) )
         {
-            return mask.get( p );
+            return selection.get( p );
         } else
         {
             return false;
@@ -77,8 +76,8 @@ static void draw_selection_mask( ImDrawList *draw_list, SelectionMask &selection
         ( animation_step == 3 || animation_step == 2 ) ? col_sel_anim_0 : col_sel_anim_1,
     };
 
-    for( int y = -1; y < mask.get_size().y; y++ ) {
-        for( int x = -1; x < mask.get_size().x; x++ ) {
+    for( int y = -1; y < selection.get_size().y; y++ ) {
+        for( int x = -1; x < selection.get_size().x; x++ ) {
             bool value_this = get_mask_boundless( point( x, y ) );
             bool value_right = get_mask_boundless( point( x + 1, y ) );
             bool value_below = get_mask_boundless( point( x, y + 1 ) );
