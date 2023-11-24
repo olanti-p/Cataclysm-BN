@@ -2,6 +2,8 @@
 
 Map making tool for [Cataclysm: Bright Nights](https://github.com/cataclysmbnteam/Cataclysm-BN).
 
+![readme pic](doc/BNMT/assets/readme_pic.png "readme_pic")
+
 ## How to install
 See [INSTALL.md](doc/BNMT/INSTALL.md)
 
