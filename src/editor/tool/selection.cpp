@@ -21,11 +21,18 @@ std::string Selection::get_tool_display_name() const
 
 std::string Selection::get_tool_hint() const
 {
-    return "Drag LMB to select in a rectangular shape.\n\n"
-           "Hold Shift to add to existing selection.\n"
-           "Press Ctrl+A to select everything.\n"
-           "Press Esc while dragging to cancel selection.\n"
-           "Press Esc or click without dragging to dismiss selection.";
+    return  "Multi-purpose selection and manipulation tool.\n"
+            "\n"
+            "Drag LMB to select in a rectangular shape.\n"
+            "Drag selected area with LMB to move selection.\n"
+            "Hold Shift to add to existing selection.\n"
+            "Press Esc while dragging to cancel selection.\n"
+            "Press Esc or click outside selected area to dismiss selection.\n"
+            "Press Delete to erase selected area.\n"
+            "Press Ctrl+A to select everything.\n"
+            "Press Ctrl+C to copy selected area to clipboard.\n"
+            "Press Ctrl+X to cut selected area to clipboard.\n"
+            "Press Ctrl+V to paste from clipboard.\n";
 }
 
 void SelectionSettings::show()
@@ -41,6 +48,12 @@ void SelectionControl::handle_tool_operation( ToolTarget &target )
     }
     CanvasSnippet *snippet = target.snippets.get_snippet( target.mapgen.uuid );
 
+    if( snippet && target.selection->has_selected() ) {
+        // May happen after an undo
+        snippet = nullptr;
+        target.snippets.drop_snippet( target.mapgen.uuid );
+    }
+
     const auto apply_snippet = [&]() {
         if( snippet ) {
             snippet = nullptr;
@@ -50,15 +63,49 @@ void SelectionControl::handle_tool_operation( ToolTarget &target )
             target.made_changes = true;
         }
     };
+    const auto is_snippet_at = [&]( point_abs_etile pos ) {
+        if( !snippet ) {
+            return false;
+        }
+        point pos_is_snippet = pos.raw() - snippet->get_pos();
+        return snippet->get_bounds().contains( pos_is_snippet ) &&
+               snippet->get_data_at( pos_is_snippet ).has_value();
+    };
+    const auto is_selection_at = [&]( point_abs_etile pos ) {
+        return target.selection->get( pos.raw() );
+    };
     if( target.view_hovered ) {
         if( ImGui::IsMouseClicked( ImGuiMouseButton_Left ) ) {
             dismissing_selection = true;
             drag_start = target.cursor_tile_pos;
+            if( !ImGui::IsKeyDown( ImGuiKey_ModShift ) ) {
+                if( is_snippet_at( target.cursor_tile_pos ) ) {
+                    is_dragging_snippet = true;
+                    initial_snippet_pos = snippet->get_pos();
+                } else if( is_selection_at( target.cursor_tile_pos ) ) {
+                    is_dragging_selection = true;
+                }
+            }
         }
-        if( ImGui::IsMouseDragging( ImGuiMouseButton_Left ) && !start && !selection_aborted ) {
-            // Stroke start
-            start = drag_start;
-            dismissing_selection = false;
+        if( ImGui::IsMouseDragging( ImGuiMouseButton_Left ) ) {
+            if( is_dragging_selection ) {
+                // Convert selection to snippet
+                CanvasSnippet new_snippet = make_snippet( target.mapgen.base.canvas, *target.selection );
+                initial_snippet_pos = new_snippet.get_pos();
+                is_dragging_selection = false;
+                is_dragging_snippet = true;
+                target.snippets.add_snippet( target.mapgen.uuid, std::move( new_snippet ) );
+                target.mapgen.erase_selected( *target.selection );
+                target.selection->clear_all();
+                target.made_changes = true;
+            } else if( is_dragging_snippet ) {
+                point drag_delta = target.cursor_tile_pos.raw() - drag_start->raw();
+                snippet->set_pos( *initial_snippet_pos + drag_delta );
+            } else if( !start && !selection_aborted ) {
+                // Stroke start
+                start = drag_start;
+                dismissing_selection = false;
+            }
         }
         if( ImGui::IsMouseReleased( ImGuiMouseButton_Left ) ) {
             if( start ) {
@@ -76,11 +123,14 @@ void SelectionControl::handle_tool_operation( ToolTarget &target )
                 start.reset();
             } else if( dismissing_selection ) {
                 dismissing_selection = false;
-                apply_snippet();
-                if( !ImGui::IsKeyDown( ImGuiKey_ModShift ) ) {
-                    if( target.selection->has_selected() ) {
-                        target.selection->clear_all();
-                        target.made_changes = true;
+                if( !is_dragging_selection && !is_dragging_snippet ) {
+                    // Dismissing does not affects clicks inside the selected area.
+                    apply_snippet();
+                    if( !ImGui::IsKeyDown( ImGuiKey_ModShift ) ) {
+                        if( target.selection->has_selected() ) {
+                            target.selection->clear_all();
+                            target.made_changes = true;
+                        }
                     }
                 }
             }
@@ -202,6 +252,10 @@ void SelectionControl::handle_tool_operation( ToolTarget &target )
     if( !ImGui::IsMouseDown( ImGuiMouseButton_Left ) ) {
         start.reset();
         drag_start.reset();
+        initial_snippet_pos.reset();
+        dismissing_selection = false;
+        is_dragging_snippet = false;
+        is_dragging_selection = false;
     }
 }
 
