@@ -121,8 +121,8 @@ std::vector<point> SelectionControl::make_rectangle( point_abs_etile p1,
 void SelectionControl::apply( SelectionMask &selection, const std::vector<point> &rect )
 {
     for( const auto &p : rect ) {
-        if( selection.data.get_bounds().contains( p ) ) {
-            selection.data.set( p, Bool( true ) );
+        if( selection.get_bounds().contains( p ) ) {
+            selection.set( p );
         }
     }
 }
