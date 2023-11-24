@@ -234,6 +234,7 @@ if (NOT MSVC)
        -Wsuggest-override \
        -Wno-format \
        -Wno-error=format \
+       -Wno-error=missing-declarations \
        -Wno-unused-macros \
        -Wno-old-style-cast \
        -Wno-zero-as-null-pointer-constant \
