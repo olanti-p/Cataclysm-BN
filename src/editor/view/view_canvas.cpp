@@ -10,6 +10,7 @@
 #include "coordinates.h"
 #include "drawing.h"
 #include "imgui.h"
+#include "mapgen/canvas_snippet.h"
 #include "mapgen/mapgen.h"
 #include "mapgen/palette.h"
 #include "mapgen/palette_view.h"
@@ -27,6 +28,7 @@
 
 #include <array>
 #include <cmath>
+#include <optional>
 #include <set>
 #include <functional>
 
@@ -45,8 +47,12 @@ static void handle_view_change_hotkey( State &state )
     }
 }
 
-static void draw_selection_mask( ImDrawList *draw_list, SelectionMask &selection, Camera &cam )
+static void draw_selection_mask( ImDrawList *draw_list, const SelectionMask &selection,
+                                 point_abs_etile selection_pos, const Camera &cam, bool is_snippet )
 {
+    if( !selection.has_selected() ) {
+        return;
+    }
     const auto get_mask_boundless = [&]( point p ) -> bool {
         if( selection.get_bounds().contains( p ) )
         {
@@ -69,11 +75,13 @@ static void draw_selection_mask( ImDrawList *draw_list, SelectionMask &selection
 
     // TODO: smoother animation
     // TODO: less triangles
+    ImVec4 c0 = col_sel_anim_0;
+    ImVec4 c1 = is_snippet ? col_sel_anim_1_snippet : col_sel_anim_1;
     std::array<ImVec4, 4> colors = {
-        ( animation_step == 0 || animation_step == 3 ) ? col_sel_anim_0 : col_sel_anim_1,
-        ( animation_step == 1 || animation_step == 0 ) ? col_sel_anim_0 : col_sel_anim_1,
-        ( animation_step == 2 || animation_step == 1 ) ? col_sel_anim_0 : col_sel_anim_1,
-        ( animation_step == 3 || animation_step == 2 ) ? col_sel_anim_0 : col_sel_anim_1,
+        ( animation_step == 0 || animation_step == 3 ) ? c0 : c1,
+        ( animation_step == 1 || animation_step == 0 ) ? c0 : c1,
+        ( animation_step == 2 || animation_step == 1 ) ? c0 : c1,
+        ( animation_step == 3 || animation_step == 2 ) ? c0 : c1,
     };
 
     for( int y = -1; y < selection.get_size().y; y++ ) {
@@ -83,7 +91,7 @@ static void draw_selection_mask( ImDrawList *draw_list, SelectionMask &selection
             bool value_below = get_mask_boundless( point( x, y + 1 ) );
 
             if( value_this != value_below ) {
-                point_abs_etile pos_below( x, y + 1 );
+                point_abs_etile pos_below = selection_pos + point( x, y + 1 );
                 point_abs_epos p1 = coords::project_combine( pos_below, point_etile_epos( 0, -2 ) );
                 point_abs_epos p2 = p1 + point_rel_epos( ETILE_SIZE / 4, 3 );
                 for( int i = 0; i < 4; i++ ) {
@@ -101,7 +109,7 @@ static void draw_selection_mask( ImDrawList *draw_list, SelectionMask &selection
                 }
             }
             if( value_this != value_right ) {
-                point_abs_etile pos_right( x + 1, y );
+                point_abs_etile pos_right = selection_pos + point( x + 1, y );
                 point_abs_epos p1 = coords::project_combine( pos_right, point_etile_epos( -2, 0 ) );
                 point_abs_epos p2 = p1 + point_rel_epos( 3, ETILE_SIZE / 4 );
                 for( int i = 0; i < 4; i++ ) {
@@ -176,6 +184,7 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
     tools::ToolSettings *settings = &state.ui->tools->get_settings( tools.get_tool() );
     tools::ToolHighlight tool_highlight;
     SelectionMask *selection = mapgen.get_selection_mask();
+    SnippetsState &snippets = state.control->snippets;
 
     tools::ToolTarget target {
         view_hovered,
@@ -189,11 +198,21 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
         tools.get_main_tile(),
         tool_highlight,
         selection,
+        snippets,
     };
     tools::ToolControl &tool_control = state.control->get_tool_control( tools.get_tool() );
-    tool_control.handle_tool_operation( target );
-    if( target.made_changes ) {
+    if( snippets.has_snippet_for( mapgen.uuid ) &&
+        mapgen.uses_rows() &&
+        !tool_control.operates_on_snippets( target ) ) {
+        CanvasSnippet snippet = snippets.drop_snippet( mapgen.uuid );
+        mapgen.apply_snippet( snippet );
+        mapgen.select_from_snippet( snippet );
         state.mark_changed();
+    } else {
+        tool_control.handle_tool_operation( target );
+        if( target.made_changes ) {
+            state.mark_changed();
+        }
     }
 
     bool show_tooltip = false;
@@ -201,6 +220,22 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
     UUID tooltip_entry_uuid = UUID_INVALID;
     bool tooltip_entry_error = false;
     point_abs_etile tooltip_pos;
+
+    const CanvasSnippet *snippet = snippets.get_snippet( mapgen.uuid );
+    const auto get_uuid_at_pos = [&]( point pos ) -> UUID {
+        if( snippet )
+        {
+            point rel_to_snippet = pos - snippet->get_pos();
+            if( snippet->get_bounds().contains( rel_to_snippet ) ) {
+                std::optional<UUID> data_at = snippet->get_data_at( rel_to_snippet );
+                if( data_at ) {
+                    return *data_at;
+                }
+            }
+        }
+        return mapgen.base.canvas.get( pos );
+    };
+
     if( view_hovered ) {
         handle_view_change_hotkey( state );
 
@@ -208,7 +243,7 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
             show_tooltip = true;
             tooltip_pos = tile_pos;
             if( is_mouse_in_bounds ) {
-                const UUID &uuid = mapgen.base.canvas.get( tile_pos.raw() );
+                const UUID &uuid = get_uuid_at_pos( tile_pos.raw() );
                 tooltip_entry = state.project().get_palette(
                                     mapgen.base.palette )->find_entry( uuid );
                 tooltip_entry_uuid = uuid;
@@ -241,7 +276,7 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
         if( mapgen.uses_rows() ) {
             if( ImGui::IsMouseClicked( ImGuiMouseButton_Middle ) ) {
                 if( is_mouse_in_bounds ) {
-                    const UUID &uuid = mapgen.base.canvas.get( tile_pos.raw() );
+                    const UUID &uuid = get_uuid_at_pos( tile_pos.raw() );
                     tools.set_main_tile( uuid );
                 } else {
                     tools.set_main_tile( UUID_INVALID );
@@ -254,7 +289,7 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
         for( int x = 0; x < mapgen.mapgensize().x(); x++ ) {
             for( int y = 0; y < mapgen.mapgensize().y(); y++ ) {
                 point_abs_etile p( x, y );
-                UUID uuid = mapgen.base.canvas.get( p.raw() );
+                UUID uuid = get_uuid_at_pos( p.raw() );
                 const SpriteRef *img = pal.sprite_from_uuid( uuid );
                 if( img ) {
                     fill_tile_sprited( draw_list, cam, p, *img );
@@ -265,7 +300,7 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
         for( int x = 0; x < mapgen.mapgensize().x(); x++ ) {
             for( int y = 0; y < mapgen.mapgensize().y(); y++ ) {
                 point_abs_etile p( x, y );
-                UUID uuid = mapgen.base.canvas.get( p.raw() );
+                UUID uuid = get_uuid_at_pos( p.raw() );
                 ImVec4 col = pal.color_from_uuid( uuid );
                 const SpriteRef *img = pal.sprite_from_uuid( uuid );
                 if( img ) {
@@ -278,7 +313,7 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
         for( int x = 0; x < mapgen.mapgensize().x(); x++ ) {
             for( int y = 0; y < mapgen.mapgensize().y(); y++ ) {
                 point_abs_etile p( x, y );
-                const std::string &mk = pal.display_key_from_uuid( mapgen.base.canvas.get( p.raw() ) );
+                const std::string &mk = pal.display_key_from_uuid( get_uuid_at_pos( p.raw() ) );
                 point_abs_epos center = coords::project_combine( p,
                                         point_etile_epos( ETILE_SIZE / 2, ETILE_SIZE / 2 ) );
                 point_abs_screen text_center = cam.world_to_screen( center );
@@ -342,8 +377,12 @@ void show_editor_view( State &state, Mapgen *mapgen_ptr )
         ImGui::TextColored( col_text, "%s", label.c_str() );
     }
 
+    if( snippet ) {
+        draw_selection_mask( draw_list, snippet->get_selection_mask(),
+                             point_abs_etile( snippet->get_pos() ), cam, true );
+    }
     if( selection ) {
-        draw_selection_mask( draw_list, *selection, cam );
+        draw_selection_mask( draw_list, *selection, point_abs_etile(), cam, false );
     }
 
     if( view_hovered ) {

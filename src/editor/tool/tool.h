@@ -13,6 +13,7 @@ namespace editor
 {
 struct Mapgen;
 struct SelectionMask;
+struct SnippetsState;
 } // namespace editor
 
 namespace editor::tools
@@ -50,6 +51,9 @@ struct ToolControl {
     }
 
     virtual void show_tooltip( ToolTarget & /*target*/ ) {};
+    virtual bool operates_on_snippets( ToolTarget & /*target*/ ) {
+        return false;
+    }
 };
 
 struct ToolDefinition {
@@ -83,6 +87,7 @@ struct ToolTarget {
     UUID main_tile = UUID_INVALID;
     ToolHighlight &highlight;
     SelectionMask *selection = nullptr;
+    SnippetsState &snippets;
 
     bool is_hovered_over_canvas() const;
 };
