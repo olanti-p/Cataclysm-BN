@@ -1,87 +1,133 @@
 # Usage (short tutorial)
 
-TODO: update tutorial
-TODO: pictures
+## Starting up
 
-Click `New Project`. You'll see multiple windows:
+Launch `cataclysm-bnmt`. This is a modified game instance that should be roughly equivalent to vanilla executable,
+except with additional code for the editor.
 
-1. `Toolbar` - currently selected tool, hover with mouse to see details.
-2. `File history` - history of edits. Hover with mouse over grey `(?)` to see details.
-3. `Advanced Map Editor` - project controls. Can be used to save/export/close project, move/zoom camera, toggle other windows.
-4. `Project Overview` - project overview. Each project is a combination of multiple mapgens grouped together and optionally dependent on same palettes.
+If installation has been done correctly, you should be met with the welcome screen:
 
-Each window can be collapsed, closed, dragged around and resized with LMB (Left Mouse Button).
+![welcome screen](assets/welcome_screen.png "welcome_screen")
 
-Click `New mapgen` and then click on the new mapgen name in the list.
+Here, you can specify which mods the editor will load, open game settings menu or exit the editor and return to the base game.
 
-Now you'll see:
+Once you're done, select `Open editor`, wait for it to load game data, and in the new menu (now mouse controlled) click `New Project`.
 
-1. `File Info` window. Contains generic settings for the selected mapgen. 
-2. Visual representation of the mapgen underneath all windows. It's empty right now.
+## UI overview
 
-You can pan and zoom the view with RMB and Mouse Wheel, see `(?: Camera controls)` hint in `Advanced Map Editor` window.
+You can hover mouse cursor over many UI elements to get tooltips explaining hotkeys or meaning of elements.
 
-In `File Info`, choose `Oter` mapgen type and `Rows` mapgen base.
+Grayed out question marks (?) also provide additional information.
 
-Click on `om_terrain` to assign the mapgen to some overmap terrain (you can type to search).
-Let's use `animalshelter`.
-Set `weight` to something huge, like `10000`, to make it easier to debug, and `fill_ter` to something mundane, like `t_region_grass`.
+Holding Ctrl will reveal additional information for tiles and objects on canvas.
 
-In `Project Overview`, click `inline palette` button to the ledt of mapgen name. You can hover with cursor to see what each button does.
+Main menu bar at the top can be used to save/export current project, as well as control which windows are visible.
 
-A new window opens up, `Palette`. This is the inline palette used by the mapgen.
-You can add new entries by pressing `+` at the bottom, and then assigning data to them by pressing a triangle on the right.
+`Debug/Metrics` window can be used to check FPS.
 
-WARNING: Not all data types are completely implemented right now. 
+## TODO parts
 
-For now, let's make some walls. Add a new entry, change the symbol from `a` to `|`, then press triangle on the right.
-A new `Mappings` window opens up, which contains data associated with the symbol.
+Some functionality is still work-in-progress, such as advanced mappings like the nested mapgen placement or some cases of error checking.
 
-Add an `AltTerrain` mapping, and then set id (box on the right, should be highlighted red) to `t_wall`.
+See `doc/BNMT/TODO.md` and `doc/BNMT/BUGS.md` for examples.
 
-Back in `Palette` window, you may notice the symbol now displays `t_wall` terrain. To the left of the symbol itself there are 2 other buttons: `Select as active for brush` and `Color on canvas`.
+Usually wip functionality is marked with `TODO` in UI.
 
-Click on `Select as active for brush`, then move your cursor to canvas and press LMB. Congrats, you placed a wall!
+## Palette import
 
-You can set custom color for the symbol in `Palette` window to make it stand out, or remove transparency to make it appear as clear tileset sprite.
+Since we're lazy, we'll be importing existing palette instead of creating our own.
 
-You can press `Select as active for brush` button again to clear selection, or simply click with `MMB` outside canvas to pick "empty" tile and make your brush act as eraser. `MMB` works as "Pipette" tool, clicking on a wall with `MMB` will make your brush place walls.
+Find `Project Overview` window, and click `New palette` button.
 
-Draw an enclosed square of walls. If you have misplaced a tile, you can always press `Ctrl+Z` to undo your mistake (or `Ctrl+Shift+Z` to undo your undo).
+Select `Import` -> `apartment_palette` as Source, then `Confirm`.
 
-Now create a new entry with `t_floor` and use `Bucket` tool to fill the area inside walls with floor, same as you would do in graphical editors such as MSPaint.
+There may be a warning about missing import functionality, but we don't care about it, just click the option to dismiss it if it pops up.
 
-It's time to place the door. Click `Duplicate entry` button for the floor entry, then open mappings list and add `AltFurniture` mapping. Choose a door you like, then plop it right in the middle of some wall.
+Now, the palette is available in the list of palettes in `Project Overview` window. If you click on it, you'll be greeted
+with a long list that describes what symbols correspond to what data.
 
-Remember: you can undo with `Ctrl+Z` if you forgot to switch to Brush and accidentally replaced all walls with your door!
+![palette verbose](assets/palette_verbose.png "palette_verbose")
 
-The project's going good, would be a shame if something happened to it. Press `Save` button in `Advanced Map Editor` window (shortcut: `Ctrl+S`), choose a folder, enter project name and click `Ok`.
+Clicking `Toggle simple palette` will reveal a simplified view that's more convenient for drawing.
 
-Now, each house needs some furniture. Add a new entry with `t_floor` and `f_fridge`, then place it somewhere.
+![palette simple](assets/palette_simple.png "palette_simple")
 
-The fridge is useless without food, so we'll add some food. In mappings list for the fridge, add a new `Igroup` mapping. This will randomly place items from an existing item group. Now, set `chance (%)` as `80, 80`, uncheck `Once`, set `repeat` to `5, 5` and set `group_id` as `fridgesnacks`. You can see in `Palette` window that the fridge entry now has a little `+ 1` note on the right, hover over it and you'll see our itemgroup.
+In verbose view, you can inspect and modify all data associated with the symbols, as well as create new entries.
 
-It's sometimes hard to keep track of stuff on canvas, but luckily you can press `Ctrl` and hover over symbols, and a little tooltip will show everything that'll be placed in that tile.
+## Creating mapgen
 
-As a final touch, let's cover the walls with graffiti. From `Project overview`, click `Show/hide map objects` button to the left of the mapgen name. This will open `Objects list` window which lists all mapgen pieces that'll be placed over an area (`place_*` functions in JSON).
+The game supports a lot of mapgen variations, but we'll be exploring the most common one: plain oter mapgen represented as JSON grid of symbols.
 
-Add a new object of `Graffiti` type, set `x` as `1, 5`, `y` as `2, 3`, `repeat` as `5, 5` and then give it some color. Don't forget alpha channel, it's transparent by default!
+In `Project Overview` window, click `New mapgen`, ensure `Oter` type is selected, then toggle OFF `Create new palette` and
+in the drop-down list select our `apartment_palette`. You can optionally give the new mapgen a name. Once you're done, click `Confirm`.
 
-You'll see a colorful blob on the canvas labeled `Graffiti: ""`. Adjust `x` and `y` to place it on some of your walls. If it becomes annoying later on, you can hide it by pressing the "eye" button for corresponding entry in `Objects list` window.
+You'll see the new mapgen on the list, and clicking on it will make it appear in the editor view.
 
-Having a row of identical graffities would look unnatural, so we'll use random text snippets. Click `Use snippet from category`, and in id prompt below enter `shelter_graffiti_snippets`.
+You can pan the camera with RMB and zoom with the mouse wheel. More info on camera control can be found in `Camera Controls` window.
 
-With creative part done, it's time to see our changes in game. First, save your project, then click `Export` (or `Ctrl+E`). Choose a directory somewhere inside your mod, choose a name for your file and click `Ok`.
+You may notice that the mapgen does not have a grid yet. Open `Mapgen Info` window, and near the bottom select `Rows`.
 
-Close the `Advanced Map Editor` window. This will close the project, and let you back into editor title screen. Click `Exit To Desktop` to get back into the game, then quit to main menu.
+Now you can paint on the resulting canvas with a brush or other drawing tools, see `Toolbar` window.
 
-Now:
-1. Run your regular `cataclysm-tiles`
-2. Create a world with your mod that contains the exported mapgen
-3. Create a new character
-4. From debug menu, open overmap editor and place `animalshelter_north` overmap terrain outside red zone
-5. Long teleport to that overmap tile. Unless you're extremely unlucky, the game will use the new mapgen definition, and you'll be able to see your new building "in the flesh".
+## Undo, redo, save, export, autosave
 
-There are many plans to automate this part and improve both UI and functionality of the editor, see [TODO.md](TODO.md) for details.
+The editor provides full undo/redo functionality using standard `Ctrl+Z`/`Ctrl+Shift+Z` hotkeys. See `History` window for more info.
 
-This concludes the tutorial. If you found any bugs, or had trouble following this document, please open an issue or contact me on Discord (see [README.md](../../README.md) for details).
+The project can be saved for future work in the editor, or exported for use by the game,
+with `Save`/`Export` options under `File` section in the main menu bar.
+
+The editor periodically creates autosaves of the project and writes them into `config/autosave/<timestamp>.json`.
+These can be used to recover lost work in case of crash, but should not be relied upon for normal saving.
+
+## Configuring oter mapgen
+
+Oter mapgen configuration can be done through the UI, or manually afterwards in the export file.
+
+The main options you want to customize are:
+1. `fill_ter` field. Simple defaults are `t_region_groundcover` for z=0, `t_open_air` for z>0, `t_rock` for z<0 
+2. `Matrix Mode`. If you want a large mapgen, larger than 24x24, use matrix mode, set matrix size to needed
+    size and specify which OMTs the mapgen corresponds to.
+3. `Normal Mode`. Opposite of `Matrix Mode`, your mapgen will have a fixed 24x24 size, but it'll let you specify
+    1 or more OMTs that it will correspond to.
+
+When in Matrix Mode, you can toggle OMT grid display through `Preferences` menu in the main menu bar.
+
+Note that in order for the editor to recognize your OMT input as valid id, the relevant OMTs should be present
+in the data files during loading (either base game files or a mod added through welcome screen).
+
+![oter modes](assets/oter_modes.png "oter_modes")
+
+## Symbol mappings
+
+Each symbol in the palette must be unique and may be associated with 0, 1, 2 or more data entries, aka `Mapping`s.
+
+TODO: Not all mappings are currently implemented, but the main ones should work (terrain, furniture, items, graffiti/signs).
+
+You can freely add or remove mappings to palette entries at any time.
+
+The furniture and terrain is added with `AltFurniture` and `AltTerrain` mappings.
+They contain weighted lists, which let you specify what terrain/furniture types will be placed and at what relative weight.
+
+When you create a new palette entry with the `New Ter`/`New Furn`/`New Furn+Ter` buttons,
+that's just a shortcut that creates a new symbol with `AltFurniture`/`AltTerrain` mapping that has 1 entry in its list.
+
+Many mappings have complex data fields, though most of them should be explained via tooltips.
+
+![symbol mappings](assets/symbol_mappings.png "symbol_mappings")
+
+## Map objects
+
+Map objects are pieces of data that can be randomly placed within an area.
+
+The list of map objects can be accessed through the relevant button.
+
+![map objects](assets/map_objects.png "map_objects")
+
+## Z-levels
+
+The editor does not explicitly support z-levels, but you can create multiple mapgens (one for each z-level),
+arrange them in the right order in `Project Overview` window and quickly scroll between them with mouse wheel while holding `Alt`.
+
+Some other small tricks:
+
+![map view tricks](assets/map_view_tricks.png "map_view_tricks")
