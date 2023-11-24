@@ -40,10 +40,11 @@ void SelectionControl::handle_tool_operation( ToolTarget &target )
     if( target.view_hovered ) {
         if( ImGui::IsMouseClicked( ImGuiMouseButton_Left ) ) {
             dismissing_selection = true;
+            drag_start = target.cursor_tile_pos;
         }
         if( ImGui::IsMouseDragging( ImGuiMouseButton_Left ) && !start && !selection_aborted ) {
             // Stroke start
-            start = target.cursor_tile_pos;
+            start = drag_start;
             dismissing_selection = false;
         }
         if( ImGui::IsMouseReleased( ImGuiMouseButton_Left ) ) {
@@ -99,6 +100,7 @@ void SelectionControl::handle_tool_operation( ToolTarget &target )
     }
     if( !ImGui::IsMouseDown( ImGuiMouseButton_Left ) ) {
         start.reset();
+        drag_start.reset();
     }
 }
 
