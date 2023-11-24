@@ -21,10 +21,10 @@ def zip_dir( zipf, src, dst = None ):
 
 
 with zipfile.ZipFile('bnmt-bindist.zip', 'w', zipfile.ZIP_DEFLATED) as zipf:
-    if os.path.isfile('build/cataclysm-tiles'):
-        zip_file(zipf, 'build/cataclysm-tiles', './cataclysm-bnmt')
+    if os.path.isfile('cataclysm-tiles'):
+        zip_file(zipf, 'cataclysm-tiles', './cataclysm-bnmt')
     else:
-        zip_file(zipf, 'build/cataclysm-tiles.exe', './cataclysm-bnmt.exe')
+        zip_file(zipf, 'cataclysm-tiles.exe', './cataclysm-bnmt.exe')
     zip_file(zipf, 'README.md')
     zip_file(zipf, 'data/raw/keybindings/bnmt.json')
     zip_dir(zipf, 'data/mods/_me_interface/')
