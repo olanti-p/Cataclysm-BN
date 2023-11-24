@@ -1,15 +1,20 @@
 #include "mapgen.h"
 
 #include "common/canvas_2d.h"
+#include "common/uuid.h"
 #include "imgui.h"
+#include "mapgen/canvas_snippet.h"
 #include "mapgen/palette.h"
+#include "point.h"
 #include "selection_mask.h"
 #include "state/state.h"
 #include "state/ui_state.h"
 #include "string_formatter.h"
 #include "widget/editable_id.h"
 #include "widget/widgets.h"
+#include <cassert>
 #include <cfloat>
+#include <climits>
 #include <vector>
 
 namespace editor
@@ -246,6 +251,20 @@ SelectionMask *Mapgen::get_selection_mask()
     }
 }
 
+void Mapgen::erase_selected( const SelectionMask &mask )
+{
+    assert( mapgensize().raw() == mask.get_size() );
+    assert( uses_rows() );
+    for( int y = 0; y < mask.get_size().y; y++ ) {
+        for( int x = 0; x < mask.get_size().x; x++ ) {
+            point pos( x, y );
+            if( mask.get( pos ) ) {
+                base.canvas.set( pos, UUID_INVALID );
+            }
+        }
+    }
+}
+
 MapgenBase::~MapgenBase() = default;
 
 void MapgenBase::remove_usages( const UUID &uuid )
@@ -253,6 +272,47 @@ void MapgenBase::remove_usages( const UUID &uuid )
     for( UUID &cell : canvas.get_data() ) {
         if( cell == uuid ) {
             cell = UUID_INVALID;
+        }
+    }
+}
+
+void Mapgen::apply_snippet( const CanvasSnippet &snippet )
+{
+    assert( uses_rows() );
+
+    Canvas2D<UUID> &canvas = base.canvas;
+
+    for( int y = 0; y < snippet.get_size().y; y++ ) {
+        for( int x = 0; x < snippet.get_size().x; x++ ) {
+            point p_src( x, y );
+            std::optional<UUID> data = snippet.get_data_at( p_src );
+            if( data ) {
+                point p_dest = snippet.get_pos() + p_src;
+                if( canvas.get_bounds().contains( p_dest ) ) {
+                    canvas.set( p_dest, *data );
+                }
+            }
+        }
+    }
+}
+
+void Mapgen::select_from_snippet( const CanvasSnippet &snippet )
+{
+    assert( uses_rows() );
+
+    selection_mask.clear_all();
+
+    const SelectionMask &snippet_mask = snippet.get_selection_mask();
+
+    for( int y = 0; y < snippet.get_size().y; y++ ) {
+        for( int x = 0; x < snippet.get_size().x; x++ ) {
+            point p_src( x, y );
+            if( snippet_mask.get( p_src ) ) {
+                point p_dest = snippet.get_pos() + p_src;
+                if( selection_mask.get_bounds().contains( p_dest ) ) {
+                    selection_mask.set( p_dest );
+                }
+            }
         }
     }
 }

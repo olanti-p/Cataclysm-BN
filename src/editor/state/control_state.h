@@ -5,6 +5,7 @@
 #include "tool/tool.h"
 #include "view/ruler.h"
 #include "widget/editable_id.h"
+#include "mapgen/canvas_snippet.h"
 
 #include <memory>
 #include <unordered_map>
@@ -23,6 +24,35 @@ struct QuickPaletteAddState {
     QuickAddMode mode = QuickAddMode::Ter;
     EID::Ter eid_ter;
     EID::Furn eid_furn;
+};
+
+struct SnippetsState {
+    public:
+        std::optional<CanvasSnippet> clipboard;
+
+        inline bool has_snippet_for( UUID mapgen ) const {
+            return snippets.count( mapgen );
+        }
+        inline void add_snippet( UUID mapgen, CanvasSnippet &&new_snippet ) {
+            snippets[mapgen] = std::move( new_snippet );
+        }
+        inline CanvasSnippet drop_snippet( UUID mapgen ) {
+            auto it = snippets.find( mapgen );
+            CanvasSnippet data = std::move( it->second );
+            snippets.erase( it );
+            return data;
+        }
+        inline CanvasSnippet *get_snippet( UUID mapgen ) {
+            auto it = snippets.find( mapgen );
+            if( it == snippets.end() ) {
+                return nullptr;
+            } else {
+                return &it->second;
+            }
+        }
+
+    private:
+        std::unordered_map<UUID, CanvasSnippet> snippets;
 };
 
 /**
@@ -57,6 +87,7 @@ struct ControlState {
         tools::ToolControl &get_tool_control( tools::ToolKind t );
 
         QuickPaletteAddState quick_add_state;
+        SnippetsState snippets;
 
         void show_warning_popup( const std::string &data );
         void handle_warning_popup();

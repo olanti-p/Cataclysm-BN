@@ -780,6 +780,26 @@ void SelectionMask::deserialize( JsonIn &jsin )
     JsonObject jo = jsin.get_object();
 
     jo.read( "data", data );
+
+    refresh_num_selected();
+}
+
+void CanvasSnippet::serialize( JsonOut &jsout ) const
+{
+    jsout.start_object();
+    jsout.member( "data", data );
+    jsout.member( "mask", mask );
+    jsout.member( "pos", pos );
+    jsout.end_object();
+}
+
+void CanvasSnippet::deserialize( JsonIn &jsin )
+{
+    JsonObject jo = jsin.get_object();
+
+    jo.read( "data", data );
+    jo.read( "mask", mask );
+    jo.read( "pos", pos );
 }
 
 } // namespace editor

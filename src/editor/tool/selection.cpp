@@ -4,8 +4,11 @@
 #include "coordinates.h"
 #include "imgui.h"
 #include "line.h"
+#include "mapgen/canvas_snippet.h"
 #include "mapgen/mapgen.h"
+#include "state/control_state.h"
 #include "point.h"
+
 #include <vector>
 
 namespace editor::tools
@@ -36,7 +39,17 @@ void SelectionControl::handle_tool_operation( ToolTarget &target )
         start.reset();
         return;
     }
-    //RectSelectionSettings &settings = *dynamic_cast<RectSelectionSettings *>( target.settings );
+    CanvasSnippet *snippet = target.snippets.get_snippet( target.mapgen.uuid );
+
+    const auto apply_snippet = [&]() {
+        if( snippet ) {
+            snippet = nullptr;
+            CanvasSnippet data = target.snippets.drop_snippet( target.mapgen.uuid );
+            target.mapgen.apply_snippet( data );
+            target.mapgen.select_from_snippet( data );
+            target.made_changes = true;
+        }
+    };
     if( target.view_hovered ) {
         if( ImGui::IsMouseClicked( ImGuiMouseButton_Left ) ) {
             dismissing_selection = true;
@@ -50,6 +63,7 @@ void SelectionControl::handle_tool_operation( ToolTarget &target )
         if( ImGui::IsMouseReleased( ImGuiMouseButton_Left ) ) {
             if( start ) {
                 // Stroke end
+                apply_snippet();
                 point_abs_etile p1 = *start;
                 point_abs_etile p2 = get_rectangle_end( target );
 
@@ -62,25 +76,112 @@ void SelectionControl::handle_tool_operation( ToolTarget &target )
                 start.reset();
             } else if( dismissing_selection ) {
                 dismissing_selection = false;
+                apply_snippet();
                 if( !ImGui::IsKeyDown( ImGuiKey_ModShift ) ) {
-                    target.selection->clear_all();
-                    target.made_changes = true;
+                    if( target.selection->has_selected() ) {
+                        target.selection->clear_all();
+                        target.made_changes = true;
+                    }
                 }
             }
         }
-        if( ImGui::IsKeyDown( ImGuiKey_ModCtrl ) && ImGui::IsKeyPressed( ImGuiKey_A ) ) {
-            // Abort & select all
+        if( ImGui::IsKeyPressed( ImGuiKey_Delete ) && target.selection->has_selected() ) {
+            // Abort & delete
             start.reset();
             selection_aborted = true;
-            target.selection->set_all();
+
+            target.mapgen.erase_selected( *target.selection );
             target.made_changes = true;
+        }
+        if( snippet ) {
+            if( ImGui::IsKeyPressed( ImGuiKey_UpArrow ) ||
+                ImGui::IsKeyPressed( ImGuiKey_DownArrow ) ||
+                ImGui::IsKeyPressed( ImGuiKey_LeftArrow ) ||
+                ImGui::IsKeyPressed( ImGuiKey_RightArrow )
+              ) {
+                // Abort & move snippet
+                start.reset();
+                selection_aborted = true;
+
+                point delta;
+                if( ImGui::IsKeyPressed( ImGuiKey_UpArrow ) ) {
+                    delta = point_north;
+                } else if( ImGui::IsKeyPressed( ImGuiKey_DownArrow ) ) {
+                    delta = point_south;
+                } else if( ImGui::IsKeyPressed( ImGuiKey_LeftArrow ) ) {
+                    delta = point_west;
+                } else {
+                    delta = point_east;
+                }
+
+                snippet->set_pos( snippet->get_pos() + delta );
+            }
+            if( ImGui::IsKeyPressed( ImGuiKey_Enter ) ) {
+                // Abort & apply snippet
+                start.reset();
+                selection_aborted = true;
+
+                apply_snippet();
+                target.mapgen.get_selection_mask()->clear_all();
+                target.made_changes = true;
+            }
+        }
+        if( ImGui::IsKeyDown( ImGuiKey_ModCtrl ) ) {
+            if( ImGui::IsKeyPressed( ImGuiKey_A ) ) {
+                // Abort & select all
+                apply_snippet();
+                start.reset();
+                selection_aborted = true;
+
+                target.selection->set_all();
+                target.made_changes = true;
+            }
+            if( ImGui::IsKeyPressed( ImGuiKey_X ) && target.selection->has_selected() ) {
+                // Abort & cut
+                apply_snippet();
+                start.reset();
+                selection_aborted = true;
+
+                CanvasSnippet new_snippet = make_snippet( target.mapgen.base.canvas, *target.selection );
+                target.snippets.clipboard = std::move( new_snippet );
+
+                target.mapgen.erase_selected( *target.selection );
+                target.made_changes = true;
+            }
+            if( ImGui::IsKeyPressed( ImGuiKey_C ) && target.selection->has_selected() ) {
+                // Abort & copy
+                apply_snippet();
+                start.reset();
+                selection_aborted = true;
+
+                CanvasSnippet new_snippet = make_snippet( target.mapgen.base.canvas, *target.selection );
+                target.snippets.clipboard = std::move( new_snippet );
+            }
+            if( ImGui::IsKeyPressed( ImGuiKey_V ) && target.snippets.clipboard.has_value() ) {
+                // Abort & paste
+                apply_snippet();
+                start.reset();
+                selection_aborted = true;
+
+                if( target.selection->has_selected() ) {
+                    target.selection->clear_all();
+                    target.made_changes = true;
+                }
+
+                // TODO: paste pos
+                CanvasSnippet paste_data = *target.snippets.clipboard;
+                target.snippets.add_snippet( target.mapgen.uuid, std::move( paste_data ) );
+            }
         }
         if( ImGui::IsKeyPressed( ImGuiKey_Escape ) ) {
             // Abort / clear selection
             if( start ) {
                 start.reset();
                 selection_aborted = true;
-            } else {
+            } else if( snippet ) {
+                snippet = nullptr;
+                target.snippets.drop_snippet( target.mapgen.uuid );
+            } else if( target.selection->has_selected() ) {
                 target.selection->clear_all();
                 target.made_changes = true;
             }

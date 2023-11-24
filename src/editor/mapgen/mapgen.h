@@ -1,15 +1,16 @@
 #ifndef CATA_SRC_EDITOR_MAPGEN_H
 #define CATA_SRC_EDITOR_MAPGEN_H
 
-#include "common/canvas_2d.h"
+#include "coordinates.h"
 #include "cuboid_rectangle.h"
 #include "game_constants.h"
-#include "coordinates.h"
-
-#include "common/uuid.h"
-#include "mapgen/palette.h"
-#include "mapgen/mapobject.h"
 #include "point.h"
+
+#include "canvas_snippet.h"
+#include "common/canvas_2d.h"
+#include "common/uuid.h"
+#include "mapgen/mapobject.h"
+#include "mapgen/palette.h"
 #include "selection_mask.h"
 #include "widget/editable_id.h"
 
@@ -83,6 +84,12 @@ enum class MapgenType {
 
 struct Mapgen {
     public:
+        Mapgen() = default;
+        Mapgen( const Mapgen & ) = default;
+        Mapgen( Mapgen && ) = default;
+        Mapgen &operator=( const Mapgen & ) = default;
+        Mapgen &operator=( Mapgen && ) = default;
+
         UUID uuid = UUID_INVALID;
 
         MapgenType mtype = MapgenType::Oter;
@@ -120,6 +127,9 @@ struct Mapgen {
         void set_canvas_size( point new_size );
 
         SelectionMask *get_selection_mask();
+        void erase_selected( const SelectionMask &mask );
+        void apply_snippet( const CanvasSnippet &snippet );
+        void select_from_snippet( const CanvasSnippet &snippet );
 
     private:
         SelectionMask selection_mask;

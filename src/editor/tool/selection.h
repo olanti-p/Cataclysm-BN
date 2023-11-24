@@ -28,6 +28,9 @@ struct SelectionControl : public ToolControl {
     point_abs_etile get_rectangle_end( ToolTarget &target ) const;
 
     void show_tooltip( ToolTarget &target ) override;
+    bool operates_on_snippets( ToolTarget & /*target*/ ) override {
+        return true;
+    }
 };
 
 struct SelectionSettings : public ToolSettings {
