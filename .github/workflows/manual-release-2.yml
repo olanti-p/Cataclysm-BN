@@ -134,13 +134,13 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DTILES=1 -DSOUND=1 -DCURSES=0 -DLUA=0 -DUSE_HOME_DIR=0 -DUSE_PREFIX_DATA_DIR=0 
+          cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DTILES=1 -DSOUND=0 -DCURSES=0 -DLUA=0 -DUSE_HOME_DIR=0 -DUSE_PREFIX_DATA_DIR=0 
       - name: Configure (MXE)
         if: matrix.mxe != 'none'
         run: |
           mkdir build
           cd build
-          /opt/mxe/usr/bin/x86_64-w64-mingw32.static.gcc11-cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DTILES=1 -DSOUND=1 -DCURSES=0 -DLUA=0 -DUSE_HOME_DIR=0 -DUSE_PREFIX_DATA_DIR=0 
+          /opt/mxe/usr/bin/x86_64-w64-mingw32.static.gcc11-cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DTILES=1 -DSOUND=0 -DCURSES=0 -DLUA=0 -DUSE_HOME_DIR=0 -DUSE_PREFIX_DATA_DIR=0 
       - name: Build BNMT (Linux)
         if: runner.os == 'Linux' && matrix.mxe == 'none' && matrix.android == 'none'
         run: |
