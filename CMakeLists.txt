@@ -232,6 +232,8 @@ if (NOT MSVC)
        -Woverloaded-virtual \
        -Wpedantic \
        -Wsuggest-override \
+       -Wno-format \
+       -Wno-error=format \
        -Wno-unused-macros \
        -Wno-old-style-cast \
        -Wno-zero-as-null-pointer-constant \
