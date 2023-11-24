@@ -14,6 +14,7 @@ namespace editor::tools
 
 struct SelectionControl : public ToolControl {
     std::optional<point_abs_etile> start;
+    std::optional<point_abs_etile> drag_start;
     bool dismissing_selection = false;
     bool selection_aborted = false;
 
