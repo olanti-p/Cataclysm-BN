@@ -8,7 +8,6 @@ on:
         description: "Version string for the release"
         required: true
         type: string
-  pull_request: -- HACK for GitHub
 env:
   VERSION: ${{ inputs.version }}
   VCPKG_BINARY_SOURCES: "default"
