@@ -3,6 +3,8 @@
 
 #include "pimpl.h"
 
+#include <string>
+
 namespace editor
 {
 struct HistoryState;
