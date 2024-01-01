@@ -35,7 +35,7 @@ WelcomeResult show_welcome_screen()
         menu.hotkey_color = c_dark_gray;
         menu.text_color = c_white;
         menu.settext( _(
-                          "+--=== B N M E ===--+\n"
+                          "+--=== B N M T ===--+\n"
                           "|   Bright Nights   |\n"
                           "|   Mapping  Tool   |\n"
                           "+-------------------+\n"
