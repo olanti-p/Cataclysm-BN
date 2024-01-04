@@ -2,7 +2,7 @@
 
 ## Starting up
 
-Launch `cataclysm-bnmt`. This is a modified game instance that should be roughly equivalent to vanilla executable,
+Launch `bnmt` executable. This is a modified game instance that should be roughly equivalent to vanilla executable,
 except with additional code for the editor.
 
 If installation has been done correctly, you should be met with the welcome screen:
