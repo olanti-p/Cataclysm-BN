@@ -32,16 +32,16 @@ Features marked with `*` are implemented only partially (some planned functional
 - Use different palettes for mapgens in single project
 - Autocomplete and fuzzy search for identifiers
 - Undo/redo support
-- Autosaves
 - UI retains its state between sessions
 - Can be used with mods
+- *Autosaves
 - *Support for big mapgens (e.g. 48x48, 72x72 - any multiple of 24)
 - *Import existing palettes from game files
 - *Assign different mappings to symbols (terrain/furniture/items/fields/graffiti/vehicle/monster/NPC/other)
 - *Mapgen objects (spawning objects within an area)
 - *Update-type mapgens
 - *Nested-type mapgens
-- *Responsive UI (hotkeys, tooltips)
+- *QoL UI features (hotkeys, tooltips)
 
 ## Bugs and limitations
 See [TODO.md](doc/BNMT/TODO.md) for list of planned features.
