@@ -13,12 +13,12 @@ See [COMPILING.md](doc/BNMT/COMPILING.md)
 ## How to use
 See [TUTORIAL.md](doc/BNMT/TUTORIAL.md)
 
-## Bugs
+## Bugs and limitations
+See [TODO.md](doc/BNMT/TODO.md) for list of planned features.
+
 See [BUGS.md](doc/BNMT/BUGS.md) for list of known bugs.
 
-If you don't see your issue there, please check the [Issue tracker on GitHub](https://github.com/olanti-p/BNMT/issues).
-
-Please open a new issue only if you don't find yours in the lists.
+If you don't see your issue there, please open a ticket or contact me on Discord.
 
 ## Feedback
 I'm available on official Bright Nights Discord server: https://discord.gg/XW7XhXuZ89 , user id `olanti_p`.

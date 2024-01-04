@@ -65,9 +65,13 @@ You'll see the new mapgen on the list, and clicking on it will make it appear in
 
 You can pan the camera with RMB and zoom with the mouse wheel. More info on camera control can be found in `Camera Controls` window.
 
+## Drawing with mouse
+
 You may notice that the mapgen does not have a grid yet. Open `Mapgen Info` window, and near the bottom select `Rows`.
 
-Now you can paint on the resulting canvas with a brush or other drawing tools, see `Toolbar` window.
+Switch to `Brush` tool in the `Toolbar` window, and click on any tile in the simplified palette view.
+
+Now, you can paint on the resulting canvas with your mouse. The are other drawing tools available, see `Toolbar` window for more info.
 
 ## Undo, redo, save, export, autosave
 

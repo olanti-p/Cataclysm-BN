@@ -10,5 +10,6 @@ These build systems are NOT supported and WON'T work:
 - Android build
 - Makefile
 - VS project in "msvc_full_features/"
+
 If you want to use one of them (for some reason..?), you'll have to add
 rules for compiling editor sources and deal with the dependencies yourself.
