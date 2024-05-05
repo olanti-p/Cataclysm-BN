@@ -15,6 +15,8 @@
 #include "cursesdef.h"
 
 class input_context;
+class scrolling_text_view;
+class ui_adaptor;
 class utf8_wrapper;
 struct point;
 
@@ -74,12 +76,16 @@ class string_input_popup // NOLINT(cata-xy)
         // Cache when using the default window
         int w_width = 0;
         int w_height = 0;
-        std::vector<std::string> descformatted;
+        int title_height = 0;
+        int description_height = 0;
         std::vector<std::string> title_split;
         int titlesize = 0;
 
         bool custom_window = false;
-        catacurses::window w;
+        catacurses::window w_full;
+        catacurses::window w_description;
+        catacurses::window w_title_and_entry;
+        std::unique_ptr<scrolling_text_view> desc_view_ptr;
 
         std::unique_ptr<input_context> ctxt_ptr;
         input_context *ctxt = nullptr;
@@ -94,7 +100,7 @@ class string_input_popup // NOLINT(cata-xy)
         void show_history( utf8_wrapper &ret );
         void add_to_history( const std::string &value ) const;
         void update_input_history( utf8_wrapper &ret, bool up );
-        void draw( const utf8_wrapper &ret, const utf8_wrapper &edit ) const;
+        void draw( ui_adaptor *ui, const utf8_wrapper &ret, const utf8_wrapper &edit ) const;
 
     public:
         string_input_popup();

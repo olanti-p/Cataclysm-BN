@@ -737,7 +737,8 @@ static tripoint_abs_omt show_notes_manager( const tripoint_abs_omt &origin )
     return result;
 }
 
-static void draw_ascii( const catacurses::window &w,
+static void draw_ascii( ui_adaptor &ui,
+                        const catacurses::window &w,
                         const tripoint_abs_omt &center,
                         const tripoint_abs_omt &/*orig*/,
                         bool blink,
@@ -1229,8 +1230,9 @@ static void draw_ascii( const catacurses::window &w,
         mvwputch( w, point( om_half_width + 1, om_half_height + 1 ), c_light_gray, LINE_XOOX );
     }
     // Done with all drawing!
-    wmove( w, point( om_half_width, om_half_height ) );
     wnoutrefresh( w );
+    // Set cursor for screen readers
+    ui.set_cursor( w, point( om_half_width, om_half_height ) );
 }
 
 static void draw_om_sidebar(
@@ -1427,6 +1429,7 @@ tiles_redraw_info redraw_info;
 #endif
 
 static void draw(
+    ui_adaptor &ui,
     const tripoint_abs_omt &center,
     const tripoint_abs_omt &orig,
     bool blink,
@@ -1438,7 +1441,7 @@ static void draw(
 {
     draw_om_sidebar( g->w_omlegend, center, orig, blink, fast_scroll, inp_ctxt, data );
     if( !use_tiles || !use_tiles_overmap ) {
-        draw_ascii( g->w_overmap, center, orig, blink, show_explored, fast_scroll, inp_ctxt, data,
+        draw_ascii( ui, g->w_overmap, center, orig, blink, show_explored, fast_scroll, inp_ctxt, data,
                     grids_data );
     } else {
 #ifdef TILES
@@ -1989,8 +1992,8 @@ static tripoint_abs_omt display( const tripoint_abs_omt &orig,
     std::chrono::time_point<std::chrono::steady_clock> last_blink = std::chrono::steady_clock::now();
     grids_draw_data grids_data;
 
-    ui.on_redraw( [&]( const ui_adaptor & ) {
-        draw( curs, orig, uistate.overmap_show_overlays,
+    ui.on_redraw( [&]( ui_adaptor & ui ) {
+        draw( ui, curs, orig, uistate.overmap_show_overlays,
               show_explored, fast_scroll, &ictxt, data, grids_data );
     } );
 

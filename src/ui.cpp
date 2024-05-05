@@ -198,7 +198,7 @@ void uilist::init()
     callback = nullptr;         // * uilist_callback
     filter.clear();          // filter string. If "", show everything
     fentries.clear();        // fentries is the actual display after filtering, and maps displayed entry number to actual entry number
-    fselected = 0;           // fentries[selected]
+    fselected = 0;           // selected = fentries[fselected]
     filtering = true;        // enable list display filtering via '/' or '.'
     filtering_igncase = true; // ignore case when filtering
     max_entry_len = 0;
@@ -652,7 +652,7 @@ void uilist::apply_scrollbar()
 /**
  * Generate and refresh output
  */
-void uilist::show()
+void uilist::show( ui_adaptor &ui )
 {
     if( !started ) {
         setup();
@@ -687,6 +687,10 @@ void uilist::show()
 
     const int pad_size = std::max( 0, w_width - 2 - pad_left - pad_right );
     const std::string padspaces = std::string( pad_size, ' ' );
+    
+    for( uilist_entry &entry : entries ) {
+        entry.drawn_rect = cata::nullopt;
+    }
 
     for( int fei = vshift, si = 0; si < vmax; fei++, si++ ) {
         if( fei < static_cast<int>( fentries.size() ) ) {
@@ -770,6 +774,8 @@ void uilist::show()
         mvwprintz( window, point( 2, w_height - 1 ), border_color, "< " );
         mvwprintz( window, point( w_width - 3, w_height - 1 ), border_color, " >" );
         filter_popup->query( /*loop=*/false, /*draw_only=*/true );
+        // Record cursor immediately after filter_popup drawing
+        ui.record_term_cursor();
     } else {
         if( !filter.empty() ) {
             mvwprintz( window, point( 2, w_height - 1 ), border_color, "< %s >", filter );
@@ -865,8 +871,8 @@ shared_ptr_fast<ui_adaptor> uilist::create_or_get_ui_adaptor()
     shared_ptr_fast<ui_adaptor> current_ui = ui.lock();
     if( !current_ui ) {
         ui = current_ui = make_shared_fast<ui_adaptor>();
-        current_ui->on_redraw( [this]( const ui_adaptor & ) {
-            show();
+        current_ui->on_redraw( [this]( const ui_adaptor & ui ) {
+            show( ui );
         } );
         current_ui->on_screen_resize( [this]( ui_adaptor & ui ) {
             reposition( ui );
@@ -895,7 +901,7 @@ void uilist::query( bool loop, int timeout )
     ret = UILIST_WAIT_INPUT;
 
     input_context ctxt = create_main_input_context();
-
+    
     hotkeys = ctxt.get_available_single_char_hotkeys( hotkeys );
 
     shared_ptr_fast<ui_adaptor> ui = create_or_get_ui_adaptor();
@@ -924,14 +930,21 @@ void uilist::query( bool loop, int timeout )
             // only handle "ANY_INPUT" since "HELP_KEYBINDINGS" is already
             // handled by the input context and the caller might want to handle
             // its custom actions
-            selected = iter->second;
-            if( entries[ selected ].enabled ) {
-                ret = entries[ selected ].retval; // valid
-            } else if( allow_disabled ) {
-                ret = entries[selected].retval; // disabled
-            }
-            if( callback != nullptr ) {
-                callback->select( this );
+            const auto it = std::find( fentries.begin(), fentries.end(), iter->second );
+            if( it != fentries.end() ) {
+                const bool enabled = entries[*it].enabled;
+                if( enabled || allow_disabled || hilight_disabled ) {
+                    // Change the selection to display correctly when this function
+                    // is called again.
+                    fselected = std::distance( fentries.begin(), it );
+                    selected = *it;
+                    if( enabled || allow_disabled ) {
+                        ret = entries[selected].retval;
+                    }
+                    if( callback != nullptr ) {
+                        callback->select( this );
+                    }
+                }
             }
         } else if( !fentries.empty() && ret_act == "CONFIRM" ) {
             if( entries[ selected ].enabled ) {
