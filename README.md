@@ -1,5 +1,7 @@
 # Bright Nights Mapping Tool
 
+WARNING: Further development moved to https://github.com/olanti-p/cata-mapgen-editor
+
 Map making tool for [Cataclysm: Bright Nights](https://github.com/cataclysmbnteam/Cataclysm-BN).
 
 ![readme pic](doc/BNMT/assets/readme_pic.png "readme_pic")
